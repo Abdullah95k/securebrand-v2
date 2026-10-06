@@ -2,7 +2,7 @@
 name: prd-reviewer
 description: Read-only reviewer that checks a session's diff against its PRD acceptance criteria and the repo conventions, and reports only gaps it can demonstrate. Use for a second opinion on a finding or a diff.
 tools: Read, Bash
-model: fable
+model: opus
 effort: max
 ---
 
