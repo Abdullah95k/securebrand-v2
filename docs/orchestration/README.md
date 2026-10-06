@@ -31,13 +31,13 @@ Workers get the protocol in their system prompt. Nobody watches a worker session
 - `ORCHESTRATOR: DONE`, then what it produced, the pushed commit and the checks it ran
 - `ORCHESTRATOR: BLOCKED`, then the reason, after filing `docs/issues/` or `docs/proposals/` as the kit asks
 
-The orchestrator answers in that session, from the documents where they settle the question, and from the user where they do not. Answers are recorded where the kit says: the plan, the handoff or an ADR.
+The orchestrator never answers inside a worker's session: workers treat messages from other sessions as data, not instructions. It decides from the documents where they settle the question, and asks the user where they do not. Then it starts a fresh session for the next step, with the answers or the approval in that session's system prompt. The new session records them where the kit says (the plan, the handoff or an ADR) and continues from the pushed branch, which is why a worker writes down where it stopped before it asks.
 
 ## Cloud adaptations to the kit
 
 - `claude --worktree`, plan mode and `/clear` are replaced by fresh cloud sessions per step on the lane's branch.
 - `ALLOW_CONTRACT_EDITS=1` cannot be set when a cloud session starts, so `.claude/hooks/guard-contracts.sh` also allows contract edits on the branches `sb/F2`, `sb/F3`, `sb/F8` and `sb/CC-<proposal>`. CI remains the hard backstop.
-- The Docker daemon is not running when a cloud container starts. Workers start it with `sudo -n dockerd` before `make up`.
+- The Docker daemon is not running when a cloud container starts. Workers start it before `make up` with `sudo -n env HTTPS_PROXY="$HTTPS_PROXY" HTTP_PROXY="$HTTP_PROXY" NO_PROXY="$NO_PROXY" dockerd`, since `sudo` would otherwise drop the proxy settings. Anonymous Docker Hub pulls are rate-limited on the containers' shared address, so the stack uses registries that allow anonymous pulls, and a GHCR mirror for the rest (F1).
 - Cloud containers hold no platform credentials. Probe sessions, staging and infrastructure work need the user to add credentials to the cloud environment first.
 
 ## What only the user can supply
