@@ -1,0 +1,2288 @@
+{
+ "fb-backfill": {
+  "reads_topics": [],
+  "writes_topics": [
+   "raw.items",
+   "source.events"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "cursors",
+   "budgets"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.fb-backfill"
+  ],
+  "jobs_out": [],
+  "ac": 9,
+  "oq": 3
+ },
+ "fb-client-webhook-receiver": {
+  "reads_topics": [
+   "source.events"
+  ],
+  "writes_topics": [
+   "raw.items",
+   "deletions"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "cursors",
+   "budgets"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.fb-client-webhook-receiver"
+  ],
+  "jobs_out": [
+   "jobs.fb-client-webhook-receiver"
+  ],
+  "ac": 11,
+  "oq": 5
+ },
+ "fb-group-comments-fetcher": {
+  "reads_topics": [
+   "source.events"
+  ],
+  "writes_topics": [
+   "raw.items",
+   "deletions"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "cursors",
+   "budgets",
+   "vendor_keys"
+  ],
+  "writes_tables": [
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.fb-group-comments-fetcher"
+  ],
+  "jobs_out": [],
+  "ac": 11,
+  "oq": 5
+ },
+ "fb-group-posts-poller": {
+  "reads_topics": [
+   "source.events"
+  ],
+  "writes_topics": [
+   "raw.items",
+   "source.events"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "cursors",
+   "budgets",
+   "vendor_keys"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.fb-group-posts-poller"
+  ],
+  "jobs_out": [],
+  "ac": 11,
+  "oq": 6
+ },
+ "fb-keyword-search": {
+  "reads_topics": [
+   "source.events"
+  ],
+  "writes_topics": [
+   "raw.items",
+   "item.hits",
+   "discovery.hits"
+  ],
+  "reads_tables": [
+   "sources",
+   "keywords",
+   "clients",
+   "cursors",
+   "budgets",
+   "vendor_keys",
+   "canary_targets"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.fb-keyword-search"
+  ],
+  "jobs_out": [],
+  "ac": 11,
+  "oq": 5
+ },
+ "fb-page-feed-poller": {
+  "reads_topics": [
+   "source.events"
+  ],
+  "writes_topics": [
+   "raw.items",
+   "source.events"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "cursors",
+   "budgets"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.fb-page-feed-poller"
+  ],
+  "jobs_out": [],
+  "ac": 9,
+  "oq": 2
+ },
+ "fb-page-resolver": {
+  "reads_topics": [
+   "source.events"
+  ],
+  "writes_topics": [
+   "poster.profiles"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "budgets",
+   "profile_cache"
+  ],
+  "writes_tables": [
+   "sources",
+   "service_runs",
+   "profile_cache"
+  ],
+  "jobs_in": [
+   "jobs.fb-page-resolver"
+  ],
+  "jobs_out": [],
+  "ac": 11,
+  "oq": 5
+ },
+ "fb-page-search": {
+  "reads_topics": [],
+  "writes_topics": [
+   "raw.items",
+   "discovery.hits"
+  ],
+  "reads_tables": [
+   "sources",
+   "keywords",
+   "clients",
+   "cursors",
+   "budgets",
+   "decisions"
+  ],
+  "writes_tables": [
+   "cursors",
+   "budgets",
+   "decisions",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.fb-page-search"
+  ],
+  "jobs_out": [],
+  "ac": 9,
+  "oq": 3
+ },
+ "fb-post-comments-fetcher": {
+  "reads_topics": [
+   "source.events"
+  ],
+  "writes_topics": [
+   "raw.items",
+   "deletions"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "cursors",
+   "budgets"
+  ],
+  "writes_tables": [
+   "cursors",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.fb-post-comments-fetcher"
+  ],
+  "jobs_out": [],
+  "ac": 11,
+  "oq": 6
+ },
+ "fb-reactions-fetcher": {
+  "reads_topics": [
+   "raw.items"
+  ],
+  "writes_topics": [
+   "item.metrics",
+   "deletions"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "writes_tables": [
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.fb-reactions-fetcher"
+  ],
+  "jobs_out": [],
+  "ac": 9,
+  "oq": 2
+ },
+ "ig-account-media-poller": {
+  "reads_topics": [
+   "source.events"
+  ],
+  "writes_topics": [
+   "raw.items",
+   "source.events"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "cursors",
+   "budgets"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors",
+   "budgets",
+   "review_queue",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.ig-account-media-poller"
+  ],
+  "jobs_out": [],
+  "ac": 12,
+  "oq": 3
+ },
+ "ig-account-resolver": {
+  "reads_topics": [],
+  "writes_topics": [
+   "poster.profiles"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "cursors",
+   "budgets",
+   "profile_cache"
+  ],
+  "writes_tables": [
+   "cursors",
+   "budgets",
+   "review_queue",
+   "service_runs",
+   "profile_cache"
+  ],
+  "jobs_in": [
+   "jobs.ig-account-resolver"
+  ],
+  "jobs_out": [],
+  "ac": 11,
+  "oq": 4
+ },
+ "ig-comments-fetcher": {
+  "reads_topics": [],
+  "writes_topics": [
+   "raw.items"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "cursors",
+   "budgets",
+   "vendor_keys"
+  ],
+  "writes_tables": [
+   "clients",
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.ig-comments-fetcher"
+  ],
+  "jobs_out": [],
+  "ac": 12,
+  "oq": 4
+ },
+ "ig-hashtag-search": {
+  "reads_topics": [],
+  "writes_topics": [
+   "raw.items",
+   "discovery.hits",
+   "source.events"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "client_sources",
+   "cursors",
+   "budgets"
+  ],
+  "writes_tables": [
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.ig-hashtag-search"
+  ],
+  "jobs_out": [],
+  "ac": 10,
+  "oq": 0
+ },
+ "ig-keyword-search": {
+  "reads_topics": [
+   "source.events"
+  ],
+  "writes_topics": [
+   "raw.items",
+   "item.hits",
+   "discovery.hits"
+  ],
+  "reads_tables": [
+   "sources",
+   "keywords",
+   "clients",
+   "cursors",
+   "budgets",
+   "vendor_keys"
+  ],
+  "writes_tables": [
+   "clients",
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.ig-keyword-search"
+  ],
+  "jobs_out": [],
+  "ac": 12,
+  "oq": 3
+ },
+ "ig-mentions-fetcher": {
+  "reads_topics": [
+   "source.events"
+  ],
+  "writes_topics": [
+   "raw.items"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "cursors",
+   "budgets"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.ig-mentions-fetcher"
+  ],
+  "jobs_out": [],
+  "ac": 12,
+  "oq": 4
+ },
+ "ig-own-comments-fetcher": {
+  "reads_topics": [],
+  "writes_topics": [
+   "raw.items",
+   "deletions"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "cursors",
+   "budgets"
+  ],
+  "writes_tables": [
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.ig-own-comments-fetcher"
+  ],
+  "jobs_out": [],
+  "ac": 12,
+  "oq": 3
+ },
+ "ig-webhook-receiver": {
+  "reads_topics": [],
+  "writes_topics": [
+   "raw.items",
+   "source.events"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "cursors"
+  ],
+  "writes_tables": [
+   "cursors",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.ig-webhook-receiver"
+  ],
+  "jobs_out": [
+   "jobs.ig-mentions-fetcher",
+   "jobs.ig-own-comments-fetcher"
+  ],
+  "ac": 12,
+  "oq": 3
+ },
+ "li-client-posts-poller": {
+  "reads_topics": [
+   "source.events"
+  ],
+  "writes_topics": [
+   "raw.items",
+   "source.events",
+   "deletions"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "client_sources",
+   "cursors",
+   "budgets"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.li-client-posts-poller"
+  ],
+  "jobs_out": [],
+  "ac": 10,
+  "oq": 4
+ },
+ "li-company-posts-poller": {
+  "reads_topics": [
+   "source.events"
+  ],
+  "writes_topics": [
+   "raw.items",
+   "source.events"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "client_sources",
+   "cursors",
+   "budgets",
+   "vendor_keys"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.li-company-posts-poller"
+  ],
+  "jobs_out": [],
+  "ac": 10,
+  "oq": 5
+ },
+ "li-notification-receiver": {
+  "reads_topics": [
+   "source.events",
+   "item.metrics"
+  ],
+  "writes_topics": [
+   "raw.items",
+   "source.events",
+   "deletions"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "budgets",
+   "service_runs"
+  ],
+  "writes_tables": [
+   "service_runs"
+  ],
+  "jobs_in": [],
+  "jobs_out": [],
+  "ac": 12,
+  "oq": 5
+ },
+ "li-org-resolver": {
+  "reads_topics": [],
+  "writes_topics": [
+   "raw.items",
+   "poster.profiles"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "client_sources",
+   "budgets",
+   "decisions",
+   "vendor_keys",
+   "service_runs"
+  ],
+  "writes_tables": [
+   "budgets",
+   "decisions",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.li-org-resolver"
+  ],
+  "jobs_out": [],
+  "ac": 11,
+  "oq": 3
+ },
+ "li-own-comments-fetcher": {
+  "reads_topics": [],
+  "writes_topics": [
+   "raw.items",
+   "deletions"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "cursors",
+   "budgets"
+  ],
+  "writes_tables": [
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.li-own-comments-fetcher"
+  ],
+  "jobs_out": [],
+  "ac": 11,
+  "oq": 4
+ },
+ "li-post-comments-fetcher": {
+  "reads_topics": [],
+  "writes_topics": [
+   "raw.items",
+   "deletions"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "client_sources",
+   "cursors",
+   "budgets",
+   "vendor_keys"
+  ],
+  "writes_tables": [
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.li-post-comments-fetcher"
+  ],
+  "jobs_out": [],
+  "ac": 12,
+  "oq": 6
+ },
+ "li-post-search": {
+  "reads_topics": [],
+  "writes_topics": [
+   "raw.items"
+  ],
+  "reads_tables": [
+   "sources",
+   "keywords",
+   "clients",
+   "cursors",
+   "budgets",
+   "vendor_keys"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.li-post-search"
+  ],
+  "jobs_out": [],
+  "ac": 10,
+  "oq": 3
+ },
+ "news-article-extractor": {
+  "reads_topics": [
+   "article.urls",
+   "crawl.policies"
+  ],
+  "writes_topics": [
+   "raw.items"
+  ],
+  "reads_tables": [
+   "sources",
+   "crawl_policies",
+   "news_urls",
+   "news_sites"
+  ],
+  "writes_tables": [
+   "crawl_policies",
+   "service_runs",
+   "news_urls"
+  ],
+  "jobs_in": [],
+  "jobs_out": [
+   "jobs.news-robots-checker"
+  ],
+  "ac": 11,
+  "oq": 4
+ },
+ "news-comments-fetcher": {
+  "reads_topics": [],
+  "writes_topics": [
+   "raw.items",
+   "deletions"
+  ],
+  "reads_tables": [
+   "sources",
+   "budgets",
+   "crawl_policies",
+   "vendor_keys",
+   "news_sites"
+  ],
+  "writes_tables": [
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.news-comments-fetcher"
+  ],
+  "jobs_out": [],
+  "ac": 11,
+  "oq": 4
+ },
+ "news-dedup": {
+  "reads_topics": [
+   "raw.items"
+  ],
+  "writes_topics": [
+   "news.dedup"
+  ],
+  "reads_tables": [
+   "sources",
+   "news_urls",
+   "news_stories",
+   "news_story_members"
+  ],
+  "writes_tables": [
+   "service_runs",
+   "news_stories",
+   "news_story_members"
+  ],
+  "jobs_in": [],
+  "jobs_out": [],
+  "ac": 12,
+  "oq": 4
+ },
+ "news-feed-poller": {
+  "reads_topics": [
+   "source.events",
+   "crawl.policies"
+  ],
+  "writes_topics": [
+   "source.events",
+   "article.urls"
+  ],
+  "reads_tables": [
+   "sources",
+   "cursors",
+   "crawl_policies",
+   "news_urls",
+   "news_sites"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors",
+   "crawl_policies",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.news-feed-poller"
+  ],
+  "jobs_out": [
+   "jobs.news-robots-checker",
+   "jobs.news-site-resolver"
+  ],
+  "ac": 11,
+  "oq": 3
+ },
+ "news-homepage-differ": {
+  "reads_topics": [
+   "source.events",
+   "article.urls",
+   "crawl.policies"
+  ],
+  "writes_topics": [
+   "article.urls"
+  ],
+  "reads_tables": [
+   "sources",
+   "cursors",
+   "crawl_policies",
+   "news_urls",
+   "news_sites"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors",
+   "crawl_policies",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.news-homepage-differ"
+  ],
+  "jobs_out": [
+   "jobs.news-robots-checker",
+   "jobs.news-site-resolver"
+  ],
+  "ac": 10,
+  "oq": 3
+ },
+ "news-robots-checker": {
+  "reads_topics": [
+   "source.events"
+  ],
+  "writes_topics": [
+   "crawl.policies"
+  ],
+  "reads_tables": [
+   "sources",
+   "crawl_policies",
+   "news_sites"
+  ],
+  "writes_tables": [
+   "sources",
+   "crawl_policies",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.news-robots-checker"
+  ],
+  "jobs_out": [],
+  "ac": 11,
+  "oq": 5
+ },
+ "news-site-resolver": {
+  "reads_topics": [
+   "crawl.policies"
+  ],
+  "writes_topics": [
+   "poster.profiles"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "client_sources",
+   "cursors",
+   "decisions",
+   "crawl_policies",
+   "service_runs",
+   "news_sites"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors",
+   "service_runs",
+   "news_sites"
+  ],
+  "jobs_in": [
+   "jobs.news-site-resolver"
+  ],
+  "jobs_out": [
+   "jobs.news-robots-checker"
+  ],
+  "ac": 9,
+  "oq": 4
+ },
+ "news-sitemap-poller": {
+  "reads_topics": [
+   "source.events",
+   "crawl.policies"
+  ],
+  "writes_topics": [
+   "article.urls"
+  ],
+  "reads_tables": [
+   "sources",
+   "cursors",
+   "crawl_policies",
+   "news_urls",
+   "news_sites"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors",
+   "crawl_policies",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.news-sitemap-poller"
+  ],
+  "jobs_out": [
+   "jobs.news-robots-checker",
+   "jobs.news-site-resolver"
+  ],
+  "ac": 11,
+  "oq": 3
+ },
+ "aggregator": {
+  "reads_topics": [
+   "source.events",
+   "deletions"
+  ],
+  "writes_topics": [],
+  "reads_tables": [
+   "cursors",
+   "retention_classes",
+   "service_runs"
+  ],
+  "writes_tables": [
+   "cursors",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.aggregator"
+  ],
+  "jobs_out": [],
+  "ac": 12,
+  "oq": 5
+ },
+ "alert-evaluator": {
+  "reads_topics": [
+   "item.hits",
+   "source.events",
+   "deletions"
+  ],
+  "writes_topics": [],
+  "reads_tables": [
+   "clients",
+   "service_runs"
+  ],
+  "writes_tables": [
+   "service_runs"
+  ],
+  "jobs_in": [],
+  "jobs_out": [],
+  "ac": 12,
+  "oq": 5
+ },
+ "analysis-entities": {
+  "reads_topics": [
+   "items.normalized",
+   "source.events"
+  ],
+  "writes_topics": [
+   "items.analysis"
+  ],
+  "reads_tables": [
+   "sources",
+   "cursors",
+   "review_queue",
+   "retention_classes",
+   "service_runs",
+   "model_versions",
+   "kb_entities",
+   "kb_aliases"
+  ],
+  "writes_tables": [
+   "cursors",
+   "review_queue",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.analysis-entities"
+  ],
+  "jobs_out": [],
+  "ac": 11,
+  "oq": 7
+ },
+ "analysis-media": {
+  "reads_topics": [
+   "items.normalized",
+   "item.hits",
+   "discovery.hits",
+   "source.events"
+  ],
+  "writes_topics": [
+   "items.analysis"
+  ],
+  "reads_tables": [
+   "sources",
+   "cursors",
+   "review_queue",
+   "retention_classes",
+   "service_runs",
+   "model_versions",
+   "brand_assets"
+  ],
+  "writes_tables": [
+   "cursors",
+   "review_queue",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.analysis-media"
+  ],
+  "jobs_out": [],
+  "ac": 11,
+  "oq": 7
+ },
+ "analysis-sentiment": {
+  "reads_topics": [
+   "items.normalized",
+   "item.hits",
+   "discovery.hits",
+   "source.events"
+  ],
+  "writes_topics": [
+   "items.analysis"
+  ],
+  "reads_tables": [
+   "sources",
+   "cursors",
+   "review_queue",
+   "retention_classes",
+   "service_runs",
+   "model_versions"
+  ],
+  "writes_tables": [
+   "cursors",
+   "review_queue",
+   "service_runs",
+   "model_versions"
+  ],
+  "jobs_in": [
+   "jobs.analysis-sentiment"
+  ],
+  "jobs_out": [],
+  "ac": 11,
+  "oq": 7
+ },
+ "analysis-topics": {
+  "reads_topics": [
+   "items.normalized",
+   "source.events"
+  ],
+  "writes_topics": [
+   "items.analysis"
+  ],
+  "reads_tables": [
+   "sources",
+   "client_sources",
+   "cursors",
+   "review_queue",
+   "retention_classes",
+   "service_runs",
+   "model_versions",
+   "taxonomy_nodes"
+  ],
+  "writes_tables": [
+   "cursors",
+   "review_queue",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.analysis-topics"
+  ],
+  "jobs_out": [],
+  "ac": 10,
+  "oq": 7
+ },
+ "backfill-orchestrator": {
+  "reads_topics": [
+   "source.events",
+   "jobs.completed"
+  ],
+  "writes_topics": [],
+  "reads_tables": [
+   "sources",
+   "client_sources",
+   "budgets",
+   "backfill_runs"
+  ],
+  "writes_tables": [
+   "sources",
+   "service_runs",
+   "backfill_runs"
+  ],
+  "jobs_in": [
+   "jobs.completed"
+  ],
+  "jobs_out": [],
+  "ac": 10,
+  "oq": 4
+ },
+ "comment-decay-scheduler": {
+  "reads_topics": [
+   "items.normalized",
+   "source.events",
+   "deletions",
+   "jobs.completed"
+  ],
+  "writes_topics": [],
+  "reads_tables": [
+   "sources",
+   "client_sources",
+   "budgets",
+   "comment_series"
+  ],
+  "writes_tables": [
+   "service_runs",
+   "comment_series"
+  ],
+  "jobs_in": [
+   "jobs.completed"
+  ],
+  "jobs_out": [
+   "jobs.fb-reactions-fetcher",
+   "jobs.ig-account-media-poller",
+   "jobs.tt-video-stats-refresher",
+   "jobs.yt-video-details-fetcher"
+  ],
+  "ac": 11,
+  "oq": 6
+ },
+ "deletion-propagator": {
+  "reads_topics": [
+   "deletions"
+  ],
+  "writes_topics": [],
+  "reads_tables": [
+   "clients",
+   "deletion_requests"
+  ],
+  "writes_tables": [
+   "deletion_requests",
+   "service_runs"
+  ],
+  "jobs_in": [],
+  "jobs_out": [
+   "jobs.aggregator"
+  ],
+  "ac": 11,
+  "oq": 6
+ },
+ "keyword-matcher": {
+  "reads_topics": [
+   "items.normalized",
+   "source.events"
+  ],
+  "writes_topics": [
+   "item.hits",
+   "discovery.hits"
+  ],
+  "reads_tables": [
+   "sources",
+   "keywords",
+   "clients",
+   "cursors",
+   "service_runs"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors"
+  ],
+  "jobs_in": [
+   "jobs.keyword-matcher"
+  ],
+  "jobs_out": [
+   "jobs.keyword-matcher"
+  ],
+  "ac": 12,
+  "oq": 6
+ },
+ "lang-dialect-id": {
+  "reads_topics": [],
+  "writes_topics": [
+   "items.normalized"
+  ],
+  "reads_tables": [
+   "service_runs"
+  ],
+  "writes_tables": [
+   "service_runs"
+  ],
+  "jobs_in": [],
+  "jobs_out": [],
+  "ac": 12,
+  "oq": 5
+ },
+ "normalize-item": {
+  "reads_topics": [
+   "raw.items",
+   "source.events"
+  ],
+  "writes_topics": [
+   "items.normalized",
+   "item.metrics"
+  ],
+  "reads_tables": [
+   "sources",
+   "cursors",
+   "review_queue",
+   "retention_classes",
+   "service_runs"
+  ],
+  "writes_tables": [
+   "cursors",
+   "review_queue",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.normalize-item"
+  ],
+  "jobs_out": [],
+  "ac": 11,
+  "oq": 4
+ },
+ "poster-resolver": {
+  "reads_topics": [
+   "discovery.hits"
+  ],
+  "writes_topics": [
+   "raw.items",
+   "poster.profiles"
+  ],
+  "reads_tables": [
+   "sources",
+   "keywords",
+   "clients",
+   "cursors",
+   "decisions",
+   "service_runs"
+  ],
+  "writes_tables": [
+   "keywords",
+   "cursors",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.poster-resolver"
+  ],
+  "jobs_out": [],
+  "ac": 10,
+  "oq": 0
+ },
+ "qualifier": {
+  "reads_topics": [
+   "poster.profiles"
+  ],
+  "writes_topics": [
+   "registry.decisions"
+  ],
+  "reads_tables": [
+   "sources",
+   "keywords",
+   "clients",
+   "client_sources",
+   "budgets",
+   "decisions",
+   "review_queue",
+   "service_runs"
+  ],
+  "writes_tables": [
+   "clients",
+   "decisions",
+   "review_queue",
+   "service_runs"
+  ],
+  "jobs_in": [],
+  "jobs_out": [],
+  "ac": 10,
+  "oq": 0
+ },
+ "quota-governor": {
+  "reads_topics": [
+   "source.events"
+  ],
+  "writes_topics": [],
+  "reads_tables": [
+   "clients",
+   "client_sources",
+   "budgets",
+   "vendor_keys",
+   "x_read_ledger",
+   "ig_hashtag_ledger",
+   "budget_reservations",
+   "budget_history"
+  ],
+  "writes_tables": [
+   "budgets",
+   "x_read_ledger",
+   "ig_hashtag_ledger",
+   "budget_reservations",
+   "budget_history"
+  ],
+  "jobs_in": [],
+  "jobs_out": [],
+  "ac": 12,
+  "oq": 5
+ },
+ "raw-archiver": {
+  "reads_topics": [
+   "raw.items",
+   "source.events"
+  ],
+  "writes_topics": [],
+  "reads_tables": [
+   "clients",
+   "cursors",
+   "deletion_requests",
+   "retention_classes"
+  ],
+  "writes_tables": [
+   "cursors",
+   "service_runs"
+  ],
+  "jobs_in": [],
+  "jobs_out": [],
+  "ac": 10,
+  "oq": 4
+ },
+ "registry-writer": {
+  "reads_topics": [
+   "registry.decisions"
+  ],
+  "writes_topics": [
+   "source.events"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "client_sources",
+   "cursors",
+   "service_runs"
+  ],
+  "writes_tables": [
+   "sources",
+   "client_sources",
+   "cursors",
+   "service_runs"
+  ],
+  "jobs_in": [],
+  "jobs_out": [],
+  "ac": 10,
+  "oq": 0
+ },
+ "retention-purger": {
+  "reads_topics": [
+   "source.events",
+   "deletions"
+  ],
+  "writes_topics": [
+   "registry.decisions",
+   "deletions"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "client_sources",
+   "cursors",
+   "deletion_requests",
+   "retention_classes",
+   "vendor_keys"
+  ],
+  "writes_tables": [
+   "cursors",
+   "deletion_requests",
+   "service_runs"
+  ],
+  "jobs_in": [],
+  "jobs_out": [
+   "jobs.yt-text-purger"
+  ],
+  "ac": 10,
+  "oq": 4
+ },
+ "source-health-canary": {
+  "reads_topics": [
+   "source.events"
+  ],
+  "writes_topics": [
+   "registry.decisions",
+   "source.events"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "client_sources",
+   "budgets",
+   "canary_targets"
+  ],
+  "writes_tables": [
+   "canary_targets",
+   "service_runs"
+  ],
+  "jobs_in": [],
+  "jobs_out": [],
+  "ac": 11,
+  "oq": 4
+ },
+ "store-writer": {
+  "reads_topics": [],
+  "writes_topics": [
+   "items.normalized"
+  ],
+  "reads_tables": [
+   "sources",
+   "keywords",
+   "clients",
+   "cursors",
+   "deletion_requests",
+   "retention_classes",
+   "service_runs"
+  ],
+  "writes_tables": [
+   "cursors",
+   "service_runs"
+  ],
+  "jobs_in": [],
+  "jobs_out": [],
+  "ac": 11,
+  "oq": 5
+ },
+ "tg-bot-channel-receiver": {
+  "reads_topics": [
+   "source.events"
+  ],
+  "writes_topics": [
+   "raw.items",
+   "discovery.hits",
+   "source.events"
+  ],
+  "reads_tables": [
+   "sources",
+   "cursors",
+   "vendor_keys",
+   "canary_targets"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.tg-bot-channel-receiver"
+  ],
+  "jobs_out": [],
+  "ac": 10,
+  "oq": 6
+ },
+ "tg-channel-posts-poller": {
+  "reads_topics": [
+   "source.events"
+  ],
+  "writes_topics": [
+   "raw.items",
+   "source.events"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "cursors",
+   "budgets",
+   "vendor_keys",
+   "canary_targets"
+  ],
+  "writes_tables": [
+   "sources",
+   "clients",
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.tg-channel-posts-poller"
+  ],
+  "jobs_out": [],
+  "ac": 10,
+  "oq": 5
+ },
+ "tg-channel-resolver": {
+  "reads_topics": [
+   "items.normalized",
+   "poster.profiles"
+  ],
+  "writes_topics": [
+   "raw.items",
+   "poster.profiles"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "client_sources",
+   "cursors",
+   "budgets",
+   "decisions",
+   "vendor_keys"
+  ],
+  "writes_tables": [
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.tg-channel-resolver"
+  ],
+  "jobs_out": [],
+  "ac": 11,
+  "oq": 4
+ },
+ "tg-discussion-receiver": {
+  "reads_topics": [
+   "source.events"
+  ],
+  "writes_topics": [
+   "raw.items",
+   "discovery.hits",
+   "source.events"
+  ],
+  "reads_tables": [
+   "sources",
+   "cursors",
+   "vendor_keys",
+   "canary_targets"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.tg-discussion-receiver"
+  ],
+  "jobs_out": [],
+  "ac": 10,
+  "oq": 5
+ },
+ "tg-message-search": {
+  "reads_topics": [],
+  "writes_topics": [
+   "raw.items",
+   "item.hits",
+   "discovery.hits"
+  ],
+  "reads_tables": [
+   "sources",
+   "keywords",
+   "clients",
+   "client_sources",
+   "cursors",
+   "budgets",
+   "decisions",
+   "vendor_keys",
+   "canary_targets"
+  ],
+  "writes_tables": [
+   "keywords",
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.tg-message-search"
+  ],
+  "jobs_out": [],
+  "ac": 11,
+  "oq": 5
+ },
+ "tt-client-videos-fetcher": {
+  "reads_topics": [
+   "source.events"
+  ],
+  "writes_topics": [
+   "raw.items",
+   "source.events",
+   "item.metrics"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "cursors",
+   "budgets"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors",
+   "budgets",
+   "retention_classes",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.tt-client-videos-fetcher"
+  ],
+  "jobs_out": [],
+  "ac": 11,
+  "oq": 5
+ },
+ "tt-hashtag-feed-poller": {
+  "reads_topics": [
+   "raw.items"
+  ],
+  "writes_topics": [
+   "raw.items"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "cursors",
+   "budgets",
+   "vendor_keys",
+   "canary_targets"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.tt-hashtag-feed-poller"
+  ],
+  "jobs_out": [],
+  "ac": 11,
+  "oq": 4
+ },
+ "tt-keyword-search": {
+  "reads_topics": [],
+  "writes_topics": [
+   "raw.items"
+  ],
+  "reads_tables": [
+   "sources",
+   "keywords",
+   "clients",
+   "cursors",
+   "budgets",
+   "vendor_keys",
+   "canary_targets"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.tt-keyword-search"
+  ],
+  "jobs_out": [],
+  "ac": 10,
+  "oq": 3
+ },
+ "tt-profile-videos-poller": {
+  "reads_topics": [
+   "source.events"
+  ],
+  "writes_topics": [
+   "raw.items",
+   "source.events"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "cursors",
+   "budgets",
+   "vendor_keys",
+   "canary_targets"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.tt-profile-videos-poller"
+  ],
+  "jobs_out": [],
+  "ac": 11,
+  "oq": 3
+ },
+ "tt-user-resolver": {
+  "reads_topics": [],
+  "writes_topics": [
+   "poster.profiles"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "budgets",
+   "vendor_keys"
+  ],
+  "writes_tables": [
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.tt-user-resolver"
+  ],
+  "jobs_out": [],
+  "ac": 10,
+  "oq": 4
+ },
+ "tt-video-comments-fetcher": {
+  "reads_topics": [],
+  "writes_topics": [
+   "raw.items",
+   "deletions"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "budgets",
+   "vendor_keys"
+  ],
+  "writes_tables": [
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.tt-video-comments-fetcher"
+  ],
+  "jobs_out": [],
+  "ac": 11,
+  "oq": 4
+ },
+ "tt-video-stats-refresher": {
+  "reads_topics": [],
+  "writes_topics": [
+   "item.metrics",
+   "deletions"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "budgets",
+   "vendor_keys",
+   "service_runs"
+  ],
+  "writes_tables": [
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.tt-video-stats-refresher"
+  ],
+  "jobs_out": [],
+  "ac": 10,
+  "oq": 4
+ },
+ "search-hit-router": {
+  "reads_topics": [
+   "source.events",
+   "search.results"
+  ],
+  "writes_topics": [
+   "discovery.hits",
+   "article.urls"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients"
+  ],
+  "writes_tables": [
+   "clients",
+   "review_queue",
+   "service_runs"
+  ],
+  "jobs_in": [],
+  "jobs_out": [],
+  "ac": 10,
+  "oq": 4
+ },
+ "web-commoncrawl-scanner": {
+  "reads_topics": [],
+  "writes_topics": [
+   "raw.items",
+   "discovery.hits",
+   "search.results"
+  ],
+  "reads_tables": [
+   "sources",
+   "service_runs"
+  ],
+  "writes_tables": [
+   "service_runs"
+  ],
+  "jobs_in": [],
+  "jobs_out": [],
+  "ac": 10,
+  "oq": 5
+ },
+ "web-gdelt-poller": {
+  "reads_topics": [],
+  "writes_topics": [
+   "raw.items",
+   "search.results"
+  ],
+  "reads_tables": [
+   "sources",
+   "keywords",
+   "cursors",
+   "budgets",
+   "canary_targets",
+   "service_runs"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.web-gdelt-poller"
+  ],
+  "jobs_out": [],
+  "ac": 10,
+  "oq": 5
+ },
+ "web-search-mojeek": {
+  "reads_topics": [],
+  "writes_topics": [
+   "raw.items",
+   "search.results"
+  ],
+  "reads_tables": [
+   "sources",
+   "keywords",
+   "clients",
+   "cursors",
+   "budgets",
+   "vendor_keys",
+   "canary_targets",
+   "service_runs"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors",
+   "budgets",
+   "vendor_keys",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.web-search-mojeek"
+  ],
+  "jobs_out": [],
+  "ac": 10,
+  "oq": 4
+ },
+ "web-search-perplexity": {
+  "reads_topics": [],
+  "writes_topics": [
+   "raw.items",
+   "search.results"
+  ],
+  "reads_tables": [
+   "sources",
+   "keywords",
+   "clients",
+   "cursors",
+   "budgets",
+   "vendor_keys",
+   "canary_targets",
+   "service_runs"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.web-search-perplexity"
+  ],
+  "jobs_out": [],
+  "ac": 10,
+  "oq": 5
+ },
+ "x-compliance-sync": {
+  "reads_topics": [],
+  "writes_topics": [
+   "deletions"
+  ],
+  "reads_tables": [
+   "sources",
+   "client_sources",
+   "cursors",
+   "deletion_requests"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.x-compliance-sync"
+  ],
+  "jobs_out": [],
+  "ac": 13,
+  "oq": 7
+ },
+ "x-filtered-stream": {
+  "reads_topics": [
+   "source.events",
+   "jobs.completed"
+  ],
+  "writes_topics": [
+   "raw.items"
+  ],
+  "reads_tables": [
+   "sources",
+   "keywords",
+   "clients",
+   "client_sources",
+   "cursors",
+   "service_runs"
+  ],
+  "writes_tables": [
+   "cursors",
+   "review_queue",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.completed"
+  ],
+  "jobs_out": [
+   "jobs.x-full-archive-search",
+   "jobs.x-recent-search"
+  ],
+  "ac": 11,
+  "oq": 6
+ },
+ "x-full-archive-search": {
+  "reads_topics": [
+   "jobs.completed"
+  ],
+  "writes_topics": [
+   "raw.items",
+   "source.events",
+   "jobs.completed"
+  ],
+  "reads_tables": [
+   "sources",
+   "keywords",
+   "clients",
+   "cursors",
+   "budgets"
+  ],
+  "writes_tables": [
+   "cursors",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.completed",
+   "jobs.x-full-archive-search"
+  ],
+  "jobs_out": [
+   "jobs.completed"
+  ],
+  "ac": 11,
+  "oq": 6
+ },
+ "x-recent-search": {
+  "reads_topics": [
+   "source.events"
+  ],
+  "writes_topics": [
+   "raw.items",
+   "discovery.hits"
+  ],
+  "reads_tables": [
+   "sources",
+   "keywords",
+   "clients",
+   "cursors",
+   "budgets"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.x-recent-search"
+  ],
+  "jobs_out": [],
+  "ac": 10,
+  "oq": 3
+ },
+ "x-replies-fetcher": {
+  "reads_topics": [],
+  "writes_topics": [
+   "raw.items",
+   "discovery.hits",
+   "deletions"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "cursors",
+   "budgets"
+  ],
+  "writes_tables": [
+   "cursors",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.x-replies-fetcher"
+  ],
+  "jobs_out": [],
+  "ac": 12,
+  "oq": 7
+ },
+ "x-user-resolver": {
+  "reads_topics": [
+   "source.events",
+   "deletions"
+  ],
+  "writes_topics": [
+   "poster.profiles"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "budgets",
+   "profile_cache"
+  ],
+  "writes_tables": [
+   "sources",
+   "service_runs",
+   "profile_cache"
+  ],
+  "jobs_in": [
+   "jobs.x-user-resolver"
+  ],
+  "jobs_out": [],
+  "ac": 11,
+  "oq": 6
+ },
+ "x-user-timeline-poller": {
+  "reads_topics": [
+   "source.events"
+  ],
+  "writes_topics": [
+   "raw.items",
+   "source.events",
+   "jobs.completed"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.x-user-timeline-poller"
+  ],
+  "jobs_out": [
+   "jobs.completed"
+  ],
+  "ac": 10,
+  "oq": 5
+ },
+ "yt-channel-resolver": {
+  "reads_topics": [
+   "source.events"
+  ],
+  "writes_topics": [
+   "poster.profiles"
+  ],
+  "reads_tables": [
+   "sources",
+   "cursors",
+   "budgets",
+   "profile_cache"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors",
+   "service_runs",
+   "profile_cache"
+  ],
+  "jobs_in": [
+   "jobs.yt-channel-resolver"
+  ],
+  "jobs_out": [],
+  "ac": 12,
+  "oq": 6
+ },
+ "yt-comments-fetcher": {
+  "reads_topics": [],
+  "writes_topics": [
+   "raw.items",
+   "deletions"
+  ],
+  "reads_tables": [
+   "sources",
+   "cursors",
+   "budgets"
+  ],
+  "writes_tables": [
+   "cursors",
+   "review_queue",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.yt-comments-fetcher"
+  ],
+  "jobs_out": [],
+  "ac": 12,
+  "oq": 5
+ },
+ "yt-keyword-search": {
+  "reads_topics": [],
+  "writes_topics": [
+   "raw.items"
+  ],
+  "reads_tables": [
+   "sources",
+   "keywords",
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "writes_tables": [
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [],
+  "jobs_out": [
+   "jobs.yt-video-details-fetcher"
+  ],
+  "ac": 9,
+  "oq": 0
+ },
+ "yt-pubsub-receiver": {
+  "reads_topics": [
+   "source.events"
+  ],
+  "writes_topics": [
+   "raw.items",
+   "deletions"
+  ],
+  "reads_tables": [
+   "sources",
+   "cursors"
+  ],
+  "writes_tables": [
+   "cursors",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.yt-pubsub-receiver"
+  ],
+  "jobs_out": [
+   "jobs.yt-video-details-fetcher"
+  ],
+  "ac": 12,
+  "oq": 5
+ },
+ "yt-replies-fetcher": {
+  "reads_topics": [],
+  "writes_topics": [
+   "raw.items",
+   "deletions"
+  ],
+  "reads_tables": [
+   "sources",
+   "cursors",
+   "budgets"
+  ],
+  "writes_tables": [
+   "cursors",
+   "review_queue",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.yt-replies-fetcher"
+  ],
+  "jobs_out": [],
+  "ac": 12,
+  "oq": 5
+ },
+ "yt-text-purger": {
+  "reads_topics": [
+   "registry.decisions"
+  ],
+  "writes_topics": [
+   "deletions"
+  ],
+  "reads_tables": [
+   "sources",
+   "clients",
+   "client_sources",
+   "deletion_requests",
+   "retention_classes"
+  ],
+  "writes_tables": [
+   "cursors",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.yt-text-purger"
+  ],
+  "jobs_out": [
+   "jobs.yt-comments-fetcher",
+   "jobs.yt-replies-fetcher",
+   "jobs.yt-video-details-fetcher"
+  ],
+  "ac": 12,
+  "oq": 4
+ },
+ "yt-uploads-reconciler": {
+  "reads_topics": [
+   "source.events"
+  ],
+  "writes_topics": [
+   "raw.items",
+   "source.events",
+   "jobs.completed"
+  ],
+  "reads_tables": [
+   "sources",
+   "cursors",
+   "budgets"
+  ],
+  "writes_tables": [
+   "sources",
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.yt-uploads-reconciler"
+  ],
+  "jobs_out": [
+   "jobs.completed",
+   "jobs.yt-video-details-fetcher"
+  ],
+  "ac": 11,
+  "oq": 4
+ },
+ "yt-video-details-fetcher": {
+  "reads_topics": [],
+  "writes_topics": [
+   "raw.items",
+   "item.metrics",
+   "deletions",
+   "jobs.completed"
+  ],
+  "reads_tables": [
+   "sources",
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "writes_tables": [
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [
+   "jobs.yt-video-details-fetcher"
+  ],
+  "jobs_out": [
+   "jobs.completed"
+  ],
+  "ac": 11,
+  "oq": 4
+ },
+ "yt-web-search-bridge": {
+  "reads_topics": [],
+  "writes_topics": [
+   "search.results"
+  ],
+  "reads_tables": [
+   "sources",
+   "keywords",
+   "clients",
+   "cursors",
+   "budgets",
+   "vendor_keys",
+   "service_runs"
+  ],
+  "writes_tables": [
+   "clients",
+   "cursors",
+   "budgets",
+   "service_runs"
+  ],
+  "jobs_in": [],
+  "jobs_out": [
+   "jobs.yt-channel-resolver",
+   "jobs.yt-video-details-fetcher"
+  ],
+  "ac": 9,
+  "oq": 0
+ }
+}

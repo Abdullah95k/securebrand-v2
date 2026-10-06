@@ -1,0 +1,68 @@
+# N6 · news-article-extractor (Python)
+
+Wave 3 · First real data, and the Meta review build · track News · size L (3 to 5 days with review) · kind service
+
+## Builds
+
+Article fetch and extraction with trafilatura; 7-day full-text cache; the news mapper.
+
+Service `news-article-extractor` · PRD `docs/prds/news/news-article-extractor.md` · lane Fetch posts · route green · 11 acceptance criteria (section 13) · 4 open questions (section 14)
+
+## Needs first (merged, with a closed review)
+
+- F6 Python SDK twin: `docs/handoffs/F6.md`
+- N1 news-robots-checker: `docs/handoffs/N1.md`
+- N0 News probe and seed list: `docs/handoffs/N0.md`
+
+## Give the session (read in this order)
+
+1. This brief
+2. The PRD in full: `docs/prds/news/news-article-extractor.md`
+3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Rotation policy; Quotas, budgets and the quota governor; Retention classes; Per-platform fact sheets: News websites
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+5. Handoff of F6: `docs/handoffs/F6.md`
+6. Handoff of N1: `docs/handoffs/N1.md`
+7. Handoff of N0: `docs/handoffs/N0.md`
+8. The N0 probe report `docs/probes/news.md` and the fixtures in `fixtures/news/`
+9. `docs/patterns/ADAPTER-PATTERN.md` (from C0) and `docs/patterns/MAPPERS.md` (from C4)
+10. N0 article fixtures
+11. C4 mapper guide
+
+## Contracts it touches (from PRD section 6)
+
+- Topics read: `article.urls`, `crawl.policies`
+- Topics written: `raw.items`
+- Job queues in: its own `jobs.news-article-extractor`; out: `jobs.news-robots-checker`
+- Tables read: `sources`, `crawl_policies`, `news_urls`, `news_sites`; written or updated: `crawl_policies`, `service_runs`, `news_urls`
+- This list is extracted from the PRD's section 6 by name; the plan confirms each item against `packages/contracts` and the migrations, and anything missing becomes a proposal.
+
+## Hands on
+
+- Code and tests in `services/news-article-extractor/`
+- `docs/handoffs/N6.md` from `build-plan/templates/HANDOFF.md`
+- `docs/reviews/N6.md` from the fresh-session review
+- news mapper in normalize-item
+- text_full_ref cache
+
+## Watch for
+
+- Beyond 7 days keep the excerpt and metadata only (news_excerpt)
+- Proxies only for challenged hosts and only in the news crawler
+- next_poll_at is set from the start of the last poll; order by next_poll_at then tier; most stale first when behind, with rotation_behind
+- Incremental reads only newer than the cursor; full re-reads happen only in backfill jobs from backfill-orchestrator
+- The cursor advances only after the producer acknowledges the batch
+
+## Done when
+
+- The definition of done in `build-plan/README.md` holds.
+
+## Runs alongside
+
+N3, N4, N5
+
+## How to run it
+
+- Plan: `claude --worktree N6 --permission-mode plan`, then `/plan-session N6`; read the plan (Ctrl+G), approve with auto mode or accept-edits
+- Build: `/clear`, then `/build-session N6` (the mode you approved with); optionally keep it going with `/goal` (see `build-plan/README.md`)
+- Review: a new terminal, `claude --worktree N6`, then `/review-session N6`
+- Fix: `claude --worktree N6` (or the build terminal), `/fix-session N6`; then a fresh session runs `/review-session N6 recheck`; merge when the review has no open blocker or should-fix

@@ -1,0 +1,776 @@
+{
+ "fb-backfill": {
+  "path": "facebook/fb-backfill.md",
+  "header": "**Platform:** Facebook · **Route:** green · **Lane:** Fetch posts · **Owner:** Backend lead, Facebook adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk (shared `/feed` field list and envelope), backfill-orchestrator, quota-governor, source-health-canary, raw-archiver, normalize-item, comment-decay-scheduler, fb-reactions-fetcher, fb-page-feed-poller (cursor hand-over), registry-writer, Supabase Postgres and Vault, Redpanda. Meta prerequisites: Business Verification, App Review for PPCA, Access Verification for Tech Providers, annual Data Use Checkup.",
+  "reads": "`jobs.fb-backfill`; `sources` (`client_ids`, `owned_by_client`, `backfill_status`), `cursors`, `clients`, `budgets` through quota-governor, `health` through the SDK canary hook.",
+  "writes_head": "",
+  "ac_count": 9,
+  "words": 2188
+ },
+ "fb-client-webhook-receiver": {
+  "path": "facebook/fb-client-webhook-receiver.md",
+  "header": "**Platform:** Facebook · **Route:** green · **Lane:** Fetch posts · **Owner:** Backend lead, Facebook adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, fb-page-feed-poller, fb-backfill, backfill-orchestrator, registry-writer, comment-decay-scheduler, normalize-item, deletion-propagator, raw-archiver, quota-governor, source-health-canary, Supabase Postgres and Vault, Redpanda, public ingress with TLS. Meta prerequisites: Business Verification, App Review, Access Verification for Tech Providers, annual Data Use Checkup.",
+  "reads": "Meta's HTTPS requests; `jobs.fb-client-webhook-receiver`; `sources`, `cursors`, `clients`, `budgets` through quota-governor; Supabase Vault (app secret, verify token, Page access tokens); `source.events` (`added`, `updated`, `tier change`, `retired`).",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2162
+ },
+ "fb-group-comments-fetcher": {
+  "path": "facebook/fb-group-comments-fetcher.md",
+  "header": "**Platform:** Facebook · **Route:** amber (optional, flag `FB_VENDOR_ROUTE`) · **Lane:** Comments · **Owner:** Backend lead, Facebook adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, comment-decay-scheduler, quota-governor, source-health-canary, raw-archiver, normalize-item, deletion-propagator, fb-group-posts-poller, fb-keyword-search, Supabase Postgres and Vault, Redpanda, a vendor contract with ScrapeCreators or SociaVault.",
+  "reads": "`jobs.fb-group-comments-fetcher`; `sources`, `clients` (government marker), `comment_ledger`, `vendor_keys`, `budgets` through quota-governor; the flag at the start of every job; `health` through the SDK canary hook; `source.events` (`fallback_on`, `fallback_off`, `retired`).",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2402
+ },
+ "fb-group-posts-poller": {
+  "path": "facebook/fb-group-posts-poller.md",
+  "header": "**Platform:** Facebook · **Route:** amber (optional, flag `FB_VENDOR_ROUTE`) · **Lane:** Fetch posts · **Owner:** Backend lead, Facebook adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, quota-governor, source-health-canary, raw-archiver, normalize-item, keyword-matcher, comment-decay-scheduler, fb-group-comments-fetcher, fb-keyword-search, backfill-orchestrator, poster-resolver, qualifier, registry-writer, Supabase Postgres and Vault, Redpanda, a vendor contract with ScrapeCreators or SociaVault.",
+  "reads": "`jobs.fb-group-posts-poller`; `sources`, `cursors`, `clients` (government marker), `vendor_keys`, `budgets` through quota-governor; the flag `FB_VENDOR_ROUTE` at the start of every job; `health` through the SDK canary hook; `source.events` (`added`, `tier change`, `retired`, `fallback_on`, `fallback_off`).",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2544
+ },
+ "fb-keyword-search": {
+  "path": "facebook/fb-keyword-search.md",
+  "header": "**Platform:** Facebook · **Route:** amber (optional, flag `FB_VENDOR_ROUTE`) · **Lane:** Discover and qualify · **Owner:** Backend lead, Facebook adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, quota-governor, source-health-canary, raw-archiver, normalize-item, keyword-matcher, poster-resolver, fb-page-resolver, qualifier, registry-writer, backfill-orchestrator, fb-page-search, fb-group-posts-poller, Supabase Postgres and Vault, Redpanda, a vendor contract with SociaVault (and ScrapeCreators for the alternative).",
+  "reads": "`jobs.fb-keyword-search`; `sources` (keyword rules), `keywords`, `cursors`, `clients` (government marker), `vendor_keys`, `canary_targets`, `budgets` through quota-governor; the flag at the start of every job; `health` through the SDK canary hook; `source.events`.",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2416
+ },
+ "fb-page-feed-poller": {
+  "path": "facebook/fb-page-feed-poller.md",
+  "header": "**Platform:** Facebook · **Route:** green · **Lane:** Fetch posts · **Owner:** Backend lead, Facebook adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, quota-governor, source-health-canary, raw-archiver, normalize-item, comment-decay-scheduler, fb-reactions-fetcher, fb-backfill, registry-writer, Supabase Postgres and Vault, Redpanda. Meta prerequisites: Business Verification, App Review for PPCA, Access Verification for Tech Providers, annual Data Use Checkup.",
+  "reads": "`jobs.fb-page-feed-poller`; `sources`, `cursors`, `clients` (token reference), `budgets` through quota-governor, `health` through the SDK canary hook; `source.events` (`added`, `tier change`, `retired`) to refresh its view of the rotation.",
+  "writes_head": "",
+  "ac_count": 9,
+  "words": 2200
+ },
+ "fb-page-resolver": {
+  "path": "facebook/fb-page-resolver.md",
+  "header": "**Platform:** Facebook · **Route:** green · **Lane:** Discover and qualify · **Owner:** Backend lead, Facebook adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, poster-resolver, qualifier, registry-writer, quota-governor, source-health-canary, fb-page-search and fb-keyword-search (candidate sources), Supabase Postgres and Vault, Redpanda. Meta prerequisites: Business Verification, App Review for PPCA, Access Verification for Tech Providers, annual Data Use Checkup.",
+  "reads": "`jobs.fb-page-resolver`; `profile_cache`, `sources`, `clients` (token reference), `budgets` through quota-governor, `health` through the SDK canary hook; `source.events` (`added`, `tier change`, `retired`).",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2128
+ },
+ "fb-page-search": {
+  "path": "facebook/fb-page-search.md",
+  "header": "**Platform:** Facebook · **Route:** green · **Lane:** Discover and qualify · **Owner:** Backend engineer, discovery lane · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, quota-governor, source-health-canary, raw-archiver, poster-resolver, fb-page-resolver, qualifier, registry-writer, Supabase Postgres (`keywords`, `sources`, `cursors`, `decisions`, `budgets`) and Vault, Redpanda. Meta prerequisites: Business Verification, App Review for PPCA (the Pages Search API is part of the grant), Access Verification for Tech Providers, annual Data Use Checkup.",
+  "reads": "`jobs.fb-page-search`; `keywords` (variants, client ids, Facebook in scope), `clients`, `sources` (existence check by `platform_id`), `cursors`, `budgets` through quota-governor, `health` through the SDK canary hook.",
+  "writes_head": "",
+  "ac_count": 9,
+  "words": 2126
+ },
+ "fb-post-comments-fetcher": {
+  "path": "facebook/fb-post-comments-fetcher.md",
+  "header": "**Platform:** Facebook · **Route:** green · **Lane:** Comments · **Owner:** Backend lead, Facebook adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, comment-decay-scheduler, quota-governor, source-health-canary, raw-archiver, normalize-item, deletion-propagator, retention-purger, fb-page-feed-poller, fb-backfill, fb-client-webhook-receiver, Supabase Postgres and Vault, Redpanda. Meta prerequisites: Business Verification, App Review for PPCA, Access Verification for Tech Providers, annual Data Use Checkup.",
+  "reads": "`jobs.fb-post-comments-fetcher`; `sources`, `clients` (token reference), `comment_ledger`, `budgets` through quota-governor, `health` through the SDK canary hook; `source.events` (`retired`, `updated`).",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2699
+ },
+ "fb-reactions-fetcher": {
+  "path": "facebook/fb-reactions-fetcher.md",
+  "header": "**Platform:** Facebook · **Route:** green · **Lane:** Fetch posts · **Owner:** Backend lead, Facebook adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, fb-page-feed-poller and fb-backfill (summary fields in the payload), comment-decay-scheduler (refresh jobs), quota-governor, source-health-canary, normalize-item (item ids), store-writer, aggregator, alert-evaluator, deletion-propagator, Supabase Postgres and Vault, Redpanda, ClickHouse (`metrics_timeseries`). Meta prerequisites: Business Verification, App Review for PPCA, Access Verification for Tech Providers, annual Data Use Checkup.",
+  "reads": "`raw.items` (extract), `jobs.fb-reactions-fetcher` (refresh); `sources` (`client_ids`, `owned_by_client`), `clients`, `budgets` through quota-governor, `health` through the SDK canary hook.",
+  "writes_head": "",
+  "ac_count": 9,
+  "words": 2143
+ },
+ "ig-account-media-poller": {
+  "path": "instagram/ig-account-media-poller.md",
+  "header": "**Platform:** Instagram · **Route:** green · **Lane:** Fetch posts · **Owner:** Backend lead, Instagram adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, quota-governor, source-health-canary, raw-archiver, normalize-item, comment-decay-scheduler, backfill-orchestrator, registry-writer, ig-account-resolver (keeps follower counts, and so tiers, current), ig-own-comments-fetcher and ig-comments-fetcher (consumers of its posts), Supabase Postgres and Vault, Redpanda. Meta prerequisites: Business Verification, App Review (Advanced Access and Instagram Public Content Access), Access Verification for Tech Providers, annual Data Use Checkup.",
+  "reads": "`jobs.ig-account-media-poller`; `sources`, `cursors`, `clients` (token reference and calling account), `budgets` through quota-governor, `health` through the SDK canary hook; `source.events` (`added`, `tier change`, `retired`) to refresh its view of the rotation.",
+  "writes_head": "",
+  "ac_count": 12,
+  "words": 2667
+ },
+ "ig-account-resolver": {
+  "path": "instagram/ig-account-resolver.md",
+  "header": "**Platform:** Instagram · **Route:** green · **Lane:** Discover and qualify · **Owner:** Backend lead, Instagram adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk (job schema gains `kind = resolve`), poster-resolver, qualifier, registry-writer, quota-governor, source-health-canary, backfill-orchestrator, raw-archiver, ig-account-media-poller, ig-mentions-fetcher and ig-keyword-search (sources of candidates), Supabase Postgres and Vault (including the `profile_cache` table, to be added to the control plane), Redpanda. Meta prerequisites: Business Verification, App Review (Advanced Access and Instagram Public Content Access), Access Verification for Tech Providers, annual Data Use Checkup.",
+  "reads": "`jobs.ig-account-resolver`; `sources`, `clients` (token reference), `cursors`, `budgets` through quota-governor, `health` through the SDK canary hook; the `profile_cache` table.",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2518
+ },
+ "ig-comments-fetcher": {
+  "path": "instagram/ig-comments-fetcher.md",
+  "header": "**Platform:** Instagram · **Route:** amber (optional, flag `IG_VENDOR_ROUTE`) · **Lane:** Comments · **Owner:** Backend lead, Instagram adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, comment-decay-scheduler, quota-governor, source-health-canary, raw-archiver, normalize-item, deletion-propagator, ig-account-media-poller, ig-hashtag-search and ig-keyword-search (sources of posts), Supabase Postgres and Vault, ClickHouse (read-only), Redpanda, and the SociaVault contract.",
+  "reads": "`jobs.ig-comments-fetcher`; `sources`, `clients` (government flag, amber acceptance), `vendor_keys`, `budgets` through quota-governor, `health` through the SDK canary hook; `IG_VENDOR_ROUTE`; ClickHouse `items` (permalink) and `comments` (stored hashes), read-only.",
+  "writes_head": "",
+  "ac_count": 12,
+  "words": 2508
+ },
+ "ig-hashtag-search": {
+  "path": "instagram/ig-hashtag-search.md",
+  "header": "**Platform:** Instagram · **Route:** green · **Lane:** Discover and qualify · **Owner:** Meta adapters engineer · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "quota-governor (ledger and call budget), source-health-canary, backfill-orchestrator, registry-writer (hashtag sources and tiers), poster-resolver and qualifier (downstream), normalize-item, raw-archiver, `listening-sdk`, Supabase Vault, Redpanda, Meta App Review (Advanced Access and Instagram Public Content Access), ig-keyword-search as the optional fallback.",
+  "reads": "- Queue `jobs.ig-hashtag-search`.\n- Tables `sources` (hashtag rows), `client_sources`, `cursors` (source × `ig-hashtag-search`), `budgets` (hashtag ledger and call budget), `clients` (which business account owns the tag).\n- Vault: the client token for the job.",
+  "writes_head": "",
+  "ac_count": 10,
+  "words": 2468
+ },
+ "ig-keyword-search": {
+  "path": "instagram/ig-keyword-search.md",
+  "header": "**Platform:** Instagram · **Route:** amber (optional, flag `IG_VENDOR_ROUTE`) · **Lane:** Discover and qualify · **Owner:** Backend lead, Instagram adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, quota-governor, source-health-canary, raw-archiver, normalize-item, keyword-matcher, comment-decay-scheduler, backfill-orchestrator, registry-writer, qualifier, ig-hashtag-search (the green counterpart and fallback source), Supabase Postgres and Vault, Redpanda, and the SociaVault contract.",
+  "reads": "`jobs.ig-keyword-search`; `sources`, `keywords`, `clients` (government flag, amber acceptance), `vendor_keys`, `cursors`, `budgets` through quota-governor, `health` through the SDK canary hook; `source.events` (`added`, `tier change`, `retired`, `fallback_on`, `fallback_off`); `IG_VENDOR_ROUTE`.",
+  "writes_head": "",
+  "ac_count": 12,
+  "words": 2702
+ },
+ "ig-mentions-fetcher": {
+  "path": "instagram/ig-mentions-fetcher.md",
+  "header": "**Platform:** Instagram · **Route:** green · **Lane:** Fetch posts · **Owner:** Backend lead, Instagram adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, quota-governor, source-health-canary, raw-archiver, normalize-item, backfill-orchestrator, ig-webhook-receiver (live path and daily reconciliation jobs), ig-account-media-poller (shares the account rows), poster-resolver and qualifier (downstream), registry-writer, Supabase Postgres and Vault, Redpanda. Meta prerequisites: Business Verification, App Review (Advanced Access), Access Verification for Tech Providers, annual Data Use Checkup.",
+  "reads": "`jobs.ig-mentions-fetcher`; `sources`, `cursors`, `clients` (token reference), `budgets` through quota-governor, `health` through the SDK canary hook; `source.events` (`added`, `retired`) to refresh its view of the rotation.",
+  "writes_head": "",
+  "ac_count": 12,
+  "words": 2539
+ },
+ "ig-own-comments-fetcher": {
+  "path": "instagram/ig-own-comments-fetcher.md",
+  "header": "**Platform:** Instagram · **Route:** green · **Lane:** Comments · **Owner:** Backend lead, Instagram adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, comment-decay-scheduler, ig-account-media-poller, ig-webhook-receiver, quota-governor, source-health-canary, raw-archiver, normalize-item, deletion-propagator, Supabase Postgres and Vault, ClickHouse (read-only), Redpanda. Meta prerequisites: Business Verification, App Review (Advanced Access), Access Verification for Tech Providers, annual Data Use Checkup.",
+  "reads": "`jobs.ig-own-comments-fetcher`; `sources`, `cursors`, `clients` (token reference), `budgets` through quota-governor, `health` through the SDK canary hook; ClickHouse `comments` (stored ids and hashes of one post, read-only).",
+  "writes_head": "",
+  "ac_count": 12,
+  "words": 2419
+ },
+ "ig-webhook-receiver": {
+  "path": "instagram/ig-webhook-receiver.md",
+  "header": "**Platform:** Instagram · **Route:** green · **Lane:** Fetch posts · **Owner:** Backend lead, Instagram adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk (job schema gains `kind = push` for this queue), ig-own-comments-fetcher, ig-mentions-fetcher, comment-decay-scheduler, normalize-item, raw-archiver, source-health-canary, registry-writer, quota-governor, Supabase Postgres and Vault, Redpanda, the cluster's ingress with a public TLS certificate. Meta prerequisites: Business Verification, App Review (Advanced Access) with the Webhooks product enabled, Access Verification for Tech Providers, annual Data Use Checkup.",
+  "reads": "Inbound HTTPS from Meta; `jobs.ig-webhook-receiver`; `sources` and `clients` (account to source mapping, token reference), `cursors` (reconciliation schedule), Supabase Vault (app secret, verify token), job results of the two fetching services.",
+  "writes_head": "",
+  "ac_count": 12,
+  "words": 2391
+ },
+ "li-client-posts-poller": {
+  "path": "linkedin/li-client-posts-poller.md",
+  "header": "**Platform:** LinkedIn · **Route:** green · **Lane:** Fetch posts · **Owner:** Backend lead, LinkedIn adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, quota-governor, source-health-canary, raw-archiver, normalize-item, comment-decay-scheduler, li-own-comments-fetcher, li-notification-receiver, backfill-orchestrator, registry-writer, retention-purger, Supabase Postgres and Vault, Redpanda. LinkedIn prerequisites: Community Management API approved for our app; each client's OAuth grant with ADMINISTRATOR, DIRECT_SPONSORED_CONTENT_POSTER or CONTENT_ADMIN on the page.",
+  "reads": "`jobs.li-client-posts-poller`; `sources`, `cursors`, `clients` (token reference), `client_sources` (priority list), `budgets` through quota-governor, `health` through the SDK canary hook; `source.events` (`added`, `updated`, `route` change, `retired`) to refresh its view of the rotation.",
+  "writes_head": "",
+  "ac_count": 10,
+  "words": 2602
+ },
+ "li-company-posts-poller": {
+  "path": "linkedin/li-company-posts-poller.md",
+  "header": "**Platform:** LinkedIn · **Route:** amber (optional, flag `LI_VENDOR_ROUTE`) · **Lane:** Fetch posts · **Owner:** Backend lead, LinkedIn adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, quota-governor, source-health-canary, raw-archiver, normalize-item, comment-decay-scheduler, li-post-comments-fetcher, li-post-search, li-org-resolver, qualifier, registry-writer, backfill-orchestrator, retention-purger, Supabase Postgres and Vault, Redpanda; externally Apify and the harvestapi `linkedin-company-posts` Actor.",
+  "reads": "`jobs.li-company-posts-poller`; `sources`, `cursors`, `client_sources` (priority list, government flag through `clients`), `vendor_keys`, `budgets` through quota-governor; `source.events`; the flag `LI_VENDOR_ROUTE`; `health` through the SDK canary hook.",
+  "writes_head": "",
+  "ac_count": 10,
+  "words": 2515
+ },
+ "li-notification-receiver": {
+  "path": "linkedin/li-notification-receiver.md",
+  "header": "**Platform:** LinkedIn · **Route:** green · **Lane:** Comments · **Owner:** Backend lead, LinkedIn adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, quota-governor, source-health-canary, raw-archiver, normalize-item, comment-decay-scheduler, li-own-comments-fetcher, li-client-posts-poller, registry-writer, backfill-orchestrator, retention-purger, aggregator, alert-evaluator, Supabase Postgres and Vault, Redpanda, a public HTTPS ingress with a certificate.",
+  "reads": "Inbound deliveries; `sources` (organization to `source_id`, `client_ids`), `clients` and Supabase Vault (client secret, tokens), `budgets` through quota-governor (enrichment and subscription calls only), `source.events`, `item.metrics` (comment counts, for the silence check).",
+  "writes_head": "",
+  "ac_count": 12,
+  "words": 2347
+ },
+ "li-org-resolver": {
+  "path": "linkedin/li-org-resolver.md",
+  "header": "**Platform:** LinkedIn · **Route:** amber (optional, flag `LI_VENDOR_ROUTE`) · **Lane:** Discover and qualify · **Owner:** Registry lead (Node) · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "`listening-sdk` (language client, Apify client, LinkedIn client), Redpanda, Supabase Postgres and Vault, poster-resolver, qualifier, registry-writer, quota-governor, source-health-canary, raw-archiver, normalize-item, retention-purger; n8n for review cards; externally Apify, harvestapi `linkedin-company-posts`, and the LinkedIn Posts API for client pages.",
+  "reads": "`jobs.li-org-resolver`; control plane: `sources`, `decisions`, `clients`, `client_sources`, `vendor_keys`, `budgets` through quota-governor; per-client LinkedIn tokens from Supabase Vault; environment `LI_VENDOR_ROUTE`.",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2437
+ },
+ "li-own-comments-fetcher": {
+  "path": "linkedin/li-own-comments-fetcher.md",
+  "header": "**Platform:** LinkedIn · **Route:** green · **Lane:** Comments · **Owner:** Backend lead, LinkedIn adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, comment-decay-scheduler, li-client-posts-poller, li-notification-receiver, backfill-orchestrator, normalize-item, aggregator, analysis-sentiment, analysis-topics, retention-purger, raw-archiver, quota-governor, source-health-canary, Supabase Postgres and Vault, ClickHouse (read), Redpanda.",
+  "reads": "`jobs.li-own-comments-fetcher`; `sources`, `cursors`, `clients` (token reference), `budgets` through quota-governor; the series state (marker, running total); ClickHouse `comments` (id, content hash and time of the post's held comments, read-only); `health` through the SDK canary hook.",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2349
+ },
+ "li-post-comments-fetcher": {
+  "path": "linkedin/li-post-comments-fetcher.md",
+  "header": "**Platform:** LinkedIn · **Route:** amber (optional, flag `LI_VENDOR_ROUTE`) · **Lane:** Comments · **Owner:** Backend lead, LinkedIn adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, comment-decay-scheduler, li-company-posts-poller, li-post-search, quota-governor, normalize-item, aggregator, analysis-sentiment, analysis-topics, retention-purger, raw-archiver, backfill-orchestrator, source-health-canary, Supabase Postgres and Vault, ClickHouse (read), Redpanda; externally Apify and the harvestapi `linkedin-post-comments` Actor.",
+  "reads": "`jobs.li-post-comments-fetcher`; `sources`, `client_sources` and `clients` (government flag), `vendor_keys`, `budgets` through quota-governor; the flag `LI_VENDOR_ROUTE`; the series state (marker, running total); ClickHouse `comments` (ids and content hashes of held comments, read-only); the post URL from the stored post.",
+  "writes_head": "",
+  "ac_count": 12,
+  "words": 2532
+ },
+ "li-post-search": {
+  "path": "linkedin/li-post-search.md",
+  "header": "**Platform:** LinkedIn · **Route:** amber (optional, flag `LI_VENDOR_ROUTE`) · **Lane:** Discover and qualify · **Owner:** Ingestion lead (Node) · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "`listening-sdk`, Redpanda, Supabase Postgres and Vault, quota-governor, raw-archiver, normalize-item, keyword-matcher, poster-resolver, li-org-resolver, qualifier, backfill-orchestrator, source-health-canary, retention-purger; externally Apify and harvestapi `linkedin-post-search`.",
+  "reads": "`jobs.li-post-search` (one partition per rule); `sources`, `keywords`, `clients` (government marker), `cursors`, `vendor_keys`, `budgets` through quota-governor; environment `LI_VENDOR_ROUTE`.",
+  "writes_head": "",
+  "ac_count": 10,
+  "words": 2164
+ },
+ "news-article-extractor": {
+  "path": "news/news-article-extractor.md",
+  "header": "**Platform:** News websites · **Route:** green · **Lane:** Fetch posts · **Owner:** Backend lead, news crawler (Python service) · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "`listening-sdk`, news-feed-poller, news-sitemap-poller, news-homepage-differ, news-site-resolver, news-robots-checker, news-dedup, normalize-item, raw-archiver, retention-purger, source-health-canary, quota-governor, Supabase Postgres, Redpanda, object storage, the shared headless pool, Decodo or Oxylabs keys in the vault.",
+  "reads": "`article.urls`; control-plane `crawl_policies`, `news_sites`, `sources`, `news_urls`; `crawl.policies` for policy changes; the cache for nothing (write-only).",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2603
+ },
+ "news-comments-fetcher": {
+  "path": "news/news-comments-fetcher.md",
+  "header": "**Platform:** News websites · **Route:** green · **Lane:** Comments · **Owner:** Backend lead, news crawler · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "`listening-sdk`, comment-decay-scheduler, news-site-resolver, news-robots-checker, news-article-extractor, normalize-item, deletion-propagator, raw-archiver, quota-governor, source-health-canary, Supabase Postgres and Vault, Redpanda, object storage for the 7-day cache.",
+  "reads": "`jobs.news-comments-fetcher`; control-plane `sources`, `news_sites` (provider, shortname, identifier template), `crawl_policies`, `budgets` through quota-governor, `vendor_keys`; stored comment hashes for the article (from the job's `post_ref` and the analytics store through the SDK).",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2588
+ },
+ "news-dedup": {
+  "path": "news/news-dedup.md",
+  "header": "**Platform:** News websites · **Route:** green · **Lane:** Processing · **Owner:** Backend lead, processing pipeline · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "`listening-sdk`, news-article-extractor, normalize-item, raw-archiver, store-writer, aggregator, alert-evaluator, keyword-matcher, source-health-canary, Supabase Postgres, Redpanda.",
+  "reads": "`raw.items` (news articles); control-plane `news_story_members`, `news_stories`, `news_urls` (hourly sweep, read-only), `sources` (publisher names for `origin_source_id`).",
+  "writes_head": "",
+  "ac_count": 12,
+  "words": 2477
+ },
+ "news-feed-poller": {
+  "path": "news/news-feed-poller.md",
+  "header": "**Platform:** News websites · **Route:** green · **Lane:** Fetch posts · **Owner:** Backend lead, news crawler · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "`listening-sdk` (host gate, adapter contract), news-site-resolver, news-robots-checker, news-article-extractor, news-sitemap-poller, news-homepage-differ, source-health-canary, quota-governor, registry-writer, backfill-orchestrator, raw-archiver, Supabase Postgres, Redpanda, the shared headless pool, Decodo or Oxylabs keys in the vault.",
+  "reads": "`jobs.news-feed-poller`; control-plane `sources`, `news_sites`, `crawl_policies`, `cursors`, `news_urls` (read-only); `source.events` (`added`, `updated`, `tier change`, `retired`) to refresh its view of the rotation; `crawl.policies` for policy changes between scans.",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2513
+ },
+ "news-homepage-differ": {
+  "path": "news/news-homepage-differ.md",
+  "header": "**Platform:** News websites · **Route:** green · **Lane:** Fetch posts · **Owner:** Backend lead, news crawler · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "`listening-sdk`, news-site-resolver, news-robots-checker, news-article-extractor, news-feed-poller, news-sitemap-poller, source-health-canary, quota-governor, registry-writer, the shared Playwright Chromium pool, Supabase Postgres, Redpanda, Decodo or Oxylabs keys in the vault.",
+  "reads": "`jobs.news-homepage-differ`; control-plane `sources`, `news_sites`, `crawl_policies`, `cursors`, `news_urls` (read-only); `source.events`; `crawl.policies`; `article.urls` outcomes only through the resolver's pattern refreshes.",
+  "writes_head": "",
+  "ac_count": 10,
+  "words": 2440
+ },
+ "news-robots-checker": {
+  "path": "news/news-robots-checker.md",
+  "header": "**Platform:** News websites · **Route:** green · **Lane:** Discover and qualify · **Owner:** Backend lead, news crawler · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "`listening-sdk` (host gate), news-site-resolver, news-feed-poller, news-sitemap-poller, news-homepage-differ, news-article-extractor, news-comments-fetcher, registry-writer, quota-governor, source-health-canary, raw-archiver, Supabase Postgres, Redpanda, the shared Playwright pool, Decodo or Oxylabs keys in the vault.",
+  "reads": "`jobs.news-robots-checker`; control-plane `crawl_policies`, `sources`, `news_sites`; `source.events` (`added`, `tier change`, `retired`) to maintain the refresh set.",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2617
+ },
+ "news-site-resolver": {
+  "path": "news/news-site-resolver.md",
+  "header": "**Platform:** News · **Route:** green · **Lane:** Discover and qualify · **Owner:** Backend lead, news lane (Node) · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "news-robots-checker, qualifier, registry-writer, lang-dialect-id, search-hit-router, web-commoncrawl-scanner, web-gdelt-poller, backfill-orchestrator, source-health-canary, quota-governor, `listening-sdk`, Supabase Postgres (`news_sites`, `crawl_policies`, `sources`), the shared headless pool, Decodo or Oxylabs keys in the vault.",
+  "reads": "`jobs.news-site-resolver`; `crawl.policies` and `crawl_policies`; `sources`; `decisions`; `clients` and `client_sources` (seed and priority lists); `news_sites`.",
+  "writes_head": "",
+  "ac_count": 9,
+  "words": 2246
+ },
+ "news-sitemap-poller": {
+  "path": "news/news-sitemap-poller.md",
+  "header": "**Platform:** News websites · **Route:** green · **Lane:** Fetch posts · **Owner:** Backend lead, news crawler · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "`listening-sdk`, news-site-resolver, news-robots-checker, news-article-extractor, news-feed-poller, news-homepage-differ, backfill-orchestrator, web-commoncrawl-scanner, source-health-canary, quota-governor, registry-writer, Supabase Postgres, Redpanda, the shared headless pool, Decodo or Oxylabs keys in the vault.",
+  "reads": "`jobs.news-sitemap-poller`; control-plane `sources`, `news_sites`, `crawl_policies`, `cursors`, `news_urls` (read-only); `source.events`; `crawl.policies`.",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2445
+ },
+ "aggregator": {
+  "path": "shared/aggregator.md",
+  "header": "**Platform:** Shared · **Route:** shared · **Lane:** Processing · **Owner:** Data engineer (ClickHouse) · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "store-writer (all base tables and dimensions); ClickHouse; Supabase Postgres (`retention_classes`, `service_runs`, `cursors`, advisory lock); `deletions` (deletion-propagator), `source.events` (registry-writer); keyword-matcher and the analysis services as upstream producers; alert-evaluator as consumer; raw-archiver (replay).",
+  "reads": "- ClickHouse: `hits`, `items`, `comments`, `analysis`, `metrics_timeseries`, `sources_dim`, `keywords_dim`, `aggregates_*`.\n- Topics: `deletions`, `source.events`, `jobs.aggregator`.\n- Control plane: `retention_classes` (`row_ttl`), `cursors`, `service_runs`.",
+  "writes_head": "",
+  "ac_count": 12,
+  "words": 2380
+ },
+ "alert-evaluator": {
+  "path": "shared/alert-evaluator.md",
+  "header": "**Platform:** Shared · **Route:** shared · **Lane:** Processing · **Owner:** Backend lead (alerts) · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "aggregator (tables and watermark), store-writer (`keywords_dim`, `sources_dim`), keyword-matcher (`item.hits`), deletion-propagator (`deletions`), registry-writer (`source.events`), n8n, ClickHouse, Supabase Postgres and Vault, Redpanda, `listening-sdk`.",
+  "reads": "- ClickHouse: `aggregates_hourly_v`, `aggregates_daily_v`, `aggregates_monthly_v`, `keywords_dim`, `sources_dim`.\n- Topics: `item.hits`, `deletions`, `source.events`.\n- Control plane: `alert_rules`, `alerts`, `alert_deliveries`, `alert_watch_items`, `clients`, `service_runs` (aggregator watermark), Vault (webhook and flow secrets).",
+  "writes_head": "",
+  "ac_count": 12,
+  "words": 2472
+ },
+ "analysis-entities": {
+  "path": "shared/analysis-entities.md",
+  "header": "**Platform:** Shared · **Route:** shared · **Lane:** Processing · **Owner:** ML lead (analysis) · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "normalize-item, lang-dialect-id (`text_norm` folding), keyword-matcher (alias overlap with keywords), raw-archiver, store-writer, aggregator, alert-evaluator, retention-purger and deletion-propagator, analysis-media (consumer of brand ids), Redpanda, Supabase Postgres (KB tables), ClickHouse, Hetzner, Hugging Face, annotation tool, `listening-sdk`.",
+  "reads": "- Topics: `items.normalized`, `source.events`, `jobs.analysis-entities` and `.priority`.\n- Control plane: `kb_entities`, `kb_aliases`, `model_versions`, `sources`, `retention_classes`, `review_queue`; ClickHouse `items`, `analysis` (text index on `text_norm`); object storage `archive/`, `models/entities/`.",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2398
+ },
+ "analysis-media": {
+  "path": "shared/analysis-media.md",
+  "header": "**Platform:** Shared · **Route:** shared · **Lane:** Processing · **Owner:** ML lead (analysis) · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "normalize-item (`media[]`), lang-dialect-id (transcript language), keyword-matcher (hits that revive skipped items), analysis-entities (brand ids for logos, optional), raw-archiver, store-writer, aggregator, alert-evaluator, retention-purger and deletion-propagator (media objects), Redpanda, Supabase Postgres, ClickHouse, object storage, Hetzner GPU pool or model API, Hugging Face, `listening-sdk`.",
+  "reads": "- Topics: `items.normalized`, `item.hits`, `discovery.hits`, `source.events`, `jobs.analysis-media` and `.priority`.\n- Control plane: `sources`, `brand_assets`, `model_versions`, `retention_classes`, `review_queue`; ClickHouse `items`, `analysis`; object storage `media/<sha256>`, `archive/`, `models/media/`.",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2458
+ },
+ "analysis-sentiment": {
+  "path": "shared/analysis-sentiment.md",
+  "header": "**Platform:** Shared · **Route:** shared · **Lane:** Processing · **Owner:** ML lead (analysis) · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "normalize-item and lang-dialect-id (inputs), keyword-matcher (hits), raw-archiver (re-run source), store-writer, aggregator, alert-evaluator, retention-purger and deletion-propagator (annotation store), Redpanda, Supabase Postgres, ClickHouse, Hetzner GPU pool or model API, Hugging Face, annotation tool, `listening-sdk`.",
+  "reads": "- Topics: `items.normalized`, `item.hits`, `discovery.hits`, `source.events`, `jobs.analysis-sentiment` and `.priority` (`analyze`, `rerun`).\n- Control plane: `sources`, `model_versions`, `retention_classes`, `review_queue`, `service_runs`; ClickHouse `items`, `comments`, `analysis`; object storage `archive/`, `models/sentiment/`.",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2713
+ },
+ "analysis-topics": {
+  "path": "shared/analysis-topics.md",
+  "header": "**Platform:** Shared · **Route:** shared · **Lane:** Processing · **Owner:** ML lead (analysis) · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "normalize-item, lang-dialect-id, store-writer, aggregator, alert-evaluator, raw-archiver (re-run source), retention-purger and deletion-propagator, Redpanda, Supabase Postgres, ClickHouse, Hetzner GPU pool or model API, Hugging Face, annotation tool, `listening-sdk`.",
+  "reads": "- Topics: `items.normalized`, `source.events`, `jobs.analysis-topics` and `.priority`.\n- Control plane: `taxonomy_nodes`, `model_versions`, `sources`, `client_sources`, `retention_classes`, `review_queue`; ClickHouse `items`, `analysis`; object storage `archive/`, `models/topics/`.",
+  "writes_head": "",
+  "ac_count": 10,
+  "words": 2325
+ },
+ "backfill-orchestrator": {
+  "path": "shared/backfill-orchestrator.md",
+  "header": "**Platform:** Shared · **Route:** shared · **Lane:** Registry · **Owner:** Backend lead, source onboarding · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, registry-writer, quota-governor, the ten backfill services, comment-decay-scheduler, normalize-item, source-health-canary, Supabase Postgres, Redpanda.",
+  "reads": "`source.events`; `jobs.completed`; tables `sources`, `client_sources`, `budgets` (mode), `backfill_runs`; the client re-run endpoint.",
+  "writes_head": "",
+  "ac_count": 10,
+  "words": 2079
+ },
+ "comment-decay-scheduler": {
+  "path": "shared/comment-decay-scheduler.md",
+  "header": "**Platform:** Shared · **Route:** shared · **Lane:** Registry · **Owner:** Backend lead, comment pipeline · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, normalize-item, registry-writer, quota-governor, source-health-canary, all comment, replies and metrics services named in section 4, backfill-orchestrator, Supabase Postgres, Redpanda.",
+  "reads": "`items.normalized`; `jobs.completed`; `source.events`; `deletions`; tables `sources`, `client_sources`, `budgets`, `comment_series`.",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 3043
+ },
+ "deletion-propagator": {
+  "path": "shared/deletion-propagator.md",
+  "header": "**Platform:** Shared · **Route:** shared · **Lane:** Support · **Owner:** Backend lead, compliance and retention · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk (`item_id` derivation, purge registry), Redpanda, ClickHouse, raw-archiver, aggregator, store-writer, normalize-item, retention-purger, x-compliance-sync, yt-text-purger, alert-evaluator, Supabase Postgres and Vault, object storage.",
+  "reads": "`deletions`; ClickHouse `items`, `comments`, `analysis`, `metrics_timeseries`; Postgres `deletion_requests`, `clients` (webhook endpoint and secret reference, from Supabase Vault); raw-archiver manifests; aggregator job status.",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2553
+ },
+ "keyword-matcher": {
+  "path": "shared/keyword-matcher.md",
+  "header": "**Platform:** Shared · **Route:** shared · **Lane:** Processing · **Owner:** Backend lead (processing) · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "normalize-item, lang-dialect-id, `listening-sdk`, Redpanda, Supabase Postgres, ClickHouse (`hits`), raw-archiver (archive reader and replay), registry-writer (`source.events`); consumers poster-resolver, store-writer, aggregator, alert-evaluator, qualifier.",
+  "reads": "- Topics: `items.normalized`, `source.events`, `jobs.keyword-matcher` (`rematch`, `candidate_retry`).\n- Control plane: `keywords`, `clients`, `sources` (cache), `cursors`, `service_runs`.\n- lang-dialect-id `/v1/fold`; ClickHouse `hits`, `items`, `comments`; the raw archive through the SDK reader.",
+  "writes_head": "",
+  "ac_count": 12,
+  "words": 2643
+ },
+ "lang-dialect-id": {
+  "path": "shared/lang-dialect-id.md",
+  "header": "**Platform:** Shared · **Route:** shared · **Lane:** Processing · **Owner:** NLP engineer (processing) · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "normalize-item and keyword-matcher (callers); `listening-sdk` (schema, TypeScript fold, fixtures); raw-archiver (replay source); fastText `lid.176` model; CAMeL Tools; KLPT; object storage (model bundle; Hugging Face is a cleared source for model files); Supabase Postgres (`service_runs`).",
+  "reads": "- HTTP: `POST /v1/detect` from normalize-item, `POST /v1/fold` from keyword-matcher (and from tools in CI).\n- Object storage: the versioned model bundle (fastText, dialect model, CAMeL Tools data, KLPT data), loaded at start-up; nothing is downloaded at run time.\n- Control plane: `service_runs` (heartbeat, version).",
+  "writes_head": "",
+  "ac_count": 12,
+  "words": 2842
+ },
+ "normalize-item": {
+  "path": "shared/normalize-item.md",
+  "header": "**Platform:** Shared · **Route:** shared · **Lane:** Processing · **Owner:** Backend lead (processing) · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "`listening-sdk` (mapper table, key derivation, folding rules, envelope), lang-dialect-id, Redpanda, Supabase Postgres (`sources`, `retention_classes`, `review_queue`, `service_runs`, Vault), ClickHouse (dedup lookups), raw-archiver (`raw_ref` and the replay source), every producer named in 5.3; keyword-matcher and store-writer as consumers.",
+  "reads": "- Topics: `raw.items` (live), `jobs.normalize-item` (`replay`, `lang_rescore`), `source.events` (registry cache refresh).\n- Control plane: `sources` (cache), `retention_classes`, `service_runs` (lag), `review_queue` (parked batches).\n- Object storage `raw/` for replay; ClickHouse `items` and `comments` for dedup lookups.",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2522
+ },
+ "poster-resolver": {
+  "path": "shared/poster-resolver.md",
+  "header": "**Platform:** Shared · **Route:** shared · **Lane:** Registry · **Owner:** Registry backend engineer · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "- Upstream: `keyword-matcher` (produces `discovery.hits`), `search-hit-router`, `registry-writer` (manual candidates).\n- Resolvers: `fb-page-resolver`, `ig-account-resolver`, `tt-user-resolver`, `x-user-resolver`, `li-org-resolver`, `tg-channel-resolver`, `yt-channel-resolver`, `news-site-resolver`.\n- `lang-dialect-id`; `quota-governor` through each resolver's `budget_tag`; `source-health-canary`; `raw-archiver`.\n- Downstream: `qualifier`. Infrastructure: Redpanda, Supabase Postgres, Supabase Vault.",
+  "reads": "- Topic `discovery.hits` (partition key: the keyword or hashtag source that produced the hit; the candidate is in the payload).\n- Queue `jobs.poster-resolver` (resolver answers, manual candidates).\n- Tables: `poster_profiles` (cache, proposed here), `decisions` (rejection memory), `keywords` and `clients` (seed lists, watchlists), `sources` (to drop hits whose poster was registered after the hit was produced).",
+  "writes_head": "",
+  "ac_count": 10,
+  "words": 2192
+ },
+ "qualifier": {
+  "path": "shared/qualifier.md",
+  "header": "**Platform:** Shared · **Route:** shared · **Lane:** Registry · **Owner:** Registry backend engineer · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "- Upstream: `poster-resolver`; `keyword-matcher` (hit context in the profile).\n- Sideways: `quota-governor` (capacity), n8n (cards, notifications), ClickHouse (sweep), `clients` and `keywords` tables.\n- Downstream: `registry-writer` (decisions), `backfill-orchestrator` and the pollers (through `source.events` once written).\n- Flags: `FB_VENDOR_ROUTE`, `IG_VENDOR_ROUTE`, `TT_VENDOR_ROUTE`, `LI_VENDOR_ROUTE`, `TG_VENDOR_ROUTE` decide whether an amber `add` is possible.",
+  "reads": "- Topic `poster.profiles`.\n- Tables: `keywords`, `clients` (seed lists, priority lists, `qualifier_config`), `client_sources`, `sources` (sweep), `decisions`, `review_queue`, `budgets` (through the governor).\n- ClickHouse `items` in the sweep.",
+  "writes_head": "",
+  "ac_count": 10,
+  "words": 2211
+ },
+ "quota-governor": {
+  "path": "shared/quota-governor.md",
+  "header": "**Platform:** Shared · **Route:** shared · **Lane:** Support · **Owner:** Platform engineer, budgets and quotas · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, every calling service, comment-decay-scheduler, backfill-orchestrator, source-health-canary, qualifier, registry-writer (client flags), n8n, Supabase Postgres and Vault, Prometheus and the dashboard tool.",
+  "reads": "Requests and `report` calls; `budgets`, `clients` (government flag), `client_sources`, `vendor_keys` (plan, no keys), platform flags, ledgers; `source.events` (`added`) for the Enterprise check.",
+  "writes_head": "",
+  "ac_count": 12,
+  "words": 2288
+ },
+ "raw-archiver": {
+  "path": "shared/raw-archiver.md",
+  "header": "**Platform:** Shared · **Route:** shared · **Lane:** Support · **Owner:** Data platform engineer, storage and replay · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk (`raw_ref` allocation and envelope), Redpanda, object storage (Backblaze B2 or Hetzner Object Storage), Supabase Postgres, normalize-item, the analysis services, retention-purger, deletion-propagator, store-writer, source-health-canary.",
+  "reads": "`raw.items`; the control-plane tables `retention_classes`, `deletion_requests`, `clients` (for offboarding scope); `source.events`; object storage (its own batches, for compaction, replay and rewrite).",
+  "writes_head": "",
+  "ac_count": 10,
+  "words": 2533
+ },
+ "registry-writer": {
+  "path": "shared/registry-writer.md",
+  "header": "**Platform:** Shared · **Route:** shared · **Lane:** Registry · **Owner:** Registry backend engineer · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "- Upstream: `qualifier`, `source-health-canary`, `retention-purger`, admin page, client app.\n- Sideways: `poster-resolver` (manual candidates), Supabase Auth, Supabase Vault, n8n (request notifications).\n- Downstream: every consumer of `source.events` listed in section 4.",
+  "reads": "- Topic `registry.decisions`.\n- HTTP: manual-add and request-status endpoints (authenticated through Supabase Auth roles: `ops`, `client_admin`).\n- Tables: `sources`, `client_sources`, `clients` (government flag, roles), `registry_audit`.",
+  "writes_head": "",
+  "ac_count": 10,
+  "words": 2064
+ },
+ "retention-purger": {
+  "path": "shared/retention-purger.md",
+  "header": "**Platform:** Shared · **Route:** shared · **Lane:** Support · **Owner:** Backend lead, compliance and retention · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk (`item_id`, `author_hash`), Redpanda, Supabase Postgres and Vault, ClickHouse, deletion-propagator, x-compliance-sync, yt-text-purger, registry-writer, raw-archiver, aggregator, alert-evaluator, n8n for the deletion channel.",
+  "reads": "`source.events`, `deletions` (X signals), Postgres `retention_classes`, `clients`, `client_sources`, `sources`, `deletion_requests`, `vendor_keys`; ClickHouse `items` and `comments` (select and count only); raw-archiver manifests for the verification step.",
+  "writes_head": "",
+  "ac_count": 10,
+  "words": 2466
+ },
+ "source-health-canary": {
+  "path": "shared/source-health-canary.md",
+  "header": "**Platform:** Shared · **Route:** shared · **Lane:** Support · **Owner:** Platform reliability engineer · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk (canary hook, adapters), registry-writer, quota-governor, n8n, every poller and fetcher (as the routes under test), Supabase Postgres and Vault, Prometheus, Redpanda.",
+  "reads": "`canary_targets`, `sources` (tier, health, route, vendor), `clients` (government flag) through `client_sources`, `budgets` through quota-governor, the platform flags, the SDK's per-call route counters (Prometheus), `source.events` (`added`, `retired`) for target hygiene.",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2236
+ },
+ "store-writer": {
+  "path": "shared/store-writer.md",
+  "header": "**Platform:** Shared · **Route:** shared · **Lane:** Processing · **Owner:** Data engineer (ClickHouse) · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "Redpanda; ClickHouse; Supabase Postgres (`retention_classes`, `deletion_requests`, `sources`, `keywords`, `clients`, `service_runs`, Vault); `listening-sdk`; producers normalize-item, analysis-sentiment, analysis-topics, analysis-media, analysis-entities, keyword-matcher, registry-writer; consumers aggregator, alert-evaluator; deletion-propagator, retention-purger, raw-archiver (replay).",
+  "reads": "- Topics: the six above.\n- Control plane: `retention_classes`, `deletion_requests`, `sources`, `keywords`, `clients`, `service_runs`.",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2493
+ },
+ "tg-bot-channel-receiver": {
+  "path": "telegram/tg-bot-channel-receiver.md",
+  "header": "**Platform:** Telegram · **Route:** green · **Lane:** Fetch posts · **Owner:** Backend lead, Telegram adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, source-health-canary, raw-archiver, normalize-item, poster-resolver, qualifier, registry-writer, tg-discussion-receiver (second step of onboarding), tg-channel-posts-poller (amber gap fill), Supabase Postgres and Vault, Redpanda, a public HTTPS endpoint outside Iraq.",
+  "reads": "Telegram updates; `jobs.tg-bot-channel-receiver` (kind `reconciliation`, `ops_force`); `sources`, `cursors`, `vendor_keys`, `canary_targets`, the onboarding records; `source.events` to refresh the chat map.",
+  "writes_head": "",
+  "ac_count": 10,
+  "words": 2618
+ },
+ "tg-channel-posts-poller": {
+  "path": "telegram/tg-channel-posts-poller.md",
+  "header": "**Platform:** Telegram · **Route:** amber (optional, flag `TG_POSTS_ACTOR`) · **Lane:** Fetch posts · **Owner:** Backend lead, Telegram adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, quota-governor, source-health-canary, raw-archiver, normalize-item, comment-decay-scheduler, backfill-orchestrator, tg-channel-resolver (supplies handles), tg-bot-channel-receiver (push channels), registry-writer, Supabase Postgres and Vault, Redpanda, an Apify contract.",
+  "reads": "`jobs.tg-channel-posts-poller` (kinds `rotation`, `reconciliation`, `backfill`, `metrics`, `ops_force`); `sources`, `cursors`, `clients` (government flag), `vendor_keys`, `budgets` through quota-governor, `canary_targets`; `source.events` to refresh its view of the rotation; the flag `TG_POSTS_ACTOR`.",
+  "writes_head": "",
+  "ac_count": 10,
+  "words": 2972
+ },
+ "tg-channel-resolver": {
+  "path": "telegram/tg-channel-resolver.md",
+  "header": "**Platform:** Telegram · **Route:** amber (optional, flag `TG_VENDOR_ROUTE`) · **Lane:** Discover and qualify · **Owner:** Ingestion lead, Telegram · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "`listening-sdk`; poster-resolver (caller) and qualifier (consumer); registry-writer; lang-dialect-id and normalize-item (language share); quota-governor; source-health-canary; raw-archiver; tg-bot-channel-receiver (resolves bot channels instead); the Telemetrio contract and the author notice required by `vendor_agreed`; the `TG_VENDOR_ROUTE` flag.",
+  "reads": "- Queue: `jobs.tg-channel-resolver`.\n- Topics: `items.normalized` (language share of hit items), `poster.profiles` (cache).\n- Control plane: `sources`, `decisions`, `clients`, `client_sources`, `budgets`, `vendor_keys`, `cursors`.",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2166
+ },
+ "tg-discussion-receiver": {
+  "path": "telegram/tg-discussion-receiver.md",
+  "header": "**Platform:** Telegram · **Route:** green · **Lane:** Comments · **Owner:** Backend lead, Telegram adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, tg-bot-channel-receiver (posts, onboarding step one), comment-decay-scheduler (push row), normalize-item, registry-writer, poster-resolver, qualifier, source-health-canary, raw-archiver, Supabase Postgres and Vault, Redpanda, a public HTTPS endpoint outside Iraq.",
+  "reads": "Telegram updates; `jobs.tg-discussion-receiver` (kinds `reconciliation`, `ops_force`); `sources`, `cursors`, `vendor_keys` (bot token and hashing secret), `canary_targets`; `source.events`; a service-private table `tg_thread_map` (group id, root message id, channel post key), written at step 3 and read at step 4.",
+  "writes_head": "",
+  "ac_count": 10,
+  "words": 2563
+ },
+ "tg-message-search": {
+  "path": "telegram/tg-message-search.md",
+  "header": "**Platform:** Telegram · **Route:** amber (optional, flag `TG_VENDOR_ROUTE`) · **Lane:** Discover and qualify · **Owner:** Ingestion lead, Telegram · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "`listening-sdk`; quota-governor; source-health-canary; poster-resolver and qualifier (consumers of `discovery.hits`); normalize-item, lang-dialect-id, keyword-matcher, raw-archiver (consumers of `raw.items`); registry-writer (keeps `sources` current for step 4); the Telemetrio contract, including the author notice the `vendor_agreed` retention class requires; the `TG_VENDOR_ROUTE` flag.",
+  "reads": "- Queue: `jobs.tg-message-search`.\n- Control plane: `keywords`, `clients`, `client_sources`, `sources`, `decisions`, `cursors`, `budgets`, `vendor_keys`, `canary_targets`.",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2167
+ },
+ "tt-client-videos-fetcher": {
+  "path": "tiktok/tt-client-videos-fetcher.md",
+  "header": "**Platform:** TikTok · **Route:** green · **Lane:** Fetch posts · **Owner:** Ingestion lead (Node) · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, quota-governor, source-health-canary, raw-archiver, normalize-item, store-writer, comment-decay-scheduler, backfill-orchestrator, tt-profile-videos-poller, registry-writer, the client portal (OAuth consent), Supabase Postgres and Vault, Redpanda, and TikTok's approval of our developer app for `user.info.basic` and `video.list`.",
+  "reads": "`jobs.tt-client-videos-fetcher`; `sources`, `cursors`, `clients` (token reference), `tt_client_video_state`, `budgets` through quota-governor; Supabase Vault (tokens, app key and secret); `source.events` (`added`, `retired`) to refresh its view of the rotation.",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2435
+ },
+ "tt-hashtag-feed-poller": {
+  "path": "tiktok/tt-hashtag-feed-poller.md",
+  "header": "**Platform:** TikTok · **Route:** amber (optional, flag `TT_VENDOR_ROUTE`) · **Lane:** Discover and qualify · **Owner:** Ingestion lead (Node) · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk (adapter contract, scheduler helper, rate limiter, idempotency); quota-governor; source-health-canary; normalize-item and keyword-matcher downstream; poster-resolver, tt-user-resolver and qualifier; comment-decay-scheduler; raw-archiver; Redpanda; Supabase and Vault; TikHub and EnsembleData contracts.",
+  "reads": "`sources`, `clients` (government flag), `cursors`, `vendor_keys`, `canary_targets` and route health, `budgets` through quota-governor; the queue `jobs.tt-hashtag-feed-poller`; the flag `TT_VENDOR_ROUTE` (off, tikhub, ensembledata); `raw.items` history only to learn hashtag ids.",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2580
+ },
+ "tt-keyword-search": {
+  "path": "tiktok/tt-keyword-search.md",
+  "header": "**Platform:** TikTok · **Route:** amber (optional, flag `TT_VENDOR_ROUTE`) · **Lane:** Discover and qualify · **Owner:** Ingestion lead (Node) · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk (adapter contract, scheduler helper, rate limiter, idempotency); quota-governor; source-health-canary; normalize-item and keyword-matcher downstream; poster-resolver, tt-user-resolver and qualifier for the discovery loop; raw-archiver; Redpanda; Supabase and Vault; TikHub and EnsembleData contracts.",
+  "reads": "`sources`, `keywords`, `clients` (government flag), `cursors`, `vendor_keys`, `canary_targets` and route health, `budgets` through quota-governor; the queue `jobs.tt-keyword-search`; the flag `TT_VENDOR_ROUTE` (off, tikhub, ensembledata).",
+  "writes_head": "",
+  "ac_count": 10,
+  "words": 2185
+ },
+ "tt-profile-videos-poller": {
+  "path": "tiktok/tt-profile-videos-poller.md",
+  "header": "**Platform:** TikTok · **Route:** amber (optional, flag `TT_VENDOR_ROUTE`) · **Lane:** Fetch posts · **Owner:** Ingestion lead (Node) · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, quota-governor, source-health-canary, raw-archiver, normalize-item, comment-decay-scheduler, tt-video-comments-fetcher, tt-video-stats-refresher, backfill-orchestrator, tt-client-videos-fetcher, qualifier and registry-writer, Supabase Postgres and Vault, Redpanda, TikHub and EnsembleData contracts.",
+  "reads": "`jobs.tt-profile-videos-poller`; `sources`, `cursors`, `clients` (government flag, contract terms), `vendor_keys`, route health and `canary_targets`, `budgets` through quota-governor; the flag `TT_VENDOR_ROUTE`; `source.events` (`added`, `tier change`, `retired`, `fallback_on`, `fallback_off`) to refresh its view of the rotation.",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2503
+ },
+ "tt-user-resolver": {
+  "path": "tiktok/tt-user-resolver.md",
+  "header": "**Platform:** TikTok · **Route:** amber (optional, flag `TT_VENDOR_ROUTE`) · **Lane:** Discover and qualify · **Owner:** Ingestion lead (Node) · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, poster-resolver, qualifier, registry-writer, backfill-orchestrator, tt-profile-videos-poller, tt-keyword-search, tt-hashtag-feed-poller, quota-governor, source-health-canary, Supabase Postgres and Vault, Redpanda, TikHub and EnsembleData contracts.",
+  "reads": "`jobs.tt-user-resolver`; `tt_user_cache`; `sources` (skip a candidate that is already registered), `clients` (government flag), `vendor_keys`, route health, `budgets` through quota-governor; the flag `TT_VENDOR_ROUTE`.",
+  "writes_head": "",
+  "ac_count": 10,
+  "words": 2129
+ },
+ "tt-video-comments-fetcher": {
+  "path": "tiktok/tt-video-comments-fetcher.md",
+  "header": "**Platform:** TikTok · **Route:** amber (optional, flag `TT_VENDOR_ROUTE`) · **Lane:** Comments · **Owner:** Ingestion lead (Node) · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, comment-decay-scheduler, quota-governor, source-health-canary, raw-archiver, normalize-item, tt-profile-videos-poller, tt-keyword-search, tt-hashtag-feed-poller, tt-video-stats-refresher, analysis-sentiment, Supabase Postgres and Vault, ClickHouse (read-only), Redpanda, TikHub and EnsembleData contracts.",
+  "reads": "`jobs.tt-video-comments-fetcher`; the service's own `tt_comment_state` table; ClickHouse `comments` (read-only, stored content hashes for the ids on a page); `sources` (registered creators, for `author_source_id`), `clients` (government flag), `vendor_keys`, route health, `budgets` through quota-governor; the flag `TT_VENDOR_ROUTE`.",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2439
+ },
+ "tt-video-stats-refresher": {
+  "path": "tiktok/tt-video-stats-refresher.md",
+  "header": "**Platform:** TikTok · **Route:** amber (optional, flag `TT_VENDOR_ROUTE`) · **Lane:** Comments and stats · **Owner:** Ingestion lead (Node) · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, comment-decay-scheduler, quota-governor, source-health-canary, normalize-item, store-writer, deletion-propagator, tt-profile-videos-poller, tt-keyword-search, tt-hashtag-feed-poller, tt-video-comments-fetcher, Supabase Vault, ClickHouse (read-only), Redpanda, TikHub and EnsembleData contracts.",
+  "reads": "`jobs.tt-video-stats-refresher`; ClickHouse `metrics_timeseries` (read-only, first-sight point); `sources` (route, vendor), `clients` (government flag), `vendor_keys`, route health, `budgets` through quota-governor; the flag `TT_VENDOR_ROUTE`.",
+  "writes_head": "",
+  "ac_count": 10,
+  "words": 2018
+ },
+ "search-hit-router": {
+  "path": "web/search-hit-router.md",
+  "header": "**Platform:** Web · **Route:** green · **Lane:** Discover and qualify · **Owner:** Backend engineer (Node), discovery lane · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "`listening-sdk`, web-search-perplexity, web-search-mojeek, web-gdelt-poller, yt-web-search-bridge, poster-resolver, news-site-resolver, news-article-extractor, registry-writer (through `source.events`), qualifier, source-health-canary, Redpanda, Supabase Postgres.",
+  "reads": "`search.results`; `source.events`; `sources` (registered news domains; registered handles and ids by platform); the service-private tables of 6.3; the shared canonicaliser and classifier in `listening-sdk`.",
+  "writes_head": "",
+  "ac_count": 10,
+  "words": 2379
+ },
+ "web-commoncrawl-scanner": {
+  "path": "web/web-commoncrawl-scanner.md",
+  "header": "**Platform:** Web · **Route:** green · **Lane:** Discover and qualify · **Owner:** Backend engineer (Node), discovery lane · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "`listening-sdk`, poster-resolver, news-site-resolver (through poster-resolver), qualifier, registry-writer, source-health-canary, Redpanda, Supabase Postgres, object storage, Common Crawl's public index.",
+  "reads": "The published-crawl list and the index of the latest crawl; `sources` (news site rows, all tiers); `service_runs`; the service-private table `cc_hosts_seen` (host, first and last emitted, captures at emission, state `emitted`, `pending` or `suppressed`).",
+  "writes_head": "",
+  "ac_count": 10,
+  "words": 2332
+ },
+ "web-gdelt-poller": {
+  "path": "web/web-gdelt-poller.md",
+  "header": "**Platform:** Web · **Route:** green · **Lane:** Discover and qualify · **Owner:** Backend engineer (Node), discovery lane · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "`listening-sdk`, quota-governor, raw-archiver, search-hit-router (downstream), registry-writer (keyword-rule rows), source-health-canary, web-search-perplexity and web-search-mojeek (parallel engines), news-article-extractor (through `article.urls`), Redpanda, Supabase Postgres.",
+  "reads": "- Queue `jobs.web-gdelt-poller` (kind `rotation`).\n- Control plane: `sources`, `keywords`, `cursors`, `budgets` through quota-governor, `canary_targets`, `service_runs`.",
+  "writes_head": "",
+  "ac_count": 10,
+  "words": 2506
+ },
+ "web-search-mojeek": {
+  "path": "web/web-search-mojeek.md",
+  "header": "**Platform:** Web · **Route:** green · **Lane:** Discover and qualify · **Owner:** Backend engineer (Node), discovery lane · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "`listening-sdk`, quota-governor, raw-archiver, search-hit-router (downstream), registry-writer (keyword-rule rows), source-health-canary, web-search-perplexity (parallel engine), web-gdelt-poller (complement), Redpanda, Supabase Postgres and Vault, a Mojeek Business-plan contract.",
+  "reads": "- Queue `jobs.web-search-mojeek` (kind `rotation`).\n- Control plane: `sources`, `keywords`, `clients`, `cursors`, `budgets` through quota-governor, `vendor_keys` (key and plan), `canary_targets`, `service_runs`.",
+  "writes_head": "",
+  "ac_count": 10,
+  "words": 2470
+ },
+ "web-search-perplexity": {
+  "path": "web/web-search-perplexity.md",
+  "header": "**Platform:** Web · **Route:** green · **Lane:** Discover and qualify · **Owner:** Backend engineer (Node), discovery lane · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "`listening-sdk`, quota-governor, raw-archiver, search-hit-router (downstream), registry-writer (keyword-rule rows), source-health-canary, web-search-mojeek (parallel engine), yt-web-search-bridge, Redpanda, Supabase Postgres and Vault, the Perplexity Search API contract and export-screening clearance.",
+  "reads": "- Queue `jobs.web-search-perplexity` (kinds `rotation`, `site_search`).\n- Control plane: `sources`, `keywords`, `clients` (opt-out, government flag), `cursors`, `budgets` through quota-governor, `vendor_keys`, `canary_targets`, `service_runs`.",
+  "writes_head": "",
+  "ac_count": 10,
+  "words": 2750
+ },
+ "x-compliance-sync": {
+  "path": "x/x-compliance-sync.md",
+  "header": "**Platform:** X · **Route:** green · **Lane:** Support · **Owner:** Backend lead, compliance and retention · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "- X API v2 batch compliance on the company app (pay-per-use; Enterprise once a government end user is on board).\n- listening-sdk (`author_hash`, canary hook), Redpanda, Supabase Postgres and Vault, ClickHouse, and n8n for exports.\n- Services: raw-archiver, store-writer, deletion-propagator (needs mode `withhold` and scope `author` with `user_ids`), retention-purger, aggregator, source-health-canary, and quota-governor if metered.",
+  "reads": "ClickHouse `items` and `comments` (distinct ids, counts, `retention_class`); raw-archiver's archive index; Postgres `sources`, `client_sources`, `deletion_requests`; `jobs.x-compliance-sync`; Supabase Vault (X app token, `AUTHOR_HASH_KEY`); quota-governor only if metered.",
+  "writes_head": "",
+  "ac_count": 13,
+  "words": 2955
+ },
+ "x-filtered-stream": {
+  "path": "x/x-filtered-stream.md",
+  "header": "**Platform:** X · **Route:** green · **Lane:** Fetch posts · **Owner:** Backend lead, X adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, quota-governor (read ledger defined by x-recent-search), x-user-timeline-poller, x-recent-search, x-full-archive-search, x-user-resolver (handles), backfill-orchestrator, registry-writer, keyword-matcher, normalize-item, comment-decay-scheduler, x-replies-fetcher, x-compliance-sync, source-health-canary, raw-archiver; Supabase Postgres and Vault, Redpanda, a persistent volume; an X pay-per-use developer app.",
+  "reads": "The stream; `source.events`; `sources`, `keywords`, `client_sources`, `clients` (X Enterprise entitlement), the blocked-terms list, own `cursors` and `service_runs` rows; `jobs.completed` (own gap jobs); quota-governor mode and ledger.",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2657
+ },
+ "x-full-archive-search": {
+  "path": "x/x-full-archive-search.md",
+  "header": "**Platform:** X · **Route:** green · **Lane:** Fetch posts · **Owner:** Backend lead, X adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, quota-governor (allowance and the read ledger defined by x-recent-search), backfill-orchestrator, x-user-timeline-poller, x-recent-search, x-filtered-stream, x-replies-fetcher, x-user-resolver, comment-decay-scheduler, normalize-item, raw-archiver, source-health-canary, x-compliance-sync, Supabase Postgres and Vault, Redpanda; an X pay-per-use developer app.",
+  "reads": "`jobs.x-full-archive-search`; `sources`, `cursors` (own progress rows and x-user-timeline-poller's row), `keywords`, `clients` (X Enterprise entitlement), `budgets` (per-job caps; counters and the read ledger through quota-governor); x-user-resolver's last profile; x-recent-search's `jobs.completed` reports.",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2517
+ },
+ "x-recent-search": {
+  "path": "x/x-recent-search.md",
+  "header": "**Platform:** X · **Route:** green · **Lane:** Discover and qualify · **Owner:** Backend lead, X adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, quota-governor (budget and the read ledger), source-health-canary, raw-archiver, normalize-item, lang-dialect-id, keyword-matcher, poster-resolver, qualifier, registry-writer, backfill-orchestrator, x-full-archive-search, x-filtered-stream, Supabase Postgres and Vault, Redpanda. X prerequisites: the company app on pay-per-use with a completed use-case review; Enterprise before any government end user.",
+  "reads": "- Control plane: `sources` (keyword rules and the `platform_id` index of registered X accounts), `keywords`, `clients`, `cursors`, `budgets` through quota-governor.\n- Queue `jobs.x-recent-search`; topic `source.events` (`added`, `tier change`, `retired`).",
+  "writes_head": "",
+  "ac_count": 10,
+  "words": 2342
+ },
+ "x-replies-fetcher": {
+  "path": "x/x-replies-fetcher.md",
+  "header": "**Platform:** X · **Route:** green · **Lane:** Comments · **Owner:** Backend lead, X adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk (job wrapper, idempotency, quota and canary hooks), comment-decay-scheduler, quota-governor (budget and read ledger), source-health-canary, raw-archiver, normalize-item, keyword-matcher, store-writer, deletion-propagator, x-compliance-sync; upstream x-user-timeline-poller, x-filtered-stream, x-recent-search; x-full-archive-search for older replies; Supabase Postgres and Vault; Redpanda. X prerequisites: the company developer app on pay-per-use with a bearer token; Enterprise, with end users named at use-case review, before any government client or several clients.",
+  "reads": "`jobs.x-replies-fetcher`; `sources`, `clients`, `cursors`; `budgets` and the read ledger through quota-governor; `health` through the SDK canary hook; the reply index; the bearer token and author-hash key from Supabase Vault.",
+  "writes_head": "",
+  "ac_count": 12,
+  "words": 2817
+ },
+ "x-user-resolver": {
+  "path": "x/x-user-resolver.md",
+  "header": "**Platform:** X · **Route:** green · **Lane:** Discover and qualify · **Owner:** Backend lead, X adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, poster-resolver, qualifier, registry-writer, quota-governor, source-health-canary, x-recent-search, x-filtered-stream and x-full-archive-search (candidate origins), x-user-timeline-poller, x-compliance-sync, Supabase Postgres and Vault, Redpanda. X prerequisites: the company app on pay-per-use with its bearer token; Enterprise, with the end user named at use-case review, before any government client or multi-client use.",
+  "reads": "`jobs.x-user-resolver`; `deletions` for X users (from x-compliance-sync); `profile_cache`, `sources`, `clients`, client watchlists, `budgets` through quota-governor, `health` through the SDK canary hook; `source.events` (`added`, `tier change`, `retired`).",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2197
+ },
+ "x-user-timeline-poller": {
+  "path": "x/x-user-timeline-poller.md",
+  "header": "**Platform:** X · **Route:** green · **Lane:** Fetch posts · **Owner:** Backend lead, X adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, quota-governor (allowance and the read ledger defined by x-recent-search), x-filtered-stream, backfill-orchestrator, x-full-archive-search, x-user-resolver, comment-decay-scheduler, x-replies-fetcher, normalize-item, x-compliance-sync, source-health-canary, raw-archiver, registry-writer, Supabase Postgres and Vault, Redpanda; an X pay-per-use developer app.",
+  "reads": "`jobs.x-user-timeline-poller`; `sources`, `cursors` (own rows and x-filtered-stream's coverage rows), `clients` (X Enterprise entitlement), `service_runs` (stream state); `budgets` and the read ledger through quota-governor; `source.events` (`added`, `tier change`, `dormant`, `retired`).",
+  "writes_head": "",
+  "ac_count": 10,
+  "words": 2330
+ },
+ "yt-channel-resolver": {
+  "path": "youtube/yt-channel-resolver.md",
+  "header": "**Platform:** YouTube · **Route:** green · **Lane:** Discover and qualify · **Owner:** Backend lead, YouTube adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, poster-resolver, qualifier, registry-writer, quota-governor, source-health-canary; yt-keyword-search, yt-web-search-bridge and search-hit-router (candidate origins, through poster-resolver); yt-uploads-reconciler, yt-pubsub-receiver and backfill-orchestrator (users of the ids, through the registry); Supabase Postgres and Vault; Redpanda. Google: the company app's Cloud project with YouTube Data API v3 enabled, an API key, and compliance with the Developer Policies (audit at any time).",
+  "reads": "`jobs.yt-channel-resolver`; `profile_cache`, `sources`, `budgets` through quota-governor, `health` through the SDK canary hook; the API key in Supabase Vault; `source.events` (`added`, `tier change`, `retired`).",
+  "writes_head": "",
+  "ac_count": 12,
+  "words": 2568
+ },
+ "yt-comments-fetcher": {
+  "path": "youtube/yt-comments-fetcher.md",
+  "header": "**Platform:** YouTube · **Route:** green · **Lane:** Comments · **Owner:** Backend lead, YouTube adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk (job wrapper, idempotency, quota and canary hooks), comment-decay-scheduler, quota-governor, source-health-canary, raw-archiver, normalize-item, store-writer, deletion-propagator, retention-purger, yt-text-purger, yt-replies-fetcher; upstream yt-pubsub-receiver, yt-uploads-reconciler, yt-keyword-search, yt-video-details-fetcher; Supabase Postgres and Vault; Redpanda. YouTube prerequisites: the company Google Cloud project with YouTube Data API v3 and an API key, Developer Policies compliance as an Analytics & Reporting client, the audit for a quota extension.",
+  "reads": "`jobs.yt-comments-fetcher`; `sources`, `cursors`, `budgets` through quota-governor, `health` through the SDK canary hook; the comment index; the API key and author-hash key from Supabase Vault.",
+  "writes_head": "",
+  "ac_count": 12,
+  "words": 2830
+ },
+ "yt-keyword-search": {
+  "path": "youtube/yt-keyword-search.md",
+  "header": "**Platform:** YouTube · **Route:** green · **Lane:** Discover and qualify · **Owner:** YouTube lane backend engineer (Node/TypeScript) · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "quota-governor, normalize-item, keyword-matcher, poster-resolver and yt-channel-resolver, qualifier and registry-writer, yt-video-details-fetcher, source-health-canary, raw-archiver, the `listening-sdk` (adapter contract, envelope, governor client), Supabase Vault, Redpanda.",
+  "reads": "- Control plane: `sources` (keyword rules), `keywords` (terms, variants, language, `client_ids`), `cursors` (rule × `yt-keyword-search`), `budgets` through quota-governor, the API key through Supabase Vault. No topics are consumed.",
+  "writes_head": "",
+  "ac_count": 9,
+  "words": 2163
+ },
+ "yt-pubsub-receiver": {
+  "path": "youtube/yt-pubsub-receiver.md",
+  "header": "**Platform:** YouTube · **Route:** green · **Lane:** Fetch posts · **Owner:** Backend lead, YouTube adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk; the hub; public ingress with TLS; Redpanda; Supabase Postgres and Vault; yt-channel-resolver (supplies the channel id the topic needs), yt-uploads-reconciler, yt-video-details-fetcher, yt-comments-fetcher, backfill-orchestrator, comment-decay-scheduler, normalize-item, registry-writer, source-health-canary, raw-archiver, deletion-propagator.",
+  "reads": "The hub's requests; `jobs.yt-pubsub-receiver`; `source.events`; `sources` (`platform_id`, `tier`, `followers`, `backfill_status`, `client_ids`, `retention_class`); `cursors`; `yt_subscriptions`; the seen ledger; Supabase Vault (hub secrets, if signing is confirmed).",
+  "writes_head": "",
+  "ac_count": 12,
+  "words": 2173
+ },
+ "yt-replies-fetcher": {
+  "path": "youtube/yt-replies-fetcher.md",
+  "header": "**Platform:** YouTube · **Route:** green · **Lane:** Comments · **Owner:** Backend lead, YouTube adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, comment-decay-scheduler, yt-comments-fetcher (`reply_candidates`, comment index), quota-governor, source-health-canary, raw-archiver, normalize-item, store-writer, deletion-propagator, retention-purger, yt-text-purger; Supabase Postgres and Vault; Redpanda; the company Google Cloud project and API key.",
+  "reads": "`jobs.yt-replies-fetcher`; `sources`, `cursors`, `budgets` through quota-governor, `health` through the SDK canary hook; the reply index; yt-comments-fetcher's comment index, read only; the API key and author-hash key from Supabase Vault.",
+  "writes_head": "",
+  "ac_count": 12,
+  "words": 2372
+ },
+ "yt-text-purger": {
+  "path": "youtube/yt-text-purger.md",
+  "header": "**Platform:** YouTube · **Route:** green · **Lane:** Support · **Owner:** Backend lead, compliance and retention · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "- Infrastructure: listening-sdk, Redpanda, Supabase Postgres and ClickHouse.\n- Retention chain: retention-purger and deletion-propagator.\n- Storage: raw-archiver, store-writer and aggregator. Aggregator builds from derived scores only, so purges leave aggregates unchanged.\n- YouTube fetchers: yt-comments-fetcher, yt-replies-fetcher and yt-video-details-fetcher.\n- Scheduling and control: comment-decay-scheduler, quota-governor, source-health-canary and alert-evaluator.",
+  "reads": "- Topics: `jobs.yt-text-purger` and `registry.decisions` (`remove_client`).\n- Postgres: `clients`, `client_sources`, `sources` (`tier`, `health`), `deletion_requests` and `retention_classes`.\n- ClickHouse: `items`, `comments` and `analysis` (select and count only).\n- Other: quota-governor answers and raw-archiver manifests.",
+  "writes_head": "",
+  "ac_count": 12,
+  "words": 2838
+ },
+ "yt-uploads-reconciler": {
+  "path": "youtube/yt-uploads-reconciler.md",
+  "header": "**Platform:** YouTube · **Route:** green · **Lane:** Fetch posts · **Owner:** Backend lead, YouTube adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk, quota-governor, yt-channel-resolver, yt-pubsub-receiver, backfill-orchestrator, yt-video-details-fetcher, normalize-item, comment-decay-scheduler, yt-comments-fetcher, source-health-canary, raw-archiver, registry-writer, Supabase Postgres and Vault, Redpanda; a YouTube Data API v3 project on the company app.",
+  "reads": "`jobs.yt-uploads-reconciler`; `source.events` (`added`, `updated` including `push_lease_lapsed`, `tier change`, `dormant`, `retired`); `sources` (with the uploads playlist id), `cursors`, `budgets` through quota-governor, `health` through the SDK canary hook; the key from Supabase Vault.",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2661
+ },
+ "yt-video-details-fetcher": {
+  "path": "youtube/yt-video-details-fetcher.md",
+  "header": "**Platform:** YouTube · **Route:** green · **Lane:** Fetch posts · **Owner:** Backend lead, YouTube adapters · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "listening-sdk; the id producers (yt-pubsub-receiver, yt-uploads-reconciler, yt-keyword-search, yt-web-search-bridge); comment-decay-scheduler; yt-comments-fetcher (same daily quota); normalize-item, store-writer, aggregator, quota-governor, source-health-canary, raw-archiver, deletion-propagator; Supabase Postgres and Vault, Redpanda, ClickHouse. Google: a Cloud project with YouTube Data API v3 and an API key.",
+  "reads": "`jobs.yt-video-details-fetcher` (`job_id`, `source_id`, `kind`, `post_ref` = video id, `due_at`, `attempt`, `series_step`); `sources` (`tier`, `retention_class`); `budgets` through quota-governor; the API key from Supabase Vault; `yt_live_watch`.",
+  "writes_head": "",
+  "ac_count": 11,
+  "words": 2203
+ },
+ "yt-web-search-bridge": {
+  "path": "youtube/yt-web-search-bridge.md",
+  "header": "**Platform:** YouTube · **Route:** green · **Lane:** Discover and qualify · **Owner:** Discovery engineer, web-search lane (Node/TypeScript) · **Status:** Draft v1, 6 Oct 2026",
+  "deps": "web-search-perplexity and web-search-mojeek (shared vendor clients, keys, budget tags), quota-governor, yt-video-details-fetcher, yt-channel-resolver, search-hit-router, normalize-item, keyword-matcher, poster-resolver, qualifier, raw-archiver, source-health-canary, `listening-sdk`, Supabase Vault, Redpanda.",
+  "reads": "- Control plane: `sources` (long-tail keyword rules), `keywords`, `clients` (engine permissions), `cursors` (rule × `yt-web-search-bridge`), `budgets` through quota-governor, `vendor_keys` through Supabase Vault. No topics are consumed.",
+  "writes_head": "",
+  "ac_count": 9,
+  "words": 2416
+ }
+}
