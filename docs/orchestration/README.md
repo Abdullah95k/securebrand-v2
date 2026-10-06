@@ -5,7 +5,7 @@ The build plan in `build-plan/` is run by one orchestrator Claude Code session i
 ## Rules the user set
 
 - One worker session works on one session ID only (one service, package, gate or decision), never two.
-- Every worker runs on the most capable model available (Claude Fable 5.1) at maximum effort. The kit's skills declare `effort: max`.
+- Every worker runs on Claude Opus 5.5 (`claude-opus-5-5`) at maximum effort. The kit's skills declare `effort: max`, and the `prd-reviewer` subagent runs on Opus. (The user moved the build off Claude Fable 5.1 on 2026-10-06 to save Fable credit.)
 - The orchestrator approves build plans, after checking each one against its brief, PRD, ADRs and handoffs. Questions the documents do not settle go to the user through the orchestrator, in batches.
 - The orchestrator merges foundation, core, service, app and gate lanes once their gates are met. The user reads and merges the decision lanes (D1, D2, D3) and every contract-change pull request.
 
