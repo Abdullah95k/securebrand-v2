@@ -1,12 +1,13 @@
-// Acceptance tests for the local stack (A1, A2, A3, A20 and the namespace collision row of the
-// plan). They drive `make up`, `make down` and `make ns-clean` against Docker on this machine and
-// talk to localhost only. The order matters: the last test leaves the stack up for the CI steps
+// Acceptance tests for the local stack (A1, A2, A3, A20, the namespace collision row of the plan,
+// and a make up from a second worktree). They drive `make up`, `make down` and `make ns-clean`
+// against Docker on this machine and talk to localhost only. The order matters: the last test leaves the stack up for the CI steps
 // that follow.
 //
 // The make down test (A2) wipes every container and volume of the one stack that all worktrees
 // share, so it runs only when TEST_STACK_RESET=1: CI's check job sets it; on a workstation, set it
 // only when no other worktree is running its tests.
 import { randomBytes } from "node:crypto";
+import { isDeepStrictEqual } from "node:util";
 import { describe, expect, it } from "vitest";
 import {
   bucketExists,
@@ -28,6 +29,7 @@ import {
   stackVolumes,
   supabaseStatus,
 } from "../helpers/stack.js";
+import { copyWorkingTree } from "../helpers/worktree-copy.js";
 
 const MINUTES = 60_000;
 const suffix = (): string => randomBytes(4).toString("hex");
@@ -102,6 +104,26 @@ describe("local stack (make up, make down, make ns-clean)", () => {
       const second = make(["up"]);
       expect(second.code, second.output).toBe(0);
       expect(stackContainers()).toEqual(before);
+    },
+    20 * MINUTES,
+  );
+
+  it(
+    "a make up from another worktree of the repository changes nothing",
+    () => {
+      const before = stackContainers();
+      const other = copyWorkingTree();
+      try {
+        const up = other.run("make", ["--no-print-directory", "up"]);
+        expect(up.code, up.output).toBe(0);
+        expect(stackContainers()).toEqual(before);
+      } finally {
+        other.cleanup();
+        // Whatever the other worktree recreated must not keep files of a deleted directory.
+        if (!isDeepStrictEqual(stackContainers(), before)) {
+          make(["up"]);
+        }
+      }
     },
     20 * MINUTES,
   );

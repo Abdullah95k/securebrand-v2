@@ -6,6 +6,68 @@
 # localhost only; stack/README.md lists them with the variables scripts/stack-env.sh prints.
 name: securebrand
 
+# The configuration files of ClickHouse and SeaweedFS, which compose writes into their containers
+# when it creates them. They live here rather than in bind-mounted files: a bind mount names a path
+# inside one worktree, so a make up from another worktree would change the service and recreate
+# its container under every other worktree's tests. Compose recreates a container when its service
+# changes, not when only a config's content does, so each service also carries the content of its
+# configs in a label (the aliases below). Compose interpolates the content: write a $ as $$.
+configs:
+  # Local development settings: quiet logs, a modest memory cap, no system log tables that only
+  # churn the disk. Production settings belong to I1.
+  clickhouse-local:
+    content: &clickhouse-local |
+      <clickhouse>
+        <logger>
+          <level>warning</level>
+          <console>1</console>
+        </logger>
+        <max_server_memory_usage_to_ram_ratio>0.5</max_server_memory_usage_to_ram_ratio>
+        <trace_log remove="1"/>
+        <text_log remove="1"/>
+        <metric_log remove="1"/>
+        <asynchronous_metric_log remove="1"/>
+        <processors_profile_log remove="1"/>
+        <part_log remove="1"/>
+        <latency_log remove="1"/>
+        <error_log remove="1"/>
+        <query_metric_log remove="1"/>
+      </clickhouse>
+  # The local stack's ClickHouse user; the values match stack/local.env (development only).
+  clickhouse-users:
+    content: &clickhouse-users |
+      <clickhouse>
+        <users>
+          <listening>
+            <password>listening-dev-only</password>
+            <networks>
+              <ip>::/0</ip>
+            </networks>
+            <profile>default</profile>
+            <quota>default</quota>
+            <access_management>1</access_management>
+            <named_collection_control>1</named_collection_control>
+          </listening>
+        </users>
+      </clickhouse>
+  # The local S3 identity; the values match stack/local.env (development only).
+  seaweedfs-s3:
+    content: &seaweedfs-s3 |
+      {
+        "identities": [
+          {
+            "name": "listening",
+            "credentials": [
+              {
+                "accessKey": "listening-local",
+                "secretKey": "listening-dev-only"
+              }
+            ],
+            "actions": ["Admin", "Read", "Write", "List", "Tagging"]
+          }
+        ]
+      }
+
 services:
   redpanda:
     image: ${REDPANDA_REPO}:${REDPANDA_TAG}
@@ -46,8 +108,14 @@ services:
       - 127.0.0.1:9000:9000
     volumes:
       - clickhouse-data:/var/lib/clickhouse
-      - ./stack/clickhouse/config.d/local.xml:/etc/clickhouse-server/config.d/local.xml:ro
-      - ./stack/clickhouse/users.d/listening.xml:/etc/clickhouse-server/users.d/listening.xml:ro
+    configs:
+      - source: clickhouse-local
+        target: /etc/clickhouse-server/config.d/local.xml
+      - source: clickhouse-users
+        target: /etc/clickhouse-server/users.d/listening.xml
+    labels:
+      securebrand.config.clickhouse-local: *clickhouse-local
+      securebrand.config.clickhouse-users: *clickhouse-users
     healthcheck:
       test: ["CMD", "clickhouse-client", "--query", "SELECT 1"]
       interval: 2s
@@ -77,7 +145,11 @@ services:
       - 127.0.0.1:8888:8888
     volumes:
       - seaweedfs-data:/data
-      - ./stack/seaweedfs/s3.json:/etc/seaweedfs/s3.json:ro
+    configs:
+      - source: seaweedfs-s3
+        target: /etc/seaweedfs/s3.json
+    labels:
+      securebrand.config.seaweedfs-s3: *seaweedfs-s3
     healthcheck:
       test:
         [

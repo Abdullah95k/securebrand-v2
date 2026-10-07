@@ -2,10 +2,12 @@
 
 One stack per machine, shared by every worktree: Redpanda, ClickHouse and SeaweedFS (local S3)
 from `compose.yaml`, and Supabase (Postgres, auth, REST, the Kong gateway) from the Supabase CLI
-with `supabase/config.toml`.
+with `supabase/config.toml`. `compose.yaml` holds the services' configuration files itself (its
+`configs`) and mounts no file of the checkout, so a `make up` from any worktree leaves a running
+stack as it is.
 
 ```bash
-make up                        # start it and wait until every service answers; a second run changes nothing
+make up                        # start it and wait until every service answers; a second run, from any worktree, changes nothing
 eval "$(scripts/stack-env.sh)" # the connection variables below, in your shell
 make smoke                     # one round trip through every service
 make ps                        # containers and Supabase's status
@@ -36,9 +38,9 @@ services read only them.
 | Supabase Postgres           | 54322                            | `SUPABASE_DB_URL`                                                                                                               |
 
 The ClickHouse and S3 credentials are fixed development values in `stack/local.env` (matching
-`clickhouse/users.d/listening.xml` and `seaweedfs/s3.json`); they work on localhost only and guard
-nothing. Supabase's URL and keys are read live from `supabase status` and never written to a file.
-`make up` creates the `listening-local` bucket.
+the `clickhouse-users` and `seaweedfs-s3` configs in `compose.yaml`); they work on localhost only
+and guard nothing. Supabase's URL and keys are read live from `supabase status` and never written
+to a file. `make up` creates the `listening-local` bucket.
 
 ## Test namespaces
 
