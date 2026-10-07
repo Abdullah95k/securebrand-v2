@@ -115,7 +115,7 @@ Entries CF-001 to CF-118 are in this file; AU-001 to AU-113 (contradictions foun
 | [CF-094](#cf-094) | A platform 401 or 403 (README decision 5): `degraded` in CONVENTIONS and most fetchers, `blocked` in the README and the canary; and what carries the state (token, key, route, page or source) | enum, rule, document | F3, F4, F5, C7, C12, and every green fetcher (named here: TT1, LI1,... |
 | [CF-095](#cf-095) | `tier`: numbers or words, and what it means on keyword rules, hashtags and news sites, whose cadences are not the reach tiers' | enum, types, rule, document | F3, F5, C1, C7, C9, W1, W2, W4, N2, N3, N4, N5, X1, YT8, YT9, IG2, ... |
 | [CF-096](#cf-096) | `tier = push` (README decision 8): "no polling and one reconciliation a day" for client-owned properties, against hourly TikTok reads, Telegram health checks, LinkedIn polling, every YouTube channel and X coverage kept beside the tier | enum, rule, document | F3, F5, C1, C7, C9, TT1, VTT4, TG1, TG2, LI1, LI3, YT2, YT3, FB2, F... |
-| [CF-097](#cf-097) | Vendor names: flag values, `sources.vendor` values and envelope values spelled three ways, search engines in `vendor` on green records, a source row naming the wrong vendor, and Actor publishers outside the cleared list | enum, names, document | F2, F3, F4, C7, C12, VTG2, VTG3, VLI1, VLI2, VLI3, VLI4, W1, W2, W4... |
+| [CF-097](#cf-097) | Vendor names: flag values, `sources.vendor` values and envelope values spelled three ways, search engines in `vendor` on green records, a source row's vendor differing from the vendor that reads its posts, and Actor publishers outside the cleared list | enum, names, document | F2, F3, F4, C7, C12, VTG2, VTG3, VLI1, VLI2, VLI3, VLI4, W1, W2, W4... |
 | [CF-098](#cf-098) | `source.events` event types: `tier change` or `tier_change`, a `route` event and a lease-lapse reason nobody emits, and no event for `blocked` | enum, names | F2, C7, C12, LI1, YT2, YT3, IG2, IG3, FB2, N3, TG1, and every `sour... |
 | [CF-099](#cf-099) | Budget tags: names outside the canonical list, wildcard rows in quota-governor, and external calls that ask the governor for nothing | budget, names, rule | F3, F5, C1, IG2, A1, A2, A3, A4, W5, TG1, TG2, YT2, X7, VLI2, YT4, ... |
 | [CF-100](#cf-100) | Budget priorities (README decision 2): client refreshes at 1 or 3, first sight at 1 for every tier, a priority-1 history read, and priorities sent by callers | budget, enum, document | F5, C1, C11, YT4, YT5, YT6, YT7, YT8, X4, X5, X6, VTT3, VTG2, FB6 |
@@ -1621,7 +1621,7 @@ Entries CF-001 to CF-118 are in this file; AU-001 to AU-113 (contradictions foun
 
 #### CF-097
 
-**Vendor names: flag values, `sources.vendor` values and envelope values spelled three ways, search engines in `vendor` on green records, a source row naming the wrong vendor, and Actor publishers outside the cleared list**
+**Vendor names: flag values, `sources.vendor` values and envelope values spelled three ways, search engines in `vendor` on green records, a source row's vendor differing from the vendor that reads its posts, and Actor publishers outside the cleared list**
 
 - **Type:** enum, names, document
 - **Where:**
