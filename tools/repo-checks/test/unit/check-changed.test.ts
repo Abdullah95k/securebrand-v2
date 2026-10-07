@@ -81,6 +81,8 @@ function buildWorkspace(repo: TempRepo): void {
     )
     .write("tools/probes/news/uv.lock", "version = 1\n")
     .write("tools/probes/news/scrub.py", "X = 1\n")
+    .write("fixtures/news/README.md", "# News\n\n- `article.html`: an article page (synthetic)\n")
+    .write("fixtures/news/article.html", "<html><body>article</body></html>\n")
     .write("docs/notes.md", "# Notes\n")
     .write("Makefile", "check:\n\t@true\n");
 }
@@ -215,6 +217,35 @@ describe("scripts/check-changed.sh", () => {
     repo.write("tools/probes/meta/scrub.test.js", "// scrubbing test, changed\n");
     repo.write("tests/e2e/G1/suite.js", "// suite, changed\n");
     expect(plan().ts).toEqual(["e2e-g1", "probe-meta"]);
+  });
+
+  it.each([
+    ["re-recorded", (r: TempRepo) => r.write("fixtures/news/article.html", "<html>new</html>\n")],
+    ["removed", (r: TempRepo) => r.remove("fixtures/news/article.html")],
+  ])(
+    "plans every workspace and Python project when a fixture is %s, since their tests read fixtures/",
+    (_, change) => {
+      change(repo);
+      const result = plan();
+      expect(result.ts).toEqual(["a", "b", "c", "e2e-g1", "probe-meta", "repo-checks"]);
+      expect([...result.python.keys()].sort()).toEqual([
+        "py/listening_sdk",
+        "services/py-dep",
+        "services/py-svc",
+        "tools/probes/news",
+      ]);
+    },
+  );
+
+  it("plans no test when only a fixture README changed", () => {
+    repo.write(
+      "fixtures/news/README.md",
+      "# News\n\n- `article.html`: an article page, synthetic\n",
+    );
+    const result = plan();
+    expect(result.ts).toEqual([]);
+    expect(result.python.size).toBe(0);
+    expect(result.fixtures).toBe(true);
   });
 
   it("plans nothing but the fixture check when only docs changed", () => {

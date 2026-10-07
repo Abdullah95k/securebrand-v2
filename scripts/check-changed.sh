@@ -13,7 +13,8 @@
 #
 # With no merge base (a shallow clone, an unrelated history) or a CHECK_BASE that is not a commit
 # here, it checks everything and says so: make check never passes silently. A change to the
-# shared Python configuration (ruff.toml, .python-version, uv.toml) checks every Python project.
+# shared Python configuration (ruff.toml, .python-version, uv.toml) checks every Python project,
+# and a change under fixtures/ (other than a README) every workspace and Python project.
 # Every step runs even after a failure; the exit status is non-zero when any step failed.
 set -euo pipefail
 # shellcheck source=lib/common.sh
@@ -44,6 +45,16 @@ else
   CHANGED="$(sb_changed_files "$BASE")"
 fi
 
+# Services read recorded responses from fixtures/<platform>/ (turbo.json lists fixtures/ among the
+# inputs of every test task), but no package holds fixtures/, so a change there selects nothing by
+# itself: every workspace and Python project is checked. A README there is read by no test.
+FIXTURES_CHANGED=0
+fixture_files="$(grep -E '^fixtures/' <<<"$CHANGED" || true)"
+if [ -n "$BASE" ] && [ -n "$fixture_files" ] && grep -qvE '(^|/)README\.md$' <<<"$fixture_files"; then
+  FIXTURES_CHANGED=1
+  echo "note: fixtures changed: checking every workspace and Python project, whose tests read them" >&2
+fi
+
 # Root tooling that tools/repo-checks tests: a change to any of it runs repo-checks too.
 ROOT_TOOLING='^(Makefile|compose\.ya?ml|package\.json|pnpm-workspace\.yaml|turbo\.json|tsconfig\.base\.json|eslint\.config\.js|\.prettierrc\.json|\.prettierignore|\.npmrc|\.node-version|\.python-version|uv\.toml|ruff\.toml|\.gitignore|\.gitattributes|CLAUDE\.md|supabase/config\.toml)$|^(scripts|stack|\.github|\.claude|tools/new-service|services/_template[^/]*)/|^(docs/[a-z]+|tests/e2e|tools/gates|tools/probes|fixtures|infra)/README\.md$'
 
@@ -59,7 +70,7 @@ TASKS=(lint typecheck test)
 TS_PACKAGES=""
 TURBO_FILTERS=()
 if [ -f package.json ] && [ -f turbo.json ]; then
-  if [ -n "$BASE" ]; then
+  if [ -n "$BASE" ] && [ "$FIXTURES_CHANGED" = 0 ]; then
     TURBO_FILTERS+=("--filter=...[$BASE]")
     # A here-string, not a pipe: grep -q stops at the first match, and a writer still holding
     # more than a pipe buffer of names would die of SIGPIPE and turn the match into a miss.
@@ -77,7 +88,7 @@ fi
 # Every project extends ruff.toml and follows .python-version and uv.toml.
 PY_SHARED='^(ruff\.toml|\.python-version|uv\.toml)$'
 PY_CHANGED=()
-if [ -z "$BASE" ] || grep -qE "$PY_SHARED" <<<"$CHANGED"; then
+if [ -z "$BASE" ] || [ "$FIXTURES_CHANGED" = 1 ] || grep -qE "$PY_SHARED" <<<"$CHANGED"; then
   PY_PROJECTS="$(python3 "$SB_LIB_DIR/py_projects.py" "$ROOT" --all)"
 else
   declare -A SEEN=()
