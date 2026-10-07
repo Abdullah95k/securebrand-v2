@@ -1,0 +1,19 @@
+{
+  "data": [
+    {
+      "id": "100000000000001_200000000000001",
+      "message": "عرض خاص اليوم بمناسبة افتتاح الفرع الجديد في بغداد 🎉 #عروض_بغداد #تسوق",
+      "permalink_url": "https://www.facebook.com/100000000000001/posts/200000000000001",
+      "created_time": "2026-10-01T09:30:00+0000"
+    },
+    {
+      "id": "100000000000001_200000000000002",
+      "message": "ئەمڕۆ داشکاندنی تایبەت لە هەولێر 🔥 #هەولێر https://example.com/offers?ref=page&lang=ckb",
+      "created_time": "2026-10-01T11:00:00+0000"
+    }
+  ],
+  "paging": {
+    "cursors": { "before": "QVFIUjNfZAkFrZAk", "after": "QVFIUmVfZAkFrZAj" },
+    "next": "https://graph.facebook.com/v24.0/100000000000001/feed?limit=100&after=QVFIUmVfZAkFrZAj&access_token=REDACTED"
+  }
+}

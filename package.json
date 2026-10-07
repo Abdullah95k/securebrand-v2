@@ -1,0 +1,29 @@
+{
+  "name": "securebrand-v2",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.34.6",
+  "engines": {
+    "node": ">=24.21.0 <25",
+    "pnpm": ">=10.34.6 <11"
+  },
+  "scripts": {
+    "new:service": "node tools/new-service/index.mjs",
+    "fmt": "prettier --write --log-level warn .",
+    "fmt:check": "prettier --check --log-level warn .",
+    "lint:root": "eslint eslint.config.js"
+  },
+  "devDependencies": {
+    "@eslint-community/eslint-plugin-eslint-comments": "catalog:",
+    "@eslint/js": "catalog:",
+    "@types/node": "catalog:",
+    "eslint": "catalog:",
+    "eslint-config-prettier": "catalog:",
+    "prettier": "catalog:",
+    "supabase": "catalog:",
+    "turbo": "catalog:",
+    "typescript": "catalog:",
+    "typescript-eslint": "catalog:",
+    "vitest": "catalog:"
+  }
+}
