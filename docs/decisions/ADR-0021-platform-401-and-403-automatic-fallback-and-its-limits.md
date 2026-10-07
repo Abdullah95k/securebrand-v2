@@ -1,0 +1,75 @@
+# ADR-0021 · Platform 401 and 403, automatic fallback and its limits
+
+2026-10-07 · decided by: the user, relayed by the orchestrator on 2026-10-07 · status: accepted
+Applies to: all
+Source: D2-Q021 (user decision; changed by the user's answer) in `docs/decisions/D2-PROPOSALS.md` · ratification: the user's merge of Abdullah95k/securebrand-v2#6 · line references are to CONVENTIONS v1 and the PRDs as they stood before D2's edits
+
+## Context
+
+CONVENTIONS says a 401 or 403 makes the service mark "the token or route `degraded`", stop the batch and alert (`CONVENTIONS L101`); the canary sets `fallback_on` "where an amber or alternate route exists and the flag is on" (`CONVENTIONS L102`). README decision 5: a platform 401 or 403 means `blocked`, no automatic fallback, an n8n approval card; a vendor key or plan error is `degraded` and may fall back; a government-watched green source never moves to amber (`README L182`). The repository rules repeat CONVENTIONS (`CLAUDE.md` L47). source-health-canary follows the README (`source-health-canary §5.3 L70` to `L72`); most fetchers follow CONVENTIONS (`x-recent-search §13 L186`, `ig-own-comments-fetcher §13 L187`); some block one source under their own conditions (`tt-client-videos-fetcher §8 L130`, `li-client-posts-poller §8 L142`, `tg-bot-channel-receiver §8 L150`); tt-client-videos-fetcher refuses any amber fallback for a client-owned account (`§8 L132`); the YouTube fetchers classify a 403 by reason (`yt-video-details-fetcher §8 L171`, `yt-comments-fetcher §8 L155`). The government exclusion has no enforcement point: registry-writer's `health_change` updates every source on the route and reads no `scope` (`registry-writer §5.2 L54`; AU-064; asked in `source-health-canary §14 Q2 L162`).
+
+The user's answer, 7 Oct 2026: "Q021 automatic switching should be considered." The orchestrator put the limits below to the user, who approved them as the answer: option 3, a 403 classified by reason first, option 1's two levels, automatic fallback wherever the route's vendor flag is on except for government-watched green sources and client-owned properties, an n8n notice to ops for every automatic fallback, and route-wide states from the canary only.
+
+Settles: RD-5, CF-094, AU-064, fb-post-comments-fetcher §14 Q5, source-health-canary §14 Q2, source-health-canary §14 Q4.
+Depends on: ADR-0016 (where token and source state are stored and who writes them).
+
+## Options
+
+1. **README decision 5, made precise at two levels.** _Not taken as a whole: its classification of a 403 by reason and its two levels are kept (see Decision); its rule of no automatic fallback, with an approval card, is not._
+   - A 403 is classified by reason first. A quota reason (YouTube's `quotaExceeded`) goes to quota-governor as `quota_exceeded`, key healthy (ADR-0057; `yt-video-details-fetcher §8 L171`). A 403 about one item (comments disabled, a private video) ends that item's series, key untouched (`yt-comments-fetcher §8 L155`). Only an authorisation 401 or 403 touches the credential.
+   - An authorisation 401 or 403 on a client token or company app key marks that credential `revoked` (one attempt to refresh it first, where the platform allows) and stops the batch; every source that only that credential could read becomes `blocked`. No automatic fallback: an n8n card goes to ops and, for client-owned properties, to the client.
+   - An authorisation 403 that concerns one source only (a removed bot, a suspended or private account, a missing page grant) makes that source `blocked`, not the credential.
+   - A vendor key or plan error (401, 402, 403 or out of credits from a vendor) marks the key `degraded`; the route may fall back, decided by the canary only.
+   - Route-wide states (`degraded`, `fallback`, back to `ok`) come only from the canary, from evidence across targets. The canary's route-wide `blocked`, when every active target and every token in use returns 401 or 403 (`source-health-canary §5.3 L72`, `§13 L151`), is kept, and only the canary sets it.
+   - No government-watched green source ever moves to an amber route; registry-writer enforces it when applying a route-wide change (AU-064 option 1); a client-owned green property never falls back to a vendor (ADR-0052).
+   - A green route not yet approved has no amber stand-in: while Page Public Content Access is pending, Page comments are not read through the vendor (`fb-post-comments-fetcher §14 Q5`).
+
+   Consequences: a revoked client token never silently turns into vendor data; government contracts are protected in one place; F3 needs a credential state and reason beside `sources.health` (ADR-0016); every green fetcher's section 8 (CF-094 names fourteen sessions), CONVENTIONS L101 and the repository's error rule are aligned.
+
+2. **CONVENTIONS L101 as written: fetchers mark the token or route `degraded`; only the canary sets `blocked`.** _Not taken._ Consequences: fewer states; a revoked client token degrades its sources and the canary may fall back to a vendor automatically; the README's approval card disappears.
+3. **Two levels without the README's no-fallback rule:** _Taken, within the limits under Decision._ credential state set by fetchers, `blocked` for a lost grant on one source, and automatic fallback wherever a flag is on except for government-watched sources. Consequences: maximum coverage, but a client's revoked token can lead to vendor data about that client's property without anyone deciding it.
+
+## Decision
+
+Option 3, within limits. A 401 or 403 is classified by reason first; an authorisation refusal marks one credential `revoked` or one source `blocked`; a blocked source falls back to its vendor route automatically wherever that route's vendor flag is on, never for a government-watched green source or a client-owned property, and every automatic fallback sends ops an n8n notice, not an approval card. Route-wide states still come only from the canary.
+
+**A 401 or 403 is classified by reason first (as option 1)**
+
+- A quota reason (YouTube's `quotaExceeded`) goes to quota-governor as `quota_exceeded`, the key staying healthy, and the job waits for the reset (ADR-0057; `yt-video-details-fetcher §8 L171`).
+- A 403 about one item (comments disabled, a private video) ends that item's series only, the key untouched (`yt-comments-fetcher §8 L155`).
+- Only an authorisation 401 or 403 touches a credential or a source.
+
+**Two levels (as option 1)**
+
+- An authorisation 401 or 403 on a client token or company app key marks that credential `revoked` (after one attempt to refresh it, where the platform allows) and stops the batch. Every source that only that credential could read becomes `blocked`, through a source-level `health_change` with reason `credential_revoked` (ADR-0016).
+- An authorisation 403 that concerns one source only (a removed bot, a suspended or private account, a missing page grant) makes that source `blocked`, not the credential.
+- A vendor key or plan error (401, 402, 403 or out of credits from a vendor) marks the vendor key `degraded`; whether the route falls back to the next vendor is the canary's decision (ADR-0051's fallback order).
+
+**Automatic fallback (option 3)**
+
+- When registry-writer applies a source-level `blocked`, it moves the source to `fallback` instead, so that its posts are read through the amber route, wherever all of these hold; otherwise the source stays `blocked`:
+  - an amber route reads that source type on the platform, declared as the alternate in `canary_targets` (`alternate_vendor`, `flag_name`, `scope`, as ADR-0052 (d) declares Instagram hashtags');
+  - that route's vendor flag is not `off` (ADR-0050);
+  - no government client watches the source; registry-writer enforces this;
+  - the source is not a client-owned property (ADR-0052);
+  - at least one client watching the source accepts amber data, since only those clients may receive it (ADR-0052).
+- Route-wide states (`degraded`, `fallback`, back to `ok`) come only from the canary, from evidence across targets. The canary falls a route back automatically wherever its alternate's flag is on; registry-writer applies a route-wide `fallback` to every source on the route, except that a government-watched green source or a client-owned property takes `degraded` instead and never moves to the vendor. The canary's route-wide `blocked`, when every active target and every token in use returns 401 or 403 (`source-health-canary §5.3 L72`, `§13 L151`), is kept, and only the canary sets it.
+- Every automatic fallback, of one source or of a route, sends ops an n8n notice (`n8n.alert/v1`, ADR-0067) naming the source or route, the reason and the vendor: registry-writer sends the source-level ones, the canary the route-wide ones. It is a notice, not an approval card: nothing waits for an answer.
+- A source that is `blocked` and cannot fall back also sends ops a notice; for a client-owned property the client gets the missing-grant card of ADR-0067, so it can grant access again.
+- A fallback ends when its cause does: a new grant or key returns the credential to `ok` (ADR-0016), the source-level decision back to `ok` ends the source's fallback (`fallback_off`), and the source is read on its green route again; a route returns when the canary sets it `ok`.
+- During a fallback, each record names the vendor that returned it (ADR-0051), and only clients that accept amber receive it (ADR-0052).
+
+**A route not yet approved**
+
+Automatic fallback acts on health states. A green route that is not yet approved has no state to fall back from, and no amber service reads Facebook Page comments, so while Page Public Content Access is pending, Page comments are not read through a vendor (`fb-post-comments-fetcher §14 Q5`).
+
+Why: The user asked for automatic switching, so coverage continues without waiting for anyone to approve a fallback. The limits keep the two promises the platform makes: a government client's green sources never turn into vendor data, and a client's own property is never read through a scraper. Classifying a 403 by reason first keeps quota and item errors from touching credentials at all, and the notice keeps ops aware of every switch.
+
+## Consequences
+
+- CONVENTIONS v1.1: the 401 and 403 rule (v1 L101) and the fallback rule (v1 L102) are rewritten as above; the compliance section gains "a government-watched green source and a client-owned property never move to an amber route; registry-writer enforces it".
+- This pull request rewords the repository's error rule, citing this ADR. `CLAUDE.md` L47: "Errors: 429 and vendor rate limits back off 30 s to 15 min with jitter. 401 and 403 are classified by reason: a quota one goes to quota-governor and waits, an item-scoped one ends that item only, and an authorisation one marks the credential revoked or the source blocked and stops the batch; a blocked source falls back to its vendor route automatically where that route's flag is on, never for a government-watched green source or a client-owned property, with an n8n notice to ops (ADR-0021). Route-wide states come only from the canary. After 5 attempts the job goes to `dlq.<service>`." In `.claude/skills/review-session/SKILL.md` L22 and `.claude/agents/prd-reviewer.md` L16, "401 and 403 are classified by reason (an authorisation one sets credential or source state, never a route state, and stops the batch)" replaces "401 and 403 mark the route degraded and stop the batch" and "401 and 403 degrade and stop".
+- README decision 5's "no automatic fallback, an n8n approval card" is superseded; source-health-canary's approval card for `blocked` becomes the notice above.
+- F3: the credential state and reason beside `sources.health` (ADR-0016) and the alternates in `canary_targets`. registry-writer (approved; ADR-0001) applies the fallback rule and its exclusions. Every green fetcher's section 8 follows the classification (CF-094 names fourteen sessions).
+
+Sessions that must read this: F3, F4, F5, C7, C12, then every green fetcher (TT1, LI1, LI2, IG3, IG5, IG6, X1, X2, YT1, YT3, YT4, TG1, TG2, VLI2 are named in CF-094) and every amber service that serves as an alternate.
