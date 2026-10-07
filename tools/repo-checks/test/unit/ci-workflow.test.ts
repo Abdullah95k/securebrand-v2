@@ -103,6 +103,24 @@ describe("GitHub workflows", () => {
     }
   });
 
+  it("installs the locked packages of both templates first, so the tests and pnpm new:service run offline", () => {
+    for (const name of ["check", "template-smoke"]) {
+      const steps = ci.jobs[name]?.steps ?? [];
+      const install = steps.findIndex((s) =>
+        (s.run ?? "").includes("pnpm install --frozen-lockfile"),
+      );
+      expect(install, name).toBeGreaterThan(-1);
+      // pnpm's store gets every workspace; uv's cache gets the Python template's packages, which
+      // the generator installs a Python service from.
+      expect(steps[install]?.run, name).toMatch(
+        /\(cd services\/_template-py && uv sync --locked\)/,
+      );
+      for (const step of steps.slice(0, install)) {
+        expect(step.run ?? "", name).not.toMatch(/make |new:service/);
+      }
+    }
+  });
+
   it("on a push to main, make check compares with the commit before the push", () => {
     const step = (ci.jobs.check?.steps ?? []).find((s) => (s.run ?? "").includes("make check"));
     expect(step).toBeDefined();

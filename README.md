@@ -19,7 +19,8 @@ make down                      # stop the stack and remove its volumes
 `pnpm new:service <name>` takes a name that follows CONVENTIONS: `<source>-<action>` for a
 per-source service (`fb-page-feed-poller`, `news-article-extractor`) or `<action>` for a shared one
 (`normalize-item`). The generated service passes `make check` without edits; its README says what to
-fill in.
+fill in. The generator installs it offline, from the packages `make bootstrap` installed (a
+TypeScript service joins `pnpm-lock.yaml` with the template's entry), and never reaches a registry.
 
 ## Commands
 
