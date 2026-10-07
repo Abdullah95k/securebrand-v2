@@ -54,4 +54,4 @@ ns-clean: ## remove this checkout's test topics, schema, databases and bucket fr
 
 # LANG is also the locale variable, so only a LANG given on the command line counts.
 new-service: ## scaffold a service: make new-service NAME=<name> [LANG=python]
-	@node tools/new-service/index.mjs "$(NAME)" $(if $(filter command line,$(origin LANG)),--lang $(LANG))
+	@scripts/new-service.sh "$(NAME)" $(if $(filter command line,$(origin LANG)),--lang $(LANG))

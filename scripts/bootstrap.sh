@@ -14,8 +14,10 @@ UV_MIN="$(sed -n 's/^required-version *= *">=\([0-9.]*\).*/\1/p' uv.toml)"
 UV_BELOW="$(sed -n 's/^required-version *= *".*<\([0-9.]*\)"$/\1/p' uv.toml)"
 PYTHON_PIN="$(tr -d '[:space:]' <.python-version)"
 
-# 1. Node.
-if [ "$(node --version 2>/dev/null)" != "v$NODE_PIN" ]; then
+# 1. Node. The scripts find nvm's pin by themselves (sb_select_node); the shell that runs make
+#    bootstrap starts on it in new shells that load nvm once it is nvm's default.
+shell_node="$(PATH="$SB_CALLER_PATH" node --version 2>/dev/null || true)"
+if [ "$(node --version 2>/dev/null)" != "v$NODE_PIN" ] || [ "$shell_node" != "v$NODE_PIN" ]; then
   nvm_sh=""
   for dir in "${NVM_DIR:-}" "$HOME/.nvm" /opt/nvm; do
     if [ -n "$dir" ] && [ -s "$dir/nvm.sh" ]; then
@@ -24,11 +26,11 @@ if [ "$(node --version 2>/dev/null)" != "v$NODE_PIN" ]; then
     fi
   done
   if [ -n "$nvm_sh" ]; then
-    echo "bootstrap: installing Node $NODE_PIN with nvm"
+    echo "bootstrap: installing Node $NODE_PIN with nvm, as nvm's default"
     # shellcheck disable=SC1090
-    (set +eu && . "$nvm_sh" && nvm install "$NODE_PIN" >/dev/null)
+    (set +eu && . "$nvm_sh" && nvm install "$NODE_PIN" >/dev/null && nvm alias default "$NODE_PIN" >/dev/null)
     sb_select_node
-  else
+  elif [ "$(node --version 2>/dev/null)" != "v$NODE_PIN" ]; then
     sb_die "Node $NODE_PIN is needed: install it with nvm, fnm, volta or mise (they read .node-version), then run make bootstrap again"
   fi
 fi
@@ -61,4 +63,12 @@ while IFS= read -r project; do
   (cd "$project" && uv sync --locked --quiet)
 done < <(python3 "$SB_LIB_DIR/py_projects.py" "$SB_KIT_ROOT" --all)
 
-"$SB_SCRIPTS_DIR/doctor.sh"
+# A script cannot switch the shell that started it: doctor checks the toolchain the scripts run,
+# and the switch for the shell comes last (make doctor, run from the shell, checks both).
+status=0
+SB_CALLER_PATH="$PATH" "$SB_SCRIPTS_DIR/doctor.sh" || status=$?
+if [ "$shell_node" != "v$NODE_PIN" ]; then
+  echo "bootstrap: this shell runs ${shell_node:-no node}, and the pnpm commands you type need" \
+    "$NODE_PIN: nvm use $NODE_PIN switches it"
+fi
+exit "$status"

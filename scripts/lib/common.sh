@@ -17,6 +17,11 @@ sb_die() {
   exit 1
 }
 
+# The PATH of the shell that started these scripts, before sb_select_node changes it (exported, so
+# a script started by another sees the shell's): make doctor also checks the node that the pnpm
+# commands a user types run on.
+export SB_CALLER_PATH="${SB_CALLER_PATH:-$PATH}"
+
 # Puts the pinned Node (.node-version) first on PATH when an nvm directory has it, so make
 # targets and the kit's hooks run the pinned toolchain even where the default node differs (the
 # cloud container ships another version). NODE_AUTOSELECT=0 keeps PATH as it is.

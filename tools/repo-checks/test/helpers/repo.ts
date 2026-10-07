@@ -61,6 +61,9 @@ export function cleanEnv(extra: NodeJS.ProcessEnv = {}): NodeJS.ProcessEnv {
       key === "CI" ||
       key === "E2E_DIR" ||
       key === "IMAGE_REGISTRY" ||
+      // Set by the scripts that started this test run (make test): a script under test must take
+      // the test's PATH as its caller's.
+      key === "SB_CALLER_PATH" ||
       // make passes its command-line variables (SERVICE=, GATE=, ...) to nested makes through
       // MAKEFLAGS and the environment; a test that runs make must start from none of them.
       [

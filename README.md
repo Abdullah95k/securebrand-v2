@@ -8,7 +8,8 @@ toolchain: how to set it up, run the local stack and work on a service.
 
 ```bash
 make bootstrap                 # Node 24.21.0 (nvm), pnpm 10, uv 0.12, Python 3.13, every dependency
-make doctor                    # check the toolchain against the pins
+nvm use 24.21.0                # this shell on the pinned Node too (fnm, volta and mise read .node-version)
+make doctor                    # check the toolchain, and the Node this shell runs, against the pins
 make up                        # Redpanda, Supabase, ClickHouse and SeaweedFS; waits until they answer
 pnpm new:service demo          # services/demo from services/_template (add --lang python for Python)
 make test SERVICE=demo         # its unit and acceptance suites
@@ -21,6 +22,11 @@ per-source service (`fb-page-feed-poller`, `news-article-extractor`) or `<action
 (`normalize-item`). The generated service passes `make check` without edits; its README says what to
 fill in. The generator installs it offline, from the packages `make bootstrap` installed (a
 TypeScript service joins `pnpm-lock.yaml` with the template's entry), and never reaches a registry.
+
+The `make` targets find the pinned Node by themselves, but the `pnpm` commands you type run your
+shell's, and pnpm refuses a Node outside `engines`. `make doctor` says when your shell runs another;
+`nvm use 24.21.0` switches it, and `make bootstrap` makes the pin nvm's default for new shells that
+load nvm.
 
 ## Commands
 

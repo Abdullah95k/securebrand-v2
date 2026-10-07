@@ -32,6 +32,19 @@ else
   if [ "$found" = "$NODE_PIN" ]; then ok "node $found"; else bad "node: expected $NODE_PIN, found $found (make bootstrap, or nvm install $NODE_PIN)"; fi
 fi
 
+# The make targets run the node above (nvm's pin when the shell runs another), but the pnpm
+# commands a user types (pnpm new:service, pnpm --filter) run the shell's, and pnpm refuses a node
+# outside package.json's engines.
+shell_node="$(PATH="$SB_CALLER_PATH" command -v node 2>/dev/null || true)"
+if [ "$shell_node" != "$(command -v node 2>/dev/null || true)" ]; then
+  found="$([ -n "$shell_node" ] && "$shell_node" --version 2>/dev/null | sed 's/^v//' || true)"
+  if [ "$found" = "$NODE_PIN" ]; then
+    ok "node $found on your PATH"
+  else
+    bad "node on your PATH: ${found:-none}${shell_node:+ ($shell_node)}, not $NODE_PIN; the make targets use nvm's, but pnpm commands you run yourself refuse it: nvm use $NODE_PIN switches this shell"
+  fi
+fi
+
 if ! command -v pnpm >/dev/null 2>&1; then
   bad "pnpm: missing (expected $PNPM_PIN; corepack enable, or npm install -g pnpm@$PNPM_PIN)"
 else

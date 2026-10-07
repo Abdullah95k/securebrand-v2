@@ -1,5 +1,6 @@
 import {
   existsSync,
+  mkdirSync,
   mkdtempSync,
   readdirSync,
   readFileSync,
@@ -175,6 +176,39 @@ describe("pnpm new:service (tools/new-service)", () => {
   it("prints the next commands", () => {
     const result = generate(target, ["demo"]);
     expect(result.output).toContain("make test SERVICE=demo");
+  });
+
+  it("make new-service runs the generator on the pinned node, like every make target", () => {
+    // The shell runs another node (the cloud container's), and nvm holds the pin: the generator
+    // and the pnpm install it starts must run on the pin, or pnpm refuses package.json's engines.
+    const pin = readFileSync(join(ROOT, ".node-version"), "utf8").trim();
+    const dir = mkdtempSync(join(tmpdir(), "make-new-service-"));
+    try {
+      const nodes = { pinned: join(dir, "nvm", "versions", "node", `v${pin}`, "bin"), shell: dir };
+      for (const [which, bin] of Object.entries(nodes)) {
+        const version = which === "pinned" ? pin : "22.22.0";
+        mkdirSync(bin, { recursive: true });
+        writeFileSync(
+          join(bin, "node"),
+          `#!/bin/sh\nif [ "$1" = "--version" ]; then echo v${version}; exit 0; fi\necho "$*" >> "${join(dir, which)}.calls"\nexec "${process.execPath}" "$@"\n`,
+          { mode: 0o755 },
+        );
+      }
+      // An invalid name: the generator stops before it writes anything into this repository.
+      const result = run("make", ["--no-print-directory", "new-service", "NAME=Not_A_Name"], {
+        cwd: ROOT,
+        env: cleanEnv({ PATH: `${dir}:${process.env.PATH ?? ""}`, NVM_DIR: join(dir, "nvm") }),
+      });
+      expect(result.output).toMatch(/naming convention/);
+      const calls = (which: string): string =>
+        existsSync(join(dir, `${which}.calls`))
+          ? readFileSync(join(dir, `${which}.calls`), "utf8")
+          : "";
+      expect(calls("pinned")).toContain("tools/new-service/index.mjs Not_A_Name");
+      expect(calls("shell")).not.toContain("index.mjs");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 
   describe("the install, which never needs the network", () => {
