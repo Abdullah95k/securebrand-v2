@@ -1472,7 +1472,7 @@ In CONVENTIONS: yes. Named by 7 PRD(s).
 | `checked_at` |  | news-robots-checker (upsert of the host's row before the message is produced (5.2 step 9, 8 L138)) |  |  |
 | `crawl_allowed` | boolean (news-robots-checker); True (news-feed-poller); True (news-homepage-differ); True (news-sitemap-poller); True, False (news-article-extractor); True, ... | news-robots-checker (upsert of the host's row before the message is produced (5.2 step 9, 8 L138)) | news-article-extractor, news-feed-poller, news-homepage-differ, news-site-resolver, news-sitemap-poller |  |
 | `crawl_delay_seconds` |  | news-robots-checker (upsert of the host's row before the message is produced (5.2 step 9, 8 L138)) |  |  |
-| `expires_at` |  | news-robots-checker (checked_at + 24 hours) |  |  |
+| `expires_at` |  | news-robots-checker (checked_at + 24 hours) | news-article-extractor, news-feed-poller, news-homepage-differ, news-site-resolver, news-sitemap-poller |  |
 | `host` |  | news-robots-checker (one row per host; upsert of the host's row before the message is produced (5.2 step 9, 8 L138)) |  |  |
 | `next_refresh_at` |  | news-robots-checker (set from the START of the last check; scheduler orders by next_refresh_at then tier) | news-robots-checker |  |
 | `next_slot_at` |  | news-article-extractor (host gate slot state)<br>news-feed-poller (host gate slot state in listening-sdk)<br>news-homepage-differ (host gate slot state)<br>news-robots-checker (listed in the row (6.2, 6.3); this PRD takes 'a slot from the host gate' (5.2 step 2) but does not say the slot is stored here)<br>news-sitemap-poller (host gate slot state) | news-article-extractor, news-feed-poller, news-homepage-differ, news-robots-checker, news-sitemap-poller |  |
@@ -1481,7 +1481,7 @@ In CONVENTIONS: yes. Named by 7 PRD(s).
 | `reason` | robots_unreachable, content_signal_search_no (news-robots-checker) | news-robots-checker (row has 'same fields' as the message (6.2 L117); not in 6.3's list) |  |  |
 | `robots` |  | news-robots-checker (upsert of the host's row before the message is produced (5.2 step 9, 8 L138); includes the compiled rules so fetching services can test a...) |  |  |
 | `rsl` |  | news-robots-checker (upsert of the host's row before the message is produced (5.2 step 9, 8 L138)) |  |  |
-| `status` | allowed, disallowed, paywalled, blocked (news-robots-checker) | news-robots-checker (upsert of the host's row before the message is produced (5.2 step 9, 8 L138)) |  |  |
+| `status` | allowed, disallowed, paywalled, blocked (news-robots-checker) | news-robots-checker (upsert of the host's row before the message is produced (5.2 step 9, 8 L138)) | news-article-extractor, news-comments-fetcher, news-feed-poller, news-homepage-differ, news-sitemap-poller |  |
 | `usage_signals` | yes, no, unset (news-robots-checker) | news-robots-checker (upsert of the host's row before the message is produced (5.2 step 9, 8 L138)) |  |  |
 
 #### `cursors`
