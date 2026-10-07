@@ -237,6 +237,18 @@ describe("scripts/check-changed.sh", () => {
     },
   );
 
+  it.each([
+    ["committed", (r: TempRepo) => r.commit("an Arabic fixture")],
+    ["not committed yet", () => undefined],
+  ])("plans every workspace and Python project for a fixture named in Arabic, %s", (_, settle) => {
+    // Git quotes a path holding non-ASCII bytes unless core.quotePath is off.
+    repo.write("fixtures/text/نص-عراقي.txt", "نص\n");
+    settle(repo);
+    const result = plan();
+    expect(result.ts).toEqual(["a", "b", "c", "e2e-g1", "probe-meta", "repo-checks"]);
+    expect(result.python.size).toBe(4);
+  });
+
   it("plans no test when only a fixture README changed", () => {
     repo.write(
       "fixtures/news/README.md",

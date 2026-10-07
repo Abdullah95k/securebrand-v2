@@ -86,9 +86,13 @@ sb_policy_base() {
 
 # Files that differ from a base commit: committed, staged, unstaged and untracked (not ignored).
 # A moved file counts at both of its paths (--no-renames), so a file moved out of a frozen path
-# is seen.
+# is seen. Paths are printed as they are (core.quotePath=false): git would otherwise quote a name
+# in Arabic, and the callers' patterns would miss it.
 sb_changed_files() {
-  { git diff --no-renames --name-only "$1"; git ls-files --others --exclude-standard; } | sort -u
+  {
+    git -c core.quotePath=false diff --no-renames --name-only "$1"
+    git -c core.quotePath=false ls-files --others --exclude-standard
+  } | sort -u
 }
 
 # Prints shell-quoted `export KEY='value'` lines.
