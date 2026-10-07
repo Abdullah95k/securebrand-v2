@@ -20,7 +20,8 @@ describe("pnpm new:service in a clean copy of the repository", () => {
   it(
     "generates a TypeScript service that passes lint, typecheck and both test suites without edits",
     () => {
-      const generated = copy.run("pnpm", ["new:service", "demo"]);
+      // CI=true as in GitHub Actions, where pnpm defaults to a frozen lockfile.
+      const generated = copy.run("pnpm", ["new:service", "demo"], { CI: "true" });
       expect(generated.code, generated.output).toBe(0);
 
       const check = copy.run("make", ["--no-print-directory", "check"], { CHECK_BASE: "HEAD" });
@@ -37,7 +38,9 @@ describe("pnpm new:service in a clean copy of the repository", () => {
   it(
     "generates a Python service that passes ruff, pyright and pytest without edits",
     () => {
-      const generated = copy.run("pnpm", ["new:service", "demo-py", "--lang", "python"]);
+      const generated = copy.run("pnpm", ["new:service", "demo-py", "--lang", "python"], {
+        CI: "true",
+      });
       expect(generated.code, generated.output).toBe(0);
 
       const check = copy.run("make", ["--no-print-directory", "check"], { CHECK_BASE: "HEAD" });

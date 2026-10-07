@@ -18,7 +18,7 @@ ok() {
 # Redpanda: a topic, one record produced and consumed through the external listener, the HTTP
 # proxy and the schema registry from the host.
 rpk() {
-  "$SB_SCRIPTS_DIR/compose.sh" exec -T redpanda rpk -X brokers=localhost:19092 "$@"
+  "$SB_SCRIPTS_DIR/compose.sh" exec -T redpanda rpk -X brokers=127.0.0.1:19092 "$@"
 }
 rpk topic create "$ID" --partitions 1 >/dev/null
 echo "hello" | rpk topic produce "$ID" >/dev/null

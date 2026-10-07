@@ -60,7 +60,22 @@ export function cleanEnv(extra: NodeJS.ProcessEnv = {}): NodeJS.ProcessEnv {
       key === "PR_LABELS" ||
       key === "CI" ||
       key === "E2E_DIR" ||
-      key === "IMAGE_REGISTRY"
+      key === "IMAGE_REGISTRY" ||
+      // make passes its command-line variables (SERVICE=, GATE=, ...) to nested makes through
+      // MAKEFLAGS and the environment; a test that runs make must start from none of them.
+      [
+        "MAKEFLAGS",
+        "MAKELEVEL",
+        "MFLAGS",
+        "MAKEOVERRIDES",
+        "SERVICE",
+        "GATE",
+        "ENGINE",
+        "NAME",
+        "ACCEPTANCE",
+        "BASE",
+        "FOLLOW",
+      ].includes(key)
     ) {
       delete env[key];
     }

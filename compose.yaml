@@ -17,9 +17,9 @@ services:
       - --memory=1G
       - --default-log-level=warn
       - --kafka-addr=internal://0.0.0.0:9092,external://0.0.0.0:19092
-      - --advertise-kafka-addr=internal://redpanda:9092,external://localhost:19092
+      - --advertise-kafka-addr=internal://redpanda:9092,external://127.0.0.1:19092
       - --pandaproxy-addr=internal://0.0.0.0:8082,external://0.0.0.0:18082
-      - --advertise-pandaproxy-addr=internal://redpanda:8082,external://localhost:18082
+      - --advertise-pandaproxy-addr=internal://redpanda:8082,external://127.0.0.1:18082
       - --schema-registry-addr=internal://0.0.0.0:8081,external://0.0.0.0:18081
       - --rpc-addr=redpanda:33145
       - --advertise-rpc-addr=redpanda:33145
@@ -37,6 +37,8 @@ services:
       retries: 60
       start_period: 5s
 
+  # No fixed nofile ulimit: some hosts (the cloud containers) refuse to raise it, and ClickHouse
+  # lifts its own soft limit to the hard limit at start.
   clickhouse:
     image: ${CLICKHOUSE_REPO}:${CLICKHOUSE_TAG}
     ports:
@@ -46,10 +48,6 @@ services:
       - clickhouse-data:/var/lib/clickhouse
       - ./stack/clickhouse/config.d/local.xml:/etc/clickhouse-server/config.d/local.xml:ro
       - ./stack/clickhouse/users.d/listening.xml:/etc/clickhouse-server/users.d/listening.xml:ro
-    ulimits:
-      nofile:
-        soft: 262144
-        hard: 262144
     healthcheck:
       test: ["CMD", "clickhouse-client", "--query", "SELECT 1"]
       interval: 2s

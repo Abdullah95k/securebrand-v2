@@ -159,9 +159,11 @@ function main() {
     const ok =
       args.lang === "ts"
         ? install(
+            // The new workspace joins pnpm-lock.yaml, so the lockfile must not be frozen (pnpm
+            // freezes it by default when CI is set); offline first, from the local store.
             [
-              ["pnpm", ["install", "--offline"]],
-              ["pnpm", ["install"]],
+              ["pnpm", ["install", "--offline", "--no-frozen-lockfile"]],
+              ["pnpm", ["install", "--no-frozen-lockfile"]],
             ],
             root,
           )

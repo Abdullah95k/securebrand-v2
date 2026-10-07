@@ -149,7 +149,9 @@ describe("local stack (make up, make down, make ns-clean)", () => {
       const one = await createNamespaceResources(`t_${suffix()}`);
       const twoNs = `t_${suffix()}`;
       const two = await createNamespaceResources(twoNs);
-      expect(new Set([...Object.values(one), ...Object.values(two)]).size).toBe(10);
+      // A namespace's schema and databases share one name (test_<ns>); two namespaces share none.
+      const taken = new Set(Object.values(one));
+      expect(Object.values(two).filter((name) => taken.has(name))).toEqual([]);
 
       const clean = make(["ns-clean"], { TEST_NAMESPACE: twoNs });
       expect(clean.code, clean.output).toBe(0);

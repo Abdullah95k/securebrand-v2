@@ -15,11 +15,11 @@ echo "make ns-clean: namespace $TEST_NAMESPACE"
 
 # Kafka topics with the namespace's prefix (regular expression, dots escaped).
 prefix_re="^${TEST_TOPIC_PREFIX//./\\.}"
-topics="$("$SB_SCRIPTS_DIR/compose.sh" exec -T redpanda rpk topic list -X brokers=localhost:19092 |
+topics="$("$SB_SCRIPTS_DIR/compose.sh" exec -T redpanda rpk topic list -X brokers=127.0.0.1:19092 |
   awk 'NR > 1 { print $1 }' | grep -E "$prefix_re" || true)"
 if [ -n "$topics" ]; then
   # shellcheck disable=SC2086 # one argument per topic
-  "$SB_SCRIPTS_DIR/compose.sh" exec -T redpanda rpk topic delete -X brokers=localhost:19092 $topics >/dev/null
+  "$SB_SCRIPTS_DIR/compose.sh" exec -T redpanda rpk topic delete -X brokers=127.0.0.1:19092 $topics >/dev/null
 fi
 echo "  topics:     $(printf '%s' "$topics" | grep -c . || true) removed (${TEST_TOPIC_PREFIX}*)"
 

@@ -40,11 +40,11 @@ describe("local stack configuration", () => {
     const vars = parseExports(result.stdout);
     const local = readEnvFile("stack/local.env");
     expect(vars).toMatchObject({
-      KAFKA_BROKERS: "localhost:19092",
-      SCHEMA_REGISTRY_URL: "http://localhost:18081",
-      REDPANDA_ADMIN_URL: "http://localhost:9644",
-      CLICKHOUSE_URL: "http://localhost:8123",
-      S3_ENDPOINT: "http://localhost:8333",
+      KAFKA_BROKERS: "127.0.0.1:19092",
+      SCHEMA_REGISTRY_URL: "http://127.0.0.1:18081",
+      REDPANDA_ADMIN_URL: "http://127.0.0.1:9644",
+      CLICKHOUSE_URL: "http://127.0.0.1:8123",
+      S3_ENDPOINT: "http://127.0.0.1:8333",
       S3_FORCE_PATH_STYLE: "true",
       S3_BUCKET: "listening-local",
     });
