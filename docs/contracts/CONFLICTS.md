@@ -133,7 +133,7 @@ Entries CF-001 to CF-118 are in this file; AU-001 to AU-113 (contradictions foun
 | [CF-112](#cf-112) | lang-dialect-id in Python: a third exception to the Node rule | rule, single-PRD | C3, F4, F6 |
 | [CF-113](#cf-113) | When a missing post or comment becomes a `deletions` message: one error, a confirmed second miss, two full reads, or never | rule | F4, C13, FB4, FB5, VFB3, YT4, YT5, VTT5, VTT6, X6, VIG2 |
 | [CF-114](#cf-114) | Rotation mechanics: a "shared scheduler" for Instagram hashtags, and due times kept outside `sources.next_poll_at` when two services rotate one row | rule | F3, F5, IG2, IG5, VIG1, FB6 |
-| [CF-115](#cf-115) | X keyword coverage on the filtered stream: every client brand keyword set, or tier-1 keyword rules only | rule | X1, X4 |
+| [CF-115](#cf-115) | X keyword coverage on the filtered stream: every client brand keyword set, or the tier-1 keyword rules x-recent-search names | rule | X1, X4 |
 | [CF-116](#cf-116) | "Already approved; do not rewrite" (CONVENTIONS L282): twenty PRDs that sit on one side of entries in this file, several against CONVENTIONS itself | document | F2, and every session whose PRD is listed in L282 (FB6, FB2, FB3, F... |
 | [CF-117](#cf-117) | Smaller CONVENTIONS and README inconsistencies (wording, lists and labels), for one batch decision | document | F2, F5, C1, YT5, YT6 |
 | [CF-118](#cf-118) | News article and URL keys: `news:url:<hex>`, `news:article:<hex>` and `news:article:sha256:<hex>` | key, types | F2, C4, N3, N4, N5, N6, N7, W3 |
@@ -1880,14 +1880,14 @@ Entries CF-001 to CF-118 are in this file; AU-001 to AU-113 (contradictions foun
 
 #### CF-115
 
-**X keyword coverage on the filtered stream: every client brand keyword set, or tier-1 keyword rules only**
+**X keyword coverage on the filtered stream: every client brand keyword set, or the tier-1 keyword rules x-recent-search names**
 
 - **Type:** rule
 - **Where:**
   - a) x-filtered-stream fills its rules in order "client brand keyword sets (one rule each, priority 1), tier-1 accounts (priority 1), tier-2 (2), tier-3 (3)" (`x-filtered-stream §5.1 L40`, `§13 L191`).
-  - b) x-recent-search: "Tier-1 keyword rules also run as stream rules on x-filtered-stream; the 15-minute search stays on as the safety net" (`x-recent-search §5.1 L47`).
-- **At stake:** the 1,000-rule budget is filled first with keyword coverage, then accounts; how many rules keyword coverage takes (every brand set, or tier-1 rules only) decides how many accounts get real-time coverage and how x-recent-search's cost split between stream and search works out.
-- **Options:** (1) every client brand keyword set on the stream, as x-filtered-stream says, with x-recent-search's split rewritten; (2) tier-1 keyword rules only on the stream, as x-recent-search says; (3) streamed rules chosen by priority within a fixed share of the 1,000 rules, recorded in both PRDs.
+  - b) x-recent-search: "Tier-1 keyword rules also run as stream rules on x-filtered-stream; the 15-minute search stays on as the safety net" (`x-recent-search §5.1 L47`). The line names tier-1 keyword rules; it does not say whether other keyword rules are streamed or excluded.
+- **At stake:** the 1,000-rule budget is filled first with keyword coverage, then accounts; how many rules keyword coverage takes (every brand set, or the tier-1 keyword rules) decides how many accounts get real-time coverage and how x-recent-search's cost split between stream and search works out.
+- **Options:** (1) every client brand keyword set on the stream, as x-filtered-stream says, with x-recent-search's split rewritten; (2) only tier-1 keyword rules on the stream, one reading of x-recent-search, which names tier-1 rules without excluding others; (3) streamed rules chosen by priority within a fixed share of the 1,000 rules, recorded in both PRDs.
 - **Blocks:** X1, X4
 
 ### Baseline documents
