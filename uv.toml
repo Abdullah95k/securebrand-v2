@@ -1,0 +1,5 @@
+# uv settings for commands run at the repository root and for Python projects without a [tool.uv]
+# table. uv stops at the first [tool.uv] table it finds, so every project that has one repeats
+# required-version (tools/repo-checks/test/unit/pins.test.ts keeps them equal). CI installs exactly
+# the lower bound.
+required-version = ">=0.12.23,<0.13"

@@ -1,0 +1,25 @@
+# Shared ruff settings. Each Python project extends this file from its pyproject.toml
+# ([tool.ruff] extend = "<relative path>/ruff.toml").
+target-version = "py313"
+line-length = 100
+
+[lint]
+select = [
+  "E",   # pycodestyle errors
+  "W",   # pycodestyle warnings
+  "F",   # pyflakes
+  "I",   # import order
+  "N",   # naming
+  "B",   # bugbear
+  "UP",  # pyupgrade
+  "SIM", # simplify
+  "RUF", # ruff-specific
+  "ANN", # annotations (typed code)
+  "PT",  # pytest style
+]
+
+[lint.per-file-ignores]
+"tests/**" = ["ANN401"]
+
+[format]
+quote-style = "double"

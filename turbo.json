@@ -1,0 +1,65 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "globalDependencies": [
+    "tsconfig.base.json",
+    "eslint.config.js",
+    ".node-version",
+    ".prettierrc.json"
+  ],
+  "globalPassThroughEnv": [
+    "HOME",
+    "PATH",
+    "TMPDIR",
+    "CI",
+    "NVM_DIR",
+    "PNPM_HOME",
+    "XDG_CACHE_HOME",
+    "XDG_DATA_HOME",
+    "UV_CACHE_DIR",
+    "UV_SYSTEM_CERTS",
+    "UV_NATIVE_TLS",
+    "DOCKER_HOST",
+    "HTTPS_PROXY",
+    "HTTP_PROXY",
+    "NO_PROXY",
+    "https_proxy",
+    "http_proxy",
+    "no_proxy",
+    "NODE_EXTRA_CA_CERTS",
+    "SSL_CERT_FILE",
+    "GITHUB_ACTIONS",
+    "GITHUB_RUN_ID",
+    "GITHUB_RUN_ATTEMPT"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "lint": {
+      "dependsOn": ["^build"]
+    },
+    "typecheck": {
+      "dependsOn": ["^build"]
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/fixtures/**"],
+      "env": ["TEST_*"]
+    },
+    "test:acceptance": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "env": [
+        "TEST_*",
+        "KAFKA_*",
+        "REDPANDA_*",
+        "SCHEMA_REGISTRY_URL",
+        "CLICKHOUSE_*",
+        "S3_*",
+        "SUPABASE_*",
+        "IMAGE_REGISTRY"
+      ]
+    }
+  }
+}
