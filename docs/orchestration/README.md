@@ -7,7 +7,8 @@ The build plan in `build-plan/` is run by one orchestrator Claude Code session i
 - One worker session works on one session ID only (one service, package, gate or decision), never two.
 - Every worker runs on Claude Opus 5.5 (`claude-opus-5-5`) at maximum effort. The kit's skills declare `effort: max`, and the `prd-reviewer` subagent runs on Opus. (The user moved the build off Claude Fable 5.1 on 2026-10-06 to save Fable credit.)
 - The orchestrator approves build plans, after checking each one against its brief, PRD, ADRs and handoffs. Questions the documents do not settle go to the user through the orchestrator, in batches.
-- The orchestrator merges foundation, core, service, app and gate lanes once their gates are met. The user reads and merges the decision lanes (D1, D2, D3) and every contract-change pull request.
+- The orchestrator merges foundation, core, service, app and gate lanes once their gates are met. The user reads and merges the decision lanes (D1, D2, D3), the lanes that freeze the contracts (F2, F3, F8) and every contract-change pull request.
+- Plan approvals are recorded in the plan's header as "Approved by: the orchestrator, under the user's delegation (docs/orchestration/README.md), <date>". The user's decisions in D2 and later decision lanes are recorded as "decided by: the user, relayed by the orchestrator on <date>". The user's merge of the lane's pull request ratifies them. (The user chose this on 7 Oct 2026.)
 
 ## Lanes
 
@@ -15,7 +16,7 @@ Each session ID is a lane with one branch, `sb/<ID>` (for example `sb/F1`, `sb/C
 
 | Kind | Steps, each a fresh worker session unless noted |
 |---|---|
-| Foundation, core, service, app | plan (`/plan-session`), build (`/build-session`), review (`/review-session`), fix (`/fix-session`, sent to the build session), recheck (`/review-session <ID> recheck`), merge |
+| Foundation, core, service, app | plan (`/plan-session`), build (`/build-session`), review (`/review-session`), fix (`/fix-session`), recheck (`/review-session <ID> recheck`), merge |
 | Decision and spec (D1, D2, D3) | decide (`/decide-session`), review by a fresh session, user reads and merges |
 | Probe | probe (`/probe-platform`; the orchestrator relays the call list and cost to the user and waits for a yes), review, merge |
 | Gate | gate (`/integration-gate`) on an up-to-date `main`; the report lands through its lane |
@@ -38,6 +39,8 @@ The orchestrator never answers inside a worker's session: workers treat messages
 - `claude --worktree`, plan mode and `/clear` are replaced by fresh cloud sessions per step on the lane's branch.
 - `ALLOW_CONTRACT_EDITS=1` cannot be set when a cloud session starts, so `.claude/hooks/guard-contracts.sh` also allows contract edits on the branches `sb/F2`, `sb/F3`, `sb/F8` and `sb/CC-<proposal>`. CI remains the hard backstop.
 - The Docker daemon is not running when a cloud container starts. Workers start it before `make up` with `sudo -n env HTTPS_PROXY="$HTTPS_PROXY" HTTP_PROXY="$HTTP_PROXY" NO_PROXY="$NO_PROXY" dockerd`, since `sudo` would otherwise drop the proxy settings. Anonymous Docker Hub pulls are rate-limited on the containers' shared address, so the stack uses registries that allow anonymous pulls, and a GHCR mirror for the rest (F1).
+- Every command in a cloud session runs in a new shell on Node 22, and a fresh container lacks the pinned toolchain, so workers run `make bootstrap` once before anything that needs Node or Python, and put `nvm use 24.21.0 >/dev/null &&` in front of a `pnpm` command they type (see `docs/handoffs/F1.md`, Operations).
+- Pull requests that change contract paths carry the `contract-change` label, which the orchestrator applies to the F2, F3, F8 and contract-change pull requests; the policy check fails such a pull request without it.
 - Cloud containers hold no platform credentials. Probe sessions, staging and infrastructure work need the user to add credentials to the cloud environment first.
 
 ## What only the user can supply
