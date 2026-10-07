@@ -37,7 +37,8 @@ export function satisfies(version: string, range: string): boolean {
       return false;
     }
     const cmp = compare(version, match[2]);
-    switch (match[1]) {
+    const op = match[1] ?? "==";
+    switch (op) {
       case ">=":
         return cmp >= 0;
       case ">":

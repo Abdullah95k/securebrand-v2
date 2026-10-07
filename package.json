@@ -19,6 +19,7 @@
     "@types/node": "catalog:",
     "eslint": "catalog:",
     "eslint-config-prettier": "catalog:",
+    "globals": "catalog:",
     "prettier": "catalog:",
     "supabase": "catalog:",
     "turbo": "catalog:",

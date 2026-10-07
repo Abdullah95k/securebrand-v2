@@ -1,0 +1,94 @@
+# The local stack: Redpanda, ClickHouse and SeaweedFS (local S3). Supabase runs beside it through
+# the Supabase CLI (supabase/config.toml). Start it with `make up`, which reads the image pins from
+# stack/versions.env and waits for every service to be healthy; `make down` removes it with its
+# volumes. One fixed project name, so every worktree of this repository shares one stack (tests
+# keep apart through TEST_NAMESPACE, see scripts/test-namespace.sh). Ports are published on
+# localhost only; stack/README.md lists them with the variables scripts/stack-env.sh prints.
+name: securebrand
+
+services:
+  redpanda:
+    image: ${REDPANDA_REPO}:${REDPANDA_TAG}
+    command:
+      - redpanda
+      - start
+      - --mode=dev-container
+      - --smp=1
+      - --memory=1G
+      - --default-log-level=warn
+      - --kafka-addr=internal://0.0.0.0:9092,external://0.0.0.0:19092
+      - --advertise-kafka-addr=internal://redpanda:9092,external://localhost:19092
+      - --pandaproxy-addr=internal://0.0.0.0:8082,external://0.0.0.0:18082
+      - --advertise-pandaproxy-addr=internal://redpanda:8082,external://localhost:18082
+      - --schema-registry-addr=internal://0.0.0.0:8081,external://0.0.0.0:18081
+      - --rpc-addr=redpanda:33145
+      - --advertise-rpc-addr=redpanda:33145
+    ports:
+      - 127.0.0.1:19092:19092
+      - 127.0.0.1:18081:18081
+      - 127.0.0.1:18082:18082
+      - 127.0.0.1:9644:9644
+    volumes:
+      - redpanda-data:/var/lib/redpanda/data
+    healthcheck:
+      test: ["CMD-SHELL", "rpk cluster health | grep -Eq 'Healthy:[[:space:]]+true'"]
+      interval: 2s
+      timeout: 5s
+      retries: 60
+      start_period: 5s
+
+  clickhouse:
+    image: ${CLICKHOUSE_REPO}:${CLICKHOUSE_TAG}
+    ports:
+      - 127.0.0.1:8123:8123
+      - 127.0.0.1:9000:9000
+    volumes:
+      - clickhouse-data:/var/lib/clickhouse
+      - ./stack/clickhouse/config.d/local.xml:/etc/clickhouse-server/config.d/local.xml:ro
+      - ./stack/clickhouse/users.d/listening.xml:/etc/clickhouse-server/users.d/listening.xml:ro
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    healthcheck:
+      test: ["CMD", "clickhouse-client", "--query", "SELECT 1"]
+      interval: 2s
+      timeout: 5s
+      retries: 60
+      start_period: 5s
+
+  seaweedfs:
+    image: ${SEAWEEDFS_REPO}:${SEAWEEDFS_TAG}
+    command:
+      - server
+      - -dir=/data
+      - -ip=127.0.0.1
+      - -ip.bind=0.0.0.0
+      - -master.volumeSizeLimitMB=1024
+      - -volume.max=0
+      - -filer
+      - -s3
+      - -s3.port=8333
+      - -s3.config=/etc/seaweedfs/s3.json
+    ports:
+      - 127.0.0.1:8333:8333
+      - 127.0.0.1:9333:9333
+      - 127.0.0.1:8888:8888
+    volumes:
+      - seaweedfs-data:/data
+      - ./stack/seaweedfs/s3.json:/etc/seaweedfs/s3.json:ro
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget -q -O /dev/null http://127.0.0.1:8888/ && wget -q -O /dev/null http://127.0.0.1:8333/healthz",
+        ]
+      interval: 2s
+      timeout: 5s
+      retries: 90
+      start_period: 5s
+
+volumes:
+  redpanda-data:
+  clickhouse-data:
+  seaweedfs-data:

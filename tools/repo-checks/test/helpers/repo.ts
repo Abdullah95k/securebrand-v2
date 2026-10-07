@@ -62,7 +62,6 @@ export function cleanEnv(extra: NodeJS.ProcessEnv = {}): NodeJS.ProcessEnv {
       key === "E2E_DIR" ||
       key === "IMAGE_REGISTRY"
     ) {
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete -- building a filtered copy of the environment
       delete env[key];
     }
   }

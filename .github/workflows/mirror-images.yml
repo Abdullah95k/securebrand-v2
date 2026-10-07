@@ -1,0 +1,54 @@
+# Copies the stack images that have no anonymous upstream (stack/versions.env) to this repository's
+# GHCR packages, so make up works where Docker Hub answers 429 (cloud sessions, CI). It runs on
+# demand and on every push, on any branch, that changes the pins, so a lane can prove make up before
+# it merges. It pulls from Docker Hub anonymously unless the DOCKERHUB_USERNAME and DOCKERHUB_TOKEN
+# secrets exist. New packages are private until the user makes them public (docs/handoffs/F1.md).
+name: Mirror images
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - stack/versions.env
+      - scripts/mirror-images.sh
+      - .github/workflows/mirror-images.yml
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: mirror-images-${{ github.ref }}
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  mirror:
+    name: mirror
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      - name: Log in to GHCR
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Log in to Docker Hub, only when its secrets exist
+        if: env.DOCKERHUB_USERNAME != '' && env.DOCKERHUB_TOKEN != ''
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          username: ${{ env.DOCKERHUB_USERNAME }}
+          password: ${{ env.DOCKERHUB_TOKEN }}
+      - name: Copy the pinned tags
+        run: scripts/mirror-images.sh

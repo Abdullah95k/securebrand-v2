@@ -1,0 +1,14 @@
+{
+  "identities": [
+    {
+      "name": "listening",
+      "credentials": [
+        {
+          "accessKey": "listening-local",
+          "secretKey": "listening-dev-only"
+        }
+      ],
+      "actions": ["Admin", "Read", "Write", "List", "Tagging"]
+    }
+  ]
+}

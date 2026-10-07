@@ -1,0 +1,58 @@
+# Weekly, grouped, few open pull requests at a time. Major versions are planned upgrades (Node 26,
+# pnpm 11, TypeScript 7, Python 3.14 and the rest are follow-ups in docs/handoffs/F1.md), so
+# Dependabot proposes minor and patch updates only. The stack's image tags in stack/versions.env
+# are bumped by hand. Renovate is not used: Mend.io fails the vendor screen.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 2
+    groups:
+      npm:
+        patterns: ["*"]
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: uv
+    directories:
+      - /services/*
+      - /packages/*
+      - /py/*
+      - /tools/probes/*
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 2
+    groups:
+      uv:
+        patterns: ["*"]
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: docker
+    directories:
+      - /services/*
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 2
+    groups:
+      docker:
+        patterns: ["*"]
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 2
+    groups:
+      github-actions:
+        patterns: ["*"]
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]

@@ -65,6 +65,14 @@ describe("scripts/check-fixtures.sh", () => {
     expect(result.output).not.toContain(secret.slice(-24));
   });
 
+  it("checks new fixtures before they are committed", () => {
+    repo.write("README.md", "x\n").commit();
+    platform("instagram", { "media.json": `{\n  ${TOKENS[0]?.[1] ?? ""}\n}\n` });
+    const result = check();
+    expect(result.code).not.toBe(0);
+    expect(result.output).toContain("fixtures/instagram/media.json:2");
+  });
+
   it("fails when a fixture directory has no README listing its files", () => {
     repo.write("fixtures/instagram/media.json", "{}\n").commit();
     const missing = check();

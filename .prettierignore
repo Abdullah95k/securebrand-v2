@@ -1,0 +1,27 @@
+# The kit, the PRDs and the orchestrator's notes are never reformatted.
+docs/prds/
+docs/orchestration/
+build-plan/
+CLAUDE.md
+KIT-README.md
+.claude/
+# The dependency register is appended to by every lane; aligned columns would make each row
+# addition rewrite every row and conflict with the other lanes.
+docs/dependencies.md
+# Plans are kept exactly as approved.
+docs/plans/*.md
+!docs/plans/README.md
+# Fixtures stay byte for byte as recorded or written.
+fixtures/
+# Generated files and outputs.
+pnpm-lock.yaml
+**/uv.lock
+node_modules/
+dist/
+coverage/
+.turbo/
+.venv/
+.build-state/
+supabase/.temp/
+supabase/.branches/
+*.log

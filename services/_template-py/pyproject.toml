@@ -1,0 +1,35 @@
+[project]
+name = "service-template"
+version = "0.0.0"
+description = "Python service created from services/_template-py"
+requires-python = ">=3.13,<3.14"
+dependencies = []
+
+[dependency-groups]
+dev = [
+  "pyright==1.1.414",
+  "pytest==9.1.1",
+  "ruff==0.16.10",
+]
+
+[build-system]
+requires = ["uv_build>=0.12.23,<0.13"]
+build-backend = "uv_build"
+
+[tool.uv]
+# uv reads only the nearest [tool.uv] table, so this repeats the root uv.toml pin.
+required-version = ">=0.12.23,<0.13"
+
+[tool.ruff]
+extend = "../../ruff.toml"
+
+[tool.pyright]
+typeCheckingMode = "strict"
+pythonVersion = "3.13"
+venvPath = "."
+venv = ".venv"
+include = ["src", "tests"]
+
+[tool.pytest.ini_options]
+addopts = ["-ra", "--strict-markers"]
+testpaths = ["tests"]
