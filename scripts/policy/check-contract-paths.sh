@@ -24,12 +24,7 @@ while [ $# -gt 0 ]; do
 done
 
 cd "$(sb_repo_root)"
-if [ -n "$BASE_REF" ]; then
-  BASE="$(git merge-base HEAD "$BASE_REF" 2>/dev/null || git rev-parse --verify "$BASE_REF^{commit}")"
-else
-  BASE="$(sb_merge_base)"
-fi
-[ -n "$BASE" ] || sb_die "no merge base with main; pass --base <ref>"
+BASE="$(sb_policy_base "$BASE_REF")"
 
 mapfile -t CHANGED < <(sb_changed_files "$BASE" | grep -E '^(packages/contracts|supabase/migrations|clickhouse/migrations)/' || true)
 if [ "${#CHANGED[@]}" -eq 0 ]; then

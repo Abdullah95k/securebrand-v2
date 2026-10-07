@@ -2,6 +2,10 @@
 // plan). They drive `make up`, `make down` and `make ns-clean` against Docker on this machine and
 // talk to localhost only. The order matters: the last test leaves the stack up for the CI steps
 // that follow.
+//
+// The make down test (A2) wipes every container and volume of the one stack that all worktrees
+// share, so it runs only when TEST_STACK_RESET=1: CI's check job sets it; on a workstation, set it
+// only when no other worktree is running its tests.
 import { randomBytes } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import {
@@ -10,6 +14,7 @@ import {
   containerHealth,
   createBucket,
   createTopic,
+  deleteBucket,
   getObject,
   listTopics,
   make,
@@ -165,6 +170,34 @@ describe("local stack (make up, make down, make ns-clean)", () => {
   );
 
   it(
+    "holds a test bucket with data for each of eight parallel worktrees at once",
+    async () => {
+      const env = stackEnv();
+      const id = suffix();
+      const buckets = Array.from(
+        { length: 8 },
+        (_, i) => namespaceEnv(`t_${id}_${i}`).TEST_S3_BUCKET ?? "",
+      );
+      const created: string[] = [];
+      try {
+        for (const [i, bucket] of buckets.entries()) {
+          await createBucket(env, bucket);
+          created.push(bucket);
+          await putObject(env, bucket, "probe.txt", `worktree ${i}`);
+        }
+        for (const [i, bucket] of buckets.entries()) {
+          expect(await getObject(env, bucket, "probe.txt")).toBe(`worktree ${i}`);
+        }
+      } finally {
+        for (const bucket of created) {
+          await deleteBucket(env, bucket);
+        }
+      }
+    },
+    5 * MINUTES,
+  );
+
+  it.runIf(process.env.TEST_STACK_RESET === "1")(
     "make down removes the volumes so the next make up starts empty",
     async () => {
       const env = stackEnv();

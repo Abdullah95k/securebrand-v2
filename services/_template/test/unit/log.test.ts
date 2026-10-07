@@ -32,6 +32,14 @@ describe("log", () => {
     ]);
   });
 
+  it("writes bigint values as strings instead of failing the job", () => {
+    const out = capture();
+    createLogger("service-template", { write: out.write }).info("fetched", {
+      post_id: 1234567890123456789n,
+    });
+    expect(out.lines[0]).toMatchObject({ post_id: "1234567890123456789" });
+  });
+
   it("drops entries below the configured level", () => {
     const out = capture();
     const log = createLogger("service-template", { write: out.write, level: "warn" });

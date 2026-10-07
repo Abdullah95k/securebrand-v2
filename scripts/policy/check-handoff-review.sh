@@ -49,21 +49,22 @@ if [ "${ID#CC-}" != "$ID" ]; then
   else
     grep -qiE '^Decision:[[:space:]]*approved' "$PROPOSAL" ||
       fail "$PROPOSAL is not approved (its Decision line must read: approved (<name>, <date>))"
-    applied="$(grep -iE '^Applied:' "$PROPOSAL" | tail -1 | sed -E 's/^Applied:[[:space:]]*//I')"
-    case "$(printf '%s' "$applied" | tr '[:upper:]' '[:lower:]')" in
-      "" | no | "no "* | "no|"* | "no |"*) fail "$PROPOSAL is not applied yet (its Applied line must name the commit)" ;;
-    esac
+    # The Applied line names the commit of this branch that applies the proposal.
+    applied="$(grep -iE '^Applied:' "$PROPOSAL" | tail -1 | sed -E 's/^Applied:[[:space:]]*//I' || true)"
+    sha="$(sed -nE 's/^`?([0-9a-fA-F]{7,40})`?([^0-9A-Za-z].*)?$/\1/p' <<<"$applied")"
+    if ! grep -qiE '^Applied:' "$PROPOSAL"; then
+      fail "$PROPOSAL has no Applied line (Applied: <commit> names the commit that applies it)"
+    elif [ -z "$sha" ]; then
+      fail "$PROPOSAL is not applied yet: its Applied line must name the commit that applies it, not \"$applied\""
+    elif ! git merge-base --is-ancestor "$sha" HEAD 2>/dev/null; then
+      fail "$PROPOSAL names commit $sha on its Applied line, but that commit is not part of this branch"
+    fi
   fi
   [ "$FAILED" = 0 ] && echo "check-handoff-review: $PROPOSAL is approved and applied"
   exit "$FAILED"
 fi
 
-if [ -n "$BASE_REF" ]; then
-  BASE="$(git merge-base HEAD "$BASE_REF" 2>/dev/null || git rev-parse --verify "$BASE_REF^{commit}")"
-else
-  BASE="$(sb_merge_base)"
-fi
-[ -n "$BASE" ] || sb_die "no merge base with main; pass --base <ref>"
+BASE="$(sb_policy_base "$BASE_REF")"
 
 GATED="$(sb_changed_files "$BASE" | grep -E '^(services|packages|py|tools|tests)/' || true)"
 if [ -z "$GATED" ]; then
@@ -77,28 +78,56 @@ REVIEW="docs/reviews/$ID.md"
 if [ ! -f "$REVIEW" ]; then
   fail "$REVIEW is missing: a fresh session runs /review-session $ID"
 else
-  # The latest verdict: the last line naming one, in the last "Recheck" section when there is one.
-  # A line naming both (the template's "ready to merge | needs fixes") is not a verdict.
+  # The latest verdict, read from the last "Recheck" section when there is one, else from the whole
+  # review. Its verdict lines are the "Verdict: ..." lines and the lines that start with a verdict
+  # (the two-line verdict the review ends with). The lane passes only when every one of them reads
+  # exactly "ready to merge" (optionally "(0 blockers, ...)"); one that starts with "needs fixes"
+  # or "not ready to merge" fails it, and so does any other wording ("ready to merge once finding
+  # 1 is fixed", "not yet ready to merge", the template's "ready to merge | needs fixes").
   verdict="$(awk '
+    function clean(s) {
+      gsub(/[*_`]/, "", s)
+      sub(/^[[:space:]]+/, "", s)
+      sub(/[[:space:]]+$/, "", s)
+      return tolower(s)
+    }
+    function kind(v) {
+      sub(/\.$/, "", v)
+      if (v ~ /^ready to merge( \(0 blockers?[^)]*\))?$/) return "ready"
+      if (v ~ /^(needs fixes|not ready to merge)/) return "fixes"
+      return "unreadable"
+    }
     { lines[NR] = $0 }
     /^#+[[:space:]].*[Rr]echeck/ { start = NR }
     END {
       if (!start) start = 1
-      v = ""
+      fixes = ""; unreadable = ""; ready = 0
       for (i = start; i <= NR; i++) {
-        l = tolower(lines[i])
-        ready = index(l, "ready to merge") > 0
-        fixes = index(l, "needs fixes") > 0
-        if (ready && fixes) continue
-        if (fixes || index(l, "not ready to merge") > 0) v = "needs fixes"
-        else if (ready) v = "ready to merge"
+        l = clean(lines[i])
+        if (l ~ /^verdict[[:space:]]*:/) {
+          v = l
+          sub(/^verdict[[:space:]]*:[[:space:]]*/, "", v)
+        } else if (l ~ /^(ready to merge|needs fixes|not ready to merge)/) {
+          v = l
+        } else {
+          continue
+        }
+        k = kind(v)
+        if (k == "ready") ready++
+        else if (k == "fixes" && fixes == "") fixes = "line " i ": " lines[i]
+        else if (k == "unreadable" && unreadable == "") unreadable = "line " i ": " lines[i]
       }
-      print v
+      if (fixes != "") print "needs fixes|" fixes
+      else if (unreadable != "") print "unreadable|" unreadable
+      else if (ready > 0) print "ready to merge|"
+      else print "none|"
     }' "$REVIEW")"
-  case "$verdict" in
+  where="${verdict#*|}"
+  case "${verdict%%|*}" in
     "ready to merge") ;;
-    "needs fixes") fail "$REVIEW: the latest verdict is needs fixes; /fix-session $ID, then /review-session $ID recheck" ;;
-    *) fail "$REVIEW has no readable verdict (\"ready to merge\" or \"needs fixes\")" ;;
+    "needs fixes") fail "$REVIEW: the latest verdict is needs fixes ($where); /fix-session $ID, then /review-session $ID recheck" ;;
+    unreadable) fail "$REVIEW: a verdict line is neither \"ready to merge\" nor \"needs fixes: N blockers, M should-fix\" ($where)" ;;
+    *) fail "$REVIEW has no readable verdict (\"Verdict: ready to merge\" or \"Verdict: needs fixes ...\")" ;;
   esac
 fi
 

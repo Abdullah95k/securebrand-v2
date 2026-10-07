@@ -25,6 +25,26 @@ const TOKENS: [string, string][] = [
     `"url": "https://cdn.example.com/a.mp4?Expires=1&${"Signa" + "ture"}=${alnum(40)}"`,
   ],
   ["a sig parameter", `"url": "https://cdn.example.com/a.jpg?e=1&${"si" + "g"}=${alnum(32)}"`],
+  [
+    "a TikTok x-signature parameter",
+    `"url": "https://p16-sign.tiktokcdn-us.com/obj/a.jpeg?x-expires=1700000000&${"x-sig" + "nature"}=${alnum(28)}%3D"`,
+  ],
+  [
+    "a lower-case S3 signature",
+    `"url": "https://bucket.example.com/a.jpg?x-amz-credential=x&${"x-amz-" + "signature"}=${alnum(64)}"`,
+  ],
+  [
+    "a JSON-escaped oh parameter",
+    `"url": "https://scontent.example.com/v/t51.jpg?stp=dst-jpg\\u0026${"o" + "h"}=00_${alnum(40)}\\u0026oe=67000000"`,
+  ],
+  [
+    "an HTML-escaped oh parameter",
+    `"src": "https://scontent.example.com/v/t1.jpg?stp=dst&amp;${"o" + "h"}=00_${alnum(40)}&amp;oe=67000000"`,
+  ],
+  [
+    "a URL-encoded sig parameter inside another URL",
+    `"url": "https://l.example.com/?u=https%3A%2F%2Fcdn.example.com%2Fa.jpg%3Fe%3D1%26${"si" + "g"}%3D${alnum(32)}"`,
+  ],
 ];
 
 describe("scripts/check-fixtures.sh", () => {
@@ -83,6 +103,28 @@ describe("scripts/check-fixtures.sh", () => {
     const unlisted = check();
     expect(unlisted.code).not.toBe(0);
     expect(unlisted.output).toContain("media.json");
+  });
+
+  it("does not count a file whose name only appears inside a longer listed name", () => {
+    platform("meta", { "page-feed.json": "{}\n" });
+    repo.write("fixtures/meta/feed.json", "{}\n").commit();
+    const result = check();
+    expect(result.code).not.toBe(0);
+    expect(result.output).toContain("fixtures/meta/feed.json is not listed");
+    expect(result.output).not.toContain("fixtures/meta/page-feed.json is not listed");
+  });
+
+  it("accepts listed names followed by punctuation or ending a sentence", () => {
+    repo.write(
+      "fixtures/meta/README.md",
+      "# Meta\n\nRecorded feed.json, `page.json` and (posts.json) on 2026-10-07. Then comments.json.\n",
+    );
+    for (const name of ["feed.json", "page.json", "posts.json", "comments.json"]) {
+      repo.write(`fixtures/meta/${name}`, "{}\n");
+    }
+    repo.commit();
+    const result = check();
+    expect(result.code, result.output).toBe(0);
   });
 
   it("accepts a file listed in a README of its own subdirectory", () => {

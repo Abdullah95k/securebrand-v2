@@ -57,6 +57,21 @@ describe("scripts/policy/check-contract-paths.sh", () => {
     expect(result.output).toContain("clickhouse/migrations/0001_items.sql");
   });
 
+  it("counts a file moved out of a contract path as a change", () => {
+    repo.git("checkout", "-q", "main");
+    repo
+      .write("packages/contracts/src/topics.ts", "export const topics = [];\n")
+      .commit("contract on main");
+    repo.git("branch", "-q", "-f", "sb/F4", "HEAD");
+    repo.checkout("sb/F4");
+    repo.write("packages/other/README.md", "x\n");
+    repo.git("mv", "packages/contracts/src/topics.ts", "packages/other/topics.ts");
+    repo.commit("move it out");
+    const result = check([]);
+    expect(result.code).not.toBe(0);
+    expect(result.output).toContain("packages/contracts/src/topics.ts");
+  });
+
   it("passes when no contract path changed", () => {
     repo.write("services/demo/src/index.ts", "export {};\n");
     repo.write("docs/contracts/README.md", "# Contracts\n").commit();

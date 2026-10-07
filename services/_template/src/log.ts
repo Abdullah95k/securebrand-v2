@@ -22,6 +22,10 @@ export interface Logger {
 
 const ORDER: Record<Level, number> = { debug: 10, info: 20, warn: 30, error: 40 };
 
+// JSON.stringify throws on a bigint (a 64-bit post id, say); a log line must never fail the job.
+const asJson = (_key: string, value: unknown): unknown =>
+  typeof value === "bigint" ? value.toString() : value;
+
 export interface LoggerOptions {
   readonly level?: Level;
   readonly write?: (line: string) => void;
@@ -45,7 +49,9 @@ export function createLogger(
     if (ORDER[level] < min) {
       return;
     }
-    write(JSON.stringify({ ts: now().toISOString(), level, service, msg, ...base, ...fields }));
+    write(
+      JSON.stringify({ ts: now().toISOString(), level, service, msg, ...base, ...fields }, asJson),
+    );
   };
 
   return {

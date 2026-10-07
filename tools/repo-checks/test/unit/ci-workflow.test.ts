@@ -77,12 +77,46 @@ describe("GitHub workflows", () => {
 
     const policyRun = runText(policy.jobs.policy ?? { steps: [] });
     for (const command of [
-      "scripts/policy/check-contract-paths.sh",
-      "scripts/policy/check-handoff-review.sh",
-      "scripts/policy/check-dependencies.sh",
-      "scripts/check-fixtures.sh",
+      '"$POLICY_SCRIPTS/policy/check-contract-paths.sh"',
+      '"$POLICY_SCRIPTS/policy/check-handoff-review.sh"',
+      '"$POLICY_SCRIPTS/policy/check-dependencies.sh"',
+      '"$POLICY_SCRIPTS/check-fixtures.sh"',
     ]) {
       expect(policyRun).toContain(command);
+    }
+  });
+
+  it("the policy job runs the base branch's copy of the policy scripts, so a pull request cannot loosen its own checks", () => {
+    const steps = policy.jobs.policy?.steps ?? [];
+    const kit = steps.findIndex((s) => (s.run ?? "").includes("git archive"));
+    expect(kit).toBeGreaterThan(-1);
+    const extract = steps[kit]?.run ?? "";
+    expect(extract).toContain('git archive "$POLICY_BASE" scripts');
+    expect(extract).toContain("POLICY_SCRIPTS=");
+    expect(extract).toContain("$GITHUB_ENV");
+    // Every check runs after the extraction, from the extracted copy only.
+    for (const step of steps.slice(0, kit)) {
+      expect(step.run ?? "").not.toContain("check-");
+    }
+    for (const step of steps.slice(kit + 1)) {
+      expect(step.run ?? "").not.toMatch(/(^|\s)scripts\//);
+    }
+  });
+
+  it("on a push to main, make check compares with the commit before the push", () => {
+    const step = (ci.jobs.check?.steps ?? []).find((s) => (s.run ?? "").includes("make check"));
+    expect(step).toBeDefined();
+    const base = step?.env?.CHECK_BASE ?? "";
+    expect(base).toContain("github.event_name == 'push'");
+    expect(base).toContain("github.event.before");
+  });
+
+  it("only CI's check job opts in to the acceptance test that resets the shared stack", () => {
+    const step = (ci.jobs.check?.steps ?? []).find((s) => (s.run ?? "").includes("make check"));
+    expect(step?.env?.TEST_STACK_RESET).toBe("1");
+    const smoke = ci.jobs["template-smoke"]?.steps ?? [];
+    for (const s of smoke) {
+      expect(s.env?.TEST_STACK_RESET).toBeUndefined();
     }
   });
 
@@ -130,6 +164,9 @@ describe("GitHub workflows", () => {
     );
     expect(dockerHub?.if).toMatch(/DOCKERHUB_USERNAME/);
     expect(runText(job ?? { steps: [] })).toContain("scripts/mirror-images.sh");
+    // Only main may replace a mirrored tag whose digest no longer matches its upstream.
+    const copy = steps.find((s) => (s.run ?? "").includes("scripts/mirror-images.sh"));
+    expect(copy?.env?.MIRROR_REPLACE).toBe("${{ github.ref == 'refs/heads/main' && '1' || '' }}");
   });
 
   it("dependabot covers npm, uv, docker and github-actions weekly and grouped with a low limit", () => {

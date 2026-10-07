@@ -9,7 +9,7 @@ from __future__ import annotations
 import json
 import sys
 from collections.abc import Callable, Mapping
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime, time
 from typing import Literal
 
 Level = Literal["debug", "info", "warn", "error"]
@@ -25,6 +25,13 @@ def _stdout(line: str) -> None:
 
 def _utcnow() -> datetime:
     return datetime.now(UTC)
+
+
+def _json_default(value: object) -> str:
+    """Values json cannot encode (datetime, UUID, Decimal, ...) as text: a log line never fails."""
+    if isinstance(value, datetime | date | time):
+        return value.isoformat()
+    return str(value)
 
 
 class Logger:
@@ -58,7 +65,10 @@ class Logger:
             return
         ts = self._now().isoformat(timespec="milliseconds").replace("+00:00", "Z")
         entry = {"ts": ts, "level": level, "service": self._service, "msg": msg}
-        self._write(json.dumps({**entry, **self._base, **fields}, ensure_ascii=False))
+        line = json.dumps(
+            {**entry, **self._base, **fields}, ensure_ascii=False, default=_json_default
+        )
+        self._write(line)
 
     def debug(self, msg: str, **fields: object) -> None:
         self.log("debug", msg, **fields)

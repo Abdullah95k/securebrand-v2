@@ -5,12 +5,16 @@
 #   scripts/check-changed.sh [--plan] [--acceptance]
 #
 #   --plan        print the steps and stop; nothing runs
-#   --acceptance  also run the acceptance suites (CI runs them with the local stack up)
-#   CHECK_BASE    compare with this ref instead of the merge base with origin/main or main
+#   --acceptance  also run the acceptance suites, with the stack variables (stack-env.sh) and
+#                 this checkout's test namespace (test-namespace.sh) exported; CI runs them with
+#                 the local stack up
+#   CHECK_BASE    compare with this commit instead of the merge base with origin/main or main
+#                 (CI passes the commit before a push to main)
 #
-# With no merge base (a shallow clone, an unrelated history) it checks everything and says so:
-# make check never passes silently. Every step runs even after a failure; the exit status is
-# non-zero when any step failed.
+# With no merge base (a shallow clone, an unrelated history) or a CHECK_BASE that is not a commit
+# here, it checks everything and says so: make check never passes silently. A change to the
+# shared Python configuration (ruff.toml, .python-version, uv.toml) checks every Python project.
+# Every step runs even after a failure; the exit status is non-zero when any step failed.
 set -euo pipefail
 # shellcheck source=lib/common.sh
 . "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
@@ -33,7 +37,8 @@ cd "$ROOT"
 
 BASE="$(sb_merge_base)"
 if [ -z "$BASE" ]; then
-  echo "warning: no merge base with main (origin/main or main): running the full check" >&2
+  [ -n "${CHECK_BASE:-}" ] || echo "warning: no merge base with main (origin/main or main)" >&2
+  echo "warning: nothing to compare with: running the full check" >&2
   CHANGED="$(git ls-files --cached --others --exclude-standard)"
 else
   CHANGED="$(sb_changed_files "$BASE")"
@@ -56,7 +61,9 @@ TURBO_FILTERS=()
 if [ -f package.json ] && [ -f turbo.json ]; then
   if [ -n "$BASE" ]; then
     TURBO_FILTERS+=("--filter=...[$BASE]")
-    if printf '%s\n' "$CHANGED" | grep -qE "$ROOT_TOOLING" && [ -f tools/repo-checks/package.json ]; then
+    # A here-string, not a pipe: grep -q stops at the first match, and a writer still holding
+    # more than a pipe buffer of names would die of SIGPIPE and turn the match into a miss.
+    if grep -qE "$ROOT_TOOLING" <<<"$CHANGED" && [ -f tools/repo-checks/package.json ]; then
       TURBO_FILTERS+=("--filter=repo-checks")
     fi
   fi
@@ -67,13 +74,18 @@ if [ -f package.json ] && [ -f turbo.json ]; then
 fi
 
 # --- Python: the nearest pyproject.toml above each changed file, plus path dependants. ----------
+# Every project extends ruff.toml and follows .python-version and uv.toml.
+PY_SHARED='^(ruff\.toml|\.python-version|uv\.toml)$'
 PY_CHANGED=()
-if [ -n "$BASE" ]; then
+if [ -z "$BASE" ] || grep -qE "$PY_SHARED" <<<"$CHANGED"; then
+  PY_PROJECTS="$(python3 "$SB_LIB_DIR/py_projects.py" "$ROOT" --all)"
+else
   declare -A SEEN=()
   while IFS= read -r file; do
-    [ -n "$file" ] || continue
-    dir="$(dirname "$file")"
-    while [ "$dir" != "." ] && [ "$dir" != "/" ]; do
+    # Parameter expansion, not dirname: a large change list must not fork per file.
+    dir="$file"
+    while [[ "$dir" == */* ]]; do
+      dir="${dir%/*}"
       if [ -f "$dir/pyproject.toml" ]; then
         if [ -z "${SEEN[$dir]:-}" ]; then
           SEEN[$dir]=1
@@ -81,7 +93,6 @@ if [ -n "$BASE" ]; then
         fi
         break
       fi
-      dir="$(dirname "$dir")"
     done
   done <<<"$CHANGED"
   if [ "${#PY_CHANGED[@]}" -gt 0 ]; then
@@ -89,8 +100,6 @@ if [ -n "$BASE" ]; then
   else
     PY_PROJECTS=""
   fi
-else
-  PY_PROJECTS="$(python3 "$SB_LIB_DIR/py_projects.py" "$ROOT" --all)"
 fi
 
 pytest_args() {
@@ -121,6 +130,14 @@ echo "step fixtures :: scripts/check-fixtures.sh"
 
 # --- Run every step. ------------------------------------------------------------------------------
 FAILED=()
+
+# The acceptance suites talk to the local stack, each under this checkout's test namespace.
+if [ "$ACCEPTANCE" = 1 ]; then
+  exports="$("$SB_SCRIPTS_DIR/test-namespace.sh")" || sb_die "scripts/test-namespace.sh failed"
+  eval "$exports"
+  exports="$("$SB_SCRIPTS_DIR/stack-env.sh")" || sb_die "scripts/stack-env.sh failed"
+  eval "$exports"
+fi
 
 if [ -n "$TS_PACKAGES" ]; then
   echo "== turbo ${TASKS[*]}"

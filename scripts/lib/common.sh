@@ -40,26 +40,48 @@ sb_select_node() {
 sb_select_node
 
 # The ref the current branch is compared with: CHECK_BASE when set, else the merge base with
-# origin/main, else with main. Prints nothing when there is no merge base.
+# origin/main, else with main. Prints nothing when there is no merge base, and when CHECK_BASE is
+# not a commit here (CI passes the commit before a push, which a force push can make unreachable
+# and which is all zeros for a new branch); the callers then check everything.
 sb_merge_base() {
   local ref base
   if [ -n "${CHECK_BASE:-}" ]; then
-    git rev-parse --verify "${CHECK_BASE}^{commit}"
-    return
+    if base="$(git rev-parse --verify -q "${CHECK_BASE}^{commit}")"; then
+      echo "$base"
+    else
+      echo "warning: CHECK_BASE=$CHECK_BASE is not a commit of this repository" >&2
+    fi
+    return 0
   fi
   for ref in origin/main main; do
     git rev-parse --verify -q "${ref}^{commit}" >/dev/null || continue
     base="$(git merge-base HEAD "$ref" 2>/dev/null || true)"
     if [ -n "$base" ]; then
       echo "$base"
-      return
+      return 0
     fi
   done
 }
 
+# The base commit of a pull request check (scripts/policy/): the merge base of HEAD and <ref>, or
+# <ref> itself when they share no history; with no <ref>, sb_merge_base. Exits when there is none.
+sb_policy_base() {
+  local ref="${1:-}" base
+  if [ -z "$ref" ]; then
+    base="$(sb_merge_base)"
+    [ -n "$base" ] || sb_die "no merge base with main; pass --base <ref>"
+  else
+    base="$(git merge-base HEAD "$ref" 2>/dev/null || git rev-parse --verify -q "$ref^{commit}")" ||
+      sb_die "$ref is not a commit of this repository; fetch it or pass another --base"
+  fi
+  echo "$base"
+}
+
 # Files that differ from a base commit: committed, staged, unstaged and untracked (not ignored).
+# A moved file counts at both of its paths (--no-renames), so a file moved out of a frozen path
+# is seen.
 sb_changed_files() {
-  { git diff --name-only "$1"; git ls-files --others --exclude-standard; } | sort -u
+  { git diff --no-renames --name-only "$1"; git ls-files --others --exclude-standard; } | sort -u
 }
 
 # Prints shell-quoted `export KEY='value'` lines.

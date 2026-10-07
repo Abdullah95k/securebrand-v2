@@ -97,6 +97,65 @@ describe("scripts/policy/check-dependencies.sh", () => {
     expect(result.output).toContain("docker.io/example/cache");
   });
 
+  it("fails for an image a Dockerfile copies from or mounts, but not for its own stages", () => {
+    repo.write(
+      "services/x/Dockerfile",
+      [
+        "FROM ghcr.io/example/runtime:2.1 AS build",
+        "COPY --from=ghcr.io/example/tool:1.0 /tool /bin/tool",
+        "RUN --mount=type=bind,from=ghcr.io/example/helper:2.0,source=/h,target=/h \\",
+        "    true",
+        "COPY --from=build /app /app",
+        "COPY --from=0 /etc/x /etc/x",
+        "",
+      ].join("\n"),
+    );
+    addRow("ghcr.io/example/runtime", "image");
+    repo.commit();
+    const result = check();
+    expect(result.code).not.toBe(0);
+    expect(result.output).toContain("ghcr.io/example/tool");
+    expect(result.output).toContain("ghcr.io/example/helper");
+    expect(result.output).not.toMatch(/^ {2}(build|0) \(/m);
+  });
+
+  it("fails for a new image in a workflow's container, services or docker:// steps", () => {
+    repo.write(
+      ".github/workflows/ci.yml",
+      [
+        "on: push",
+        "jobs:",
+        "  one:",
+        "    runs-on: ubuntu-24.04",
+        "    container: ghcr.io/example/ci-runner:1.0",
+        "    services:",
+        "      cache:",
+        "        image: ghcr.io/example/cache-svc:7",
+        "    steps:",
+        "      - uses: docker://ghcr.io/example/step-image:3",
+        "  two:",
+        "    runs-on: ubuntu-24.04",
+        "    container:",
+        "      image: ghcr.io/example/job-image:2",
+        "    steps:",
+        "      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "",
+      ].join("\n"),
+    );
+    repo.commit();
+    const result = check();
+    expect(result.code).not.toBe(0);
+    for (const image of [
+      "ghcr.io/example/ci-runner",
+      "ghcr.io/example/cache-svc",
+      "ghcr.io/example/step-image",
+      "ghcr.io/example/job-image",
+    ]) {
+      expect(result.output).toContain(image);
+    }
+    expect(result.output).not.toContain("actions/checkout");
+  });
+
   it("reads image names behind Dockerfile build arguments", () => {
     repo.write(
       "services/x/Dockerfile",

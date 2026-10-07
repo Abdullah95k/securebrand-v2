@@ -63,6 +63,12 @@ jobs:
           IMAGE_PULL_WAIT_SECONDS: "600"
         run: make up
       - name: make check, with the acceptance suites of the changed packages
+        env:
+          # On a push to main, compare with the commit before the push: the merge base of main
+          # with itself is HEAD, which would check nothing. An unknown commit checks everything.
+          CHECK_BASE: ${{ github.event_name == 'push' && github.event.before || '' }}
+          # The acceptance test of make down may wipe this runner's stack (nobody else uses it).
+          TEST_STACK_RESET: "1"
         run: |
           mkdir -p .build-state
           make check ACCEPTANCE=1 2>&1 | tee .build-state/ci-check.log

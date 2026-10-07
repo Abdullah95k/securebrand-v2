@@ -4,6 +4,11 @@
 # publishes. Images with an anonymous upstream are left alone. Run by
 # .github/workflows/mirror-images.yml after logging in to ghcr.io (and to Docker Hub when its
 # secrets exist); needs docker buildx.
+#
+# A tag already in the mirror is compared with its upstream by manifest digest (a copy keeps the
+# digest). When they differ (the upstream was retagged, or a branch copied from a wrong upstream),
+# it fails and names both digests; only MIRROR_REPLACE=1, which the workflow sets on main, where
+# stack/versions.env is reviewed, copies the upstream over it.
 set -euo pipefail
 # shellcheck source=lib/common.sh
 . "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
@@ -20,6 +25,11 @@ while IFS='=' read -r key value; do
   case "$key" in *_TAG) NAMES+=("${key%_TAG}") ;; esac
 done < <(grep -E '^[A-Z0-9_]+=' stack/versions.env)
 
+# The manifest digest of an image reference; nothing when the registry does not have it.
+digest() {
+  docker buildx imagetools inspect "$1" --format '{{.Manifest.Digest}}' 2>/dev/null || true
+}
+
 MIRRORED=0
 for name in "${NAMES[@]}"; do
   repo="${PIN[${name}_REPO]}"
@@ -34,10 +44,18 @@ for name in "${NAMES[@]}"; do
       ;;
   esac
   [ -n "$upstream" ] || sb_die "stack/versions.env names no ${name}_UPSTREAM to copy $repo from"
-  if docker buildx imagetools inspect "$repo:$tag" >/dev/null 2>&1; then
-    echo "mirror: $repo:$tag is already there"
+  want="$(digest "$upstream:$tag")"
+  if [ -z "$want" ]; then
+    docker buildx imagetools inspect "$upstream:$tag" >/dev/null || true # the registry's answer
+    sb_die "cannot read $upstream:$tag (${name}_UPSTREAM and ${name}_TAG in stack/versions.env)"
+  fi
+  have="$(digest "$repo:$tag")"
+  if [ "$have" = "$want" ]; then
+    echo "mirror: $repo:$tag is already there ($want)"
+  elif [ -n "$have" ] && [ "${MIRROR_REPLACE:-}" != 1 ]; then
+    sb_die "$repo:$tag holds $have, but $upstream:$tag is $want; check which is right, then run the mirror workflow on main, which replaces it"
   else
-    echo "mirror: $upstream:$tag -> $repo:$tag"
+    echo "mirror: $upstream:$tag ($want) -> $repo:$tag${have:+ (replacing $have)}"
     docker buildx imagetools create --tag "$repo:$tag" "$upstream:$tag"
   fi
   MIRRORED=$((MIRRORED + 1))

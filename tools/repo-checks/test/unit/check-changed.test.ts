@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { script, TempRepo } from "../helpers/repo.js";
+import { cleanEnv, script, TempRepo } from "../helpers/repo.js";
 
 // A small workspace shaped like this repository: TypeScript packages with a dependency edge
 // (b depends on a), tools and end-to-end workspaces, and independent Python projects, one of
@@ -189,6 +189,28 @@ describe("scripts/check-changed.sh", () => {
     expect(plan().ts).toContain("repo-checks");
   });
 
+  it("adds repo-checks when root tooling changed among thousands of other files", () => {
+    repo.write("Makefile", "check:\n\t@echo changed\n");
+    // More than a pipe buffer (64 KiB) of file names, all sorting after the Makefile.
+    for (let i = 0; i < 3000; i += 1) {
+      repo.write(`zz-bulk/${String(i).padStart(5, "0")}-${"x".repeat(40)}.md`, "x\n");
+    }
+    expect(plan().ts).toContain("repo-checks");
+  });
+
+  it.each(["ruff.toml", ".python-version", "uv.toml"])(
+    "plans every Python project when the shared %s changed",
+    (file) => {
+      repo.write(file, "# shared by every Python project\n");
+      expect([...plan().python.keys()].sort()).toEqual([
+        "py/listening_sdk",
+        "services/py-dep",
+        "services/py-svc",
+        "tools/probes/news",
+      ]);
+    },
+  );
+
   it("includes tools and tests workspaces in the Turborepo filter", () => {
     repo.write("tools/probes/meta/scrub.test.js", "// scrubbing test, changed\n");
     repo.write("tests/e2e/G1/suite.js", "// suite, changed\n");
@@ -227,6 +249,63 @@ describe("scripts/check-changed.sh", () => {
       "services/py-svc",
       "tools/probes/news",
     ]);
+  });
+
+  it("warns and checks everything when CHECK_BASE is not a commit of this repository", () => {
+    repo.write("packages/a/index.js", "export const a = 5;\n");
+    const result = script("check-changed.sh", ["--plan"], {
+      cwd: repo.dir,
+      env: cleanEnv({ CHECK_BASE: "0".repeat(40) }),
+    });
+    expect(result.code, result.output).toBe(0);
+    expect(result.stderr).toContain("CHECK_BASE");
+    const full = parsePlan(result.stdout);
+    expect(full.base).toBe("none");
+    expect(full.ts).toEqual(["a", "b", "c", "e2e-g1", "probe-meta", "repo-checks"]);
+  });
+
+  it("compares with CHECK_BASE when it names a commit", () => {
+    repo.write("services/c/index.js", "export const c = 6;\n").commit("c");
+    const before = repo.git("rev-parse", "HEAD").trim();
+    repo.write("packages/a/index.js", "export const a = 6;\n").commit("a");
+    const result = script("check-changed.sh", ["--plan"], {
+      cwd: repo.dir,
+      env: cleanEnv({ CHECK_BASE: before }),
+    });
+    expect(result.code, result.output).toBe(0);
+    const planned = parsePlan(result.stdout);
+    expect(planned.base).toBe(before);
+    expect(planned.ts).toEqual(["a", "b"]);
+  });
+
+  it("gives the acceptance suites the stack variables and the test namespace", () => {
+    repo.writeJson("services/c/package.json", {
+      name: "c",
+      version: "0.0.0",
+      scripts: {
+        ...scripts(),
+        "test:acceptance": [
+          'node -e "const e = process.env;',
+          "const ok = e.TEST_NAMESPACE === 'sb_t1' && e.TEST_TOPIC_PREFIX === 'sb_t1.'",
+          "&& e.KAFKA_BROKERS === '127.0.0.1:19092' && e.S3_ENDPOINT === 'http://127.0.0.1:8333'",
+          '&& Boolean(e.CLICKHOUSE_URL); process.exit(ok ? 0 : 9)"',
+        ].join(" "),
+      },
+    });
+    repo.writeJson("turbo.json", {
+      tasks: {
+        lint: {},
+        typecheck: {},
+        test: {},
+        "test:acceptance": { cache: false, env: ["TEST_*", "KAFKA_*", "S3_*", "CLICKHOUSE_*"] },
+      },
+    });
+    const result = script("check-changed.sh", ["--acceptance"], {
+      cwd: repo.dir,
+      timeoutMs: 240_000,
+    });
+    expect(result.code, result.output).toBe(0);
+    expect(result.output).toContain("make check passed");
   });
 
   it("a second run with no new changes plans the same steps", () => {

@@ -2,6 +2,7 @@
 // and the names scripts/test-namespace.sh derives. Everything here talks to localhost.
 import {
   CreateBucketCommand,
+  DeleteBucketCommand,
   DeleteObjectCommand,
   GetObjectCommand,
   HeadBucketCommand,
@@ -202,6 +203,18 @@ export async function deleteObject(env: StackEnv, bucket: string, key: string): 
 
 export async function createBucket(env: StackEnv, bucket: string): Promise<void> {
   await s3(env).send(new CreateBucketCommand({ Bucket: bucket }));
+}
+
+/** Deletes the bucket's objects (one listing page is enough for a test bucket), then the bucket. */
+export async function deleteBucket(env: StackEnv, bucket: string): Promise<void> {
+  const client = s3(env);
+  const listed = await client.send(new ListObjectsV2Command({ Bucket: bucket }));
+  for (const object of listed.Contents ?? []) {
+    if (object.Key !== undefined) {
+      await client.send(new DeleteObjectCommand({ Bucket: bucket, Key: object.Key }));
+    }
+  }
+  await client.send(new DeleteBucketCommand({ Bucket: bucket }));
 }
 
 export async function bucketExists(env: StackEnv, bucket: string): Promise<boolean> {

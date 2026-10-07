@@ -47,7 +47,10 @@ Parallel worktrees share this stack, so every test names what it creates after `
 CI): Kafka topics `<namespace>.*` (`TEST_TOPIC_PREFIX`), the Postgres schema and database
 `test_<namespace>` (`TEST_PG_SCHEMA`, `TEST_PG_DATABASE`), the ClickHouse database
 `test_<namespace>` (`TEST_CH_DATABASE`) and the S3 bucket `test-<namespace>` (`TEST_S3_BUCKET`).
-`make test`, `make check` and `make e2e` set these variables; `make ns-clean` removes what they name.
+`make test`, `make check ACCEPTANCE=1` and `make e2e` set these variables and the connection
+variables above; `make ns-clean` removes what they name. SeaweedFS has 200 volume slots and every
+bucket takes seven, so about 25 test buckets fit at once besides `listening-local`; delete a bucket
+when its tests are done (`make ns-clean`, or the S3 DeleteBucket call), which frees its slots.
 The SDK (F4, F6) applies the topic prefix in test mode.
 
 ## Images
@@ -63,6 +66,9 @@ instead. `scripts/compose.sh <command>` runs docker compose with the pins set.
 
 To change a pin, edit `versions.env` (the tag, and for a new image its `_REPO` and `_UPSTREAM`), add
 or update its row in `docs/dependencies.md`, and push: the mirror workflow copies a new Redpanda tag.
+A tag already in the mirror is compared with its upstream by manifest digest on every run. When they
+differ, the run fails and names both digests; only a run on main, where `versions.env` is reviewed,
+replaces the mirrored tag.
 
 ## Fallbacks
 

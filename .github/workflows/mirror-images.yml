@@ -51,4 +51,7 @@ jobs:
           username: ${{ env.DOCKERHUB_USERNAME }}
           password: ${{ env.DOCKERHUB_TOKEN }}
       - name: Copy the pinned tags
+        env:
+          # A tag already mirrored is replaced only from main, where stack/versions.env is reviewed.
+          MIRROR_REPLACE: ${{ github.ref == 'refs/heads/main' && '1' || '' }}
         run: scripts/mirror-images.sh

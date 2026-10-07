@@ -71,6 +71,30 @@ describe("scripts/policy/check-handoff-review.sh", () => {
     expect(result.output).toMatch(/needs fixes/i);
   });
 
+  it.each([
+    "Verdict: not yet ready to merge (1 blocker open)",
+    "Verdict: isn't ready to merge: finding 1 is open",
+    "Verdict: ready to merge once finding 1 is fixed",
+  ])("fails when the verdict line is not plainly ready to merge: %s", (verdict) => {
+    repo.write("docs/handoffs/C11.md", "# Handoff\n");
+    repo.write("docs/reviews/C11.md", `# Review · C11\n\n${verdict}\n\n## Findings\n`).commit();
+    const result = check("sb/C11");
+    expect(result.code).not.toBe(0);
+    expect(result.output).toMatch(/verdict/i);
+  });
+
+  it("does not take a closing remark that mentions ready to merge for the verdict", () => {
+    repo.write("docs/handoffs/C11.md", "# Handoff\n");
+    repo.write(
+      "docs/reviews/C11.md",
+      "# Review · C11\n\nVerdict: needs fixes (1 blockers, 0 should-fix)\n\nOnce finding 1 is fixed, the lane is ready to merge.\n",
+    );
+    repo.commit();
+    const result = check("sb/C11");
+    expect(result.code).not.toBe(0);
+    expect(result.output).toMatch(/needs fixes/i);
+  });
+
   it("fails when the review has no readable verdict", () => {
     repo.write("docs/handoffs/C11.md", "# Handoff\n");
     repo.write("docs/reviews/C11.md", review("template-only.md")).commit();
@@ -124,12 +148,61 @@ describe("scripts/policy/check-handoff-review.sh", () => {
     expect(unapplied.code).not.toBe(0);
     expect(unapplied.output).toContain("docs/proposals/F4-topic-x.md");
 
+    const change = repo.git("rev-parse", "--short", "HEAD").trim();
     repo.write(
       "docs/proposals/F4-topic-x.md",
-      "# Proposal · F4 · topic x\n\nRaised by: session F4 · 2026-10-07\nDecision: approved (user, 2026-10-07)\nApplied: 0123abc\n",
+      `# Proposal · F4 · topic x\n\nRaised by: session F4 · 2026-10-07\nDecision: approved (user, 2026-10-07)\nApplied: ${change}\n`,
     );
     repo.commit();
     const applied = check("sb/CC-F4-topic-x");
     expect(applied.code, applied.output).toBe(0);
+  });
+
+  it("does not take a commit that is not part of the branch on the Applied line", () => {
+    repo.git("checkout", "-q", "-f", "main");
+    repo.git("clean", "-q", "-fd");
+    repo.branch("sb/CC-F4-topic-x");
+    repo.write("packages/contracts/src/topics.ts", "export {};\n");
+    repo.write(
+      "docs/proposals/F4-topic-x.md",
+      "# Proposal · F4 · topic x\n\nDecision: approved (user, 2026-10-07)\nApplied: 0123abc\n",
+    );
+    repo.commit();
+    const result = check("sb/CC-F4-topic-x");
+    expect(result.code).not.toBe(0);
+    expect(result.output).toContain("0123abc");
+  });
+
+  it.each(["pending", "TBD", "not yet", "<commit>", "yes"])(
+    "does not take '%s' on the Applied line for a commit",
+    (value) => {
+      repo.git("checkout", "-q", "-f", "main");
+      repo.git("clean", "-q", "-fd");
+      repo.branch("sb/CC-F4-topic-x");
+      repo.write("packages/contracts/src/topics.ts", "export {};\n");
+      repo.write(
+        "docs/proposals/F4-topic-x.md",
+        `# Proposal · F4 · topic x\n\nDecision: approved (user, 2026-10-07)\nApplied: ${value}\n`,
+      );
+      repo.commit();
+      const result = check("sb/CC-F4-topic-x");
+      expect(result.code).not.toBe(0);
+      expect(result.output).toContain("Applied");
+    },
+  );
+
+  it("explains a proposal that has no Applied line", () => {
+    repo.git("checkout", "-q", "-f", "main");
+    repo.git("clean", "-q", "-fd");
+    repo.branch("sb/CC-F4-topic-x");
+    repo.write("packages/contracts/src/topics.ts", "export {};\n");
+    repo.write(
+      "docs/proposals/F4-topic-x.md",
+      "# Proposal · F4 · topic x\n\nDecision: approved (user, 2026-10-07)\n",
+    );
+    repo.commit();
+    const result = check("sb/CC-F4-topic-x");
+    expect(result.code).not.toBe(0);
+    expect(result.output).toContain("Applied");
   });
 });

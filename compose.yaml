@@ -62,8 +62,11 @@ services:
       - -dir=/data
       - -ip=127.0.0.1
       - -ip.bind=0.0.0.0
+      # Every bucket is a collection of seven volumes, and every worktree's tests create a bucket:
+      # a fixed number of slots (volumes are sparse files, so an unused slot costs no disk), not
+      # the default, free disk divided by the volume size (21 slots on a 22 GB disk).
       - -master.volumeSizeLimitMB=1024
-      - -volume.max=0
+      - -volume.max=200
       - -filer
       - -s3
       - -s3.port=8333

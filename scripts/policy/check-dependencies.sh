@@ -19,11 +19,6 @@ done
 
 ROOT="$(sb_repo_root)"
 cd "$ROOT"
-if [ -n "$BASE_REF" ]; then
-  BASE="$(git merge-base HEAD "$BASE_REF" 2>/dev/null || git rev-parse --verify "$BASE_REF^{commit}")"
-else
-  BASE="$(sb_merge_base)"
-fi
-[ -n "$BASE" ] || sb_die "no merge base with main; pass --base <ref>"
+BASE="$(sb_policy_base "$BASE_REF")"
 
 exec python3 "$SB_SCRIPTS_DIR/policy/dependencies.py" "$ROOT" "$BASE"

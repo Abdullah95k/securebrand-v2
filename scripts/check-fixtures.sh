@@ -2,11 +2,12 @@
 # Fixtures must stay scrubbed (.claude/rules/fixtures.md). Over the files under fixtures/ that git
 # tracks or would add (ignored ones excluded):
 #   - no token or signed URL (Meta, Google, JWT, bearer, AWS, Telegram bot, access_token=,
-#     X-Amz-Signature=, X-Goog-Signature=, Signature=, sig=, oh=); findings name the file and
-#     line, never the match;
+#     X-Amz-Signature=, X-Goog-Signature=, x-signature=, Signature=, sig=, oh=, also escaped or
+#     URL-encoded); findings name the file and line, never the match;
 #   - no tracked raw/ directory (raw responses stay local and are deleted after scrubbing);
-#   - every file of a platform folder is listed in a README.md of its directory or of a parent
-#     folder up to fixtures/<platform>/. synthetic-* files and the non-platform folders
+#   - every file of a platform folder is listed, by its whole name, in a README.md of its
+#     directory or of a parent folder up to fixtures/<platform>/. synthetic-* files and the
+#     non-platform folders
 #     fixtures/contracts/ (F2) and fixtures/text/ (F7) need no per-file entry.
 # Used by make check, make policy and CI.
 set -euo pipefail
@@ -25,24 +26,29 @@ problem() {
   PROBLEMS=$((PROBLEMS + 1))
 }
 
-# 1. Tokens and signed URLs.
+# 1. Tokens and signed URLs. Each entry is kind|grep options|pattern. A signed URL's parameter
+# counts in any letter case and after any separator a fixture can hold: ?, &, ; (of &amp;),
+# & or \x26 (escaped in JSON and scripts) and %26 (a URL inside another URL), with = or %3D.
 PATTERNS=(
-  'a Meta access token|EAA[A-Za-z0-9]{20,}'
-  'a Google API key|AIza[0-9A-Za-z_-]{35}'
-  'a JWT|eyJ[A-Za-z0-9_-]{8,}\.eyJ[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}'
-  'a bearer token|[Bb]earer[[:space:]]+[A-Za-z0-9._~+/=-]{20,}'
-  'an AWS access key|(AKIA|ASIA)[0-9A-Z]{16}'
-  'a Telegram bot token|[0-9]{8,10}:[A-Za-z0-9_-]{35}'
-  'an access_token parameter|access_token=[A-Za-z0-9._%-]{16,}'
-  'a signed URL|[?&](X-Amz-Signature|X-Goog-Signature|Signature|sig|oh)=[A-Za-z0-9%._~+/=-]{8,}'
+  'a Meta access token||EAA[A-Za-z0-9]{20,}'
+  'a Google API key||AIza[0-9A-Za-z_-]{35}'
+  'a JWT||eyJ[A-Za-z0-9_-]{8,}\.eyJ[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}'
+  'a bearer token||[Bb]earer[[:space:]]+[A-Za-z0-9._~+/=-]{20,}'
+  'an AWS access key||(AKIA|ASIA)[0-9A-Z]{16}'
+  'a Telegram bot token||[0-9]{8,10}:[A-Za-z0-9_-]{35}'
+  'an access_token parameter|-i|access_token(=|%3D)[A-Za-z0-9._%-]{16,}'
+  'a signed URL|-i|([?&;]|\\u0026|\\x26|%26)(x-amz-signature|x-goog-signature|x-signature|signature|sig|oh)(=|%3D)[A-Za-z0-9%._~+/=-]{8,}'
 )
 for entry in "${PATTERNS[@]}"; do
   kind="${entry%%|*}"
-  regex="${entry#*|}"
+  rest="${entry#*|}"
+  regex="${rest#*|}"
+  grep_opts=(-HnIE -o)
+  [ -z "${rest%%|*}" ] || grep_opts+=("${rest%%|*}")
   while IFS= read -r hit; do
     [ -n "$hit" ] || continue
     problem "${hit%%:*}:$(echo "$hit" | cut -d: -f2): $kind (remove it or replace it with a stable fake)"
-  done < <(printf '%s\0' "${FILES[@]}" | xargs -0 grep -HnIE -o -- "$regex" 2>/dev/null | cut -d: -f1,2 | sort -u || true)
+  done < <(printf '%s\0' "${FILES[@]}" | xargs -0 grep "${grep_opts[@]}" -- "$regex" 2>/dev/null | cut -d: -f1,2 | sort -u || true)
 done
 
 # 2. Raw responses must never be tracked.
@@ -53,13 +59,41 @@ for file in "${FILES[@]}"; do
 done
 
 # 3. A README lists every file of a platform folder.
+
+# A file name as an extended regular expression that matches it literally: every character other
+# than a letter, a digit, _, / or - goes in brackets (no backslash escapes, which newer greps warn
+# about).
+ere_literal() {
+  local s="$1" out="" c i
+  for ((i = 0; i < ${#s}; i++)); do
+    c="${s:i:1}"
+    case "$c" in
+      [[:alnum:]_/-]) out+="$c" ;;
+      '^') out+='\^' ;;
+      *) out+="[$c]" ;;
+    esac
+  done
+  printf '%s' "$out"
+}
+
+# The name appears as a whole name: not inside a longer one (feed.json in page-feed.json or in
+# feed.json.bak). A sentence may end right after it.
+names_file() {
+  local name before after
+  name="$(ere_literal "$1")"
+  before='(^|[^[:alnum:]_./-])'
+  after='($|[^[:alnum:]_./-]|[.]($|[^[:alnum:]_/-]))'
+  grep -qE -- "$before$name$after" "$2"
+}
+
 listed_in_readme() {
   local file="$1" top="$2" dir rel
   dir="$(dirname "$file")"
   while :; do
     if [ -f "$dir/README.md" ]; then
       rel="${file#"$dir"/}"
-      if grep -qF -- "$rel" "$dir/README.md" || grep -qF -- "$(basename "$file")" "$dir/README.md"; then
+      if names_file "$file" "$dir/README.md" || names_file "$rel" "$dir/README.md" ||
+        names_file "$(basename "$file")" "$dir/README.md"; then
         return 0
       fi
     fi

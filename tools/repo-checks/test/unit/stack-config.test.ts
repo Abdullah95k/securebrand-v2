@@ -6,7 +6,7 @@ import { cleanEnv, parseExports, ROOT, script } from "../helpers/repo.js";
 describe("local stack configuration", () => {
   const compose = parse(readText("compose.yaml")) as {
     name: string;
-    services: Record<string, { ports?: string[]; volumes?: string[] }>;
+    services: Record<string, { ports?: string[]; volumes?: string[]; command?: string[] }>;
     volumes: Record<string, unknown>;
   };
 
@@ -32,6 +32,16 @@ describe("local stack configuration", () => {
       ).toBe(true);
     }
     expect(Object.keys(compose.volumes).length).toBeGreaterThanOrEqual(3);
+  });
+
+  it("gives SeaweedFS a fixed number of volume slots, enough for a test bucket per worktree", () => {
+    // Each bucket is a collection that takes seven volume slots. Left at 0, the number of slots is
+    // the free disk divided by the volume size limit (21 on a 22 GB disk): three buckets.
+    const command = compose.services.seaweedfs?.command ?? [];
+    const max = Number(
+      /^-volume\.max=(\d+)$/.exec(command.find((a) => a.startsWith("-volume.max=")) ?? "")?.[1],
+    );
+    expect(max).toBeGreaterThanOrEqual(7 * 20);
   });
 
   it("stack-env.sh prints the ports and the credentials the stack config defines", () => {

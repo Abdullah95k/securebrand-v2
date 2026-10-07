@@ -5,7 +5,9 @@
 # Ports are those compose.yaml publishes; the fixed development credentials come from
 # stack/local.env. The Supabase URL and keys are read live from `supabase status` and never
 # written to a file. With --no-supabase, or when Supabase is not running, SUPABASE_* are left out
-# (with a note on stderr). make test, make check, make e2e and make smoke evaluate this.
+# (with a note on stderr). make test, make check ACCEPTANCE=1, make e2e and make smoke evaluate
+# this. The stack is the one this kit starts (one per machine), so its configuration is read from
+# the repository that holds these scripts, whatever the working directory.
 set -euo pipefail
 # shellcheck source=lib/common.sh
 . "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
@@ -18,7 +20,7 @@ for arg in "$@"; do
   esac
 done
 
-ROOT="$(sb_repo_root)"
+ROOT="$SB_KIT_ROOT"
 declare -A LOCAL=()
 while IFS='=' read -r key value; do
   LOCAL[$key]="$value"

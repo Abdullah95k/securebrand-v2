@@ -8,8 +8,10 @@ Compares the runtime dependencies declared at <base commit> with those in the wo
   - PyPI: [project].dependencies and [project.optional-dependencies] of every pyproject.toml
     (dependency groups are tools; names with a path or workspace source in [tool.uv.sources] are
     this repository's own packages);
-  - images: "image:" lines of compose files, FROM lines of Dockerfiles (build arguments resolved)
-    and the *_REPO and *_UPSTREAM entries of stack/versions.env.
+  - images: "image:" lines of compose files; FROM, COPY --from and RUN --mount=from= of
+    Dockerfiles (build arguments resolved, the file's own stages skipped); the *_REPO and
+    *_UPSTREAM entries of stack/versions.env; and in GitHub workflows the job containers, service
+    containers and docker:// steps.
 A dependency counts as new when no manifest declared it at the base commit; one that moved or
 was removed never fails, and a renamed one is new. A row matches when its first cell (or a
 backticked name in it) equals the dependency: images by repository without tag, npm names
@@ -52,6 +54,10 @@ def image_repository(ref: str) -> str:
     return ref
 
 
+def is_workflow(path: str) -> bool:
+    return re.fullmatch(r"\.github/workflows/[^/]+\.ya?ml", path) is not None
+
+
 def is_manifest(path: str) -> bool:
     name = PurePosixPath(path).name
     if "/node_modules/" in f"/{path}" or "/.venv/" in f"/{path}":
@@ -59,6 +65,7 @@ def is_manifest(path: str) -> bool:
     return (
         name in ("package.json", "pyproject.toml")
         or path == "stack/versions.env"
+        or is_workflow(path)
         or re.fullmatch(r"(docker-)?compose(\.[\w-]+)?\.ya?ml", name) is not None
         or name == "Dockerfile"
         or name.startswith("Dockerfile.")
@@ -148,7 +155,7 @@ def pypi(text: str) -> set[Dependency]:
 
 def compose(text: str, values: dict[str, str]) -> set[Dependency]:
     found: set[Dependency] = set()
-    for match in re.finditer(r"^\s*image:\s*[\"']?([^\"'\s#]+)", text, re.MULTILINE):
+    for match in re.finditer(r"^[ \t]*image:[ \t]*[\"']?([^\"'\s#]+)", text, re.MULTILINE):
         repo = image_repository(substitute(match.group(1), values))
         found.add(Dependency("image", repo, repo.lower()))
     return found
@@ -158,7 +165,17 @@ def dockerfile(text: str) -> set[Dependency]:
     args: dict[str, str] = {}
     stages: set[str] = set()
     found: set[Dependency] = set()
-    for raw in text.splitlines():
+
+    def add(ref: str) -> None:
+        image = substitute(ref.strip("'\""), args)
+        if image.lower() in stages or image.isdigit() or image.lower() == "scratch":
+            return
+        if "$" not in image:
+            repo = image_repository(image)
+            found.add(Dependency("image", repo, repo.lower()))
+
+    # Instructions continued with a trailing backslash are read as one line.
+    for raw in re.sub(r"\\[ \t]*\r?\n", " ", text).splitlines():
         line = raw.strip()
         arg = re.match(r"(?i)^ARG\s+([A-Za-z_][A-Za-z0-9_]*)=(\S+)", line)
         if arg:
@@ -166,12 +183,36 @@ def dockerfile(text: str) -> set[Dependency]:
             continue
         frm = re.match(r"(?i)^FROM\s+(?:--platform=\S+\s+)?(\S+)(?:\s+AS\s+(\S+))?", line)
         if frm:
-            image = substitute(frm.group(1), args)
-            if image.lower() != "scratch" and image not in stages and "$" not in image:
-                repo = image_repository(image)
-                found.add(Dependency("image", repo, repo.lower()))
+            add(frm.group(1))
             if frm.group(2):
-                stages.add(frm.group(2))
+                stages.add(frm.group(2).lower())
+            continue
+        if re.match(r"(?i)^COPY\s", line):
+            for ref in re.findall(r"(?i)(?:^|\s)--from=(\S+)", line):
+                add(ref)
+        elif re.match(r"(?i)^RUN\s", line):
+            for mount in re.findall(r"(?i)(?:^|\s)--mount=(\S+)", line):
+                for ref in re.findall(r"(?:^|,)from=([^,]+)", mount):
+                    add(ref)
+    return found
+
+
+WORKFLOW_IMAGES = (
+    re.compile(r"^[ \t]*image:[ \t]*[\"']?([^\"'\s#]+)", re.MULTILINE),
+    re.compile(r"^[ \t]*container:[ \t]*[\"']?([^\"'\s#{]+)", re.MULTILINE),
+    re.compile(r"^[ \t]*(?:-[ \t]+)?uses:[ \t]*[\"']?docker://([^\"'\s#]+)", re.MULTILINE),
+)
+
+
+def workflow(text: str) -> set[Dependency]:
+    """Images of a GitHub workflow: job and service containers, and docker:// steps."""
+    found: set[Dependency] = set()
+    for pattern in WORKFLOW_IMAGES:
+        for match in pattern.finditer(text):
+            if "$" in match.group(1):  # an expression such as ${{ matrix.image }}
+                continue
+            repo = image_repository(match.group(1))
+            found.add(Dependency("image", repo, repo.lower()))
     return found
 
 
@@ -195,6 +236,8 @@ def collect(files: dict[str, str]) -> dict[Dependency, str]:
             deps = pypi(text)
         elif path == "stack/versions.env":
             deps = versions_env(text)
+        elif is_workflow(path):
+            deps = workflow(text)
         elif name.endswith((".yml", ".yaml")):
             deps = compose(text, values)
         else:
@@ -227,7 +270,11 @@ def main(argv: list[str]) -> int:
     before = {(d.kind, d.key) for d in collect(at_commit(root, base))}
     now = collect(working_tree(root))
     register_path = root / REGISTER
-    keys = register_keys(register_path.read_text(encoding="utf-8")) if register_path.is_file() else set()
+    keys = (
+        register_keys(register_path.read_text(encoding="utf-8"))
+        if register_path.is_file()
+        else set()
+    )
 
     missing = []
     for dep, path in sorted(now.items(), key=lambda item: (item[0].kind, item[0].key)):

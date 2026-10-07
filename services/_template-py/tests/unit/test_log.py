@@ -1,5 +1,7 @@
 import json
 from datetime import UTC, datetime
+from decimal import Decimal
+from uuid import UUID
 
 from service_template.log import Logger
 
@@ -44,3 +46,17 @@ def test_keeps_arabic_and_sorani_text_readable() -> None:
     Logger("service-template", write=lines.append).info("نص عربي", note="کوردی")
     assert "نص عربي" in lines[0]
     assert "کوردی" in lines[0]
+
+
+def test_writes_datetimes_uuids_and_decimals_instead_of_failing_the_job() -> None:
+    lines: list[str] = []
+    Logger("service-template", write=lines.append).info(
+        "fetched",
+        fetched_at=datetime(2026, 10, 7, 12, 30, tzinfo=UTC),
+        item=UUID("12345678-1234-5678-1234-567812345678"),
+        score=Decimal("0.25"),
+    )
+    entry = json.loads(lines[0])
+    assert entry["fetched_at"] == "2026-10-07T12:30:00+00:00"
+    assert entry["item"] == "12345678-1234-5678-1234-567812345678"
+    assert entry["score"] == "0.25"
