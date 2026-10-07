@@ -1,6 +1,6 @@
 # Contract conflicts: assumptions one PRD makes about another
 
-D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contracts/CONFLICTS.md` (same entry format and reading rules). Every cross-service assumption the extraction recorded (about 770) was checked against the PRD of the service it is about; these entries are the ones that PRD contradicts, or does not support where a contract element depends on it. Overlaps with CF entries are named in each entry.
+D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contracts/CONFLICTS.md` (same entry format and reading rules). Every cross-service assumption the extraction recorded (about 770) was checked against the PRD of the service it is about; these entries are the ones that PRD contradicts, or does not support where a contract element depends on it. Overlaps with CF entries are named in the text of an entry where they were found, not in every entry; a **CF overlaps** line at the end of an entry lists the entries of `docs/contracts/CONFLICTS.md` that cite it or put the same question. Where two AU entries put one question twice (one from each audit pass), each carries a **Same disagreement as** line so D2 answers them once; a **Shares a point with** line names a sibling that repeats one sub-point.
 
 ## Index
 
@@ -13,7 +13,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 | [AU-005](#au-005) | Early discovery hits: `context.discovery_hit_emitted` against keyword-matcher emitting anyway | shape, writers | C5, C4, C8, X1 |
 | [AU-006](#au-006) | Hit field read by analysis-sentiment: `matched_text` or `matched_term` | names | F2, C5, A1 |
 | [AU-007](#au-007) | Resolver answers: on `jobs.poster-resolver` to poster-resolver, or straight onto `poster.profiles` by each resolver | writers, shape | F2, C8, C9, FB1, IG1, VTT3, X2, VLI2, VTG2, YT1, N2 |
-| [AU-008](#au-008) | `discovery.hits` fields: the "approved poster-resolver schema" other PRDs defer to is not defined, and poster-resolver ignores `candidate_pending` and caption handles | shape, partition | F2, C5, C8, W3, W5, IG2 |
+| [AU-008](#au-008) | `discovery.hits` fields: "poster-resolver's approved schema", which other PRDs defer to, is not defined, and poster-resolver ignores `candidate_pending` and caption handles | shape, partition | F2, C5, C8, W3, W5, IG2 |
 | [AU-009](#au-009) | `poster.profiles` fields the qualifier's rules need, which poster-resolver does not emit; resolver signals the qualifier never reads | shape, enum | F2, C8, C9, VLI2, VTG2, X2 |
 | [AU-010](#au-010) | A Parquet archive of normalized items: normalize-item and the four analysis services expect one; raw-archiver archives `raw.items` only | writers, shape | C2, C4, F8, A1, A2, A3, A4 |
 | [AU-011](#au-011) | `search.results`: neither archived nor normalized, though yt-web-search-bridge relies on both | writers | C2, C4, YT9 |
@@ -23,7 +23,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 | [AU-015](#au-015) | How a backfilled record is marked: `job_kind = backfill` is expected, `metrics_observation = backfill` (or nothing) is written | names; shape; rule | F2, F4, C4, C10, C11, FB3, VFB1, VFB2, IG3, X5. |
 | [AU-016](#au-016) | Push-tier changes asked of registry-writer by the receivers have no input path, and the `push_lease_lapsed` event yt-uploads-reconciler waits for is never emitted | writers; shape; enum | F2, C7, FB7, YT2, YT3. |
 | [AU-017](#au-017) | Backfill completion: backfill-orchestrator waits for a `jobs.completed` report with `oldest_item_at`, `capped` and `capped_reason`; fb-backfill sends none, the others send other fields, and several services write `backfill_status` themselves (Telegram's receivers `capped` where the orchestrator sets `done`) | shape; writers; enum | F2, F4, C10, FB3, VFB2, IG3, VTT1, VTT2, VTT4, X5, TG1, TG2, VTG3, ... |
-| [AU-018](#au-018) | Subscribing a client-owned Instagram account: registry-writer leaves it to the receiver on `added`; ig-webhook-receiver reads no `source.events` and subscribes "on connecting", with no trigger defined | writers; rule | C7, IG4. |
+| [AU-018](#au-018) | Subscribing a client-owned Instagram account: registry-writer leaves it to the receiver on `added`; ig-webhook-receiver reads no `source.events` and subscribes when an account is connected ("Connecting an account creates its subscription here"), with no trigger defined | writers; rule | C7, IG4. |
 | [AU-019](#au-019) | Partition key of search finds on `raw.items`: normalize-item expects the producer to key them on the poster, while CONVENTIONS and the producers key them on the rule's `source_id` | partition; key | F2, F4, C4, IG2, VTT1, VTT2, YT8, W1, W2, W4. |
 | [AU-020](#au-020) | comment_series columns that fetchers keep their per-post cursor in (`newest_comment_at`, thread id) | shape, writers | F3, F2, C11, LI2, VLI4, N8 |
 | [AU-021](#au-021) | Stores and columns other PRDs expect registry-writer to write: `news_sites`, crawl-policy health, uploads playlist id, hashtag binding, ownership flip, client flags | writers, single-PRD | F3, C7, N1, N2, N3, YT1, IG2, VLI3, C1 |
@@ -84,7 +84,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 | [AU-076](#au-076) | Deletion modes and scopes the propagator does not have: `withhold`, `text_only`, `derived`/`purge_derived`, `fetched_before`, `user_ids` | enum, shape | C13, F2, X7, YT7 |
 | [AU-077](#au-077) | Stores outside deletion-propagator's purge registry: annotation text, service-private indexes, analysis media | rule, writers | C13, C14, F4, A1, A2, A3, A4, X6 |
 | [AU-078](#au-078) | LinkedIn 48-hour clock: applied by field inside organization posts, or by kind | retention, rule | C14, C13, LI1 |
-| [AU-079](#au-079) | Registry decision for an author request that matches a registered source: no producer and no decision type | writers, enum | C14, C7, C13 |
+| [AU-079](#au-079) | Registry decision for an author request that matches a registered source: no producer, and no reason value for an author request | writers, enum | C14, C7, C13 |
 | [AU-080](#au-080) | YouTube derived metrics and aggregates: ten years, or 36 months | retention, document | C14, C15, YT5, F8 |
 | [AU-081](#au-081) | Aggregate grain: language, entities, brand appearance, per-post LinkedIn rollups, stories and channel owners are promised but not in the grain | shape, rule | C15, F8, C3, LI2, LI3, VLI4, YT4, YT5, N7, A3, A4 |
 | [AU-082](#au-082) | Recompute after deletions: deletion-propagator's bucket jobs and `done`, against aggregator's date-range job and its own `deletions` reconciliation | job kind, shape, writers | C15, C13, C14, F2 |
@@ -100,9 +100,9 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 | [AU-092](#au-092) | Per-client acceptance of amber data: some amber services filter on it, others only on the government flag | rule; single-PRD | F3, IG2, VIG1, VIG2, VTT1 to VTT6, VFB1 to VFB3, VTG3, TT1, C11. |
 | [AU-093](#au-093) | x-filtered-stream's gap jobs: a kind, fields, attribution and a report that x-recent-search and x-full-archive-search do not define | job kind; shape; rule | F2, F4, X1, X4, X5. |
 | [AU-094](#au-094) | Who emits `backfill` and `keyword_history` jobs for an X keyword rule | job kind; rule | F2, X1, X5, C10. |
-| [AU-095](#au-095) | The X Enterprise gate for government clients: checked in five places under three representations, and not where x-recent-search expects it | flag; rule; single-PRD | F3, X1 to X7, C5, C7. |
+| [AU-095](#au-095) | The X Enterprise gate for government clients: checked in six places under three representations, and not where x-recent-search expects it | flag; rule; single-PRD | F3, X1 to X7, C5, C7. |
 | [AU-096](#au-096) | An X reply: `x:comment:<id>` from x-replies-fetcher, `x:post:<id>` from the other X readers, and no agreed hand-back for replies older than 7 days | key; shape; rule | F2, C4, X1, X3, X4, X5, X6. |
-| [AU-097](#au-097) | The n8n flows: several PRDs call them by signed webhook, no document defines the flows, their endpoints, payloads or signing (follow-up assumption) | document; single-PRD | F2, A5, C1, C7, C9, C12, VLI2, X7. |
+| [AU-097](#au-097) | The n8n flows: several PRDs call them by signed webhook, no document defines the flows, their endpoints, payloads or signing (follow-up assumption) | shape; single-PRD | F2, A5, C1, C7, C9, C12, VLI2, X7. |
 | [AU-098](#au-098) | LinkedIn posts found by keyword search: comment series by default (li-post-search) or only if the budget allows, default no (li-post-comments-fetcher) | rule | C11, VLI1, VLI4. |
 | [AU-099](#au-099) | The Telegram daily health check: a `health` job from comment-decay-scheduler, or tg-discussion-receiver's own `reconciliation` job | job kind; writers | F2, C11, TG2. |
 | [AU-100](#au-100) | YouTube channels without a working subscription: reach-tier polling (yt-pubsub-receiver) or one daily read (yt-uploads-reconciler); dormant channels weekly or daily | rule; schedule | YT2, YT3, C1. |
@@ -135,6 +135,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** news series never advance if the scheduler reads only `jobs.completed`; series on disabled or deleted videos keep emitting steps; fields outside the five-field report are dropped by a typed consumer.
 - **Options:** (1) `jobs.completed/v1` as the only channel, with a closed status list (including terminal statuses) and a fixed report plus named optional fields; (2) `service_runs` result rows as the channel (target's Q1 alternative); (3) a small required core and a free `extra` object the scheduler stores but does not interpret.
 - **Blocks:** F2, F4, C11, C10, N8, YT5, YT6, X5, X6, VFB3, VIG2
+- **CF overlaps:** cited by CF-024, CF-041, CF-117.
 
 ### AU-002
 
@@ -145,9 +146,11 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
   - a) Consumers of the marker: `comment-decay-scheduler §5.1 L66` "Posts with `job_kind = backfill` (carried from the raw envelope)"; `backfill-orchestrator §3 L25`, `§5.1 L48` ("Backfilled posts travel as ordinary traffic with `job_kind = backfill`"), `§13 L157` (criterion 9).
   - b) Target: `normalize-item §5.1 L45` "Backfill traffic from fb-backfill and backfill-orchestrator is ordinary live traffic with `job_kind = backfill` in the envelope"; `§5.2 L49` reads `job_kind` from the envelope; the `items.normalized/v1` record (`§6.2 L95`-`L119`) has no `job_kind` and the PRD never says it is copied.
   - c) Producers: only `x-full-archive-search §6.2 L106`/`L112` writes `"job_kind": "backfill"`; `fb-backfill §6.2 L88`/`L103` marks backfill with `"metrics_observation": "backfill"`; `ig-account-media-poller §5.1 L50`, `ig-keyword-search §5.1 L51`, `ig-mentions-fetcher §5.1 L49` "carry `metrics_observation = backfill`".
-- **At stake:** the scheduler cannot tell backfilled posts from live ones and opens a full series for 90 days of history; backfill-orchestrator's criterion 9 cannot pass.
+- **At stake:** the scheduler cannot tell backfilled posts from live ones, so a backfilled post younger than the profile's last step is not recognised and opens a normal series (older ones get the `once` fetch by age, `comment-decay-scheduler §5.1 L66`); backfill-orchestrator's criterion 9 cannot pass.
 - **Options:** (1) every backfill service writes `job_kind` in the raw envelope and normalize-item copies it onto `items.normalized/v1`; (2) normalize-item derives the marker from `metrics_observation = backfill` and publishes one field; (3) the scheduler reads `metrics_observation` from `items.normalized` (the field added there).
 - **Blocks:** F2, C4, C10, C11, FB3, IG3, IG5, VIG1, X5
+- **Same disagreement as:** AU-015 (same references; AU-015 also cites fb-backfill §13 L165 and the other backfill producers; Blocks differ: only AU-002 has IG5 and VIG1, only AU-015 has F4, VFB1 and VFB2).
+- **CF overlaps:** cited by CF-006.
 
 ### AU-003
 
@@ -160,6 +163,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** unique-story counts and story-level alerts need the three fields on every news item; as written the verdict is never applied and a `story_update` cannot produce a version.
 - **Options:** (1) normalize-item consumes `news.dedup` with a bounded wait and adds the three fields to `items.normalized/v1`; (2) a table-only join on `news_story_members` by store-writer and aggregator (news-dedup's fallback in Q1), topic dropped; (3) news-dedup publishes story records that consumers join on `item_id`.
 - **Blocks:** F2, C4, N7, C6, C15, A5
+- **CF overlaps:** cited by CF-025.
 
 ### AU-004
 
@@ -172,6 +176,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** an increment published as an observation overwrites the absolute count in `metrics_timeseries`; mixing both needs a field saying which one a message is.
 - **Options:** (1) absolute observations only, from li-client-posts-poller's reads; (2) a delta form of `item.metrics` with a marker field, applied on top of the latest absolute value; (3) reaction events update an in-memory running count in normalize-item, published as absolute observations.
 - **Blocks:** F2, C4, LI3, LI1, C6
+- **CF overlaps:** cited by CF-008, CF-018.
 
 ### AU-005
 
@@ -184,6 +189,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** the flag never reaches keyword-matcher, so two discovery hits are emitted per candidate (harmless only if poster-resolver deduplicates, as CONVENTIONS says); x-recent-search's single-hit expectation fails.
 - **Options:** (1) both emit and poster-resolver deduplicates (target, CONVENTIONS); (2) normalize-item carries the flag onto `items.normalized` and keyword-matcher skips flagged candidates; (3) only keyword-matcher emits discovery hits.
 - **Blocks:** C5, C4, C8, X1
+- **CF overlaps:** cited by CF-010.
 
 ### AU-006
 
@@ -196,6 +202,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** the aspect path reads a field that is not on the hit; the client's spelling in `matched_term` is not the text as it appears in the item, so the window has to come from `offsets`.
 - **Options:** (1) `matched_term` plus `offsets` (target); analysis-sentiment cuts the window from `offsets`; (2) add `matched_text` (the matched span of `text_norm`) to both hit topics.
 - **Blocks:** F2, C5, A1
+- **CF overlaps:** cited by CF-009.
 
 ### AU-007
 
@@ -208,10 +215,11 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** poster-resolver waits on a queue no resolver writes (15-minute timeout, five attempts, then DLQ for every candidate), while the qualifier receives eight resolver shapes that skipped the cache, the individuals gate and `lang_share`.
 - **Options:** (1) resolvers answer on `jobs.poster-resolver` and only poster-resolver writes `poster.profiles` (target); (2) resolvers write `poster.profiles` and poster-resolver only dispatches, deduplicates and caches by consuming that topic; (3) resolvers write `poster.profiles` in poster-resolver's single schema and poster-resolver stops emitting.
 - **Blocks:** F2, C8, C9, FB1, IG1, VTT3, X2, VLI2, VTG2, YT1, N2
+- **CF overlaps:** cited by CF-012.
 
 ### AU-008
 
-**`discovery.hits` fields: the "approved poster-resolver schema" other PRDs defer to is not defined, and poster-resolver ignores `candidate_pending` and caption handles**
+**`discovery.hits` fields: "poster-resolver's approved schema", which other PRDs defer to, is not defined, and poster-resolver ignores `candidate_pending` and caption handles**
 
 - **Type:** shape, partition
 - **Where:**
@@ -222,6 +230,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** producers emit different shapes while pointing at a schema nobody wrote; a pending hit yields no buildable `candidate_key`; Instagram hashtag posters are never resolved.
 - **Options:** (1) keyword-matcher's `discovery.hits/v1` is the schema and other producers conform, with poster-resolver listing the fields it requires (including `candidate_pending`); (2) poster-resolver's PRD defines the schema (candidate block, `type`, `origin`, evidence) and keyword-matcher conforms; (3) two message types under one topic, item hits and source candidates, told apart by `type`.
 - **Blocks:** F2, C5, C8, W3, W5, IG2
+- **CF overlaps:** cited by CF-011.
 
 ### AU-009
 
@@ -231,10 +240,11 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **Where:**
   - a) Target: `qualifier §5.4 L71` "From `poster.profiles`: every field listed in the `poster-resolver` PRD"; rule 4 (`§5.2 L55`) "More than 50 posts a day with over 60% duplicate text → `reject`. Default avatar on an account under 30 days old → `review`"; rule 6 (`§5.2 L57`) "`push` when `owned_by_client`"; the decision carries `source_type` and `owned_by_client` (`§6.2 L84`).
   - b) `poster-resolver §6.2 L89` profile: `posts_30d`, `last_post_at`, `location_text`, `country_signals` (`iraqi_place`, `phone_964`, `iq_domain`, `outlet_link`, `seed_list`), `lang_share`, and no posts-per-day peak, duplicate-text share, avatar flag, account age (`created_at` is received, `§5.4 L74`, but not emitted), `owned_by_client` or `source_type`.
-  - c) Resolver promises the qualifier does not support: `li-org-resolver §8 L124` "the profile is emitted with `posts_sampled = 0` and the qualifier treats it as inactive"; `tg-channel-resolver §5.4 L67` the vendor's country "counts as one Iraqi signal, not two" (not among rule 2's signals, `qualifier §5.2 L53`); `x-user-resolver §12 L171` "watchlist-only passes carry `qualifies_by = ["watchlist"]` for review" (no such review rule); `tg-channel-resolver §8 L120` "Not indexed by the vendor: `unresolved: not_indexed`; the qualifier raises a review card", while rule 1 sends every `unresolvable` to `reject` (`qualifier §5.2 L52`).
-- **At stake:** rules 4 and 6 cannot be evaluated from the profile as specified, and four resolvers expect outcomes (inactive, one signal, review) the qualifier's rules do not produce.
+  - c) Resolver promises the qualifier does not support: `li-org-resolver §8 L124` "the profile is emitted with `posts_sampled = 0` and the qualifier treats it as inactive", while the qualifier reads no `posts_sampled` (a profile field, `li-org-resolver §6.2 L99`, that the qualifier's PRD never names) and has only rule 3 for inactivity ("No post in 30 days → still added, but with `tier = dormant`", `qualifier §5.2 L54`, which reads `last_post_at`, `li-org-resolver §6.2 L96`), so nothing says whether an empty sample from a failed run reaches rule 3 as dormant; `tg-channel-resolver §5.4 L67` the vendor's country "counts as one Iraqi signal, not two" (not among rule 2's signals, `qualifier §5.2 L53`); `x-user-resolver §12 L171` "watchlist-only passes carry `qualifies_by = ["watchlist"]` for review" (no such review rule); `tg-channel-resolver §8 L120` "Not indexed by the vendor: `unresolved: not_indexed`; the qualifier raises a review card", while rule 1 sends every `unresolvable` to `reject` (`qualifier §5.2 L52`).
+- **At stake:** rules 4 and 6 cannot be evaluated from the profile as specified, three resolvers expect outcomes (one signal, review) the qualifier's rules do not produce, and li-org-resolver's empty sample would be read by rule 3 as dormant.
 - **Options:** (1) extend poster-resolver's profile with the rule-4 and rule-6 fields and fix closed lists of signals and unresolvable reasons the qualifier maps; (2) the qualifier drops or rewrites the rules it cannot evaluate from the profile; (3) per-platform profile extensions that the qualifier reads by platform.
 - **Blocks:** F2, C8, C9, VLI2, VTG2, X2
+- **CF overlaps:** cited by CF-013, CF-014.
 
 ### AU-010
 
@@ -248,6 +258,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** model re-runs read fields that are not in the archive, so they must re-normalize and re-match raw payloads (and cannot reproduce live inputs) or have no source at all.
 - **Options:** (1) raw-archiver also consumes `items.normalized` and writes a normalized Parquet with the fields the models read; (2) re-runs go through `raw.replay` with `target = analysis` (`raw-archiver §5.3 L71`) and normalize-item re-normalizes; (3) re-runs read ClickHouse `items` and `comments`.
 - **Blocks:** C2, C4, F8, A1, A2, A3, A4
+- **CF overlaps:** cited by CF-053.
 
 ### AU-011
 
@@ -260,6 +271,8 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** the bridge's engine responses have no archive copy (no replay, no provenance record) and no parking on a shape change.
 - **Options:** (1) yt-web-search-bridge also writes its responses to `raw.items`, as the web search services do; (2) raw-archiver also consumes `search.results`; (3) accept `search.results` as unarchived derived data and drop the claim.
 - **Blocks:** C2, C4, YT9
+- **Shares a point with:** AU-029 (yt-web-search-bridge §8 L148, the bridge's unarchived responses).
+- **CF overlaps:** cited by CF-023.
 
 ### AU-012
 
@@ -268,9 +281,9 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **Type:** writers, names
 - **Where:**
   - a) `tg-message-search §4 L34` "normalize-item, lang-dialect-id and keyword-matcher consume `raw.items`" and "poster-resolver and qualifier consume `discovery.hits`"; `§11 L126` (with raw-archiver); `ig-hashtag-search §4 L37` "normalize-item, lang-dialect-id, keyword-matcher and store-writer consume `raw.items`"; `ig-hashtag-search §4 L36` "poster-resolver and qualifier consume `discovery.hits`".
-  - b) Targets: keyword-matcher reads `items.normalized` (`keyword-matcher §5.1 L40`, `§6.1 L90`); lang-dialect-id has "no topic, consumer group, cursor or rotation" (`lang-dialect-id §5.1 L43`); store-writer reads `items.normalized`, `items.analysis`, `item.metrics`, `item.hits`, `discovery.hits`, `source.events` (`store-writer §3 L22`); the qualifier reads `poster.profiles` (`qualifier §6.1 L76`). Only normalize-item and raw-archiver read `raw.items`.
-- **At stake:** fields these producers put on `raw.items` for those consumers (for example x-recent-search's flag in AU-005) never reach them unless normalize-item carries them; schema changes on `raw.items` are coordinated with the wrong services.
-- **Options:** (1) correct the producers' lists: `raw.items` is read by normalize-item and raw-archiver only, `discovery.hits` by poster-resolver (and store-writer); (2) in addition, list in contracts which raw fields normalize-item must carry onto `items.normalized` for downstream use.
+  - b) Targets: keyword-matcher reads `items.normalized` (`keyword-matcher §5.1 L40`, `§6.1 L90`); lang-dialect-id has "no topic, consumer group, cursor or rotation" (`lang-dialect-id §5.1 L43`); store-writer reads `items.normalized`, `items.analysis`, `item.metrics`, `item.hits`, `discovery.hits`, `source.events` (`store-writer §3 L22`); the qualifier reads `poster.profiles` (`qualifier §6.1 L76`). Of the services named, none reads `raw.items`; its consumers are normalize-item, raw-archiver, fb-reactions-fetcher in extract mode (`fb-reactions-fetcher §5.1 L39`, `§6.1 L98`) and news-dedup (`news-dedup §3 L19`, `§6.1 L80`).
+- **At stake:** fields these producers put on `raw.items` for those consumers (for example x-recent-search's flag in AU-005) never reach them unless normalize-item carries them; schema changes on `raw.items` are coordinated with services that do not read the topic.
+- **Options:** (1) the producers' lists name the actual readers: `raw.items` read by normalize-item, raw-archiver, fb-reactions-fetcher and news-dedup, `discovery.hits` by poster-resolver, store-writer and analysis-sentiment (`analysis-sentiment §6.1 L85`); (2) in addition, list in contracts which raw fields normalize-item must carry onto `items.normalized` for downstream use.
 - **Blocks:** F2, C4, IG2, VTG1
 
 ### AU-013
@@ -284,6 +297,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** alert-evaluator's deletion rule cannot match its watch set for messages that identify items by key, author, source or client.
 - **Options:** (1) every producer adds `item_ids` (derived with the SDK helper) to every item-scope message; (2) alert-evaluator derives `item_id` from the key itself and ignores non-item scopes; (3) deletion-propagator publishes a completion message with resolved item ids that alert-evaluator consumes instead.
 - **Blocks:** F2, C13, A5
+- **CF overlaps:** cited by CF-020.
 
 ### AU-014
 
@@ -310,6 +324,8 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** comment-decay-scheduler gives backfilled posts one `once` fetch only when it sees `job_kind = backfill`; with fb-backfill's envelope as written, a backfilled post younger than the last series step is not recognised and opens a normal series (fb-backfill §5.1 L47 itself expects a series aligned to `created_time`), and normalize-item finds no `job_kind` to carry.
 - **Options:** (1) `job_kind` becomes a required envelope field written by the SDK job wrapper from the job's `kind` for every producer; (2) `metrics_observation = backfill` is the marker and normalize-item, comment-decay-scheduler and backfill-orchestrator read it; (3) both, with `metrics_observation` kept only for the counts label.
 - **Blocks:** F2, F4, C4, C10, C11, FB3, VFB1, VFB2, IG3, X5.
+- **Same disagreement as:** AU-002 (same references; AU-002 frames it as the field on `items.normalized`; Blocks differ: only AU-002 has IG5 and VIG1, only AU-015 has F4, VFB1 and VFB2).
+- **CF overlaps:** cited by CF-005, CF-006.
 
 ### AU-016
 
@@ -320,10 +336,12 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
   - yt-uploads-reconciler §5.1 L51: "yt-pubsub-receiver flags the channel on `source.events` (`updated`, `reason = push_lease_lapsed`)"; §6.1 L104; §13 L189; §14 Q4 L201: "The lapse flag's shape must match yt-pubsub-receiver's PRD when it is written."
   - yt-pubsub-receiver writes no `source.events`: a lapsed lease means "registry-writer sets the channel's `next_poll_at` to now" (§5.1 L42), through "requests to registry-writer (push, promotion, `next_poll_at`, `health`)" (§6.2 L130).
   - fb-client-webhook-receiver also "asks registry-writer" to promote a dormant Page back to push (§5.1 L42, §13 L189) and to return a Page to its reach tier when its subscription fails (§5.2 L59).
-  - registry-writer's inputs are `registry.decisions`, its manual endpoint and the canary's health change (§5.4 L81); it owns `tier` and `health` but not `next_poll_at` after insert (§3 L27), and lists no request from a receiver.
+  - registry-writer's inputs are `registry.decisions`, its manual endpoint and the canary's health change (§5.4 L81); it owns `tier` and `health` (§3 L27) but not `next_poll_at`, which it sets only on insert (§5.2 L52) and otherwise leaves to "the pollers" (§3 L30), and lists no request from a receiver.
 - **At stake:** a lapsed YouTube lease is never caught up at once, a failed Facebook subscription never drops the Page back to reach-tier polling, and dormant push sources are never promoted, because the signal has no carrier.
 - **Options:** (1) receivers emit `registry.decisions` (`tier_change`, `promote`, `update`) that registry-writer applies, and registry-writer emits `source.events` `updated` with a `reason` (`push_lease_lapsed`); (2) receivers write `source.events` themselves with an agreed `reason` vocabulary; (3) a registry-writer request endpoint for receivers, named in F2.
 - **Blocks:** F2, C7, FB7, YT2, YT3.
+- **Same disagreement as:** AU-063 (AU-016 adds the `push_lease_lapsed` event yt-uploads-reconciler waits for; AU-063 adds retirement through registry-writer).
+- **CF overlaps:** cited by CF-016, CF-031, CF-033, CF-098.
 
 ### AU-017
 
@@ -333,15 +351,17 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **Where:**
   - backfill-orchestrator §5.2 L59 ("Consume the completion event from `jobs.completed`; write `done` or `capped`, `backfill_runs` counters, and `next_poll_at = now()`"), §5.4 L92 (example event from `"service": "fb-backfill"` with `report` `{new_count, pages, cost_units, oldest_item_at, capped, capped_reason}`), §5.3 L81 (`capped_reason`: `route_cap`, `budget`, `deadline`, `failed`), §5.2 L60 and §13 L158 (no completion by the timeout: re-emit with the same `job_id`).
   - What the backfill services report: x-full-archive-search §5.2 L57 (status, `new_count`, `seen_count`, `pages`, `cost_units`); yt-uploads-reconciler §5.2 L66 (`new_count`, `seen_count`, `pages`, `cost_units`); tt-profile-videos-poller §5.1 L51 (`oldest_seen` and `pages`); news-sitemap-poller §6.2 L127 (`coverage_days`, `urls_emitted`); fb-backfill writes no `jobs.completed` (§6.2 L110). None reports `oldest_item_at` or `capped_reason`.
-  - Who writes `backfill_status`: fb-backfill sets `done`/`capped` and `next_poll_at` itself (§5.2 L56), which backfill-orchestrator accepts "until its next revision" (§14 Q2 L163); fb-group-posts-poller (§5.1 L50) and tg-channel-posts-poller (§5.1 L54, "the service sets `done` or `capped`") do too; tt-keyword-search (§5.1 L44) and tt-hashtag-feed-poller (§5.1 L48) run their own backfill and move the status themselves; ig-account-media-poller "reports `done` or `capped`" (§5.1 L50). tg-bot-channel-receiver (§5.1 L50) and tg-discussion-receiver (§5.1 L51) set `capped` at onboarding, while backfill-orchestrator sets `done` at once for a green Telegram channel (§5.3 L76).
+  - Who writes `backfill_status`: fb-backfill sets `done`/`capped` and `next_poll_at` itself (§5.2 L56), which backfill-orchestrator accepts until fb-backfill's next revision ("proposed that this service becomes the single writer at its next revision (the values are identical meanwhile)", §14 Q2 L163); fb-group-posts-poller (§5.1 L50) and tg-channel-posts-poller (§5.1 L54, "the service sets `done` or `capped`") do too; tt-keyword-search (§5.1 L44) and tt-hashtag-feed-poller (§5.1 L48) run their own backfill and move the status themselves; ig-account-media-poller "reports `done` or `capped`" (§5.1 L50). tg-bot-channel-receiver (§5.1 L50) and tg-discussion-receiver (§5.1 L51) set `capped` at onboarding, while backfill-orchestrator sets `done` at once for a green Telegram channel (§5.3 L76).
   - The topic and its other names are CF-089; the extra writers of the `sources.backfill_status` column are a B question.
 - **At stake:** backfill-orchestrator never hears that fb-backfill finished, so the run stays `running` until the timeout re-emits it and the Page is read again; `capped_reason` and `backfill_runs` coverage cannot be filled from any report; the same Telegram case ends `done` or `capped` depending on which writer runs last.
 - **Options:** (1) one backfill report in `jobs.completed/v1` with required `status` (`done`/`capped`), `capped_reason`, `oldest_item_at` and the counts, and backfill-orchestrator the only writer of `backfill_status`; (2) the services set `backfill_status` themselves and backfill-orchestrator records `backfill_runs` from `source.events` `updated`; (3) as (1), with route extras (`coverage_days`, `oldest_seen`, `seen_count`) optional and the green Telegram value fixed in the route table.
 - **Blocks:** F2, F4, C10, FB3, VFB2, IG3, VTT1, VTT2, VTT4, X5, TG1, TG2, VTG3, YT3, N4.
+- **Shares a point with:** AU-043 c) (`coverage_days` against `oldest_item_at`).
+- **CF overlaps:** cited by CF-024, CF-030.
 
 ### AU-018
 
-**Subscribing a client-owned Instagram account: registry-writer leaves it to the receiver on `added`; ig-webhook-receiver reads no `source.events` and subscribes "on connecting", with no trigger defined**
+**Subscribing a client-owned Instagram account: registry-writer leaves it to the receiver on `added`; ig-webhook-receiver reads no `source.events` and subscribes when an account is connected ("Connecting an account creates its subscription here"), with no trigger defined**
 
 - **Type:** writers; rule
 - **Where:**
@@ -361,10 +381,12 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
   - normalize-item §5.1 L41: "records without a `source_id` (keyword searches, hashtag feeds, search results) are keyed by the producer on `<platform>:<poster platform_id>`, which keeps a poster's post and its later comments together"; §6.2 L91 (`items.normalized` "keyed by `source_id` or poster key").
   - CONVENTIONS L281: a search service writes `raw.items` "with `source_id` = the keyword-rule or hashtag source that produced the query".
   - Producers key on that rule or hashtag: ig-hashtag-search §6.2 L91; tt-keyword-search §6.2 L73; tt-hashtag-feed-poller §6.2 L79; yt-keyword-search §6.2 L96; web-search-perplexity §6.2 L89 (`web:<source_id>`).
-  - Extends PART, which lists the `items.normalized` and web `raw.items` keys but not this rule.
+  - Readers that follow the poster key: keyword-matcher §5.1 L40 ("Partitions follow normalize-item's keys (`source_id`, or the poster key for search results)"); store-writer §5.1 L39 ("Partitions follow `source_id` (or the poster key)").
+  - Same disagreement as CF-003 h) in `docs/contracts/CONFLICTS.md` (normalize-item §5.1 L41 against CONVENTIONS L281), which names this entry as its overlap.
 - **At stake:** the ordering normalize-item relies on (a poster's post and its comments on one worker) does not hold for search finds, and the same post found by two rules lands on two partitions; code written to normalize-item's text waits for a key no producer sets.
 - **Options:** (1) search finds keep the rule's `source_id` as partition key (CONVENTIONS L281) and normalize-item drops the poster-key rule; (2) search producers partition on `<platform>:<poster platform_id>` while the envelope keeps the rule's `source_id`; (3) the item's own `idempotency_key` as partition key for search finds.
 - **Blocks:** F2, F4, C4, IG2, VTT1, VTT2, YT8, W1, W2, W4.
+- **CF overlaps:** cited by CF-003.
 
 
 ## 2. Tables, columns and storage
@@ -382,6 +404,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** the LinkedIn fetchers have no cursor of their own and their held comments expire at 48 h; if the scheduler neither stores nor sends the marker, each fetch re-reads or cannot stop at the right comment; news cannot pass its thread id between fetches.
 - **Options:** (1) add `newest_comment_at` and an opaque per-post cursor (thread id) to `comment_series`, the completion report and the job; (2) each fetcher keeps a per-post cursor in its own table; (3) a generic `fetch_state` object carried from report to next job and stored by the scheduler without interpretation.
 - **Blocks:** F3, F2, C11, LI2, VLI4, N8
+- **CF overlaps:** cited by CF-045.
 
 ### AU-021
 
@@ -389,15 +412,17 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 
 - **Type:** writers, single-PRD
 - **Where:**
-  - a) News: `news-site-resolver §6.2 L112` "registry-writer maps `proposed_source` onto the `sources` row ... and `site_profile` onto `news_sites`, keyed by `source_id`"; `§5.2 L46` sites with `crawl_allowed: false` are "registered with `health = blocked`"; `§5.2 L55` profile changes go to registry-writer; `news-feed-poller §5.1 L48` ("registry-writer writes the `sources` row and the `news_sites` profile"); `news-robots-checker §4 L35`, `§5.2 L61`, `§6.2 L117` "registry-writer maps `crawl_allowed = false` onto `sources.health = blocked`".
+  - a) News: news-site-resolver writes `news_sites` itself, one row per host (`news-site-resolver §5.2 L54` "write `news_sites` with `status: candidate`", `§6.2 L79`, `§6.3 L116` "one row per host"), yet also expects `news-site-resolver §6.2 L112` "registry-writer maps `proposed_source` onto the `sources` row ... and `site_profile` onto `news_sites`, keyed by `source_id`" (two writers, keyed by host or by `source_id`; CF-047); `§5.2 L46` sites with `crawl_allowed: false` are "registered with `health = blocked`"; `§5.2 L55` profile changes go to registry-writer; `news-feed-poller §5.1 L48` ("registry-writer writes the `sources` row and the `news_sites` profile"); `news-robots-checker §4 L35`, `§5.2 L61`, `§6.2 L117` "registry-writer maps `crawl_allowed = false` onto `sources.health = blocked`".
   - b) `yt-channel-resolver §3 L27` and `§6.3 L138` "the stored uploads playlist id are written by registry-writer".
   - c) `ig-hashtag-search §5.1 L57` "Hashtags are bound to a client account at registration".
   - d) `li-company-posts-poller §3 L26` and `§13 L180` "registry-writer flips it to `route = green`" when a client starts administering a page.
   - e) `quota-governor §11 L143` "registry-writer (client flags)".
   - f) Target: owns the `sources` columns of `registry-writer §3 L27` (no uploads playlist id, no bound account); writes `sources`, `client_sources`, `registry_audit` only (`§6.2 L91`), neither `news_sites` nor `clients` (which it reads, `§6.1 L88`); `add` always sets `health = ok` (`§5.2 L52`); an `add` on an existing row merges only `client_ids`, tier, followers, display name and handle (`§5.3 L70`-`L73`), so route and `owned_by_client` stay; a route change needs an `update` decision (`§5.2 L56`) that no PRD says who sends.
-- **At stake:** news site profiles, crawl-blocked health, YouTube uploads playlist ids and Instagram hashtag bindings have no writer, and a page a client starts administering stays on the amber route.
+- **At stake:** `news_sites` gets two writers keyed differently (host or `source_id`); crawl-blocked health, YouTube uploads playlist ids and Instagram hashtag bindings have no writer; and a page a client starts administering stays on the amber route.
 - **Options:** (1) registry-writer takes these fields into its decision schema (site profile, crawl health, uploads playlist id, bound account, ownership flip); (2) each producing service keeps its own table (`news_sites` by news-site-resolver, playlist id in yt-channel-resolver's cache) and registry-writer stays as written; (3) identity-level fields through registry-writer, platform profiles in service tables.
 - **Blocks:** F3, C7, N1, N2, N3, YT1, IG2, VLI3, C1
+- **Same disagreement as:** AU-027 for b) (the YouTube uploads playlist id).
+- **CF overlaps:** cited by CF-029, CF-047, CF-048.
 
 ### AU-022
 
@@ -412,6 +437,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** two writers of `items` and `comments` with incompatible version rules: a tombstone is collapsed away by the next content upsert, and only the `deletion_requests` check (which depends on deletion-propagator marking rows done) keeps deleted items out.
 - **Options:** (1) the `deletion_requests` guard only, with deletion-propagator deleting rows but writing no tombstones; (2) tombstones with an `is_deleted` column and a `row_version` from the shared SDK formula set above any content version, checked by store-writer; (3) both, with the version formula and guard in listening-sdk.
 - **Blocks:** F8, C6, C13, C14, C2
+- **CF overlaps:** cited by CF-049, CF-055.
 
 ### AU-023
 
@@ -426,6 +452,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** with (`item_id`, `model`) as the ReplacingMergeTree key a re-run row replaces the live row at once (no side-by-side, no switch-over), two tasks of one item may collapse if `model` is not task-specific, and the version column the table needs is not in the message.
 - **Options:** (1) sorting key (`item_id`, `task`, `model_version`) with version `produced_at`, the active version chosen at read time; (2) the target's key, with re-runs written to a separate table until switch-over; (3) one table per task with `model_version` in the key.
 - **Blocks:** F8, C6, A1, A2, A3, A4, C15, A5
+- **CF overlaps:** cited by CF-050, CF-058, CF-117; same question as CF-075.
 
 ### AU-024
 
@@ -438,6 +465,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** two services write one append-only table with different column sets, and the confirmation signal the target waits for is not defined.
 - **Options:** (1) one `retention_audit` schema with the union of columns and a `writer` column; (2) yt-text-purger writes its own audit table and confirms through `deletion_requests` or a job result; (3) retention-purger writes every row, from a result yt-text-purger reports.
 - **Blocks:** F3, C14, YT7
+- **CF overlaps:** cited by CF-054, CF-059.
 
 ### AU-025
 
@@ -450,6 +478,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** two writers of `media/<sha256>`; objects written directly carry no `.refs`, so reference-based deletion never removes them and media outlives the item's retention class.
 - **Options:** (1) analysis-media stores through raw-archiver's media endpoint, which keeps the references; (2) analysis-media owns `media/` and its own reference index, and deletion-propagator calls it; (3) one SDK media store that writes object and reference together for every writer.
 - **Blocks:** C2, A4, C13, C14
+- **CF overlaps:** cited by CF-050, CF-053.
 
 ### AU-026
 
@@ -464,6 +493,8 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** posts stored under the pre-allocated id are orphaned when registry-writer creates the row under a random id, and two writers set `backfill_status` to different values at creation.
 - **Options:** (1) an `onboarding_requests` table in F3 and a registry-writer rule that adopts `proposed_source_id`; (2) the receiver buffers posts of a not-yet-registered chat and writes them once `source.events` `added` arrives; (3) onboarding goes through `POST /registry/sources` like any manual add and the receiver maps chats only after `added`.
 - **Blocks:** F3, C7, C8, TG1, TG2.
+- **Shares a point with:** AU-057 g) (`proposed_source_id`, registry-writer §5.3 L68-L69, tg-bot-channel-receiver §14 Q4 L197).
+- **CF overlaps:** cited by CF-010, CF-059.
 
 ### AU-027
 
@@ -474,9 +505,12 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
   - yt-uploads-reconciler selects only channels with "a stored uploads playlist id" (§5.1 L43), reads "`sources` (with the uploads playlist id)" (§6.1 L104), calls `playlistItems` with the "uploads playlist id stored by yt-channel-resolver" (§5.3 L73, L78), and puts "Storing the uploads playlist id (yt-channel-resolver)" out of scope (§3 L30); on a playlist 404 "ops re-runs yt-channel-resolver" (§8 L154).
   - yt-channel-resolver returns `uploads_playlist_id` in `poster.profiles` (§6.2 L126) and puts "registering and storing the uploads playlist id (registry-writer)" out of scope (§3 L27); "`sources.followers` and the stored uploads playlist id are written by registry-writer, not here" (§6.3 L138).
   - registry-writer's owned columns (§3 L27) and its insert (§5.3 L68) have no such column; CONVENTIONS L36 lists none.
+  - yt-channel-resolver §5.2 L62: "copy `contentDetails.relatedPlaylists.uploads`, never derive it from the channel id".
 - **At stake:** no YouTube channel ever passes yt-uploads-reconciler's selector, so there is no backfill and no daily reconciliation for any channel; F3 has no column to add and no writer to give it.
-- **Options:** (1) a `sources` column (for example `uploads_playlist_id`) written by registry-writer from the qualifier's decided row; (2) a YouTube side table keyed by `source_id`, written by yt-channel-resolver; (3) derive it at read time from the channel id (yt-channel-resolver §5.2 L62 forbids this: "never derive it from the channel id").
+- **Options:** (1) a `sources` column (for example `uploads_playlist_id`) written by registry-writer from the qualifier's decided row; (2) a YouTube side table keyed by `source_id`, written by yt-channel-resolver; (3) derive it at read time from the channel id (a change to yt-channel-resolver §5.2 L62).
 - **Blocks:** F3, C7, C9, YT1, YT3.
+- **Same disagreement as:** AU-021 b).
+- **CF overlaps:** cited by CF-033.
 
 ### AU-028
 
@@ -485,11 +519,12 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **Type:** single-PRD; writers
 - **Where:**
   - news-comments-fetcher §5.1 L49 (onboarding needs `comments_provider = disqus`, the `disqus_shortname` "and an identifier template if the site uses one"), §5.2 L55 (thread lookup "by `ident:<identifier>` when the resolver's template yields one").
-  - news-site-resolver parses "the `disqus_config` identifier template" (§5.2 L47; §3 L20 "identifier scheme"), but its profile carries only `comments_provider` and `disqus_shortname` (§6.2 L102; §5.4 L69 "comment provider and shortname"), and registry-writer maps that profile onto `news_sites` (§6.2 L112).
-  - news-comments-fetcher §8 L139: a shortname Disqus rejects "marks the site's comments `degraded` and sends news-site-resolver a `refresh`"; neither `news_sites` nor `sources` has a comments-only state, and the resolver's refresh triggers (§5.1 L40) do not include this one.
+  - news-site-resolver parses "the `disqus_config` identifier template" (§5.2 L47; §3 L20 "identifier scheme"), but its profile carries only `comments_provider` and `disqus_shortname` (§6.2 L102; §5.4 L69 "comment provider and shortname"), and registry-writer maps that profile onto `news_sites` (news-site-resolver §6.2 L112).
+  - news-comments-fetcher §8 L139: a shortname Disqus rejects "marks the site's comments `degraded` and sends news-site-resolver a `refresh`"; neither `news_sites` nor `sources` has a comments-only state, and the resolver's refresh triggers (news-site-resolver §5.1 L40) do not include this one.
 - **At stake:** the template never reaches `news_sites`, so every thread lookup falls back to the URL forms; the comments `degraded` mark can only land in `sources.health`, which governs the whole site.
 - **Options:** (1) `site_profile` and `news_sites` gain `disqus_identifier_template` and a comments health field; (2) template added; a rejected shortname instead sets `comments_provider = none` through a resolver refresh; (3) the extractor captures `disqus_identifier` per article (news-comments-fetcher §14 Q3 L186) and no template is stored.
 - **Blocks:** F3, C7, N2, N6, N8.
+- **CF overlaps:** cited by CF-047.
 
 ### AU-029
 
@@ -503,6 +538,8 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** the bridge's paid responses are never archived, so its provenance and replay rest on nothing; the scanner writes into raw-archiver's tree outside its manifests, integrity checks and lifecycle clock.
 - **Options:** (1) both write `raw.items` records (`kind_hint`, `normalize = skip`, as the engines do) and raw-archiver stays the only writer under `raw/`; (2) direct writes allowed for non-item artefacts, with a path and manifest rule in raw-archiver; (3) the bridge's responses archived by the engines through `site_search` (AU-108 option 1), the scanner as (1) or (2).
 - **Blocks:** C2, W5, YT9.
+- **Shares a point with:** AU-011 (yt-web-search-bridge §8 L148).
+- **CF overlaps:** cited by CF-053, CF-059.
 
 
 ## 3. Keys, jobs, values, budgets, flags, retention and rules
@@ -530,12 +567,13 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **Type:** job kind, enum
 - **Where:**
   - a) Target: `comment-decay-scheduler §5.1 L68` "`metrics` jobs at +24 h and +7 d"; step labels in the form `"series_step": "+6h"` (`§5.4 L127`, `§6.2 L141`); client refresh `series_step = refresh:<request_id>` (`§5.1 L70`). `CONVENTIONS L277` job kinds: rotation, reconciliation, backfill, comments, replies, `metrics`, ops_force.
-  - b) `fb-reactions-fetcher §5.1 L41`: "`kind = refresh_24h`" and "`kind = refresh_7d`"; `§14 Q1 L186` asks the scheduler's PRD to confirm it emits them (alternative: "a small due-time table owned by this service").
+  - b) `fb-reactions-fetcher §5.1 L41`: "`kind = refresh_24h`" and "`kind = refresh_7d`"; a client's refresh beyond day 7 "arrives as `kind = refresh_client`" (`§5.1 L47`); `§14 Q1 L186` asks the scheduler's PRD to confirm it emits them (alternative: "a small due-time table owned by this service").
   - c) `yt-video-details-fetcher §5.1 L45`: "`metrics` from comment-decay-scheduler, `series_step` `24h` or `7d` ... or `client`".
   - d) `tt-video-stats-refresher §5.1 L42`: `kind = metrics`, `series_step` (`+24h` or `+7d`), which matches the target.
 - **At stake:** fb-reactions-fetcher dispatches on `kind` and has no `metrics` branch; yt-video-details-fetcher labels observations `24h`, `7d`, `client`, which never equal the scheduler's `+24h`, `+7d`, `refresh:<request_id>`, so idempotency keys and observation labels built from the step differ per side.
 - **Options:** (1) `kind = metrics` with `series_step` `+24h`, `+7d`, `refresh:<request_id>` (target, CONVENTIONS kind list); (2) add `refresh_24h` and `refresh_7d` to the kind list; (3) `kind = metrics` with bare labels `24h`, `7d`, `client`.
 - **Blocks:** F2, C11, FB4, YT4
+- **CF overlaps:** same question as CF-081.
 
 ### AU-032
 
@@ -548,6 +586,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** the poller's `metrics` path has no producer, so Tier 1 Telegram views are never refreshed; if the scheduler adds the lane it needs a Tier-1-only, +24-h-only rule it does not have.
 - **Options:** (1) the scheduler adds a Telegram metrics row (+24 h, Tier 1 only) to `jobs.tg-channel-posts-poller`; (2) no Telegram refresh in v1 (target as written) and the poller drops `metrics`; (3) the poller schedules its own refresh (departs from `CONVENTIONS L278`, "comment, reply and metrics jobs are emitted only by comment-decay-scheduler").
 - **Blocks:** C11, VTG3
+- **CF overlaps:** same question as CF-082.
 
 ### AU-033
 
@@ -556,10 +595,11 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **Type:** job kind
 - **Where:**
   - a) Target: `comment-decay-scheduler §5.1 L57` tg_own: "push; one daily `health` job"; `CONVENTIONS L268` "push (live), daily health check".
-  - b) `tg-discussion-receiver §4 L37` "comment-decay-scheduler holds a `push` row for this route and emits nothing for it"; `§5.1 L45` "comment-decay-scheduler emits no jobs for this route"; `§6.1 L110` its queue takes kinds `reconciliation`, `ops_force` only. `CONVENTIONS L277` has no `health` kind.
-- **At stake:** a `health` job produced onto `jobs.tg-discussion-receiver` is a kind its consumer does not accept (ends in the DLQ), or the daily check named in CONVENTIONS runs nowhere.
+  - b) `tg-discussion-receiver §4 L37` "comment-decay-scheduler holds a `push` row for this route and emits nothing for it"; `§5.1 L45` "comment-decay-scheduler emits no jobs for this route"; `§5.1 L47` the daily health check is the receiver's own: "A leader replica (Postgres advisory lock) emits one `reconciliation` job per group to `jobs.tg-discussion-receiver`"; `§6.1 L110` its queue takes kinds `reconciliation`, `ops_force` only. `CONVENTIONS L277` has no `health` kind.
+- **At stake:** a `health` job produced onto `jobs.tg-discussion-receiver` is a kind its consumer does not accept (ends in the DLQ), and the receiver already runs the daily check through its own `reconciliation` jobs, so two producers would cover one check.
 - **Options:** (1) the scheduler emits the daily check under an existing kind the receiver accepts (`reconciliation`); (2) add `health` to the kind list and to tg-discussion-receiver; (3) no job: the daily check belongs to source-health-canary's canary channel and the scheduler only holds the push row.
 - **Blocks:** F2, C11, TG2
+- **Same disagreement as:** AU-099 (AU-099 states the producer question with tg-discussion-receiver's own `reconciliation` job, §5.1 L47; AU-033 adds a canary option).
 
 ### AU-034
 
@@ -604,6 +644,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** one contracts type has to deserialise every job; the scheduler never reads `news_sites` (Disqus shortname) or permalinks, so it cannot fill what news and FB-group fetchers expect; a string key and an object do not parse as each other.
 - **Options:** (1) the target's object, fetchers look up the rest by `item_id`; (2) the idempotency key string (`<platform>:<kind>:<id>`); (3) a base object plus per-profile extensions defined in contracts (news, fb_group, replies).
 - **Blocks:** F2, C11, N8, VFB3, VTT5, VTT6, YT6, IG6, LI2
+- **CF overlaps:** same question as CF-074.
 
 ### AU-037
 
@@ -620,6 +661,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** as written the scheduler opens amber series on posts with no comments, on news sites without Disqus, on unconfirmed search results and on individuals' posts, spending vendor money the fetchers assume is never spent; each gate needs a field on `items.normalized` or a table read that no contract defines.
 - **Options:** (1) the scheduler reads the signals (`comments_count` and a hit or individual marker on `items.normalized`, `news_sites.comments_provider`) and gates per profile; (2) fetchers complete such jobs as `skipped` without a request and the scheduler ends the series; (3) the producing service marks the item "no series" with one agreed field the scheduler honours.
 - **Blocks:** C11, C4, IG2, IG3, VIG2, N6, N8, VLI1, VLI4, VTT5, X6
+- **Shares a point with:** AU-098 (for d): li-post-search §5.1 L50, li-post-comments-fetcher §5.1 L40).
 
 ### AU-038
 
@@ -643,10 +685,11 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
   - a) Target: `comment-decay-scheduler §5.1 L70` a client refresh "creates one `comments` job (`series_step = refresh:<request_id>`), priority tier 1 (client-facing)"; `§13 L196`; `README L179` (decision 2) puts "client refresh" at priority 1.
   - b) `backfill-orchestrator §5.1 L48`: after a client asks, "each backfilled post then gets a refresh through the scheduler, at lowest priority".
   - c) `yt-replies-fetcher §14 Q3 L192` "client-refresh priority (proposed 3)".
-  - d) `yt-video-details-fetcher §5.1 L45` labels the refresh step `client`, not `refresh:<request_id>`.
+  - d) `yt-video-details-fetcher §5.1 L45` labels the refresh step `client`, not `refresh:<request_id>`; `fb-reactions-fetcher §5.1 L47` receives it as a kind of its own, `kind = refresh_client`.
 - **At stake:** quota-governor admits by priority; the same client action is priority 1, 3 or 5 depending on the PRD, and the YouTube metrics consumer does not recognise the scheduler's label.
 - **Options:** (1) priority 1 for every client refresh (target, README decision 2); (2) priority 1 except refreshes of backfilled posts, which run at backfill priority; (3) priority 3 for client refreshes; and separately one label, `refresh:<request_id>` or `client`.
 - **Blocks:** C11, C1, C10, YT4, YT6
+- **CF overlaps:** cited by CF-100.
 
 ### AU-040
 
@@ -660,6 +703,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** a client request for replies of an X post between day 7 and day 30 has no emitter and no queue, and x-full-archive-search's `replies` kind has no producer.
 - **Options:** (1) the scheduler emits `replies` to `jobs.x-full-archive-search` for X posts outside the 7-day window on client request; (2) the client app or x-full-archive-search's own endpoint creates the job (exception to `CONVENTIONS L278`); (3) no X replies beyond 7 days in v1.
 - **Blocks:** C11, X5, X6
+- **Shares a point with:** AU-096 (the replies hand-back in x-full-archive-search §6.2 L128).
 
 ### AU-041
 
@@ -672,6 +716,8 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** the onboarding contract of an approved PRD (`CONVENTIONS L282`) promises clients a series the scheduler will not run; the `news_disqus` budget is sized on one of the two.
 - **Options:** (1) +6 h, +24 h, +3 d (target, CONVENTIONS); (2) the general series to day 30 for Disqus sites.
 - **Blocks:** C11, N2, N8
+- **Same disagreement as:** AU-107 (same references and two-way choice; also CF-108).
+- **CF overlaps:** cited by CF-108.
 
 ### AU-042
 
@@ -688,6 +734,8 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** six services (fb-keyword-search, ig-keyword-search, li-post-search, ig-hashtag-search, tt-client-videos-fetcher, ig-mentions-fetcher) wait for a `backfill` job the orchestrator never emits (it marks the source `done` with `no_history_route`, or sends the only job elsewhere), so these sources start with no history; X keyword history runs on add in one PRD and only on request in the other.
 - **Options:** (1) extend the route table to every service named (one job per service, several per Instagram account); (2) keep the table: those sources get `no_history_route` and the services drop their backfill path; (3) search and hashtag services backfill on their first rotation run (ig-hashtag-search's design) and the orchestrator marks them `done`; for X keyword rules, separately, `backfill` on add or `keyword_history` on request.
 - **Blocks:** C10, F2, VFB1, VIG1, VLI1, IG2, IG4, IG5, TT1, X5
+- **Shares a point with:** AU-088 (for c): ig-hashtag-search §5.1 L45, backfill-orchestrator §5.3 L79); AU-094 (for f): X keyword rule, `backfill` or `keyword_history`).
+- **CF overlaps:** cited by CF-030; same question as CF-088.
 
 ### AU-043
 
@@ -701,6 +749,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** fb-backfill (an approved PRD, `CONVENTIONS L282`) reads fields the orchestrator never writes; a window anchored on `added_at` and a cap counted from emission differ whenever a run waits in `pending`; the news coverage figure has no field.
 - **Options:** (1) the target's `cap` and `run_id`, with fb-backfill deriving the window and news reporting `oldest_item_at`; (2) the job carries `window_start`, `window_end` and `reason` (cap kept for item limits); (3) both forms, the window only on re-runs.
 - **Blocks:** F2, C10, FB3, N4
+- **Shares a point with:** AU-017 (`coverage_days` against `oldest_item_at`, for c)).
 
 ### AU-044
 
@@ -712,9 +761,12 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
   - b) `news-feed-poller §5.1 L48`: the orchestrator "schedules the 90-day backfill through news-sitemap-poller or web-commoncrawl-scanner. This scheduler does not wait for the backfill".
   - c) `news-site-resolver §5.1 L41` (5): "through news-sitemap-poller (or web-commoncrawl-scanner where there is no sitemap)".
   - d) `news-sitemap-poller §5.1 L41` selects due sites with no `backfill_status` condition; `§5.1 L49` the orchestrator "sends one `backfill` job in parallel"; `§5.1 L51` if coverage is under 90 days "backfill-orchestrator sets `backfill_status = capped` and asks web-commoncrawl-scanner for the remainder".
+  - e) web-commoncrawl-scanner: "**Backfill on add.** None applies." (`web-commoncrawl-scanner §5.1 L44`); it writes "`discovery.hits` of type `site` ...; no `raw.items`, no `search.results`" (`§6.2 L84`).
 - **At stake:** the orchestrator would send news-feed-poller backfill jobs it has no handler for, never asks web-commoncrawl-scanner, and the news pollers rotate `pending` sites the orchestrator assumes are held back.
 - **Options:** (1) the target's table and wait-for-`done` rule, news PRDs revised; (2) a news exception: rotation starts at `added`, backfill runs in parallel through news-sitemap-poller, the remainder through web-commoncrawl-scanner as an eleventh target; (3) news sites get `no_history_route` and news-sitemap-poller backfills on its own first pass.
 - **Blocks:** C10, N2, N3, N4, W5
+- **Same disagreement as:** AU-103 (AU-103 adds that web-commoncrawl-scanner emits hosts, never article URLs, and the extractor's `found_via` tiers; AU-044 adds the option of no news backfill route).
+- **CF overlaps:** cited by CF-022.
 
 ### AU-045
 
@@ -765,9 +817,10 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
   - e) A second formula for the same people: `poster-resolver §5.2 L59` "`author_hash = sha256(platform || platform_id || salt)` with the salt from Supabase Vault" for individual candidates, against normalize-item's HMAC `author_ref` (a), so an individual's reference in `poster_profiles` never equals the one on their items.
   - f) Edge hashing also departs from `CONVENTIONS L15` ("`raw.items` — every record exactly as a fetch or push returned it"): `li-notification-receiver §14 Q5 L202` and `li-post-comments-fetcher §14 Q5 L196` ask raw-archiver's owners to accept minimised records; raw-archiver stores each message "exactly as produced" (`raw-archiver §2 L13`) and never parses payloads (`§8 L137`), so the question is the CONVENTIONS rule, not the archiver.
   - g) Name in ClickHouse: `x-compliance-sync §5.2 L52` "mentions keep only `author_hash` in ClickHouse" and `deletion-propagator §5.3 L62` empties `author_hash`, while store-writer's row carries `author_ref` (`store-writer §6.2 L110`).
-- **At stake:** with edge hashing normalize-item has no platform id to hash and must pass a value through; a different key or formula gives one person two references (author dedup, deletion by author and the never-profile rule depend on one reference); the field is `author_hash` in one PRD and `author_ref` in the others.
+- **At stake:** with edge hashing normalize-item has no platform id to hash and must pass a value through; a different key or formula gives one person two references (author dedup, deletion by author and the never-profile rule depend on one reference); the field is `author_hash` on the deletion, compliance and resolver side (8 PRDs: deletion-propagator, x-compliance-sync, poster-resolver, retention-purger, tt-video-comments-fetcher, qualifier, registry-writer, news-comments-fetcher) and `author_ref` in normalize-item, store-writer and the fetchers (17 PRDs).
 - **Options:** (1) normalize-item hashes everything (target as written) and edge services send ids in clear; (2) edge services hash with the same Vault key and formula through listening-sdk, and normalize-item passes `author_ref` through when present; (3) edge hashing only on the routes README decision 8 and these PRDs name, normalize-item for the rest.
 - **Blocks:** F2, F4, C4, C2, VTT5, VIG2, TG2
+- **CF overlaps:** cited by CF-109.
 
 ### AU-049
 
@@ -780,6 +833,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** an edited PPCA comment has new text, so a new key and a new `item_id`; normalize-item publishes it as a second comment, the old one stays, counts double and the edit link is lost.
 - **Options:** (1) normalize-item honours `edit_of` and publishes under the old key's `item_id` with `version + 1`; (2) a new item, and the fetcher emits a `deletions` message for the old key; (3) PPCA edits are not tracked (accepted loss) and the fetcher drops `edit_of`.
 - **Blocks:** C4, FB5, F2
+- **CF overlaps:** same question as CF-067.
 
 ### AU-050
 
@@ -792,6 +846,8 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** a reply fetched by x-replies-fetcher and the same reply found by x-recent-search are one item under the target's key and two under the fetcher's; deletion-propagator and x-compliance-sync must derive the same `item_id` for X deletions.
 - **Options:** (1) `x:post:<id>` for every X item, kind from `referenced_tweets` (target); (2) `x:comment:<id>` for replies fetched as replies, linked to any `x:post:<id>` copy; (3) one key, with the reply relation carried only in `parent_id`/`root_id`.
 - **Blocks:** C4, X1, X4, X6, X7, C13
+- **Same disagreement as:** AU-096 (AU-096 also covers the reply hand-back for replies older than 7 days and reply-author minimisation; also CF-065).
+- **CF overlaps:** same question as CF-065.
 
 ### AU-051
 
@@ -805,6 +861,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** every YouTube video is either published twice (partial, then full, possibly under two keys) or parked as `schema_unknown`; if the published `kind` is not `post`, no YouTube comment or metrics series opens; yt-video-details-fetcher's whole design rests on the hold.
 - **Options:** (1) normalize-item holds `partial: true` records until the full record under the same key arrives (with a timeout); (2) partial published as version 1, full record as version 2; (3) partial producers stop writing `raw.items` and only yt-video-details-fetcher writes the record; separately, one key (`youtube:video:<id>` or `youtube:post:<id>`) and `kind = post` for videos.
 - **Blocks:** F2, C4, C11, YT2, YT3, YT4, YT8
+- **CF overlaps:** cited by CF-008; same question as CF-061.
 
 ### AU-052
 
@@ -819,6 +876,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** every batch from these producers parks as `schema_unknown`: Disqus comments, LinkedIn live comments, the 20 sampled LinkedIn posts and Instagram keyword results never reach `items.normalized`; web search responses park forever unless there is an explicit archive-only outcome.
 - **Options:** (1) add a mapper for each producer named and an explicit archive-only outcome for `kind_hint = search_response`; (2) restrict `raw.items` writers to the mapper list (web results only through search-hit-router, as the target says); (3) select mappers by payload family (platform, vendor, kind) rather than by service.
 - **Blocks:** F2, C4, VIG1, LI3, VLI2, N8, W1, W2, W3, W4, VTG3
+- **CF overlaps:** cited by CF-008, CF-110.
 
 ### AU-053
 
@@ -831,6 +889,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** the same Instagram post found by the amber keyword route and by a green route becomes two items, double-counting mentions.
 - **Options:** (1) key Instagram posts by shortcode on every route; (2) a secondary dedup join on the permalink shortcode in normalize-item; (3) accept duplicates across routes and dedup in aggregation.
 - **Blocks:** C4, VIG1, IG2, IG3, IG5
+- **CF overlaps:** same question as CF-066.
 
 ### AU-054
 
@@ -856,6 +915,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** a brand named after the first 300 characters of an article is never a hit, so news recall is bounded by the excerpt.
 - **Options:** (1) excerpt only (target as written); (2) keyword-matcher reads `text_full_ref` within 7 days and persists only offsets and terms, subject to counsel.
 - **Blocks:** C5, N6, A1, A2, A3
+- **CF overlaps:** cited by CF-111.
 
 ### AU-056
 
@@ -865,10 +925,11 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **Where:**
   - a) Target: `poster-resolver §5.3 L67` job `{"job_id","kind":"resolve","candidate_key","platform","platform_id","handle","hit_url","origin","reply_to","attempt","sample_posts"}`; amber resolvers are not called while the flag is `off` and "the candidate is marked `unresolvable: route_off`" (`§5.2 L56`, `§13 L144`); answers are `resolved` or `unresolvable` (`poster-resolver §5.3 L70`).
   - b) `ig-account-resolver §5.1 L42` the job carries "the `client_ids` whose hit produced the candidate"; `tt-user-resolver §5.1 L41` "the `client_ids` whose hits produced it, `attempt` and a priority"; `li-org-resolver §5.1 L44` `{candidate_key, url_or_handle, origin, client_ids, seed_list, kind, attempt}`.
-  - c) `tt-user-resolver §5.2 L53` "Flag off: ... return the job as `skipped_flag_off`; poster-resolver keeps the candidate waiting", while the target sends no job when the flag is off and closes the candidate.
+  - c) `tt-user-resolver §5.2 L53` "Flag off: ... return the job as `skipped_flag_off`; poster-resolver keeps the candidate waiting", and `li-org-resolver §5.2 L53` "if `off`, emit `resolution = unresolved, reason = vendor_route_off`", while the target sends no job when the flag is off and closes the candidate.
 - **At stake:** resolvers that gate on clients (government, amber acceptance) or order work by priority receive neither field; a TikTok candidate is closed on one side and parked on the other.
 - **Options:** (1) the target's job as written, resolvers look up client context themselves; (2) add `client_ids`, a priority and `seed_list` to the resolve job; (3) a common core plus per-resolver extensions; and separately for flag-off: close as `route_off`, or keep waiting.
 - **Blocks:** F2, C8, IG1, VTT3, VLI2
+- **Same disagreement as:** AU-111 (AU-111 also covers li-org-resolver's re-keying, answer content and news-site-resolver's producers).
 
 ### AU-057
 
@@ -886,6 +947,8 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** a client's own Telegram channel or discussion group can be typed as an individual, answered from rejection memory or sent through a paid vendor lookup, and the pre-allocated `source_id` has no field to travel in.
 - **Options:** (1) client-added sources bypass discovery and reach registry-writer directly (seed or manual path); (2) poster-resolver accepts `origin = client_onboarding`, carries `proposed_source_id` and `owned_by_client` into the profile, and types groups as qualifying; (3) every client addition uses poster-resolver's `manual` origin through registry-writer.
 - **Blocks:** C7, C8, C9, TG1, TG2, VLI2
+- **Shares a point with:** AU-026 (for g): `proposed_source_id`).
+- **CF overlaps:** cited by CF-010.
 
 ### AU-058
 
@@ -898,6 +961,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** two writers of the same tier change (the poller writes `source.events` directly, registry-writer applies the qualifier's decisions); with the sweep alone, a dormant source that posts waits up to a day at weekly cadence.
 - **Options:** (1) the sweep only (target); (2) the poller asks for promotion at the first new post through a decision that registry-writer applies; (3) both, deduplicated by decision id.
 - **Blocks:** C9, C7, X3
+- **CF overlaps:** cited by CF-033.
 
 ### AU-059
 
@@ -911,6 +975,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** li-org-resolver's refresh path has no producer, so LinkedIn pages are decayed or retired on hit data alone; the unreadable-channel report has no channel to travel on.
 - **Options:** (1) the qualifier emits `refresh` jobs (directly or through poster-resolver) before decay decisions; (2) resolvers refresh on their own schedule (as ig-account-resolver does) and the qualifier decides from data; (3) no refresh before decay, and unreadable channels reach ops through alerts only.
 - **Blocks:** C9, VLI2, VTG3
+- **Same disagreement as:** AU-112 for a) (AU-112's LinkedIn bullet: li-org-resolver's `refresh` jobs from the qualifier).
 
 ### AU-060
 
@@ -924,6 +989,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** a client's 31st hashtag is either not watched at all or watched through a paid vendor with amber provenance; the qualifier has no rule for either.
 - **Options:** (1) queued, with the Instagram hashtag cap added to rule 5's capacity check; (2) registered as amber when `IG_VENDOR_ROUTE` is on and no government client is involved; (3) the client chooses per hashtag.
 - **Blocks:** C9, C1, IG2, VIG1
+- **Shares a point with:** AU-087 (the 31st hashtag, ig-keyword-search §3 L20 and §13 L169).
 
 ### AU-061
 
@@ -932,7 +998,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **Type:** rule, writers
 - **Where:**
   - a) `fb-keyword-search §1 L9` "how a hit inside a group adds that group as a source (qualifier rule 8)"; `§6.2 L120` "(rule 8: the group is a source, the poster is qualified separately)"; `fb-group-posts-poller §6.2 L124` (the poster is a candidate "separately from the group").
-  - b) Target: rule 8 (`qualifier §5.2 L59`) acts on a profile with `account_type = group`; keyword-matcher builds a candidate from the item's author only (`keyword-matcher §5.3 L74`); poster-resolver builds `candidate_key` from the hit (`poster-resolver §5.2 L52`). No PRD emits the group itself as a candidate.
+  - b) Target: rule 8 (`qualifier §5.2 L59`) acts on a profile with `account_type = group`; keyword-matcher builds a candidate from the item's author only (`keyword-matcher §5.3 L74`); poster-resolver builds `candidate_key` from the hit (`poster-resolver §5.2 L52`). No PRD emits, as a candidate, the group in which fb-keyword-search or fb-group-posts-poller found a hit; the only group candidates are search-hit-router's web results `facebook:group:<id or slug>` (`search-hit-router §5.3 L75`), which no resolver takes (AU-109).
 - **At stake:** a hit in an unwatched group never adds the group, so fb-keyword-search's discovery of groups does not happen.
 - **Options:** (1) keyword-matcher emits a second candidate for the container (the group) of a group post; (2) fb-keyword-search emits group candidates on `discovery.hits` itself (a change to its "writes neither" line and to `CONVENTIONS L281`); (3) groups are added only by clients or ops.
 - **Blocks:** C5, C8, C9, VFB1, VFB2
@@ -945,10 +1011,11 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **Where:**
   - a) `web-search-perplexity §5.1 L41` "Each active `keywords` row has one `sources` row (`platform = web`, `source_type = keyword_rule`) created by registry-writer"; `web-search-mojeek §5.1 L42` (same); `web-gdelt-poller §5.1 L41` and `§11 L150` ("registry-writer (keyword-rule rows)"); `fb-keyword-search §3 L28` "Creating keyword rules (client set-up and registry-writer)"; `ig-hashtag-search §11 L163` "registry-writer (hashtag sources and tiers)". `CONVENTIONS L281`: a search service writes items with "`source_id` = the keyword-rule or hashtag source that produced the query".
   - b) `fb-page-search §5.1 L40`: "a control-plane change to `keywords` (`created` or `variants changed`) for a client with Facebook in scope, emitted by registry-writer, `reason = seed`".
-  - c) Target: registry-writer applies `registry.decisions` (`registry-writer §3 L22`) from the qualifier, the canary, ops, client admins and retention-purger (`§4 L36`); it reads `sources`, `client_sources`, `clients`, `registry_audit` (`§6.1 L88`), not `keywords`; its manual add takes `{platform, url_or_handle, ...}` and resolves through poster-resolver and the qualifier (`§5.2 L61`); it writes `sources`, `client_sources`, `registry_audit` and `source.events` only (`§6.2 L91`-`L92`), no jobs.
+  - c) Target: registry-writer applies `registry.decisions` (`registry-writer §3 L22`) from the qualifier, the canary, ops, client admins and retention-purger (`§4 L36`); it reads `sources`, `client_sources`, `clients`, `registry_audit` (`§6.1 L88`), not `keywords`; its manual add takes `{platform, url_or_handle, ...}` and resolves through poster-resolver and the qualifier (`§5.2 L61`); it writes `sources`, `client_sources`, `registry_audit` and `source.events` only (`§6.2 L91`-`L92`), and no job other than the manual candidate on `jobs.poster-resolver` (`§5.2 L61`): no seed job on `jobs.fb-page-search`.
 - **At stake:** the search services rotate over `sources` rows that nobody creates, and fb-page-search's seed job has no emitter; a keyword rule pushed through the manual add would be sent to poster-resolver and the qualifier, which only judge posters.
 - **Options:** (1) registry-writer watches `keywords` and keeps one keyword-rule source per active rule (and emits the seed signal); (2) the keyword editor writes keyword-rule sources through a new decision type registry-writer applies; (3) search services rotate on `keywords` directly with no `sources` row.
 - **Blocks:** C7, F3, W1, W2, W4, VFB1, FB6, IG2
+- **CF overlaps:** cited by CF-040.
 
 ### AU-063
 
@@ -960,9 +1027,11 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
   - b) `fb-client-webhook-receiver §5.1 L42` the first new-post event "asks registry-writer to promote the Page back to push"; `§5.2 L59` "ask registry-writer to return the Page to its reach tier".
   - c) `yt-uploads-reconciler §8 L154` "a vanished channel is retired through registry-writer".
   - d) Target: decision producers are the qualifier, source-health-canary, ops, client admins and retention-purger (`registry-writer §4 L36`); `next_poll_at` is an operational column "written by their owners" (`§3 L30`); per-source `health` changes only through the canary's route-level `health_change` (`§5.2 L54`); no request message or endpoint exists for other services beyond the manual add (`§5.2 L61`).
-- **At stake:** promotions, lease-lapse catch-up and retirements asked for by these services have no message type and no accepted producer, so they do not happen, or the services write `sources` directly.
+- **At stake:** promotions and retirements asked for by these services have decision types (`promote`, `retire`, `registry-writer §3 L22`) but these services are not accepted producers, and the lease-lapse `next_poll_at` catch-up has neither, so they do not happen, or the services write `sources` directly.
 - **Options:** (1) registry-writer accepts decisions (`promote`, `tier_change`, `retire`, `update`) from these services; `next_poll_at` stays with the poller; (2) such requests go to the qualifier, which emits the decision; (3) services update operational columns through the SDK and send only identity changes to registry-writer.
 - **Blocks:** C7, C9, YT2, YT3, FB7
+- **Same disagreement as:** AU-016 (AU-016 adds the `push_lease_lapsed` event yt-uploads-reconciler waits for; AU-063 adds retirement through registry-writer).
+- **CF overlaps:** cited by CF-016, CF-031, CF-032, CF-033.
 
 ### AU-064
 
@@ -976,6 +1045,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** a fallback flips government-watched green sources to `fallback` along with the rest, against README decision 5.
 - **Options:** (1) registry-writer reads `scope` and excludes sources whose `client_ids` include a government client; (2) the canary sends one decision per eligible source; (3) the fallback is recorded per route only and each fetcher applies the government exclusion at run time.
 - **Blocks:** C7, C12
+- **CF overlaps:** cited by CF-015.
 
 ### AU-065
 
@@ -983,13 +1053,14 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 
 - **Type:** budget, shape
 - **Where:**
-  - a) Target: `quota-governor §5.3 L82` "`fb_vendor`, `ig_vendor`, `tt_vendor`, `li_vendor_<action>`, `tg_*` | monthly spend per tag (`tt_vendor` with per-service sub-counters)"; `CONVENTIONS L279` gives per-service sub-counters to `tt_vendor` only; the response is `{decision, wait_until, remaining}` plus `charge` and `reservation_id` (`§5.1 L37`); the `budgets` row is keyed by `budget_tag` and `sub_counter` (`§6.2 L104`).
+  - a) Target: `quota-governor §5.3 L82` "`fb_vendor`, `ig_vendor`, `tt_vendor`, `li_vendor_<action>`, `tg_*` | monthly spend per tag (`tt_vendor` with per-service sub-counters)"; `CONVENTIONS L279` gives per-service sub-counters to `tt_vendor` only; the response is `{decision, wait_until, remaining}` plus `charge` and `reservation_id` (`quota-governor §5.1 L37`); the `budgets` row is keyed by `budget_tag` and `sub_counter` (`quota-governor §6.2 L104`).
   - b) Per-source spend: `qualifier §5.2 L56` rule 5 checks "vendor monthly spend per source"; `ig-comments-fetcher §5.1 L41` "the source's vendor spend is under its cap (qualifier rule 5)"; `ig-keyword-search §6.3 L121` "a monthly spend counter per source"; `tt-hashtag-feed-poller §7 L118` and `tt-keyword-search §7 L112` "the per-source vendor spend cap applies".
   - c) Per-service sub-counters on `ig_vendor`: `ig-comments-fetcher §6.3 L119` "with a counter per service"; `ig-keyword-search §6.3 L121` "a sub-counter per service".
   - d) Page cap: `tt-hashtag-feed-poller §5.1 L50` "a per-run page cap from quota-governor"; the response carries no such field.
 - **At stake:** rule 5's per-source cap and the amber services' cap checks have no counter to read; the governor's capacity answer to the qualifier cannot be computed; the page cap has nowhere to come from.
 - **Options:** (1) per-source and per-service sub-counters on every amber tag, read by the capacity query; (2) per-source spend computed from cost reports outside the governor (for example in `service_runs`), the governor keeping tag-level counters only; (3) no per-source caps: tag-level monthly caps only, and the page cap set by each service's own configuration.
 - **Blocks:** C1, C9, F3, F5, VIG1, VIG2, VTT1, VTT2
+- **CF overlaps:** cited by CF-037.
 
 ### AU-066
 
@@ -1010,7 +1081,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 
 - **Type:** budget, rule
 - **Where:**
-  - a) Target: priorities are "derived from job kind and tier by an SDK helper; a caller cannot claim more than its kind allows" (`quota-governor §5.1 L39`), "validated server-side" (`§12 L149`): 1 Tier 1 rotation, client refresh, `ops_force`, canaries; 2 Tier 2, client keyword searches, comment steps up to +24 h, metrics at +24 h; 3 Tier 3, later comment steps, replies, metrics at +7 d; 4 hot extras, resolvers, discovery; 5 backfill (`§5.1 L43`-`L47`; `README L179`, decision 2). `stretch` admits priorities 1 to 3, from 95% only 1 and 2 (`§5.1 L49`); `stretch_factor` applies to amber tags only (`§5.1 L51`); whether metered green routes stretch is open (`§14 Q2 L171`); the Meta bucket gates only priorities 4 and 5 above 80% (`§5.3 L80`).
+  - a) Target: priorities are "derived from job kind and tier by an SDK helper; a caller cannot claim more than its kind allows" (`quota-governor §5.1 L39`), "validated server-side" (`§12 L149`): 1 Tier 1 rotation, client refresh, `ops_force`, canaries; 2 Tier 2, client keyword searches, comment steps up to +24 h, metrics at +24 h; 3 Tier 3, later comment steps, replies, metrics at +7 d; 4 hot extras, resolvers, discovery; 5 backfill (`§5.1 L43`-`L47`; `README L179`, decision 2). `stretch` admits priorities 1 to 3, from 95% only 1 and 2 (`quota-governor §5.1 L49`); `stretch_factor` applies to amber tags only (`quota-governor §5.1 L51`); whether metered green routes stretch is open (`quota-governor §14 Q2 L171`); the Meta bucket gates only priorities 4 and 5 above 80% (`quota-governor §5.3 L80`).
   - b) `yt-video-details-fetcher §5.1 L50` and `§14 Q1 L215`: first sight from Tier 2, Tier 3, push and keyword-rule sources at priority 1 ("confirm in the quota-governor PRD"); the target names no first-sight priority and derives it from tier.
   - c) `fb-reactions-fetcher §7 L134` "quota-governor orders rotation polls first, comment series second, metrics refreshes third" and `§12 L167` "+7 d refreshes are dropped before +24 h ones"; the target puts +24 h metrics level with Tier 2 rotation and early comment steps, and on the Meta tag gates only 4 and 5.
   - d) `x-recent-search §7 L143`: at 80% of the X cap the governor "cuts x-full-archive-search jobs first, then stretches tier-2 and tier-3 searches to daily, then drops reply steps after +24 h"; the target does not stretch the green X tag and admits priority 3 (later reply steps) until 95%.
@@ -1018,6 +1089,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** the SDK helper computes priorities from the table, so these PRDs' orderings (and their tests) do not hold: YouTube first sight runs at 2 or 3, Facebook metrics compete with rotation, X searches are never stretched.
 - **Options:** (1) the target's table everywhere, with the PRDs revised; (2) add explicit rows (first sight at 1; X cascade; Meta metrics order) to the table; (3) per-tag priority profiles configured in `budgets`.
 - **Blocks:** C1, F5, YT4, FB4, X1, X5, X6, VLI1, VTG1
+- **CF overlaps:** cited by CF-100, CF-101, CF-117.
 
 ### AU-068
 
@@ -1026,12 +1098,13 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **Type:** budget, names
 - **Where:**
   - a) Tag: `ig-hashtag-search §7 L136` "quota-governor meters calls under `ig_graph_<client_id>`", against `quota-governor §5.3 L83` and `CONVENTIONS L279` `ig_graph_<ig_user_id>`.
-  - b) YouTube buckets: `yt-keyword-search §5.1 L51` "the governor's backfill allowance (set in `budgets`)"; `yt-text-purger §7 L187` refresh "bucket share is set in quota-governor"; the target's buckets are `search`, `ingest`, `comments`, `reserve` (`quota-governor §5.3 L79`, also `CONVENTIONS L279`).
+  - b) YouTube buckets: `yt-keyword-search §5.1 L51` "the governor's backfill allowance (set in `budgets`, to be measured in the pilot)"; `yt-text-purger §7 L187` refresh "bucket share is set in quota-governor"; the target's buckets are `search`, `ingest`, `comments`, `reserve` (`quota-governor §5.3 L79`, also `CONVENTIONS L279`).
   - c) Alert: `tt-hashtag-feed-poller §10 L139` and `tt-keyword-search §10 L131` "`budget_80pct` from quota-governor"; the governor's alert is `budget_80` (`quota-governor §10 L139`).
   - d) Hashtag ledger: `ig-hashtag-search §5.1 L57` "The governor keeps, in `budgets`, the ledger ... a hashtag that would be the 31st is denied"; the target keeps it in the proposed table `ig_hashtag_ledger` (`quota-governor §6.3 L107`, `README L186`) and the 31st "waits until the oldest leaves the window" (`quota-governor §5.3 L81`).
 - **At stake:** budget requests under a tag the governor does not know are denied (`flag_off` for an unknown tag, `quota-governor §5.3 L67`); YouTube backfill and text refresh have no bucket to draw from; alert routing keys do not match.
 - **Options:** (1) the target's names (`ig_graph_<ig_user_id>`, four YouTube buckets, `budget_80`, `ig_hashtag_ledger`), PRDs revised; (2) add `backfill` and `refresh` buckets to `youtube_data_api`; (3) charge YouTube backfill to `ingest` and refresh to `comments`, keeping four buckets.
 - **Blocks:** C1, F3, F5, IG2, YT7, YT8, VTT1, VTT2
+- **CF overlaps:** cited by CF-038, CF-099.
 
 ### AU-069
 
@@ -1058,6 +1131,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** one site, account or scan cannot be flagged as the PRDs describe, and a per-source `blocked` from X compliance sent as `health_change` would block the whole X route.
 - **Options:** (1) the canary accepts per-source health requests (a decision with `source_id`); (2) these services ask registry-writer for per-source health themselves (see AU-063); (3) per-source problems stay in each service's state and alerts; health stays route-level.
 - **Blocks:** C12, C7, N2, N3, IG4, X4, X7, W5
+- **CF overlaps:** cited by CF-032.
 
 ### AU-071
 
@@ -1083,6 +1157,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** two replay mechanisms; the direct read skips the archiver's deletion and class-clock guards, so a replay can republish deleted or expired items.
 - **Options:** (1) `raw.replay` is the only path and normalize-item consumes it; (2) the direct read, with the deletion and clock checks moved into the shared SDK reader; (3) both, with the guards in the SDK reader.
 - **Blocks:** C2, C4, C5, F4, A1, A2, A3, A4
+- **CF overlaps:** cited by CF-026.
 
 ### AU-073
 
@@ -1134,6 +1209,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** X withholding, the YouTube 30-day text purge and the 36-month end are rejected or applied with the wrong semantics (for example a purge that also blanks a refreshed version).
 - **Options:** (1) add `withhold` and `purge_derived` modes, `text_only` and `derived` scopes and a `fetched_before` guard to deletion-propagator; (2) producers map onto the two modes and four scopes (withhold as delete, text_only as `purge_text` over listed item ids, derived as delete of analysis rows); (3) yt-text-purger performs its own text purge and deletion-propagator handles only full deletions.
 - **Blocks:** C13, F2, X7, YT7
+- **CF overlaps:** same question as CF-076.
 
 ### AU-077
 
@@ -1149,6 +1225,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** labelled copies of item text, OCR text and transcripts, and X reply ids survive deletions, so the "removes the item from every place" guarantee (and X's 24-hour rule) fails.
 - **Options:** (1) register the annotation tool, analysis-media's stores and the reply and comment indexes in the purge registry; (2) each owning service consumes `deletions` and purges its own store, reporting to deletion-propagator; (3) these stores keep only `item_id` references, never text.
 - **Blocks:** C13, C14, F4, A1, A2, A3, A4, X6
+- **CF overlaps:** cited by CF-021, CF-045, CF-059.
 
 ### AU-078
 
@@ -1161,15 +1238,16 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** member fields inside an organization post either outlive 48 hours (the post is kept) or take the whole post with them (deleted by kind); the store keeps one class per row.
 - **Options:** (1) a field-level purge mode for member fields inside organization items; (2) the poller drops or hashes member fields before writing, so organization items hold no member data; (3) organization items take the 48-hour clock whole, and only aggregates survive.
 - **Blocks:** C14, C13, LI1
+- **CF overlaps:** cited by CF-105.
 
 ### AU-079
 
-**Registry decision for an author request that matches a registered source: no producer and no decision type**
+**Registry decision for an author request that matches a registered source: no producer, and no reason value for an author request**
 
 - **Type:** writers, enum
 - **Where:**
   - a) `deletion-propagator §14 Q3 L173`: "An author request that matches a registered source needs a registry decision; no producer for it is listed in registry-writer. Proposed: retention-purger emits it."
-  - b) Target: retention-purger emits only `remove_client` on `registry.decisions` (`retention-purger §3 L22`, `§6.2 L94`); author requests become `deletions` with scope `author` (`§5.3 L78`). `registry-writer §3 L22` lists no decision type for it.
+  - b) Target: retention-purger emits only `remove_client` on `registry.decisions` (`retention-purger §3 L22`, `§6.2 L94`); author requests become `deletions` with scope `author` (`§5.3 L78`). `registry-writer §3 L22` applies `retire` and `remove_client` but has no reason value for an author request, and its producers of decisions (`§4 L36`) include retention-purger only for `remove_client`.
 - **At stake:** an author who is also a registered source keeps being polled after asking to be forgotten.
 - **Options:** (1) retention-purger emits a `retire` (or new) decision for the matching source; (2) ops handles it through the manual path; (3) an author request never touches the registry.
 - **Blocks:** C14, C7, C13
@@ -1186,6 +1264,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** YouTube-derived aggregates may be kept seven years longer than the YouTube terms quoted in CONVENTIONS allow; nobody deletes them.
 - **Options:** (1) ten years for all aggregates (CONVENTIONS L81, target); (2) 36 months for YouTube-derived aggregates and scores, with a purge path; (3) ten years only for aggregates that do not identify a YouTube channel owner, 36 months for the rest.
 - **Blocks:** C14, C15, YT5, F8
+- **CF overlaps:** cited by CF-106.
 
 ### AU-081
 
@@ -1216,6 +1295,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** deletion-propagator waits for a `done` aggregator never sends, so deletions stall before `completed` (the X 24-hour deadline included); the job fields do not match; the same deletion triggers two recomputes.
 - **Options:** (1) aggregator accepts bucket jobs and reports `done` (on `jobs.completed` or a status row); (2) deletion-propagator drops the recompute step and verifies by query after aggregator's own reconciliation; (3) a shared recompute-request table both read and write.
 - **Blocks:** C15, C13, C14, F2
+- **CF overlaps:** cited by CF-021, CF-093.
 
 ### AU-083
 
@@ -1244,6 +1324,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** every webhook-delivered post of a client-owned Page would hit fb-reactions-fetcher's `schema_unknown` path, and the label that should tell reconciliation reads apart from rotation polls is never set.
 - **Options:** (1) fb-page-feed-poller writes `webhook_reconcile` on reconciliation jobs and fb-reactions-fetcher skips records with `delivery = push`; (2) drop `webhook_reconcile` from the vocabulary and filter extract mode on records that carry summaries; (3) one `metrics_observation` vocabulary for all platforms in F2 (see CF-019), with the webhook case named.
 - **Blocks:** F2, FB2, FB4, FB7.
+- **CF overlaps:** cited by CF-019.
 
 ### AU-085
 
@@ -1257,6 +1338,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** a post deleted on a client's own Instagram account, or a LinkedIn post deleted after its first week, stays in `items` and in dashboards, although `meta_on_request` data must go on request (CONVENTIONS L78) and LinkedIn data may be kept only as its terms allow.
 - **Options:** (1) the poller emits `deletions` when a `metrics` or reconciliation re-read no longer lists a post it should (Instagram), and the LinkedIn reconciliation window covers the whole retention period; (2) the comment fetcher emits the post's `deletions` on the deleted-object error (404) it already sees; (3) post deletions only through deletion-propagator requests (client, user, platform).
 - **Blocks:** IG3, IG6, LI1, LI2, C13.
+- **CF overlaps:** cited by CF-113.
 
 ### AU-086
 
@@ -1283,6 +1365,8 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** a budget-denied green hashtag either stays dark (no one sets `health = fallback`, so ig-keyword-search never selects it) or, if `fallback_on` is mapped to `health`, stays on the paid route for good, since nothing emits `fallback_off` when the 7-day window frees the slot.
 - **Options:** (1) overflow is decided at registration (the 31st tag registered `route = amber`, as ig-keyword-search reads it) and ig-hashtag-search only emits `updated` with `budget_wait`; (2) ig-hashtag-search's `fallback_on` stands: registry-writer sets `health = fallback` and ig-hashtag-search emits `fallback_off` at window expiry; (3) only source-health-canary emits `fallback_on` and `fallback_off`, and a budget wait never moves a hashtag to the vendor.
 - **Blocks:** F2, IG2, VIG1, C7, C12.
+- **Shares a point with:** AU-060 (the 31st hashtag).
+- **CF overlaps:** cited by CF-032, CF-102.
 
 ### AU-088
 
@@ -1296,6 +1380,8 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** as written nothing emits rotation or first-poll jobs for green hashtags, so the green Instagram discovery lane never starts.
 - **Options:** (1) ig-hashtag-search keeps its own scheduler per CONVENTIONS L278 and emits its own first poll on `added`; (2) a shared scheduler becomes an SDK component or service for all pollers, and CONVENTIONS L278 is rewritten.
 - **Blocks:** IG2, F5, C10.
+- **Shares a point with:** AU-042 c).
+- **CF overlaps:** cited by CF-114.
 
 ### AU-089
 
@@ -1320,6 +1406,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** a comment carrying a media URL (sticker, image) or a title hashes differently on the two sides, so every fetch writes it again as a new version and the edit counts become noise.
 - **Options:** (1) one SDK hash helper with one input definition, used by fetchers and normalize-item; (2) fetchers compare against their own envelope hash, stored in its own column; (3) normalize-item uses the text-only hash for comments.
 - **Blocks:** F2, F4, C4, C6, IG6, VIG2.
+- **CF overlaps:** cited by CF-007, CF-045.
 
 ### AU-091
 
@@ -1334,6 +1421,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** with one row per account or channel, the amber pollers' selectors never match a green push source, so the daily reconciliation both sides rely on never runs (and a Telegram receiver outage is never repaired); with two rows, the source has two `source_id`s, two tiers and two cursors, which no PRD describes.
 - **Options:** (1) one row (`route = green`), and the amber pollers' selectors add green push sources whose clients accept amber data; (2) a second, amber row per authorised account or bot channel, linked to the green one; (3) drop the amber reconciliation and treat the green read as complete.
 - **Blocks:** TT1, VTT4, TG1, VTG3, C7, C9.
+- **CF overlaps:** cited by CF-031, CF-096.
 
 ### AU-092
 
@@ -1347,6 +1435,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** a non-government client whose contract excludes amber data still receives amber TikTok comments and stats, Telegram posts and Facebook data, while the same client's amber Instagram data and the amber TikTok reconciliation are withheld; "accepts amber data" means two different things, and F3 has no column to build either check on.
 - **Options:** (1) per-client amber acceptance (a `clients` column) checked by every amber service and by comment-decay-scheduler; (2) government flag only, as CONVENTIONS L7 says, and the acceptance checks are removed; (3) acceptance checked once, by keyword-matcher and the client app at read time, not by fetchers.
 - **Blocks:** F3, IG2, VIG1, VIG2, VTT1 to VTT6, VFB1 to VFB3, VTG3, TT1, C11.
+- **CF overlaps:** cited by CF-039.
 
 ### AU-093
 
@@ -1373,20 +1462,23 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** every new X keyword rule gets an automatic `backfill` job that x-full-archive-search refuses, a stale x-recent-search cursor emits a `keyword_history` job from a producer x-full-archive-search does not accept, and client-requested history needs a kind backfill-orchestrator does not emit.
 - **Options:** (1) backfill-orchestrator sends no job for X keyword rules (x-recent-search's 7-day `first_run` is the backfill) and emits `keyword_history` only on client request; x-recent-search stops emitting it; (2) x-recent-search owns `keyword_history` emission (stale cursor and client request) and x-full-archive-search lists it as a producer; (3) one `backfill` kind with a `scope` (`account` or `keyword`) and a `requested_by`.
 - **Blocks:** F2, X1, X5, C10.
+- **Shares a point with:** AU-042 f).
+- **CF overlaps:** same question as CF-084.
 
 ### AU-095
 
-**The X Enterprise gate for government clients: checked in five places under three representations, and not where x-recent-search expects it**
+**The X Enterprise gate for government clients: checked in six places under three representations, and not where x-recent-search expects it**
 
 - **Type:** flag; rule; single-PRD
 - **Where:**
   - x-recent-search §12 L175: "the registry refuses X rules whose `client_ids` carry a government flag until the Enterprise contract is recorded in `clients`"; §7 L146: sensitive-event rules "are rejected at registry review and refused by the builder"; its own steps (§5.2 L53-L59) drop no government client.
   - registry-writer has no such refusal: manual adds (§5.2 L61), `clients` read for "government flag, roles" (§6.1 L88), and its only government test is an amber manual add (§13 L152).
-  - Per-client column: keyword-matcher §5.2 L69 `clients.x_enterprise` ("none on X items unless `clients.x_enterprise = true`"); "X Enterprise entitlement" in `clients` for x-filtered-stream (§5.2 A L52, §6.1 L107), x-user-timeline-poller (§5.2 L55, §6.1 L108) and x-full-archive-search (§5.2 L50, §6.1 L102); x-user-timeline-poller §14 Q5 L195: "Which `clients` column records a government client's X Enterprise entitlement?"
+  - Per-client column: keyword-matcher §5.3 L69 `clients.x_enterprise` ("none on X items unless `clients.x_enterprise = true`"); "X Enterprise entitlement" in `clients` for x-filtered-stream (§5.2 A L52, §6.1 L107), x-user-timeline-poller (§5.2 L55, §6.1 L108) and x-full-archive-search (§5.2 L50, §6.1 L102); x-user-timeline-poller §14 Q5 L195: "Which `clients` column records a government client's X Enterprise entitlement?"
   - App-level setting: x-user-resolver §5.2 L54 "unless `X_PLAN = enterprise` with that end user declared"; x-replies-fetcher §5.2 L54 "only when the company app's X plan setting is Enterprise".
-- **At stake:** x-recent-search reads and pays for X posts for a rule whose only clients are government end users without Enterprise, because the registry check it relies on does not exist; the other five services cannot share one test while the entitlement is a `clients` column in some and an app-wide setting in others.
+- **At stake:** x-recent-search reads and pays for X posts for a rule whose only clients are government end users without Enterprise, because the registry check it relies on does not exist; the other six services cannot share one test while the entitlement is a `clients` column in some and an app-wide setting in others.
 - **Options:** (1) one `clients` column (for example `x_enterprise`, or an end-user declaration) checked by every x-* service and keyword-matcher, x-recent-search included; (2) one app-level setting plus a per-client declaration list; (3) a registry-time refusal in registry-writer for government-only X rules, the fetch-time checks kept as a second line.
 - **Blocks:** F3, X1 to X7, C5, C7.
+- **CF overlaps:** cited by CF-039, CF-103.
 
 ### AU-096
 
@@ -1400,12 +1492,14 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** one reply becomes two items (one in `items`, one in `comments`) with different ids, so counts, sentiment and deletions split; replies read by x-full-archive-search can carry reply authors' ids and usernames in clear and never enter x-replies-fetcher's index.
 - **Options:** (1) every X reader writes replies as `x:comment:<id>` with x-replies-fetcher's minimization (an SDK X mapper), and the boundary is a field of x-replies-fetcher's index; (2) keep `x:post:<id>` for every X post, replies included, and x-replies-fetcher adopts it; (3) keep both keys and have normalize-item map `x:post:<id>` of a reply to `x:comment:<id>`.
 - **Blocks:** F2, C4, X1, X3, X4, X5, X6.
+- **Same disagreement as:** AU-050 for the key question (AU-050 is the key alone; also CF-065).
+- **CF overlaps:** same question as CF-065.
 
 ### AU-097
 
 **The n8n flows: several PRDs call them by signed webhook, no document defines the flows, their endpoints, payloads or signing (follow-up assumption)**
 
-- **Type:** document; single-PRD
+- **Type:** shape; single-PRD
 - **Where:**
   - alert-evaluator §3 L24 and L27: delivery "through n8n flows (email, Telegram, Slack)", "sending email, Telegram or Slack messages themselves (the n8n flows)" out of scope; §5.3 L69: "Email, Telegram and Slack each have an n8n flow reached by a signed webhook call"; §6.2 L85-L87: payload `"schema": "alert/v1"`.
   - Other callers, each with its own payload: qualifier §5.3 L67 (`POST /qualifier/review` with the card payload and three buttons, and a signed callback, §9 L116); source-health-canary §5.2 L57 ("an n8n alert") and §5.3 L77 (an approval card for `blocked`); quota-governor §4 L31 ("n8n delivers the alerts"); registry-writer §11 L133 (request notifications); li-org-resolver §6.2 L79 (review cards); x-compliance-sync §6.2 L130 (exports).
@@ -1426,6 +1520,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** comment-decay-scheduler's LinkedIn amber profile cannot be built from both PRDs: the number of series opened (and so most of `li_vendor_post_comments` spend) depends on which default wins.
 - **Options:** (1) keyword-hit posts get a series by default (li-post-search); (2) only posts of registered pages by default, keyword hits on budget headroom (li-post-comments-fetcher); (3) keyword hits only for a client's priority keywords.
 - **Blocks:** C11, VLI1, VLI4.
+- **Shares a point with:** AU-037 d).
 
 ### AU-099
 
@@ -1439,6 +1534,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** either two producers run the same daily check on one queue, or comment-decay-scheduler emits a `health` kind the consumer rejects.
 - **Options:** (1) tg-discussion-receiver's own scheduler emits `reconciliation`, and comment-decay-scheduler's `tg_own` row only records the profile; (2) comment-decay-scheduler emits the daily job and tg-discussion-receiver drops its scheduler and accepts `health`.
 - **Blocks:** F2, C11, TG2.
+- **Same disagreement as:** AU-033 (AU-033 adds the option that the check belongs to source-health-canary).
 
 ### AU-100
 
@@ -1452,6 +1548,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** a Tier 1 channel whose subscription failed is read once a day instead of hourly, so the freshness promise for it fails silently; quota planning differs by up to 24 units per channel a day.
 - **Options:** (1) yt-uploads-reconciler adds reach-tier cadence for channels without a verified lease (reading `yt_subscriptions` or a registry flag) and weekly dormant runs; (2) one daily read for every channel, and yt-pubsub-receiver and the freshness promise are reworded; (3) unsubscribed channels move to a separate poller kind (`rotation`) on the same queue.
 - **Blocks:** YT2, YT3, C1.
+- **CF overlaps:** cited by CF-096.
 
 ### AU-101
 
@@ -1467,6 +1564,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** three producers send shapes the consumer does not parse; backfill first sights are recognised by a field no producer sets, so they run at the wrong priority; quota-governor gets requests on an unknown bucket.
 - **Options:** (1) one job per id (`post_ref` string) with an `origin` field (`push`, `reconciliation`, `backfill`, `search`, `web_bridge`) from which the consumer derives priority; (2) `post_refs` lists of at most 50 ids, with `origin`, and the consumer splits them into slots; (3) keep `series_step = backfill` as the backfill marker and require producers to set it.
 - **Blocks:** F2, C1, YT2, YT3, YT4, YT8, YT9.
+- **CF overlaps:** same question as CF-083.
 
 ### AU-102
 
@@ -1497,6 +1595,8 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** the job backfill-orchestrator sends news-feed-poller is a kind it rejects; sites with a short or no sitemap end `capped` with nothing behind the promised remainder; the extractor cannot place `web_search` URLs in a fetch tier.
 - **Options:** (1) news backfill goes to news-sitemap-poller only; sites without a usable sitemap end `capped` (`route_cap`), `commoncrawl` leaves the extractor's list, and the news schedulers are exempt from the `done`/`capped` rule; (2) web-commoncrawl-scanner gains a `backfill` kind that lists one host's captured URLs from the index and writes `article.urls` with `found_via = commoncrawl`, requested by backfill-orchestrator; (3) either of these, plus `web_search` added to the extractor's tier list (as live or as backfill).
 - **Blocks:** C10, N2, N3, N4, N6, W3, W5.
+- **Same disagreement as:** AU-044 (AU-044 is the narrower routing and rotation-wait question).
+- **CF overlaps:** cited by CF-022.
 
 ### AU-104
 
@@ -1510,6 +1610,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** a fetcher built to news-robots-checker's rule stops its batch and asks for a policy re-check on every 429 instead of backing off; one built to its own PRD never sends the feed and sitemap re-checks news-robots-checker sizes its cooldown for.
 - **Options:** (1) 429 backs off only and feed or sitemap 404/410 sends `refresh` only; news-robots-checker §5.1 L47 narrows to 401, 402, 403, 451 and challenges; (2) as news-robots-checker says: 429 and feed or sitemap 404/410 also send `recheck`, coalesced by its cooldown; (3) 429 backs off; feed or sitemap 404/410 sends both `refresh` and `recheck`.
 - **Blocks:** N1, N2, N3, N4, N5, N6.
+- **CF overlaps:** same question as CF-092.
 
 ### AU-105
 
@@ -1533,11 +1634,12 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **Where:**
   - news-dedup §3 L22 (the hourly sweep "adds same-canonical copies the extractor recorded but did not emit"), §5.3 L64 ("it records them as `duplicate_canonical`"; they "are added as members by the hourly sweep from the `news_urls` ledger"), §13 L163; §14 Q3 L169 keeps the ledger-based sweep.
   - news-article-extractor §5.2 L57 ("record both URLs, write nothing new (`duplicate_canonical`)"); `news_urls` `status` = `done | gone | not_article | paywalled | skipped_policy | failed` (§6.3 L129), without `duplicate_canonical`; §13 L177 ("one ledger entry per URL").
-  - Key: `news_story_members` is keyed on `idempotency_key` (§6.3 L108, primary key); the extractor's key is `news:article:<canonical_url_hash>` (§9 L152), which a same-canonical copy shares with the origin; the ledger row carries none of the member fields of news-dedup §5.2 L54 beyond `source_id` and `fetched_at` (no title or text hash, language or excerpt).
+  - Key: `news_story_members` is keyed on `idempotency_key` (news-dedup §6.3 L108, primary key); the extractor's key is `news:article:<canonical_url_hash>` (news-article-extractor §9 L152), which a same-canonical copy shares with the origin; the ledger row carries none of the member fields of news-dedup §5.2 L54 beyond `source_id` and `fetched_at` (no title or text hash, language or excerpt).
   - news-dedup §13 L160 ("every copy stays on `raw.items` and reaches normalize-item with `duplicate_of` set") cannot hold for these copies, which never reach `raw.items`.
 - **At stake:** the sweep cannot select the copies by status, and inserting one as a member collides with the origin's primary key, so "also published by N outlets" misses every outlet that names the origin as canonical.
 - **Options:** (1) add `duplicate_canonical` to `news_urls.status` and key sweep-added members on the copy's `news:url:<url_hash>`, text fields null, `matched_by = canonical`; (2) the extractor emits same-canonical copies to `raw.items` under a per-URL key (the alternative in news-dedup §14 Q3) and the sweep goes; (3) the sweep finds copies as ledger rows whose `canonical_url_hash` belongs to another URL, with a composite member key.
 - **Blocks:** F3, N6, N7.
+- **CF overlaps:** cited by CF-110.
 
 ### AU-107
 
@@ -1550,6 +1652,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** read as the onboarding contract, the resolver's line promises clients and sizes `news_disqus` for eight fetches per article where the scheduler emits three.
 - **Options:** (1) the three-step profile everywhere (the resolver's line follows the scheduler); (2) the longer series for Disqus sites, changing CONVENTIONS L269, the scheduler's profile and the fetcher.
 - **Blocks:** N2, N8, C11.
+- **Same disagreement as:** AU-041 (same references and two-way choice; also CF-108).
 
 ### AU-108
 
@@ -1564,6 +1667,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** web-search-perplexity's `site_search` path and acceptance test 9 have no producer; the bridge's Mojeek default contradicts Mojeek's "Perplexity in v1"; the bridge's spend lands on the tags the engines cap for their own rotations.
 - **Options:** (1) the bridge sends `site_search` jobs to web-search-perplexity (and to web-search-mojeek once `site:` is confirmed), which call, archive and publish to `search.results`, and the bridge reads its results there (search-hit-router no longer the sole consumer); (2) the bridge keeps calling the engines through the shared clients, `site_search` leaves web-search-perplexity, and the bridge gets its own budget tags; (3) as (2), charging the engines' tags with a recorded share.
 - **Blocks:** C1, W1, W2, YT9.
+- **CF overlaps:** cited by CF-023.
 
 ### AU-109
 
@@ -1606,6 +1710,7 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** from poster-resolver's job the Facebook and Instagram resolvers have no token to call with and the X, TikTok and LinkedIn government gates nothing to check; a LinkedIn answer carries a key poster-resolver never issued; an amber candidate with its flag off ends in three different states; the qualifier's language and Iraqi-signal inputs are computed twice or not at all.
 - **Options:** (1) one resolve-job schema in F2 with `client_ids`, `seed_list` and the issued `candidate_key` echoed unchanged; amber resolvers are called with the flag off and answer `route_off`; resolvers return post texts and poster-resolver computes the shares; (2) as (1), but each resolver computes shares and signals and poster-resolver forwards them; (3) resolvers read `client_ids` and seed-list membership from poster-resolver's `poster_profiles` row by `candidate_key`, and poster-resolver keeps its flag-off rule.
 - **Blocks:** F2, C8, C9, FB1, IG1, VTT3, X2, VLI2, VTG2, YT1, N2.
+- **Same disagreement as:** AU-056 for (a) and (c) (AU-056 is the narrower field and flag-off question).
 
 ### AU-112
 
@@ -1620,6 +1725,8 @@ D1 · 7 Oct 2026 · Status: **open, none resolved.** Companion to `docs/contract
 - **At stake:** TikTok creators' and LinkedIn pages' follower counts, and with them reach tiers, are never refreshed; Instagram accounts get no first due time unless the scheduler also scans for sources without a cursor row.
 - **Options:** (1) every resolver runs its own 30-day loop over its registered sources: tt-user-resolver and li-org-resolver gain one, ig-account-resolver seeds missing cursor rows from `sources`; (2) one refresh scheduler (poster-resolver or registry-writer) sends `refresh` jobs to all eight resolvers and the per-resolver loops go; (3) the qualifier's daily sweep emits `refresh` jobs for the sources it reviews, as li-org-resolver expects, with the others as (1).
 - **Blocks:** C7, C8, C9, FB1, IG1, VTT3, VTT6, X2, VLI2, VLI3, VTG2, YT1, N2.
+- **Same disagreement as:** AU-059 a) for the LinkedIn bullet.
+- **CF overlaps:** cited by CF-035.
 
 ### AU-113
 
