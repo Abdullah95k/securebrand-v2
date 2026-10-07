@@ -3232,7 +3232,7 @@ Every key, id, hash or cursor format a PRD defines, as written, grouped by name.
 | `answer matching` | x-user-resolver: `every answer carries the request's job_id` (6.2 L132) |
 | `Apify run id` | li-company-posts-poller: `run id returned by POST .../runs` (5.3 L70) |
 | `Apify runId / defaultDatasetId` | li-org-resolver: `{runId}, {defaultDatasetId}` (5.3 L61) |
-| `article.urls idempotency_key` | search-hit-router: `news:article:<canonical_url_hash>` (6.2 L123) |
+| `article.urls idempotency_key` | search-hit-router: `news:article:<canonical_url_hash>` (9 L159; 13.4 L184) |
 | `article.urls message_id` | search-hit-router: `au:…:<canonical_url_hash>` (9 L159) |
 | `article.urls partition key` | search-hit-router: `source_id (the news site's)` (6.2 L117) |
 | `author reference` | ig-own-comments-fetcher: `hashed author reference on downstream items (made by normalize-item)` (3 L29)<br>ig-webhook-receiver: `hashed reference downstream (not made here)` (7 L135) |
