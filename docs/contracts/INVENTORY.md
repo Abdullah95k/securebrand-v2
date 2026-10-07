@@ -17,6 +17,20 @@ This file lists, for every PRD, each topic, job queue and job kind, table and co
 - "As written": names keep the PRD's spelling, case and placeholders. Two spellings of one thing appear as two rows on purpose: each such pair is a conflict, never a synonym.
 - JSON types are the types of the example values (`string`, `integer`, `number`, `boolean`, `null`, `object`, `array`). A `null` example says nothing about the type.
 
+## Known corrections from the review
+
+A fresh verification pass checked 16 PRDs (every folder) against this inventory. Its systematic findings are fixed: services that schedule their own jobs are now shown as producers of their own queue, reader and writer lists are no longer cut, dead letters separate writers from mentions, and the raw batch path no longer names x-compliance-sync as its writer. These row-level corrections were found and are not yet applied to the tables below; read the rows with them in mind:
+
+- `jobs.<service>`: comment-decay-scheduler also writes this spelling (comment-decay-scheduler 3 L21, 6.2 L138), next to `jobs.<comment service>`.
+- `clients`: quota-governor (6.1 L94), registry-writer (6.1 L88, also `roles`) and x-user-resolver (5.2 L54) read the government marking.
+- `deletion_requests`: retention-purger writes `status` (intake and status, 6.2 L94) and keeps the author hash (5.3 L78).
+- `service_runs`: registry-writer keeps lag, unpublished-event count and pending manual requests (6.3 L102); yt-text-purger records its run start.
+- `budgets`: tg-channel-resolver (6.3 L108) and tg-message-search (6.3 L96) keep counters through quota-governor as fb-reactions-fetcher and tt-hashtag-feed-poller do; fb-reactions-fetcher names no store for its usage headers (5.2 L53).
+- Section 8, job partition key: tt-hashtag-feed-poller (5.2 L54) and comment-decay-scheduler (3 L21) also partition by `source_id`; the concept is split across several differently named rows.
+- Section 7: retention-purger assigns `retention_class` on its `deletions` messages (6.2 L100); search-hit-router only mentions `news_excerpt` (7 L144), its messages carry no class.
+- Small attributions: fb-reactions-fetcher's job has no field named `due_at` (5.1 L41); ig-webhook-receiver also writes mention items (9 L152); li-notification-receiver names no `jobs.` queue; yt-text-purger also reads `items.item_id` and `source_id` (5.3 L75); `stretch_factor` 1.0 is an example value, not a default.
+- Companion file: the `alerts` row covers only some folders' alert names; news-robots-checker also spells `robots_status` (5.3 L71); quota-governor's decision values are written "allow, wait-until and deny" (3 L20).
+
 Sections 9 (enumerations other services see) and 10 (internal calls between services) are in the companion file `docs/contracts/INVENTORY-VALUES-AND-CALLS.md`, to keep this file readable.
 
 ## Contents
@@ -121,7 +135,7 @@ Each kind as written, the queues that consume it (by the consumer's own PRD) and
 | postgres | `retention_classes` | yes | 11 |  |
 | postgres | `review_queue` | yes | 21 | analysis-entities, analysis-media, analysis-sentiment, analysis-topics, ig-account-media-poller, ig-account-resolver, news-site-resolver, normalize-item, qualifier, search-hit-router, web-gdelt-poller, web-search-mojeek, web-search-perplexity, x-filtered-stream, x-recent-search, yt-comments-fetcher, yt-keyword-search, yt-replies-fetcher, yt-web-search-bridge |
 | postgres | `service_runs` | yes | 85 | aggregator, alert-evaluator, analysis-entities, analysis-media, analysis-sentiment, analysis-topics, backfill-orchestrator, comment-decay-scheduler, deletion-propagator, fb-backfill, fb-client-webhook-receiver, fb-group-comments-fetcher, fb-group-posts-poller, fb-keyword-search, fb-page-feed-poller, fb-page-resolver, fb-page-search, fb-post-comments-fetcher, fb-reactions-fetcher, ig-account-media-poller, ig-account-resolver, ig-comments-fetcher, ig-hashtag-search, ig-keyword-search, ig-mentions-fetcher, ig-own-comments-fetcher, ig-webhook-receiver, lang-dialect-id, li-client-posts-poller, li-company-posts-poller, li-notification-receiver, li-org-resolver, li-own-comments-fetcher, li-post-comments-fetcher, li-post-search, news-article-extractor, news-comments-fetcher, news-dedup, news-feed-poller, news-homepage-differ, news-robots-checker, news-site-resolver, news-sitemap-poller, normalize-item, poster-resolver, qualifier, raw-archiver, registry-writer, retention-purger, search-hit-router, source-health-canary, store-writer, tg-bot-channel-receiver, tg-channel-posts-poller, tg-channel-resolver, tg-discussion-receiver, tg-message-search, tt-client-videos-fetcher, tt-hashtag-feed-poller, tt-keyword-search, tt-profile-videos-poller, tt-user-resolver, tt-video-comments-fetcher, tt-video-stats-refresher, web-commoncrawl-scanner, web-gdelt-poller, web-search-mojeek, web-search-perplexity, x-compliance-sync, x-filtered-stream, x-full-archive-search, x-recent-search, x-replies-fetcher, x-user-resolver, x-user-timeline-poller, yt-channel-resolver, yt-comments-fetcher, yt-keyword-search, yt-pubsub-receiver, yt-replies-fetcher, yt-text-purger, yt-uploads-reconciler, yt-video-details-fetcher, yt-web-search-bridge |
-| postgres | `sources` | yes | 80 | backfill-orchestrator, fb-backfill, fb-client-webhook-receiver, fb-group-posts-poller, fb-keyword-search, fb-page-feed-poller, ig-account-media-poller, ig-hashtag-search, ig-mentions-fetcher, ig-webhook-receiver, keyword-matcher, li-client-posts-poller, li-company-posts-poller, li-notification-receiver, li-own-comments-fetcher, li-post-search, news-feed-poller, news-homepage-differ, news-sitemap-poller, registry-writer, tg-bot-channel-receiver, tg-channel-posts-poller, tg-discussion-receiver, tg-message-search, tt-client-videos-fetcher, tt-hashtag-feed-poller, tt-keyword-search, tt-profile-videos-poller, web-gdelt-poller, web-search-mojeek, web-search-perplexity, x-compliance-sync, x-full-archive-search, x-recent-search, x-user-timeline-poller, yt-uploads-reconciler |
+| postgres | `sources` | yes | 80 | backfill-orchestrator, fb-backfill, fb-client-webhook-receiver, fb-group-posts-poller, fb-keyword-search, fb-page-feed-poller, ig-account-media-poller, ig-hashtag-search, ig-mentions-fetcher, ig-webhook-receiver, keyword-matcher, li-client-posts-poller, li-company-posts-poller, li-notification-receiver, li-own-comments-fetcher, li-post-search, news-feed-poller, news-homepage-differ, news-sitemap-poller, registry-writer, tg-bot-channel-receiver, tg-channel-posts-poller, tg-discussion-receiver, tg-message-search, tt-client-videos-fetcher, tt-hashtag-feed-poller, tt-keyword-search, tt-profile-videos-poller, web-gdelt-poller, web-search-mojeek, web-search-perplexity, x-full-archive-search, x-recent-search, x-user-timeline-poller, yt-uploads-reconciler |
 | postgres | `vendor_keys` | yes | 26 | retention-purger, tt-keyword-search |
 | postgres | `alert_deliveries` | **no** | 1 | alert-evaluator |
 | postgres | `alert_rules` | **no** | 1 | alert-evaluator |
@@ -941,21 +955,21 @@ Every queue a PRD consumes from or produces into: `jobs.<service>` queues, prior
 | `jobs.ig-hashtag-search` | ig-hashtag-search: (kinds not stated) | (no PRD produces into it) | ig-hashtag-search 5.1 L45; 5.1 L55; +5 more |
 | `jobs.ig-keyword-search` | ig-keyword-search: rotation, backfill, ops_force | ig-keyword-search: rotation | ig-keyword-search 3 L19; 3 L21; +5 more; ig-keyword-search 5.1 L41; 5.1 L43; +4 more |
 | `jobs.ig-mentions-fetcher` | ig-mentions-fetcher: rotation, reconciliation, backfill, ops_force | ig-mentions-fetcher: rotation<br>ig-webhook-receiver: reconciliation, ops_force | ig-mentions-fetcher 3 L19; 3 L21; +8 more; ig-mentions-fetcher 5.1 L41; 5.1 L43; +5 more; ig-webhook-receiver 2 L13; 3 L21; +5 more |
-| `jobs.ig-own-comments-fetcher` | ig-own-comments-fetcher: comments, replies, reconciliation, ops_force | ig-webhook-receiver: reconciliation, ops_force | ig-own-comments-fetcher 3 L19; 4 L34; +6 more; ig-webhook-receiver 2 L13; 3 L21; +4 more |
+| `jobs.ig-own-comments-fetcher` | ig-own-comments-fetcher: comments, replies, reconciliation, ops_force | ig-webhook-receiver: reconciliation, ops_force<br>ig-own-comments-fetcher (own scheduler, as its PRD says): comments, replies, reconciliation | ig-own-comments-fetcher 3 L19; 4 L34; +6 more; ig-webhook-receiver 2 L13; 3 L21; +4 more; ig-own-comments-fetcher 3 L19; 4 L34; +6 more |
 | `jobs.ig-webhook-receiver` | ig-webhook-receiver: push | ig-webhook-receiver: push | ig-webhook-receiver 5.2 L56; 5.2 L59; +2 more; ig-webhook-receiver 3 L19; 5.2 L55; +2 more |
 | `jobs.keyword-matcher` | keyword-matcher: rematch, candidate_retry | keyword-matcher: candidate_retry | keyword-matcher 3 L23; 4 L34; +4 more; keyword-matcher 5.3 L74; 6.2 L95 |
-| `jobs.li-client-posts-poller` | li-client-posts-poller: rotation, reconciliation, backfill, ops_force | (no PRD produces into it)<br>mentioned by: li-notification-receiver | li-client-posts-poller 5.1 L40; 5.1 L48; +5 more |
-| `jobs.li-company-posts-poller` | li-company-posts-poller: rotation, backfill, ops_force | (no PRD produces into it) | li-company-posts-poller 3 L19; 3 L21; +5 more |
+| `jobs.li-client-posts-poller` | li-client-posts-poller: rotation, reconciliation, backfill, ops_force | li-client-posts-poller (own scheduler, as its PRD says): rotation, reconciliation, backfill<br>mentioned by: li-notification-receiver | li-client-posts-poller 5.1 L40; 5.1 L48; +5 more; li-client-posts-poller 5.1 L40; 5.1 L48; +5 more |
+| `jobs.li-company-posts-poller` | li-company-posts-poller: rotation, backfill, ops_force | li-company-posts-poller (own scheduler, as its PRD says): rotation, backfill | li-company-posts-poller 3 L19; 3 L21; +5 more; li-company-posts-poller 3 L19; 3 L21; +5 more |
 | `jobs.li-org-resolver` | li-org-resolver: refresh | (no PRD produces into it) | li-org-resolver 5.1 L44; 6.1 L75; +1 more |
 | `jobs.li-own-comments-fetcher` | li-own-comments-fetcher: comments | (no PRD produces into it)<br>mentioned by: li-notification-receiver | li-own-comments-fetcher 3 L19; 5.1 L38; +6 more |
 | `jobs.li-post-comments-fetcher` | li-post-comments-fetcher: comments | (no PRD produces into it)<br>mentioned by: li-post-search | li-post-comments-fetcher 3 L19; 5.1 L40; +5 more |
-| `jobs.li-post-search` | li-post-search: backfill | (no PRD produces into it) | li-post-search 5.1 L44; 5.1 L48; +3 more |
-| `jobs.news-comments-fetcher` | news-comments-fetcher: comments, ops_force | (no PRD produces into it) | news-comments-fetcher 3 L19; 5.1 L41; +3 more |
-| `jobs.news-feed-poller` | news-feed-poller: rotation, ops_force | (no PRD produces into it) | news-feed-poller 3 L19; 5.1 L40; +2 more |
-| `jobs.news-homepage-differ` | news-homepage-differ: rotation, ops_force | (no PRD produces into it) | news-homepage-differ 5.1 L41; 5.2 L53; +1 more |
-| `jobs.news-robots-checker` | news-robots-checker: first_check, refresh, recheck, ops_force | news-article-extractor: recheck<br>news-feed-poller: recheck<br>news-homepage-differ: recheck<br>news-site-resolver: (kinds not stated)<br>news-sitemap-poller: recheck | news-robots-checker 3 L19; 5.1 L41; +3 more; news-article-extractor 3 L23; 5.2 L54; +6 more; news-feed-poller 3 L22; 6.2 L115; +2 more; news-homepage-differ 3 L22; 6.2 L118; +2 more; news-site-resolver 5.1 L41; 6.2 L79; +1 more; news-sitemap-poller 3 L23; 6.2 L127; +2 more |
-| `jobs.news-site-resolver` | news-site-resolver: resolve, refresh | news-comments-fetcher: refresh<br>news-feed-poller: refresh<br>news-homepage-differ: refresh<br>news-sitemap-poller: refresh | news-site-resolver 5.1 L38-L40; 6.1 L75; +2 more; news-comments-fetcher 8 L139; news-feed-poller 3 L21; 5.2 L59; +4 more; news-homepage-differ 3 L22; 5.2 L60; +3 more; news-sitemap-poller 3 L23; 6.2 L127; +4 more |
-| `jobs.news-sitemap-poller` | news-sitemap-poller: rotation, backfill, ops_force | (no PRD produces into it) | news-sitemap-poller 3 L21; 5.1 L41; +3 more |
+| `jobs.li-post-search` | li-post-search: backfill | li-post-search (own scheduler, as its PRD says): backfill | li-post-search 5.1 L44; 5.1 L48; +3 more; li-post-search 5.1 L44; 5.1 L48; +3 more |
+| `jobs.news-comments-fetcher` | news-comments-fetcher: comments, ops_force | news-comments-fetcher (own scheduler, as its PRD says): comments | news-comments-fetcher 3 L19; 5.1 L41; +3 more; news-comments-fetcher 3 L19; 5.1 L41; +3 more |
+| `jobs.news-feed-poller` | news-feed-poller: rotation, ops_force | news-feed-poller (own scheduler, as its PRD says): rotation | news-feed-poller 3 L19; 5.1 L40; +2 more; news-feed-poller 3 L19; 5.1 L40; +2 more |
+| `jobs.news-homepage-differ` | news-homepage-differ: rotation, ops_force | news-homepage-differ (own scheduler, as its PRD says): rotation | news-homepage-differ 5.1 L41; 5.2 L53; +1 more; news-homepage-differ 5.1 L41; 5.2 L53; +1 more |
+| `jobs.news-robots-checker` | news-robots-checker: first_check, refresh, recheck, ops_force | news-article-extractor: recheck<br>news-feed-poller: recheck<br>news-homepage-differ: recheck<br>news-site-resolver: (kinds not stated)<br>news-sitemap-poller: recheck<br>news-robots-checker (own scheduler, as its PRD says): first_check, refresh, recheck | news-robots-checker 3 L19; 5.1 L41; +3 more; news-article-extractor 3 L23; 5.2 L54; +6 more; news-feed-poller 3 L22; 6.2 L115; +2 more; news-homepage-differ 3 L22; 6.2 L118; +2 more; news-site-resolver 5.1 L41; 6.2 L79; +1 more; news-sitemap-poller 3 L23; 6.2 L127; +2 more; news-robots-checker 3 L19; 5.1 L41; +3 more |
+| `jobs.news-site-resolver` | news-site-resolver: resolve, refresh | news-comments-fetcher: refresh<br>news-feed-poller: refresh<br>news-homepage-differ: refresh<br>news-sitemap-poller: refresh<br>news-site-resolver (own scheduler, as its PRD says): resolve, refresh | news-site-resolver 5.1 L38-L40; 6.1 L75; +2 more; news-comments-fetcher 8 L139; news-feed-poller 3 L21; 5.2 L59; +4 more; news-homepage-differ 3 L22; 5.2 L60; +3 more; news-sitemap-poller 3 L23; 6.2 L127; +4 more; news-site-resolver 5.1 L38-L40; 6.1 L75; +2 more |
+| `jobs.news-sitemap-poller` | news-sitemap-poller: rotation, backfill, ops_force | news-sitemap-poller (own scheduler, as its PRD says): rotation, backfill | news-sitemap-poller 3 L21; 5.1 L41; +3 more; news-sitemap-poller 3 L21; 5.1 L41; +3 more |
 | `jobs.normalize-item` | normalize-item: replay, lang_rescore | normalize-item: lang_rescore | normalize-item 5.1 L45; 6.1 L86; +2 more; normalize-item 8 L133; 13.9 L172 |
 | `jobs.poster-resolver` | poster-resolver: resolved, unresolvable, manual_candidate | registry-writer: manual_candidate | poster-resolver 4 L37; 5.1 L46; +3 more; registry-writer 3 L25; 4 L38; +1 more |
 | `jobs.tg-bot-channel-receiver` | tg-bot-channel-receiver: reconciliation, ops_force | tg-bot-channel-receiver: reconciliation | tg-bot-channel-receiver 5.1 L44; 6.1 L109; +1 more; tg-bot-channel-receiver 5.1 L44; 5.1 L48; +2 more |
@@ -963,23 +977,23 @@ Every queue a PRD consumes from or produces into: `jobs.<service>` queues, prior
 | `jobs.tg-channel-resolver` | tg-channel-resolver: refresh | tg-channel-resolver: refresh | tg-channel-resolver 2 L15; 5.1 L44; +5 more; tg-channel-resolver 3 L22; 5.1 L44; +2 more |
 | `jobs.tg-discussion-receiver` | tg-discussion-receiver: reconciliation, ops_force | tg-discussion-receiver: reconciliation | tg-discussion-receiver 5.1 L47; 6.1 L110; +1 more; tg-discussion-receiver 5.1 L47; 5.1 L49; +1 more |
 | `jobs.tg-message-search` | tg-message-search: (kinds not stated) | tg-message-search: (kinds not stated) | tg-message-search 5.1 L43; 5.1 L44; +3 more; tg-message-search 5.1 L43; 5.1 L45; +2 more |
-| `jobs.tt-client-videos-fetcher` | tt-client-videos-fetcher: rotation, backfill, ops_force | (no PRD produces into it) | tt-client-videos-fetcher 4 L34; 5.1 L41; +6 more |
-| `jobs.tt-hashtag-feed-poller` | tt-hashtag-feed-poller: (kinds not stated) | (no PRD produces into it) | tt-hashtag-feed-poller 5.1 L44; 5.1 L46; +7 more |
-| `jobs.tt-keyword-search` | tt-keyword-search: (kinds not stated) | (no PRD produces into it) | tt-keyword-search 5.1 L42; 5.1 L44; +5 more |
-| `jobs.tt-profile-videos-poller` | tt-profile-videos-poller: rotation, reconciliation, backfill, ops_force | (no PRD produces into it) | tt-profile-videos-poller 3 L19; 3 L20; +8 more |
+| `jobs.tt-client-videos-fetcher` | tt-client-videos-fetcher: rotation, backfill, ops_force | tt-client-videos-fetcher (own scheduler, as its PRD says): rotation, backfill | tt-client-videos-fetcher 4 L34; 5.1 L41; +6 more; tt-client-videos-fetcher 4 L34; 5.1 L41; +6 more |
+| `jobs.tt-hashtag-feed-poller` | tt-hashtag-feed-poller: (kinds not stated) | tt-hashtag-feed-poller (own scheduler, as its PRD says): (kinds not stated) | tt-hashtag-feed-poller 5.1 L44; 5.1 L46; +7 more; tt-hashtag-feed-poller 5.1 L44; 5.1 L46; +7 more |
+| `jobs.tt-keyword-search` | tt-keyword-search: (kinds not stated) | tt-keyword-search (own scheduler, as its PRD says): (kinds not stated) | tt-keyword-search 5.1 L42; 5.1 L44; +5 more; tt-keyword-search 5.1 L42; 5.1 L44; +5 more |
+| `jobs.tt-profile-videos-poller` | tt-profile-videos-poller: rotation, reconciliation, backfill, ops_force | tt-profile-videos-poller (own scheduler, as its PRD says): rotation, reconciliation, backfill | tt-profile-videos-poller 3 L19; 3 L20; +8 more; tt-profile-videos-poller 3 L19; 3 L20; +8 more |
 | `jobs.tt-user-resolver` | tt-user-resolver: resolve | (no PRD produces into it) | tt-user-resolver 3 L19; 4 L35; +5 more |
 | `jobs.tt-video-comments-fetcher` | tt-video-comments-fetcher: comments, replies | (no PRD produces into it) | tt-video-comments-fetcher 3 L19; 5.1 L41; +4 more |
 | `jobs.tt-video-stats-refresher` | tt-video-stats-refresher: metrics, ops_force | comment-decay-scheduler: metrics | tt-video-stats-refresher 3 L19; 4 L35; +3 more; comment-decay-scheduler 5.1 L68; 6.2 L138 |
-| `jobs.web-commoncrawl-scanner` | web-commoncrawl-scanner: rotation, ops_force | (no PRD produces into it) | web-commoncrawl-scanner 5.1 L41; 5.1 L42; +4 more |
-| `jobs.web-gdelt-poller` | web-gdelt-poller: rotation | (no PRD produces into it) | web-gdelt-poller 5.1 L42; 6.1 L86; +4 more |
-| `jobs.web-search-mojeek` | web-search-mojeek: rotation | (no PRD produces into it) | web-search-mojeek 5.1 L43; 6.1 L83; +2 more |
-| `jobs.web-search-perplexity` | web-search-perplexity: rotation, site_search | (no PRD produces into it) | web-search-perplexity 5.1 L42; 6.1 L85; +7 more |
+| `jobs.web-commoncrawl-scanner` | web-commoncrawl-scanner: rotation, ops_force | web-commoncrawl-scanner (own scheduler, as its PRD says): rotation | web-commoncrawl-scanner 5.1 L41; 5.1 L42; +4 more; web-commoncrawl-scanner 5.1 L41; 5.1 L42; +4 more |
+| `jobs.web-gdelt-poller` | web-gdelt-poller: rotation | web-gdelt-poller (own scheduler, as its PRD says): rotation | web-gdelt-poller 5.1 L42; 6.1 L86; +4 more; web-gdelt-poller 5.1 L42; 6.1 L86; +4 more |
+| `jobs.web-search-mojeek` | web-search-mojeek: rotation | web-search-mojeek (own scheduler, as its PRD says): rotation | web-search-mojeek 5.1 L43; 6.1 L83; +2 more; web-search-mojeek 5.1 L43; 6.1 L83; +2 more |
+| `jobs.web-search-perplexity` | web-search-perplexity: rotation, site_search | web-search-perplexity (own scheduler, as its PRD says): rotation, site_search | web-search-perplexity 5.1 L42; 6.1 L85; +7 more; web-search-perplexity 5.1 L42; 6.1 L85; +7 more |
 | `jobs.x-compliance-sync` | x-compliance-sync: ops_force | (no PRD produces into it) | x-compliance-sync 5.1 L45; 6.1 L93; +1 more |
 | `jobs.x-full-archive-search` | x-full-archive-search: backfill, keyword_history, replies | x-filtered-stream: (kinds not stated)<br>x-recent-search: keyword_history | x-full-archive-search 3 L19-L21; 5.1 L39; +2 more; x-filtered-stream 5.2 L70; 6.2 L145; x-recent-search 5.1 L45; 5.1 L49; +1 more |
-| `jobs.x-recent-search` | x-recent-search: rotation, first_run, gap_backfill, ops_force | x-filtered-stream: reconciliation | x-recent-search 3 L19-L22; 4 L32; +3 more; x-filtered-stream 4 L32; 5.1 L44; +4 more |
+| `jobs.x-recent-search` | x-recent-search: rotation, first_run, gap_backfill, ops_force | x-filtered-stream: reconciliation<br>x-recent-search (own scheduler, as its PRD says): rotation, first_run, gap_backfill | x-recent-search 3 L19-L22; 4 L32; +3 more; x-filtered-stream 4 L32; 5.1 L44; +4 more; x-recent-search 3 L19-L22; 4 L32; +3 more |
 | `jobs.x-replies-fetcher` | x-replies-fetcher: comments | (no PRD produces into it) | x-replies-fetcher 3 L19; 5.1 L41; +1 more |
-| `jobs.x-user-resolver` | x-user-resolver: resolve, rotation, ops_force | (no PRD produces into it) | x-user-resolver 3 L19; 4 L32-L34; +3 more |
-| `jobs.x-user-timeline-poller` | x-user-timeline-poller: rotation, reconciliation, ops_force | (no PRD produces into it) | x-user-timeline-poller 3 L19; 4 L31; +3 more |
+| `jobs.x-user-resolver` | x-user-resolver: resolve, rotation, ops_force | x-user-resolver (own scheduler, as its PRD says): resolve, rotation | x-user-resolver 3 L19; 4 L32-L34; +3 more; x-user-resolver 3 L19; 4 L32-L34; +3 more |
+| `jobs.x-user-timeline-poller` | x-user-timeline-poller: rotation, reconciliation, ops_force | x-user-timeline-poller (own scheduler, as its PRD says): rotation, reconciliation | x-user-timeline-poller 3 L19; 4 L31; +3 more; x-user-timeline-poller 3 L19; 4 L31; +3 more |
 | `jobs.yt-channel-resolver` | yt-channel-resolver: resolve, rotation, ops_force | yt-channel-resolver: rotation<br>yt-web-search-bridge: resolve | yt-channel-resolver 4 L37; 5.1 L44; +3 more; yt-channel-resolver 5.1 L50; yt-web-search-bridge 2 L13; 3 L23; +3 more |
 | `jobs.yt-comments-fetcher` | yt-comments-fetcher: comments | yt-text-purger: refresh | yt-comments-fetcher 3 L19; 5.1 L40; +1 more; yt-text-purger 3 L20; 5.3 L96-L102; +3 more |
 | `jobs.yt-pubsub-receiver` | yt-pubsub-receiver: (kinds not stated) | yt-pubsub-receiver: (kinds not stated) | yt-pubsub-receiver 5.1 L38; 5.2 L55; +1 more; yt-pubsub-receiver 5.1 L38; 5.2 L54 |
@@ -1158,93 +1172,93 @@ Fields of job messages as each PRD writes them (consumed or produced). CONVENTIO
 
 ### 3.4 Dead-letter queues
 
-| Dead letter | Written by |
-|---|---|
-| `dlq.<fetcher>` | yt-text-purger |
-| `dlq.<service>` | backfill-orchestrator, comment-decay-scheduler |
-| `dlq.aggregator` | aggregator |
-| `dlq.alert-evaluator` | alert-evaluator |
-| `dlq.analysis-entities` | analysis-entities |
-| `dlq.analysis-media` | analysis-media |
-| `dlq.analysis-sentiment` | analysis-sentiment |
-| `dlq.analysis-topics` | analysis-topics |
-| `dlq.backfill-orchestrator` | backfill-orchestrator |
-| `dlq.comment-decay-scheduler` | comment-decay-scheduler |
-| `dlq.deletion-propagator` | deletion-propagator |
-| `dlq.fb-backfill` | fb-backfill |
-| `dlq.fb-client-webhook-receiver` | fb-client-webhook-receiver |
-| `dlq.fb-group-comments-fetcher` | fb-group-comments-fetcher |
-| `dlq.fb-group-posts-poller` | fb-group-posts-poller |
-| `dlq.fb-keyword-search` | fb-keyword-search |
-| `dlq.fb-page-feed-poller` | fb-page-feed-poller |
-| `dlq.fb-page-resolver` | fb-page-resolver |
-| `dlq.fb-page-search` | fb-page-search |
-| `dlq.fb-post-comments-fetcher` | fb-post-comments-fetcher |
-| `dlq.fb-reactions-fetcher` | fb-reactions-fetcher |
-| `dlq.ig-account-media-poller` | ig-account-media-poller |
-| `dlq.ig-account-resolver` | ig-account-resolver |
-| `dlq.ig-comments-fetcher` | ig-comments-fetcher |
-| `dlq.ig-hashtag-search` | ig-hashtag-search |
-| `dlq.ig-keyword-search` | ig-keyword-search |
-| `dlq.ig-mentions-fetcher` | ig-mentions-fetcher |
-| `dlq.ig-own-comments-fetcher` | ig-own-comments-fetcher |
-| `dlq.ig-webhook-receiver` | ig-webhook-receiver |
-| `dlq.keyword-matcher` | keyword-matcher |
-| `dlq.li-client-posts-poller` | li-client-posts-poller |
-| `dlq.li-company-posts-poller` | li-company-posts-poller |
-| `dlq.li-org-resolver` | li-org-resolver |
-| `dlq.li-own-comments-fetcher` | li-own-comments-fetcher |
-| `dlq.li-post-comments-fetcher` | li-post-comments-fetcher |
-| `dlq.li-post-search` | li-post-search |
-| `dlq.news-article-extractor` | news-article-extractor |
-| `dlq.news-comments-fetcher` | news-comments-fetcher |
-| `dlq.news-dedup` | news-dedup |
-| `dlq.news-feed-poller` | news-feed-poller |
-| `dlq.news-homepage-differ` | news-homepage-differ |
-| `dlq.news-robots-checker` | news-robots-checker |
-| `dlq.news-site-resolver` | news-site-resolver |
-| `dlq.news-sitemap-poller` | news-sitemap-poller |
-| `dlq.normalize-item` | normalize-item |
-| `dlq.poster-resolver` | poster-resolver |
-| `dlq.qualifier` | qualifier |
-| `dlq.raw-archiver` | raw-archiver |
-| `dlq.registry-writer` | registry-writer |
-| `dlq.retention-purger` | retention-purger |
-| `dlq.search-hit-router` | search-hit-router |
-| `dlq.source-health-canary` | source-health-canary |
-| `dlq.store-writer` | store-writer |
-| `dlq.tg-bot-channel-receiver` | tg-bot-channel-receiver |
-| `dlq.tg-channel-posts-poller` | tg-channel-posts-poller |
-| `dlq.tg-channel-resolver` | tg-channel-resolver |
-| `dlq.tg-discussion-receiver` | tg-discussion-receiver |
-| `dlq.tg-message-search` | tg-message-search |
-| `dlq.tt-client-videos-fetcher` | tt-client-videos-fetcher |
-| `dlq.tt-hashtag-feed-poller` | tt-hashtag-feed-poller |
-| `dlq.tt-keyword-search` | tt-keyword-search |
-| `dlq.tt-profile-videos-poller` | tt-profile-videos-poller |
-| `dlq.tt-user-resolver` | tt-user-resolver |
-| `dlq.tt-video-comments-fetcher` | tt-video-comments-fetcher |
-| `dlq.tt-video-stats-refresher` | tt-video-stats-refresher |
-| `dlq.web-commoncrawl-scanner` | web-commoncrawl-scanner |
-| `dlq.web-gdelt-poller` | web-gdelt-poller |
-| `dlq.web-search-mojeek` | web-search-mojeek |
-| `dlq.web-search-perplexity` | web-search-perplexity |
-| `dlq.x-compliance-sync` | x-compliance-sync |
-| `dlq.x-filtered-stream` | x-filtered-stream |
-| `dlq.x-full-archive-search` | x-full-archive-search |
-| `dlq.x-recent-search` | x-recent-search |
-| `dlq.x-replies-fetcher` | x-replies-fetcher |
-| `dlq.x-user-resolver` | x-user-resolver |
-| `dlq.x-user-timeline-poller` | x-user-timeline-poller |
-| `dlq.yt-channel-resolver` | yt-channel-resolver |
-| `dlq.yt-comments-fetcher` | yt-comments-fetcher |
-| `dlq.yt-keyword-search` | yt-keyword-search |
-| `dlq.yt-pubsub-receiver` | yt-pubsub-receiver |
-| `dlq.yt-replies-fetcher` | yt-replies-fetcher |
-| `dlq.yt-text-purger` | yt-text-purger |
-| `dlq.yt-uploads-reconciler` | yt-uploads-reconciler |
-| `dlq.yt-video-details-fetcher` | yt-video-details-fetcher |
-| `dlq.yt-web-search-bridge` | yt-web-search-bridge |
+| Dead letter | Written by | Mentioned by |
+|---|---|---|
+| `dlq.<fetcher>` |  | yt-text-purger |
+| `dlq.<service>` |  | backfill-orchestrator, comment-decay-scheduler |
+| `dlq.aggregator` | aggregator |  |
+| `dlq.alert-evaluator` | alert-evaluator |  |
+| `dlq.analysis-entities` | analysis-entities |  |
+| `dlq.analysis-media` | analysis-media |  |
+| `dlq.analysis-sentiment` | analysis-sentiment |  |
+| `dlq.analysis-topics` | analysis-topics |  |
+| `dlq.backfill-orchestrator` | backfill-orchestrator |  |
+| `dlq.comment-decay-scheduler` | comment-decay-scheduler |  |
+| `dlq.deletion-propagator` | deletion-propagator |  |
+| `dlq.fb-backfill` | fb-backfill |  |
+| `dlq.fb-client-webhook-receiver` | fb-client-webhook-receiver |  |
+| `dlq.fb-group-comments-fetcher` | fb-group-comments-fetcher |  |
+| `dlq.fb-group-posts-poller` | fb-group-posts-poller |  |
+| `dlq.fb-keyword-search` | fb-keyword-search |  |
+| `dlq.fb-page-feed-poller` | fb-page-feed-poller |  |
+| `dlq.fb-page-resolver` | fb-page-resolver |  |
+| `dlq.fb-page-search` | fb-page-search |  |
+| `dlq.fb-post-comments-fetcher` | fb-post-comments-fetcher |  |
+| `dlq.fb-reactions-fetcher` | fb-reactions-fetcher |  |
+| `dlq.ig-account-media-poller` | ig-account-media-poller |  |
+| `dlq.ig-account-resolver` | ig-account-resolver |  |
+| `dlq.ig-comments-fetcher` | ig-comments-fetcher |  |
+| `dlq.ig-hashtag-search` | ig-hashtag-search |  |
+| `dlq.ig-keyword-search` | ig-keyword-search |  |
+| `dlq.ig-mentions-fetcher` | ig-mentions-fetcher |  |
+| `dlq.ig-own-comments-fetcher` | ig-own-comments-fetcher |  |
+| `dlq.ig-webhook-receiver` | ig-webhook-receiver |  |
+| `dlq.keyword-matcher` | keyword-matcher |  |
+| `dlq.li-client-posts-poller` | li-client-posts-poller |  |
+| `dlq.li-company-posts-poller` | li-company-posts-poller |  |
+| `dlq.li-org-resolver` | li-org-resolver |  |
+| `dlq.li-own-comments-fetcher` | li-own-comments-fetcher |  |
+| `dlq.li-post-comments-fetcher` | li-post-comments-fetcher |  |
+| `dlq.li-post-search` | li-post-search |  |
+| `dlq.news-article-extractor` | news-article-extractor |  |
+| `dlq.news-comments-fetcher` | news-comments-fetcher |  |
+| `dlq.news-dedup` | news-dedup |  |
+| `dlq.news-feed-poller` | news-feed-poller |  |
+| `dlq.news-homepage-differ` | news-homepage-differ |  |
+| `dlq.news-robots-checker` | news-robots-checker |  |
+| `dlq.news-site-resolver` | news-site-resolver |  |
+| `dlq.news-sitemap-poller` | news-sitemap-poller |  |
+| `dlq.normalize-item` | normalize-item |  |
+| `dlq.poster-resolver` | poster-resolver |  |
+| `dlq.qualifier` | qualifier |  |
+| `dlq.raw-archiver` | raw-archiver |  |
+| `dlq.registry-writer` | registry-writer |  |
+| `dlq.retention-purger` | retention-purger |  |
+| `dlq.search-hit-router` | search-hit-router |  |
+| `dlq.source-health-canary` | source-health-canary |  |
+| `dlq.store-writer` | store-writer |  |
+| `dlq.tg-bot-channel-receiver` | tg-bot-channel-receiver |  |
+| `dlq.tg-channel-posts-poller` | tg-channel-posts-poller |  |
+| `dlq.tg-channel-resolver` | tg-channel-resolver |  |
+| `dlq.tg-discussion-receiver` | tg-discussion-receiver |  |
+| `dlq.tg-message-search` | tg-message-search |  |
+| `dlq.tt-client-videos-fetcher` | tt-client-videos-fetcher |  |
+| `dlq.tt-hashtag-feed-poller` | tt-hashtag-feed-poller |  |
+| `dlq.tt-keyword-search` | tt-keyword-search |  |
+| `dlq.tt-profile-videos-poller` | tt-profile-videos-poller |  |
+| `dlq.tt-user-resolver` | tt-user-resolver |  |
+| `dlq.tt-video-comments-fetcher` | tt-video-comments-fetcher |  |
+| `dlq.tt-video-stats-refresher` | tt-video-stats-refresher |  |
+| `dlq.web-commoncrawl-scanner` | web-commoncrawl-scanner |  |
+| `dlq.web-gdelt-poller` | web-gdelt-poller |  |
+| `dlq.web-search-mojeek` | web-search-mojeek |  |
+| `dlq.web-search-perplexity` | web-search-perplexity |  |
+| `dlq.x-compliance-sync` | x-compliance-sync |  |
+| `dlq.x-filtered-stream` | x-filtered-stream |  |
+| `dlq.x-full-archive-search` | x-full-archive-search |  |
+| `dlq.x-recent-search` | x-recent-search |  |
+| `dlq.x-replies-fetcher` | x-replies-fetcher |  |
+| `dlq.x-user-resolver` | x-user-resolver |  |
+| `dlq.x-user-timeline-poller` | x-user-timeline-poller |  |
+| `dlq.yt-channel-resolver` | yt-channel-resolver |  |
+| `dlq.yt-comments-fetcher` | yt-comments-fetcher |  |
+| `dlq.yt-keyword-search` | yt-keyword-search |  |
+| `dlq.yt-pubsub-receiver` | yt-pubsub-receiver |  |
+| `dlq.yt-replies-fetcher` | yt-replies-fetcher |  |
+| `dlq.yt-text-purger` | yt-text-purger |  |
+| `dlq.yt-uploads-reconciler` | yt-uploads-reconciler |  |
+| `dlq.yt-video-details-fetcher` | yt-video-details-fetcher |  |
+| `dlq.yt-web-search-bridge` | yt-web-search-bridge |  |
 
 ## 4. By table
 
@@ -1320,28 +1334,28 @@ In CONVENTIONS: yes. Named by 55 PRD(s).
 | Column as written | Type and values as stated | Written by (how) | Read by | Mentioned by |
 |---|---|---|---|---|
 | `(unnamed) cap for mojeek_search` |  |  | web-search-mojeek |  |
-| `(unnamed) counters (queries and GBP, per month)` |  | web-search-mojeek (through quota-governor (allowance request, then cost_unit...) | web-search-mojeek |  |
-| `(unnamed) governor counters` |  | web-search-perplexity (through quota-governor (allowance request, then cost_unit...) | web-search-perplexity |  |
+| `(unnamed) counters (queries and GBP, per month)` |  | web-search-mojeek (through quota-governor (allowance request, then cost_units report)) | web-search-mojeek |  |
+| `(unnamed) governor counters` |  | web-search-perplexity (through quota-governor (allowance request, then cost_units report)) | web-search-perplexity |  |
 | `(unnamed) money cap` |  |  |  | web-gdelt-poller |
 | `(unnamed) monthly cap for perplexity_search` |  |  | web-search-perplexity |  |
 | `(unnamed) per-minute ceiling` |  |  |  | web-search-perplexity |
-| `(unnamed) request counters under gdelt_doc_api` |  | web-gdelt-poller (through quota-governor (allowance per request, then cost_...) | web-gdelt-poller |  |
+| `(unnamed) request counters under gdelt_doc_api` |  | web-gdelt-poller (through quota-governor (allowance per request, then cost_units report)) | web-gdelt-poller |  |
 | `backfill allowance` |  |  | yt-keyword-search |  |
-| `budget counters per engine` |  | yt-web-search-bridge (through quota-governor (6.1); updated with actual request...) | yt-web-search-bridge |  |
+| `budget counters per engine` |  | yt-web-search-bridge (through quota-governor (6.1); updated with actual request and query counts after acknowledgement (5.2 step 8)) | yt-web-search-bridge |  |
 | `budget_tag` | string (quota-governor) | quota-governor | quota-governor |  |
-| `counters for li_vendor_company_posts (column names not stated)` |  | li-company-posts-poller (state per 6.3; allowance asked of quota-governor and cost...) | li-company-posts-poller |  |
+| `counters for li_vendor_company_posts (column names not stated)` |  | li-company-posts-poller (state per 6.3; allowance asked of quota-governor and cost_units reported to quota-governor after acknowledgement) | li-company-posts-poller |  |
 | `counters for li_vendor_post_comments (column names not stated)` |  |  | li-post-comments-fetcher |  |
 | `counters in USD` |  |  | tg-channel-posts-poller |  |
-| `counters per client token (column names not stated)` |  | li-client-posts-poller (read through quota-governor (6.1); 5.2 step 7 'Record the...) | li-client-posts-poller, li-own-comments-fetcher |  |
+| `counters per client token (column names not stated)` |  | li-client-posts-poller (read through quota-governor (6.1); 5.2 step 7 'Record the metrics of section 10 and the rate-limit usage into budgets' (write path not st...) | li-client-posts-poller, li-own-comments-fetcher |  |
 | `counters per token` |  | fb-backfill (through quota-governor)<br>fb-page-search (through quota-governor)<br>fb-reactions-fetcher (through quota-governor) | fb-backfill, fb-page-search, fb-reactions-fetcher |  |
 | `counters per token per 24 h` |  | fb-page-feed-poller (through quota-governor) | fb-page-feed-poller |  |
 | `counters under li_vendor_org_resolver (column names not stated)` |  |  | li-org-resolver |  |
 | `counters under li_vendor_post_search (column names not stated)` |  |  | li-post-search |  |
 | `counters under tt_display:<client_id>` |  | tt-client-videos-fetcher (through quota-governor) | tt-client-videos-fetcher |  |
-| `counters under tt_vendor (sub-counter profile_videos)` |  | tt-profile-videos-poller (6.1: through quota-governor; 5.2 step 7: 'Record ... the ...) | tt-profile-videos-poller |  |
+| `counters under tt_vendor (sub-counter profile_videos)` |  | tt-profile-videos-poller (6.1: through quota-governor; 5.2 step 7: 'Record ... the request count into `budgets`' (that step does not say through quota-governor)) | tt-profile-videos-poller |  |
 | `currency` | string (quota-governor) | quota-governor | quota-governor |  |
 | `distinct channels queried` |  |  | tg-channel-resolver |  |
-| `fb_vendor counters` |  | fb-group-comments-fetcher (through quota-governor)<br>fb-group-posts-poller (through quota-governor; requests billed recorded into bud...)<br>fb-keyword-search (through quota-governor; cost recorded after ack) | fb-group-comments-fetcher, fb-group-posts-poller, fb-keyword-search |  |
+| `fb_vendor counters` |  | fb-group-comments-fetcher (through quota-governor)<br>fb-group-posts-poller (through quota-governor; requests billed recorded into budgets (5.2 step 7))<br>fb-keyword-search (through quota-governor; cost recorded after ack) | fb-group-comments-fetcher, fb-group-posts-poller, fb-keyword-search |  |
 | `first queried at` |  |  | ig-hashtag-search |  |
 | `hashtag id` |  |  | ig-hashtag-search |  |
 | `keywords this month` |  |  | tg-message-search |  |
@@ -1362,7 +1376,7 @@ In CONVENTIONS: yes. Named by 55 PRD(s).
 | `unit` | string (quota-governor) | quota-governor | quota-governor |  |
 | `unit_price` | number (quota-governor) | quota-governor | quota-governor |  |
 | `usage headers` |  | fb-reactions-fetcher (recorded in refresh step 6) |  |  |
-| `usage headers (X-App-Usage, X-Business-Use-Case-Usage)` |  | fb-page-feed-poller (recorded into budgets by this service (5.2 step 7); mecha...) |  |  |
+| `usage headers (X-App-Usage, X-Business-Use-Case-Usage)` |  | fb-page-feed-poller (recorded into budgets by this service (5.2 step 7); mechanism not stated) |  |  |
 | `used` | integer (quota-governor) | quota-governor (settled after report) | quota-governor |  |
 | `warn_50_at` | string (timestamp) (quota-governor) | quota-governor (alert fired once per period) | quota-governor |  |
 | `warn_80_at` |  | quota-governor | quota-governor |  |
@@ -1452,22 +1466,22 @@ In CONVENTIONS: yes. Named by 7 PRD(s).
 
 | Column as written | Type and values as stated | Written by (how) | Read by | Mentioned by |
 |---|---|---|---|---|
-| `access_mode` | direct, headless, proxy (news-article-extractor); direct, headless, proxy (news-sitemap-poller); direct, headless, proxy, blocked (news-feed-poller); direct,... | news-robots-checker (upsert of the host's row before the message is produced (...) | news-article-extractor, news-feed-poller, news-homepage-differ, news-sitemap-poller |  |
-| `changed_fields` |  | news-robots-checker (row has 'same fields' as the message (6.2 L117); not in 6...) |  |  |
-| `checked_at` |  | news-robots-checker (upsert of the host's row before the message is produced (...) |  |  |
-| `crawl_allowed` | boolean (news-robots-checker); True (news-feed-poller); True (news-homepage-differ); True (news-sitemap-poller); True, False (news-article-extractor); True, ... | news-robots-checker (upsert of the host's row before the message is produced (...) | news-article-extractor, news-feed-poller, news-homepage-differ, news-site-resolver, news-sitemap-poller |  |
-| `crawl_delay_seconds` |  | news-robots-checker (upsert of the host's row before the message is produced (...) |  |  |
+| `access_mode` | direct, headless, proxy (news-article-extractor); direct, headless, proxy (news-sitemap-poller); direct, headless, proxy, blocked (news-feed-poller); direct,... | news-robots-checker (upsert of the host's row before the message is produced (5.2 step 9, 8 L138)) | news-article-extractor, news-feed-poller, news-homepage-differ, news-sitemap-poller |  |
+| `changed_fields` |  | news-robots-checker (row has 'same fields' as the message (6.2 L117); not in 6.3's list) |  |  |
+| `checked_at` |  | news-robots-checker (upsert of the host's row before the message is produced (5.2 step 9, 8 L138)) |  |  |
+| `crawl_allowed` | boolean (news-robots-checker); True (news-feed-poller); True (news-homepage-differ); True (news-sitemap-poller); True, False (news-article-extractor); True, ... | news-robots-checker (upsert of the host's row before the message is produced (5.2 step 9, 8 L138)) | news-article-extractor, news-feed-poller, news-homepage-differ, news-site-resolver, news-sitemap-poller |  |
+| `crawl_delay_seconds` |  | news-robots-checker (upsert of the host's row before the message is produced (5.2 step 9, 8 L138)) |  |  |
 | `expires_at` |  | news-robots-checker (checked_at + 24 hours) |  |  |
-| `host` |  | news-robots-checker (one row per host; upsert of the host's row before the mes...) |  |  |
-| `next_refresh_at` |  | news-robots-checker (set from the START of the last check; scheduler orders by...) | news-robots-checker |  |
-| `next_slot_at` |  | news-article-extractor (host gate slot state)<br>news-feed-poller (host gate slot state in listening-sdk)<br>news-homepage-differ (host gate slot state)<br>news-robots-checker (listed in the row (6.2, 6.3); this PRD takes 'a slot from...)<br>news-sitemap-poller (host gate slot state) | news-article-extractor, news-feed-poller, news-homepage-differ, news-robots-checker, news-sitemap-poller |  |
-| `payment` |  | news-robots-checker (upsert of the host's row before the message is produced (...) |  |  |
-| `policy_version` |  | news-robots-checker (incremented on any change; a replay produces the same pol...) |  |  |
-| `reason` | robots_unreachable, content_signal_search_no (news-robots-checker) | news-robots-checker (row has 'same fields' as the message (6.2 L117); not in 6...) |  |  |
-| `robots` |  | news-robots-checker (upsert of the host's row before the message is produced (...) |  |  |
-| `rsl` |  | news-robots-checker (upsert of the host's row before the message is produced (...) |  |  |
-| `status` | allowed, disallowed, paywalled, blocked (news-robots-checker) | news-robots-checker (upsert of the host's row before the message is produced (...) |  |  |
-| `usage_signals` | yes, no, unset (news-robots-checker) | news-robots-checker (upsert of the host's row before the message is produced (...) |  |  |
+| `host` |  | news-robots-checker (one row per host; upsert of the host's row before the message is produced (5.2 step 9, 8 L138)) |  |  |
+| `next_refresh_at` |  | news-robots-checker (set from the START of the last check; scheduler orders by next_refresh_at then tier) | news-robots-checker |  |
+| `next_slot_at` |  | news-article-extractor (host gate slot state)<br>news-feed-poller (host gate slot state in listening-sdk)<br>news-homepage-differ (host gate slot state)<br>news-robots-checker (listed in the row (6.2, 6.3); this PRD takes 'a slot from the host gate' (5.2 step 2) but does not say the slot is stored here)<br>news-sitemap-poller (host gate slot state) | news-article-extractor, news-feed-poller, news-homepage-differ, news-robots-checker, news-sitemap-poller |  |
+| `payment` |  | news-robots-checker (upsert of the host's row before the message is produced (5.2 step 9, 8 L138)) |  |  |
+| `policy_version` |  | news-robots-checker (incremented on any change; a replay produces the same policy_version once) |  |  |
+| `reason` | robots_unreachable, content_signal_search_no (news-robots-checker) | news-robots-checker (row has 'same fields' as the message (6.2 L117); not in 6.3's list) |  |  |
+| `robots` |  | news-robots-checker (upsert of the host's row before the message is produced (5.2 step 9, 8 L138); includes the compiled rules so fetching services can test a...) |  |  |
+| `rsl` |  | news-robots-checker (upsert of the host's row before the message is produced (5.2 step 9, 8 L138)) |  |  |
+| `status` | allowed, disallowed, paywalled, blocked (news-robots-checker) | news-robots-checker (upsert of the host's row before the message is produced (5.2 step 9, 8 L138)) |  |  |
+| `usage_signals` | yes, no, unset (news-robots-checker) | news-robots-checker (upsert of the host's row before the message is produced (5.2 step 9, 8 L138)) |  |  |
 
 #### `cursors`
 
@@ -1482,24 +1496,24 @@ In CONVENTIONS: yes. Named by 64 PRD(s).
 |---|---|---|---|---|
 | `7-day set of sent ids (hashed)` |  | yt-web-search-bridge (ids not re-sent while in the set) | yt-web-search-bridge |  |
 | `checked_at` |  | ig-webhook-receiver (daily subscription check) |  |  |
-| `consecutive_errors` |  | fb-backfill<br>fb-client-webhook-receiver<br>fb-group-posts-poller (set to 0 after ack)<br>fb-keyword-search (set to 0 after ack)<br>fb-page-feed-poller (set to 0 after Redpanda ack)<br>fb-page-search<br>fb-post-comments-fetcher (health fields updated in step 8)<br>ig-account-media-poller (reset to 0 after ack)<br>ig-account-resolver (reset to 0)<br>ig-comments-fetcher (reset to 0)<br>ig-hashtag-search<br>ig-keyword-search (reset to 0 after ack)<br>ig-mentions-fetcher (reset to 0 after ack)<br>ig-own-comments-fetcher (reset to 0)<br>li-client-posts-poller (reset to 0 after Redpanda acknowledges)<br>li-company-posts-poller (reset to 0 after Redpanda acknowledges)<br>li-own-comments-fetcher<br>li-post-comments-fetcher<br>li-post-search<br>news-feed-poller (set to 0 after a successful poll)<br>news-homepage-differ<br>news-sitemap-poller<br>tg-bot-channel-receiver<br>tg-channel-posts-poller (set to 0 on success; repeated unreadable-channel failures...)<br>tg-discussion-receiver<br>tg-message-search<br>tt-client-videos-fetcher (reset to 0 after Redpanda acknowledges)<br>tt-hashtag-feed-poller (not stated)<br>tt-keyword-search (not stated)<br>tt-profile-videos-poller (reset to 0 after Redpanda acknowledges)<br>web-gdelt-poller<br>web-search-mojeek<br>web-search-perplexity<br>x-full-archive-search (own row)<br>x-recent-search<br>x-replies-fetcher<br>x-user-timeline-poller (set to 0 after success)<br>yt-comments-fetcher<br>yt-keyword-search<br>yt-uploads-reconciler (= 0 on success)<br>yt-web-search-bridge | ig-hashtag-search, tg-channel-posts-poller |  |
-| `cursor` | JSON (news-feed-poller); JSON (news-homepage-differ); JSON (news-sitemap-poller); JSON (tg-discussion-receiver); JSON (tt-hashtag-feed-poller); JSON (tt-keyw... | aggregator (recompute progress)<br>analysis-entities (re-run and alias re-link progress)<br>analysis-media (rerun progress)<br>analysis-sentiment (rerun progress)<br>analysis-topics (rerun progress)<br>fb-backfill (own row (source_id, fb-backfill): oldest created_time rea...)<br>fb-backfill (row (source_id, fb-page-feed-poller): written on completi...)<br>fb-client-webhook-receiver (updated after the raw.items acknowledgement)<br>fb-group-posts-poller (after Redpanda ack, set to the newest created_time seen)<br>fb-keyword-search (after Redpanda ack, per-variant cursors updated)<br>fb-page-feed-poller (after Redpanda ack, set to the newest created_time seen; ...)<br>fb-page-search (ISO timestamp of the last run start; written after Redpan...)<br>ig-account-media-poller (set to the newest `timestamp` seen, only after Redpanda a...)<br>ig-hashtag-search (advanced to the newest timestamp seen only on Redpanda ac...)<br>ig-keyword-search (advanced to the newest timestamp seen after Redpanda ackn...)<br>ig-mentions-fetcher (each edge's since timestamp advanced to the newest timest...)<br>keyword-matcher (rematch progress)<br>li-client-posts-poller (read at job start; set after Redpanda acknowledges to the...)<br>li-company-posts-poller (read at job start; set after Redpanda acknowledges to the...)<br>li-post-search (timestamp of the newest post seen; advanced only after ac...)<br>news-feed-poller (JSON map from feed URL to {etag, last_modified, newest_pu...)<br>news-homepage-differ (JSON {etag, last_modified, page_hash, link_hashes (last t...)<br>news-sitemap-poller (JSON map from sitemap URL to {etag, last_modified, newest...)<br>normalize-item (replay progress)<br>raw-archiver (replay progress)<br>retention-purger (last cut-off)<br>tg-bot-channel-receiver (set after Redpanda ack to the newest message id stored; c...)<br>tg-channel-posts-poller (read to build since (oldest cursor in the batch) and to d...)<br>tg-channel-resolver (not stated; holds the last profile time)<br>tg-discussion-receiver (written at onboarding step two with the linked channel's ...)<br>tg-message-search (advanced after Redpanda acknowledges the batch)<br>tt-client-videos-fetcher (read for incremental reads; set after Redpanda acknowledg...)<br>tt-hashtag-feed-poller (advanced after Redpanda acknowledges the batch)<br>tt-keyword-search (advanced after Redpanda acknowledges the batch)<br>tt-profile-videos-poller (read at job start; set after Redpanda acknowledges; does ...)<br>web-gdelt-poller (advanced to the run's start on Redpanda's acknowledgement)<br>web-search-mojeek (advanced on Redpanda's acknowledgement)<br>x-filtered-stream (= X rule id; coverage rows upserted after X confirms, cle...)<br>x-full-archive-search (x-user-timeline-poller's row: raised to the highest id re...)<br>x-recent-search (= newest_id per rule (the next since_id); advanced to met...)<br>x-user-timeline-poller (= highest stored post id as a decimal string (the next si...)<br>yt-keyword-search (RFC 3339 timestamp of the last successful run start; adva...)<br>yt-pubsub-receiver (newest updated)<br>yt-text-purger (cursor = cut-off, set at the end of a run)<br>yt-uploads-reconciler (ISO publishedAt of the newest video already stored; set a...) | fb-backfill, fb-group-posts-poller, fb-keyword-search, fb-page-feed-poller, fb-page-search, ig-account-media-poller, ig-hashtag-search, ig-keyword-search, ig-mentions-fetcher, li-client-posts-poller, li-company-posts-poller, li-post-search, +17 more | ig-account-resolver, li-own-comments-fetcher |
-| `due time` |  | ig-keyword-search (set from the START of the last search (`poll_started_at +...) | ig-keyword-search |  |
+| `consecutive_errors` |  | fb-backfill<br>fb-client-webhook-receiver<br>fb-group-posts-poller (set to 0 after ack)<br>fb-keyword-search (set to 0 after ack)<br>fb-page-feed-poller (set to 0 after Redpanda ack)<br>fb-page-search<br>fb-post-comments-fetcher (health fields updated in step 8)<br>ig-account-media-poller (reset to 0 after ack)<br>ig-account-resolver (reset to 0)<br>ig-comments-fetcher (reset to 0)<br>ig-hashtag-search<br>ig-keyword-search (reset to 0 after ack)<br>ig-mentions-fetcher (reset to 0 after ack)<br>ig-own-comments-fetcher (reset to 0)<br>li-client-posts-poller (reset to 0 after Redpanda acknowledges)<br>li-company-posts-poller (reset to 0 after Redpanda acknowledges)<br>li-own-comments-fetcher<br>li-post-comments-fetcher<br>li-post-search<br>news-feed-poller (set to 0 after a successful poll)<br>news-homepage-differ<br>news-sitemap-poller<br>tg-bot-channel-receiver<br>tg-channel-posts-poller (set to 0 on success; repeated unreadable-channel failures raise it)<br>tg-discussion-receiver<br>tg-message-search<br>tt-client-videos-fetcher (reset to 0 after Redpanda acknowledges)<br>tt-hashtag-feed-poller (not stated)<br>tt-keyword-search (not stated)<br>tt-profile-videos-poller (reset to 0 after Redpanda acknowledges)<br>web-gdelt-poller<br>web-search-mojeek<br>web-search-perplexity<br>x-full-archive-search (own row)<br>x-recent-search<br>x-replies-fetcher<br>x-user-timeline-poller (set to 0 after success)<br>yt-comments-fetcher<br>yt-keyword-search<br>yt-uploads-reconciler (= 0 on success)<br>yt-web-search-bridge | ig-hashtag-search, tg-channel-posts-poller |  |
+| `cursor` | JSON (news-feed-poller); JSON (news-homepage-differ); JSON (news-sitemap-poller); JSON (tg-discussion-receiver); JSON (tt-hashtag-feed-poller); JSON (tt-keyw... | aggregator (recompute progress)<br>analysis-entities (re-run and alias re-link progress)<br>analysis-media (rerun progress)<br>analysis-sentiment (rerun progress)<br>analysis-topics (rerun progress)<br>fb-backfill (own row (source_id, fb-backfill): oldest created_time reached, written after each page is acknowledged by Redpanda; read at start as the ...)<br>fb-backfill (row (source_id, fb-page-feed-poller): written on completion as the newest created_time seen, or window_end when the feed returned nothing)<br>fb-client-webhook-receiver (updated after the raw.items acknowledgement)<br>fb-group-posts-poller (after Redpanda ack, set to the newest created_time seen)<br>fb-keyword-search (after Redpanda ack, per-variant cursors updated)<br>fb-page-feed-poller (after Redpanda ack, set to the newest created_time seen; read to compute since = cursor - 24 h)<br>fb-page-search (ISO timestamp of the last run start; written after Redpanda acknowledges)<br>ig-account-media-poller (set to the newest `timestamp` seen, only after Redpanda acknowledges)<br>ig-hashtag-search (advanced to the newest timestamp seen only on Redpanda acknowledgement)<br>ig-keyword-search (advanced to the newest timestamp seen after Redpanda acknowledges)<br>ig-mentions-fetcher (each edge's since timestamp advanced to the newest timestamp seen only after Redpanda acknowledges; poll_started_at kept for the due time)<br>keyword-matcher (rematch progress)<br>li-client-posts-poller (read at job start; set after Redpanda acknowledges to the newest lastModifiedAt seen)<br>li-company-posts-poller (read at job start; set after Redpanda acknowledges to the newest post time seen)<br>li-post-search (timestamp of the newest post seen; advanced only after acknowledgement; unchanged on skip or failed run)<br>news-feed-poller (JSON map from feed URL to {etag, last_modified, newest_published_at, first50_hash}; stored only after Redpanda acknowledgement)<br>news-homepage-differ (JSON {etag, last_modified, page_hash, link_hashes (last three snapshots), sections, render}; moves only after Redpanda acknowledges)<br>news-sitemap-poller (JSON map from sitemap URL to {etag, last_modified, newest_date, urls_hash}; advanced only after Redpanda acknowledges)<br>normalize-item (replay progress)<br>raw-archiver (replay progress)<br>retention-purger (last cut-off)<br>tg-bot-channel-receiver (set after Redpanda ack to the newest message id stored; cursors is listed under reads in 6.1)<br>tg-channel-posts-poller (read to build since (oldest cursor in the batch) and to drop older items; set after Redpanda acknowledges to the newest post time seen; n...)<br>tg-channel-resolver (not stated; holds the last profile time)<br>tg-discussion-receiver (written at onboarding step two with the linked channel's chat id and source_id; also holds the newest message id stored)<br>tg-message-search (advanced after Redpanda acknowledges the batch)<br>tt-client-videos-fetcher (read for incremental reads; set after Redpanda acknowledges; does not advance when the produce fails)<br>tt-hashtag-feed-poller (advanced after Redpanda acknowledges the batch)<br>tt-keyword-search (advanced after Redpanda acknowledges the batch)<br>tt-profile-videos-poller (read at job start; set after Redpanda acknowledges; does not advance when the produce fails)<br>web-gdelt-poller (advanced to the run's start on Redpanda's acknowledgement)<br>web-search-mojeek (advanced on Redpanda's acknowledgement)<br>x-filtered-stream (= X rule id; coverage rows upserted after X confirms, cleared for uncovered sources (and on retired / budget shedding))<br>x-full-archive-search (x-user-timeline-poller's row: raised to the highest id read (64-bit integer comparison; never lowered), after the Redpanda ack and before...)<br>x-recent-search (= newest_id per rule (the next since_id); advanced to meta.newest_id only after the Redpanda acknowledgement)<br>x-user-timeline-poller (= highest stored post id as a decimal string (the next since_id), compared as 64-bit integers; advanced only after the Redpanda ack; empt...)<br>yt-keyword-search (RFC 3339 timestamp of the last successful run start; advanced after Redpanda acknowledges the batch)<br>yt-pubsub-receiver (newest updated)<br>yt-text-purger (cursor = cut-off, set at the end of a run)<br>yt-uploads-reconciler (ISO publishedAt of the newest video already stored; set after acknowledgement to the newest publishedAt seen) | fb-backfill, fb-group-posts-poller, fb-keyword-search, fb-page-feed-poller, fb-page-search, ig-account-media-poller, ig-hashtag-search, ig-keyword-search, ig-mentions-fetcher, li-client-posts-poller, li-company-posts-poller, li-post-search, news-feed-poller, news-homepage-differ, news-sitemap-poller, tg-bot-channel-receiver, tg-channel-posts-poller, tg-channel-resolver, tg-discussion-receiver, tg-message-search, tt-client-videos-fetcher, tt-hashtag-feed-poller, tt-keyword-search, tt-profile-videos-poller, x-recent-search, x-user-timeline-poller, yt-keyword-search, yt-pubsub-receiver, yt-uploads-reconciler | ig-account-resolver, li-own-comments-fetcher |
+| `due time` |  | ig-keyword-search (set from the START of the last search (`poll_started_at + interval`); a failed job keeps its due time) | ig-keyword-search |  |
 | `health (columns not named)` |  | fb-group-comments-fetcher ('cursors health' updated with the report) |  |  |
 | `highest id` |  | x-full-archive-search (own progress row) | x-full-archive-search |  |
 | `job_id` |  | x-full-archive-search (own progress row) | x-full-archive-search |  |
 | `last run time` |  | yt-web-search-bridge | yt-web-search-bridge |  |
-| `last_error` | hashtag_id_unknown (tt-hashtag-feed-poller) | fb-backfill<br>fb-client-webhook-receiver<br>fb-group-posts-poller<br>fb-keyword-search<br>fb-page-feed-poller<br>fb-page-search<br>fb-post-comments-fetcher (health fields updated in step 8)<br>ig-account-media-poller<br>ig-account-resolver<br>ig-comments-fetcher<br>ig-keyword-search<br>ig-mentions-fetcher<br>ig-own-comments-fetcher<br>li-client-posts-poller<br>li-company-posts-poller<br>li-own-comments-fetcher<br>li-post-comments-fetcher<br>li-post-search<br>news-feed-poller<br>news-homepage-differ<br>news-sitemap-poller<br>tg-bot-channel-receiver<br>tg-channel-posts-poller<br>tg-discussion-receiver<br>tg-message-search<br>tt-client-videos-fetcher (not stated)<br>tt-hashtag-feed-poller (the job ends with last_error = hashtag_id_unknown when th...)<br>tt-keyword-search (not stated)<br>tt-profile-videos-poller (not stated)<br>web-gdelt-poller<br>web-search-mojeek<br>web-search-perplexity<br>x-filtered-stream (rule rejection reason; the source stays on poller rotation)<br>x-full-archive-search (own row)<br>x-recent-search<br>x-replies-fetcher<br>x-user-timeline-poller<br>yt-comments-fetcher<br>yt-keyword-search (recorded on HTTP 400 for the term)<br>yt-uploads-reconciler |  |  |
+| `last_error` | hashtag_id_unknown (tt-hashtag-feed-poller) | fb-backfill<br>fb-client-webhook-receiver<br>fb-group-posts-poller<br>fb-keyword-search<br>fb-page-feed-poller<br>fb-page-search<br>fb-post-comments-fetcher (health fields updated in step 8)<br>ig-account-media-poller<br>ig-account-resolver<br>ig-comments-fetcher<br>ig-keyword-search<br>ig-mentions-fetcher<br>ig-own-comments-fetcher<br>li-client-posts-poller<br>li-company-posts-poller<br>li-own-comments-fetcher<br>li-post-comments-fetcher<br>li-post-search<br>news-feed-poller<br>news-homepage-differ<br>news-sitemap-poller<br>tg-bot-channel-receiver<br>tg-channel-posts-poller<br>tg-discussion-receiver<br>tg-message-search<br>tt-client-videos-fetcher (not stated)<br>tt-hashtag-feed-poller (the job ends with last_error = hashtag_id_unknown when the id is not resolvable)<br>tt-keyword-search (not stated)<br>tt-profile-videos-poller (not stated)<br>web-gdelt-poller<br>web-search-mojeek<br>web-search-perplexity<br>x-filtered-stream (rule rejection reason; the source stays on poller rotation)<br>x-full-archive-search (own row)<br>x-recent-search<br>x-replies-fetcher<br>x-user-timeline-poller<br>yt-comments-fetcher<br>yt-keyword-search (recorded on HTTP 400 for the term)<br>yt-uploads-reconciler |  |  |
 | `last_run_started_at` |  | web-search-perplexity |  |  |
-| `last_success_at` |  | fb-backfill<br>fb-client-webhook-receiver (= last successful audit; the audit orders Pages by oldest...)<br>fb-group-posts-poller (after Redpanda ack)<br>fb-keyword-search (after ack)<br>fb-page-feed-poller (after Redpanda ack)<br>fb-page-search<br>fb-post-comments-fetcher (health fields updated in step 8)<br>ig-account-media-poller (after ack)<br>ig-account-resolver (for a registered source after a refresh)<br>ig-comments-fetcher (after Redpanda acknowledges)<br>ig-keyword-search (after ack)<br>ig-mentions-fetcher (after ack)<br>ig-own-comments-fetcher (after Redpanda acknowledges)<br>ig-webhook-receiver<br>li-client-posts-poller (set after Redpanda acknowledges)<br>li-company-posts-poller (set after Redpanda acknowledges)<br>li-own-comments-fetcher<br>li-post-comments-fetcher<br>li-post-search<br>news-feed-poller<br>news-homepage-differ<br>news-sitemap-poller<br>tg-bot-channel-receiver<br>tg-channel-posts-poller (after Redpanda acknowledges)<br>tg-discussion-receiver<br>tg-message-search<br>tt-client-videos-fetcher (set after Redpanda acknowledges)<br>tt-hashtag-feed-poller (not stated)<br>tt-keyword-search (not stated)<br>tt-profile-videos-poller (set after Redpanda acknowledges)<br>web-gdelt-poller<br>web-search-mojeek<br>web-search-perplexity<br>x-filtered-stream<br>x-full-archive-search (own row)<br>x-recent-search<br>x-replies-fetcher (after the Redpanda ack)<br>x-user-timeline-poller<br>yt-comments-fetcher (updated only after Redpanda acknowledges)<br>yt-keyword-search<br>yt-pubsub-receiver (last verified lease)<br>yt-uploads-reconciler (set after acknowledgement; most-stale-first ordering uses...) | fb-client-webhook-receiver, yt-uploads-reconciler |  |
-| `next_search_at` |  | fb-page-search (kept per keyword in cursors; = run_start + 7 days, from t...) | fb-page-search |  |
-| `next_token` |  | x-full-archive-search (own progress row; if X rejects it the job restarts with e...) | x-full-archive-search |  |
+| `last_success_at` |  | fb-backfill<br>fb-client-webhook-receiver (= last successful audit; the audit orders Pages by oldest last_success_at then tier)<br>fb-group-posts-poller (after Redpanda ack)<br>fb-keyword-search (after ack)<br>fb-page-feed-poller (after Redpanda ack)<br>fb-page-search<br>fb-post-comments-fetcher (health fields updated in step 8)<br>ig-account-media-poller (after ack)<br>ig-account-resolver (for a registered source after a refresh)<br>ig-comments-fetcher (after Redpanda acknowledges)<br>ig-keyword-search (after ack)<br>ig-mentions-fetcher (after ack)<br>ig-own-comments-fetcher (after Redpanda acknowledges)<br>ig-webhook-receiver<br>li-client-posts-poller (set after Redpanda acknowledges)<br>li-company-posts-poller (set after Redpanda acknowledges)<br>li-own-comments-fetcher<br>li-post-comments-fetcher<br>li-post-search<br>news-feed-poller<br>news-homepage-differ<br>news-sitemap-poller<br>tg-bot-channel-receiver<br>tg-channel-posts-poller (after Redpanda acknowledges)<br>tg-discussion-receiver<br>tg-message-search<br>tt-client-videos-fetcher (set after Redpanda acknowledges)<br>tt-hashtag-feed-poller (not stated)<br>tt-keyword-search (not stated)<br>tt-profile-videos-poller (set after Redpanda acknowledges)<br>web-gdelt-poller<br>web-search-mojeek<br>web-search-perplexity<br>x-filtered-stream<br>x-full-archive-search (own row)<br>x-recent-search<br>x-replies-fetcher (after the Redpanda ack)<br>x-user-timeline-poller<br>yt-comments-fetcher (updated only after Redpanda acknowledges)<br>yt-keyword-search<br>yt-pubsub-receiver (last verified lease)<br>yt-uploads-reconciler (set after acknowledgement; most-stale-first ordering uses the oldest last_success_at) | fb-client-webhook-receiver, yt-uploads-reconciler |  |
+| `next_search_at` |  | fb-page-search (kept per keyword in cursors; = run_start + 7 days, from the START of the last run) | fb-page-search |  |
+| `next_token` |  | x-full-archive-search (own progress row; if X rejects it the job restarts with end_time = the oldest created_at read) | x-full-archive-search |  |
 | `oldest created_at` |  | x-full-archive-search (own progress row) | x-full-archive-search |  |
 | `paid reads` |  | x-full-archive-search (own progress row) | x-full-archive-search |  |
-| `reconciliation due time` |  | ig-webhook-receiver (`started_at + 24 h` (+ 7 d for dormant), set from the STA...) | ig-webhook-receiver |  |
-| `refresh_due_at` |  | ig-account-resolver (direct write by the service: `refresh_started_at + 30 day...) | ig-account-resolver |  |
+| `reconciliation due time` |  | ig-webhook-receiver (`started_at + 24 h` (+ 7 d for dormant), set from the START of the last reconciliation, written when both fetchers report) | ig-webhook-receiver |  |
+| `refresh_due_at` |  | ig-account-resolver (direct write by the service: `refresh_started_at + 30 days`, set from the START of the last refresh; a failed refresh keeps its due time) | ig-account-resolver |  |
 | `results_last_run` |  | web-search-perplexity |  |  |
-| `service` | aggregator (aggregator); analysis-entities (analysis-entities); analysis-media (analysis-media); analysis-sentiment (analysis-sentiment); analysis-topics (an... | aggregator (recompute progress)<br>analysis-entities (re-run and alias re-link progress)<br>analysis-media (rerun progress)<br>analysis-sentiment (rerun progress)<br>analysis-topics (rerun progress)<br>fb-backfill (own row (source_id, fb-backfill); also writes the fb-page...)<br>keyword-matcher (rematch progress)<br>li-client-posts-poller (a second cursors row tracks the daily reconciliation unde...)<br>normalize-item (replay progress row)<br>raw-archiver (replay progress)<br>retention-purger (per-sweep watermark per class)<br>store-writer (replay progress)<br>yt-comments-fetcher (row key)<br>yt-text-purger | fb-backfill, fb-client-webhook-receiver, fb-page-feed-poller, fb-page-search, ig-account-media-poller, ig-account-resolver, li-client-posts-poller, web-gdelt-poller, web-search-mojeek, web-search-perplexity, yt-comments-fetcher |  |
+| `service` | aggregator (aggregator); analysis-entities (analysis-entities); analysis-media (analysis-media); analysis-sentiment (analysis-sentiment); analysis-topics (an... | aggregator (recompute progress)<br>analysis-entities (re-run and alias re-link progress)<br>analysis-media (rerun progress)<br>analysis-sentiment (rerun progress)<br>analysis-topics (rerun progress)<br>fb-backfill (own row (source_id, fb-backfill); also writes the fb-page-feed-poller row)<br>keyword-matcher (rematch progress)<br>li-client-posts-poller (a second cursors row tracks the daily reconciliation under service li-client-posts-poller:reconcile)<br>normalize-item (replay progress row)<br>raw-archiver (replay progress)<br>retention-purger (per-sweep watermark per class)<br>store-writer (replay progress)<br>yt-comments-fetcher (row key)<br>yt-text-purger | fb-backfill, fb-client-webhook-receiver, fb-page-feed-poller, fb-page-search, ig-account-media-poller, ig-account-resolver, li-client-posts-poller, web-gdelt-poller, web-search-mojeek, web-search-perplexity, yt-comments-fetcher |  |
 | `source_id` |  | yt-comments-fetcher (row per (source_id, yt-comments-fetcher)) | fb-backfill, fb-client-webhook-receiver, fb-page-feed-poller, ig-account-media-poller, ig-account-resolver, yt-comments-fetcher |  |
 | `subscription state` |  | ig-webhook-receiver (daily subscription check) | ig-webhook-receiver |  |
 
@@ -1523,7 +1537,7 @@ In CONVENTIONS: yes. Named by 9 PRD(s).
 | `keyword` |  | fb-page-search (per-keyword set) | fb-page-search |  |
 | `kind` | fb_page_search_emitted (fb-page-search) | fb-page-search (rows of the per-keyword emitted-Page-id set) |  |  |
 | `payload` |  | qualifier |  |  |
-| `published_at` |  | qualifier (outbox column, same transaction as the registry.decisions...) |  |  |
+| `published_at` |  | qualifier (outbox column, same transaction as the registry.decisions publish) |  |  |
 | `reason` |  | qualifier |  |  |
 | `rejection and its age (column names not stated)` |  |  | li-org-resolver |  |
 | `rule_hit` |  | qualifier |  |  |
@@ -1645,7 +1659,7 @@ In CONVENTIONS: yes. Named by 21 PRD(s).
 | `deadline_at` |  | qualifier |  |  |
 | `kind` | annotation:media (analysis-media); annotation:sentiment (analysis-sentiment); annotation:topics (analysis-topics); kb_candidate, annotation:entities (analysi... | analysis-entities<br>analysis-media (annotation tasks)<br>analysis-sentiment (rows point to tasks in the annotation tool)<br>analysis-topics (annotation tasks) |  |  |
 | `opened_at` |  | qualifier (24-hour clock starts here) | qualifier |  |
-| `reason` | not_returned (ig-account-media-poller) | ig-account-media-poller (row inserted on the second consecutive poll with no busin...) |  |  |
+| `reason` | not_returned (ig-account-media-poller) | ig-account-media-poller (row inserted on the second consecutive poll with no business_discovery object) |  |  |
 | `reviewer` |  | qualifier (from the n8n callback) |  |  |
 | `status` |  | qualifier | qualifier |  |
 
@@ -1659,17 +1673,17 @@ In CONVENTIONS: yes. Named by 85 PRD(s).
 | Column as written | Type and values as stated | Written by (how) | Read by | Mentioned by |
 |---|---|---|---|---|
 | `(unnamed) lag` |  | web-search-perplexity |  |  |
-| `(unnamed) scan checkpoint` | JSON (web-commoncrawl-scanner) | web-commoncrawl-scanner (JSON on this service's service_runs row; advanced only af...) | web-commoncrawl-scanner |  |
+| `(unnamed) scan checkpoint` | JSON (web-commoncrawl-scanner) | web-commoncrawl-scanner (JSON on this service's service_runs row; advanced only after the partition's messages are acknowledged) | web-commoncrawl-scanner |  |
 | `(unnamed) spend this month` |  | web-search-perplexity |  |  |
-| `Apify run id (column name not stated)` |  | li-company-posts-poller ('The Apify run id goes into the structured logs and servi...) |  |  |
-| `ckb_supported` | true, false (web-search-perplexity) | web-search-perplexity (recorded after the start-up probe with the canary query; ...) |  |  |
+| `Apify run id (column name not stated)` |  | li-company-posts-poller ('The Apify run id goes into the structured logs and service_runs') |  |  |
+| `ckb_supported` | true, false (web-search-perplexity) | web-search-perplexity (recorded after the start-up probe with the canary query; set to false when ckb is rejected mid-run) |  |  |
 | `connected_at` |  | x-filtered-stream (on connect) |  |  |
 | `connection_id` | ULID (x-filtered-stream) | x-filtered-stream (on connect) |  |  |
 | `cost_units` |  | li-post-search<br>news-comments-fetcher (as new_count; one request is one unit) |  |  |
 | `evaluation time, rules evaluated, alerts fired` |  | alert-evaluator |  |  |
-| `event counts (per page, daily; name not stated)` |  | li-notification-receiver (per-page counters updated per event; events received in t...) | li-notification-receiver |  |
-| `gap_possible` |  | tg-channel-posts-poller (a channel whose gap exceeds the max-posts cap is marked g...) |  |  |
-| `high-water mark` |  | x-filtered-stream (receipt time up to which every post is acknowledged; pers...) |  |  |
+| `event counts (per page, daily; name not stated)` |  | li-notification-receiver (per-page counters updated per event; events received in the last 24 hours read by the check) | li-notification-receiver |  |
+| `gap_possible` |  | tg-channel-posts-poller (a channel whose gap exceeds the max-posts cap is marked gap_possible in service_runs and ops is told) |  |  |
+| `high-water mark` |  | x-filtered-stream (receipt time up to which every post is acknowledged; persisted with each `service_runs` heartbeat) |  |  |
 | `hours touched` |  | aggregator (recorded per pass) |  |  |
 | `ids sent` |  | yt-web-search-bridge |  |  |
 | `lag of the most overdue refresh job` |  | fb-reactions-fetcher |  |  |
@@ -1677,20 +1691,20 @@ In CONVENTIONS: yes. Named by 85 PRD(s).
 | `last run` |  | yt-keyword-search |  |  |
 | `last run and errors (column names not stated)` |  | li-org-resolver (written per job) |  |  |
 | `last run and lag (column names not stated)` |  | tt-video-stats-refresher (written after Redpanda acknowledges) |  |  |
-| `last_event_at (per page)` |  | li-notification-receiver (updated after each event; read by the 24-hour subscriptio...) | li-notification-receiver |  |
+| `last_event_at (per page)` |  | li-notification-receiver (updated after each event; read by the 24-hour subscription check) | li-notification-receiver |  |
 | `last_success_at` |  | aggregator (recorded per pass) | alert-evaluator |  |
 | `new_count` |  | li-post-search (written per job)<br>news-comments-fetcher (result row written after Redpanda acknowledges) |  |  |
 | `newest_comment_at` |  | news-comments-fetcher (as new_count) |  |  |
 | `open gaps with job ids` |  | x-filtered-stream |  |  |
-| `outage window` |  | tg-bot-channel-receiver (written when an outage is longer than Telegram keeps upda...) |  |  |
+| `outage window` |  | tg-bot-channel-receiver (written when an outage is longer than Telegram keeps updates (receiver_outage)) |  |  |
 | `pages` |  | li-post-search<br>news-comments-fetcher (as new_count) |  |  |
 | `parse failures` |  | yt-web-search-bridge |  |  |
 | `queries per engine` |  | yt-web-search-bridge |  |  |
 | `reason` | budget (x-filtered-stream) | x-filtered-stream (e.g. reason = budget when the budget is exhausted) |  |  |
 | `rules queried` |  | yt-web-search-bridge |  |  |
 | `seen_count` |  | li-post-search<br>news-comments-fetcher (as new_count) |  |  |
-| `state` | connected, reconnecting, disconnected (x-filtered-stream) | x-filtered-stream (on connect, on reconnect, past the grace period, on 401/4...) |  |  |
-| `subscription state (per page; name not stated)` |  | li-notification-receiver (6.3 lists it with last_event_at and daily event counts '(...) | li-notification-receiver |  |
+| `state` | connected, reconnecting, disconnected (x-filtered-stream) | x-filtered-stream (on connect, on reconnect, past the grace period, on 401/403, and on budget exhaustion) |  |  |
+| `subscription state (per page; name not stated)` |  | li-notification-receiver (6.3 lists it with last_event_at and daily event counts '(in service_runs)') | li-notification-receiver |  |
 | `terms run and skipped` |  | yt-keyword-search |  |  |
 | `thread_id` |  | news-comments-fetcher (as new_count) |  |  |
 | `units spent` |  | yt-keyword-search |  |  |
@@ -1700,7 +1714,7 @@ In CONVENTIONS: yes. Named by 85 PRD(s).
 
 In CONVENTIONS: yes. Named by 80 PRD(s).
 
-- Table-level writers: backfill-orchestrator, fb-backfill, fb-client-webhook-receiver, fb-group-posts-poller, fb-keyword-search, fb-page-feed-poller, ig-account-media-poller, ig-hashtag-search, ig-mentions-fetcher, ig-webhook-receiver, keyword-matcher, li-client-posts-poller, li-company-posts-poller, li-notification-receiver, li-own-comments-fetcher, li-post-search, news-feed-poller, news-homepage-differ, news-sitemap-poller, registry-writer, tg-bot-channel-receiver, tg-channel-posts-poller, tg-discussion-receiver, tg-message-search, tt-client-videos-fetcher, tt-hashtag-feed-poller, tt-keyword-search, tt-profile-videos-poller, web-gdelt-poller, web-search-mojeek, web-search-perplexity, x-compliance-sync, x-full-archive-search, x-recent-search, x-user-timeline-poller, yt-uploads-reconciler
+- Table-level writers: backfill-orchestrator, fb-backfill, fb-client-webhook-receiver, fb-group-posts-poller, fb-keyword-search, fb-page-feed-poller, ig-account-media-poller, ig-hashtag-search, ig-mentions-fetcher, ig-webhook-receiver, keyword-matcher, li-client-posts-poller, li-company-posts-poller, li-notification-receiver, li-own-comments-fetcher, li-post-search, news-feed-poller, news-homepage-differ, news-sitemap-poller, registry-writer, tg-bot-channel-receiver, tg-channel-posts-poller, tg-discussion-receiver, tg-message-search, tt-client-videos-fetcher, tt-hashtag-feed-poller, tt-keyword-search, tt-profile-videos-poller, web-gdelt-poller, web-search-mojeek, web-search-perplexity, x-full-archive-search, x-recent-search, x-user-timeline-poller, yt-uploads-reconciler
 - Table-level readers: analysis-entities, analysis-media, analysis-sentiment, analysis-topics, backfill-orchestrator, comment-decay-scheduler, fb-backfill, fb-client-webhook-receiver, fb-group-comments-fetcher, fb-group-posts-poller, fb-keyword-search, fb-page-feed-poller, fb-page-resolver, fb-page-search, fb-post-comments-fetcher, fb-reactions-fetcher, ig-account-media-poller, ig-account-resolver, ig-comments-fetcher, ig-hashtag-search, ig-keyword-search, ig-mentions-fetcher, ig-own-comments-fetcher, ig-webhook-receiver, keyword-matcher, li-client-posts-poller, li-company-posts-poller, li-notification-receiver, li-org-resolver, li-own-comments-fetcher, li-post-comments-fetcher, li-post-search, news-article-extractor, news-comments-fetcher, news-dedup, news-feed-poller, news-homepage-differ, news-robots-checker, news-site-resolver, news-sitemap-poller, normalize-item, poster-resolver, qualifier, registry-writer, retention-purger, search-hit-router, source-health-canary, store-writer, tg-bot-channel-receiver, tg-channel-posts-poller, tg-channel-resolver, tg-discussion-receiver, tg-message-search, tt-client-videos-fetcher, tt-hashtag-feed-poller, tt-keyword-search, tt-profile-videos-poller, tt-user-resolver, tt-video-comments-fetcher, tt-video-stats-refresher, web-commoncrawl-scanner, web-gdelt-poller, web-search-mojeek, web-search-perplexity, x-compliance-sync, x-filtered-stream, x-full-archive-search, x-recent-search, x-replies-fetcher, x-user-resolver, x-user-timeline-poller, yt-channel-resolver, yt-comments-fetcher, yt-keyword-search, yt-pubsub-receiver, yt-replies-fetcher, yt-text-purger, yt-uploads-reconciler, yt-video-details-fetcher, yt-web-search-bridge
 - Keys as stated: unique index on (platform, platform_id); ON CONFLICT (platform, platform_id) DO UPDATE
 
@@ -1712,29 +1726,29 @@ In CONVENTIONS: yes. Named by 80 PRD(s).
 | `(unnamed) registered news domains` |  |  | search-hit-router |  |
 | `added_at` |  | registry-writer (now() on insert) | backfill-orchestrator, fb-backfill, x-full-archive-search |  |
 | `added_by` | client (fb-client-webhook-receiver); client (li-client-posts-poller); client (tg-bot-channel-receiver); qualifier (news-site-resolver); qualifier, client, op... | registry-writer (from the decision's origin) |  | fb-client-webhook-receiver, li-client-posts-poller, news-site-resolver, tg-bot-channel-receiver |
-| `backfill_status` | capped (news-sitemap-poller); capped (tg-bot-channel-receiver); capped (tg-discussion-receiver); done, capped (ig-hashtag-search); done, capped (yt-pubsub-re... | backfill-orchestrator (direct write by the orchestrator; done/capped and next_po...)<br>fb-backfill (set directly by this service: running when the job is con...)<br>fb-group-posts-poller (read: filter backfill_status in (done, capped); on backfi...)<br>fb-keyword-search (read: filter backfill_status in (done, capped); after the...)<br>registry-writer ('pending' on insert only)<br>tg-bot-channel-receiver ('At onboarding backfill_status is set to capped (route ca...)<br>tg-channel-posts-poller (after the backfill job 'the service sets `done` or `cappe...)<br>tg-discussion-receiver ('backfill_status is capped from onboarding'; the writer i...)<br>tt-hashtag-feed-poller (written by this service: moves pending -> running -> done...)<br>tt-keyword-search (this service moves it pending -> running -> done (or capp...) | backfill-orchestrator, fb-backfill, fb-group-posts-poller, fb-keyword-search, fb-page-feed-poller, ig-account-media-poller, ig-keyword-search, ig-mentions-fetcher, li-client-posts-poller, li-company-posts-poller, news-sitemap-poller, tg-channel-posts-poller, +8 more | ig-hashtag-search, li-post-search, news-site-resolver, tt-user-resolver, x-full-archive-search |
-| `client_ids` |  | registry-writer (insert; on conflict array union) | fb-backfill, fb-group-posts-poller, fb-keyword-search, fb-page-feed-poller, fb-reactions-fetcher, ig-account-media-poller, ig-comments-fetcher, ig-keyword-search, keyword-matcher, li-company-posts-poller, li-notification-receiver, li-post-search, +7 more | x-recent-search |
+| `backfill_status` | capped (news-sitemap-poller); capped (tg-bot-channel-receiver); capped (tg-discussion-receiver); done, capped (ig-hashtag-search); done, capped (yt-pubsub-re... | backfill-orchestrator (direct write by the orchestrator; done/capped and next_poll_at in one transaction)<br>fb-backfill (set directly by this service: running when the job is consumed; done or capped on completion; capped after 5 failed attempts or when the ...)<br>fb-group-posts-poller (read: filter backfill_status in (done, capped); on backfill-job completion 'backfill_status becomes done or capped' (passive; writer not ...)<br>fb-keyword-search (read: filter backfill_status in (done, capped); after the backfill job 'backfill_status becomes done or capped' (13.8: its backfill job s...)<br>registry-writer ('pending' on insert only)<br>tg-bot-channel-receiver ('At onboarding backfill_status is set to capped (route cap: zero days)'; the writer is not named)<br>tg-channel-posts-poller (after the backfill job 'the service sets `done` or `capped` and `next_poll_at = now()`'; write mechanism not stated)<br>tg-discussion-receiver ('backfill_status is capped from onboarding'; the writer is not named)<br>tt-hashtag-feed-poller (written by this service: moves pending -> running -> done or capped during the first job after add)<br>tt-keyword-search (this service moves it pending -> running -> done (or capped) during the deep search) | backfill-orchestrator, fb-backfill, fb-group-posts-poller, fb-keyword-search, fb-page-feed-poller, ig-account-media-poller, ig-keyword-search, ig-mentions-fetcher, li-client-posts-poller, li-company-posts-poller, news-sitemap-poller, tg-channel-posts-poller, tt-client-videos-fetcher, tt-hashtag-feed-poller, tt-keyword-search, tt-profile-videos-poller, x-filtered-stream, x-user-timeline-poller, yt-pubsub-receiver, yt-uploads-reconciler | ig-hashtag-search, li-post-search, news-site-resolver, tt-user-resolver, x-full-archive-search |
+| `client_ids` |  | registry-writer (insert; on conflict array union) | fb-backfill, fb-group-posts-poller, fb-keyword-search, fb-page-feed-poller, fb-reactions-fetcher, ig-account-media-poller, ig-comments-fetcher, ig-keyword-search, keyword-matcher, li-company-posts-poller, li-notification-receiver, li-post-search, retention-purger, tt-hashtag-feed-poller, tt-keyword-search, x-replies-fetcher, yt-comments-fetcher, yt-pubsub-receiver, yt-replies-fetcher | x-recent-search |
 | `country_signals` |  | registry-writer (insert) |  | news-site-resolver |
 | `display_name` |  | registry-writer (insert; updated on conflict) |  | news-site-resolver |
-| `followers` |  | registry-writer (insert; updated on conflict)<br>tg-bot-channel-receiver (refreshed from getChatMemberCount at the daily check; wri...) | yt-pubsub-receiver | fb-group-posts-poller, fb-page-resolver, ig-account-resolver, news-site-resolver, tg-channel-posts-poller, x-user-resolver, yt-channel-resolver |
+| `followers` |  | registry-writer (insert; updated on conflict)<br>tg-bot-channel-receiver (refreshed from getChatMemberCount at the daily check; write mechanism not stated) | yt-pubsub-receiver | fb-group-posts-poller, fb-page-resolver, ig-account-resolver, news-site-resolver, tg-channel-posts-poller, x-user-resolver, yt-channel-resolver |
 | `handle` |  | registry-writer (insert; updated on conflict) | ig-account-media-poller, tg-channel-posts-poller, x-filtered-stream, x-full-archive-search | news-site-resolver |
-| `health` | blocked (backfill-orchestrator); blocked (li-notification-receiver); blocked (news-robots-checker); blocked (web-search-mojeek); blocked (web-search-perplexi... | fb-client-webhook-receiver (set by this service when the daily subscription audit fails)<br>fb-group-posts-poller (read: filter health != blocked, stop if blocked, fallback...)<br>fb-keyword-search (read: filter health != blocked, stop if blocked; fallback...)<br>fb-page-feed-poller (read: scheduler filter health != blocked and job stops if...)<br>ig-account-media-poller (read: scheduler filter `health != blocked`, job stops if ...)<br>ig-mentions-fetcher (read: filter `health != blocked`, stop if blocked; write:...)<br>ig-webhook-receiver (set degraded when a lost subscription cannot be re-create...)<br>li-client-posts-poller (read by the scheduler (health != blocked) and at job star...)<br>li-company-posts-poller (read by the scheduler (health != blocked) and through the...)<br>li-notification-receiver (on enrichment 401/403: 'token degraded or page blocked as...)<br>li-own-comments-fetcher (read at job start (stop if blocked) and through the SDK c...)<br>registry-writer ('ok' on insert; bulk UPDATE ... WHERE route = $1 AND vend...)<br>tg-bot-channel-receiver (lost administrator role (daily check or my_chat_member) o...)<br>tg-discussion-receiver (removal or HTTP 403 on one group -> blocked; changed link...)<br>tt-client-videos-fetcher (read: selection `health != blocked`, stop at job start if...)<br>tt-hashtag-feed-poller (passive in the PRD: 'the source goes to `health = degrade...)<br>tt-profile-videos-poller (read: selection health != blocked, stop at job start if b...)<br>web-gdelt-poller (scheduler selects health != blocked; a non-JSON 200 marks...)<br>x-compliance-sync (indirect: the SDK canary hook asks source-health-canary t...)<br>x-full-archive-search (read: stop if health = blocked; write: health = blocked w...)<br>x-recent-search (read: scheduler filter health != blocked; write: a rule w...)<br>x-user-timeline-poller (read: filter health != blocked and stop if blocked; write...)<br>yt-pubsub-receiver (via request to registry-writer: degraded after 5 failed s...)<br>yt-uploads-reconciler (read: stop if blocked, scheduler skips blocked; write: he...) | backfill-orchestrator, comment-decay-scheduler, fb-backfill, fb-group-comments-fetcher, fb-group-posts-poller, fb-keyword-search, fb-page-feed-poller, fb-post-comments-fetcher, ig-account-media-poller, ig-hashtag-search, ig-keyword-search, ig-mentions-fetcher, +25 more | li-org-resolver, li-post-comments-fetcher, news-robots-checker, news-site-resolver |
+| `health` | blocked (backfill-orchestrator); blocked (li-notification-receiver); blocked (news-robots-checker); blocked (web-search-mojeek); blocked (web-search-perplexi... | fb-client-webhook-receiver (set by this service when the daily subscription audit fails)<br>fb-group-posts-poller (read: filter health != blocked, stop if blocked, fallback selects the other vendor; listed in 6.3 as this service's state)<br>fb-keyword-search (read: filter health != blocked, stop if blocked; fallback -> other vendor if it offers search; 6.3 lists it as this service's state)<br>fb-page-feed-poller (read: scheduler filter health != blocked and job stops if health = blocked; write: token expiry sets health = blocked (writer not named e...)<br>ig-account-media-poller (read: scheduler filter `health != blocked`, job stops if blocked; write: `health = blocked` when no client in client_ids has a healthy to...)<br>ig-mentions-fetcher (read: filter `health != blocked`, stop if blocked; write: a revoked token sets `health = blocked`)<br>ig-webhook-receiver (set degraded when a lost subscription cannot be re-created (mechanism not stated))<br>li-client-posts-poller (read by the scheduler (health != blocked) and at job start (stop if blocked); health also read 'through the SDK canary hook'; set to bloc...)<br>li-company-posts-poller (read by the scheduler (health != blocked) and through the SDK canary hook; set to degraded by this service when a page no longer resolves...)<br>li-notification-receiver (on enrichment 401/403: 'token degraded or page blocked as in li-own-comments-fetcher')<br>li-own-comments-fetcher (read at job start (stop if blocked) and through the SDK canary hook; a 403 on one page while the token works elsewhere blocks only that p...)<br>registry-writer ('ok' on insert; bulk UPDATE ... WHERE route = $1 AND vendor = $2 AND platform = $3 on health_change)<br>tg-bot-channel-receiver (lost administrator role (daily check or my_chat_member) or HTTP 403 on one chat sets blocked; re-adding the bot restores ok; a missing ca...)<br>tg-discussion-receiver (removal or HTTP 403 on one group -> blocked; changed link or privacy mode on -> degraded with the reason; a missing hourly canary comment...)<br>tt-client-videos-fetcher (read: selection `health != blocked`, stop at job start if blocked; write: this service sets `blocked` when a 401 refresh fails and on 403...)<br>tt-hashtag-feed-poller (passive in the PRD: 'the source goes to `health = degraded`' when the hashtag id is not resolvable; setter not stated)<br>tt-profile-videos-poller (read: selection health != blocked, stop at job start if blocked; write: a creator the vendor reports as private or not found is marked he...)<br>web-gdelt-poller (scheduler selects health != blocked; a non-JSON 200 marks the rule degraded (write mechanism not stated))<br>x-compliance-sync (indirect: the SDK canary hook asks source-health-canary to set `health = blocked`, and back to `ok` when X stops reporting the source)<br>x-full-archive-search (read: stop if health = blocked; write: health = blocked when the account is not found, suspended or protected (method not stated))<br>x-recent-search (read: scheduler filter health != blocked; write: a rule whose query is rejected (HTTP 400) 'is parked `degraded`')<br>x-user-timeline-poller (read: filter health != blocked and stop if blocked; write: health = blocked when the account is not found, suspended or protected)<br>yt-pubsub-receiver (via request to registry-writer: degraded after 5 failed subscription attempts)<br>yt-uploads-reconciler (read: stop if blocked, scheduler skips blocked; write: health = degraded on HTTP 404 on the playlist) | backfill-orchestrator, comment-decay-scheduler, fb-backfill, fb-group-comments-fetcher, fb-group-posts-poller, fb-keyword-search, fb-page-feed-poller, fb-post-comments-fetcher, ig-account-media-poller, ig-hashtag-search, ig-keyword-search, ig-mentions-fetcher, ig-own-comments-fetcher, li-client-posts-poller, li-company-posts-poller, li-own-comments-fetcher, li-post-search, news-feed-poller, news-homepage-differ, news-sitemap-poller, source-health-canary, tg-channel-posts-poller, tt-client-videos-fetcher, tt-keyword-search, tt-profile-videos-poller, web-gdelt-poller, web-search-mojeek, web-search-perplexity, x-filtered-stream, x-full-archive-search, x-recent-search, x-replies-fetcher, x-user-timeline-poller, yt-comments-fetcher, yt-replies-fetcher, yt-text-purger, yt-uploads-reconciler | li-org-resolver, li-post-comments-fetcher, news-robots-checker, news-site-resolver |
 | `lang_share` |  | registry-writer (insert) |  | news-site-resolver |
-| `last_hit_at` |  | keyword-matcher (direct write: greatest(current, hit_at) for the item's so...)<br>x-recent-search (after the Redpanda ack) | qualifier | registry-writer |
+| `last_hit_at` |  | keyword-matcher (direct write: greatest(current, hit_at) for the item's source_id and author_source_id, coalesced to one write per source per minute)<br>x-recent-search (after the Redpanda ack) | qualifier | registry-writer |
 | `last_polled_at` |  | fb-group-posts-poller (after Redpanda ack)<br>fb-keyword-search (after Redpanda ack)<br>fb-page-feed-poller (set by this service after Redpanda ack (5.2 step 6))<br>ig-account-media-poller (after Redpanda acknowledges (5.2 step 6))<br>ig-hashtag-search (set on Redpanda ack)<br>ig-keyword-search (set after Redpanda acknowledges (5.2 step 7))<br>ig-mentions-fetcher (set after Redpanda acknowledges)<br>li-client-posts-poller (set after Redpanda acknowledges (5.2 step 6))<br>li-company-posts-poller (set after Redpanda acknowledges)<br>news-feed-poller (set after Redpanda acknowledgement (5.2 step 7))<br>news-homepage-differ (set at 5.2 step 7)<br>news-sitemap-poller (listed under 6.3 State)<br>tg-bot-channel-receiver (not stated (listed as state in 6.3))<br>tg-channel-posts-poller (set after Redpanda acknowledges; mechanism not stated)<br>tg-discussion-receiver (not stated (listed as state))<br>tt-client-videos-fetcher (set after Redpanda acknowledges)<br>tt-hashtag-feed-poller (written by this service)<br>tt-keyword-search (not stated)<br>tt-profile-videos-poller (set after Redpanda acknowledges)<br>web-gdelt-poller (updated on Redpanda's acknowledgement (mechanism not stated))<br>web-search-mojeek (updated on Redpanda's acknowledgement (mechanism not stated))<br>web-search-perplexity (updated on Redpanda's acknowledgement (mechanism not stated))<br>x-recent-search (after the Redpanda ack)<br>x-user-timeline-poller (after the Redpanda ack)<br>yt-uploads-reconciler (direct write after acknowledgement) | ig-hashtag-search, yt-keyword-search, yt-web-search-bridge | registry-writer |
-| `next_poll_at` |  | backfill-orchestrator (set to now() on completion, capped or 'no history route')<br>fb-backfill (set to now() when done or capped is written, so fb-page-f...)<br>fb-group-posts-poller (read: next_poll_at <= now(); written after Redpanda ack a...)<br>fb-keyword-search (read: next_poll_at <= now(); written after ack as poll_st...)<br>fb-page-feed-poller (read: next_poll_at <= now(); write by this service after ...)<br>ig-account-media-poller (direct write by the service after Redpanda ack: `poll_sta...)<br>ig-hashtag-search (set from the start of the last poll on Redpanda ack; on a...)<br>li-client-posts-poller (read by the scheduler (<= now()); set after Redpanda ackn...)<br>li-company-posts-poller (read by the scheduler (<= now()); set after Redpanda ackn...)<br>li-post-search (kept by 'the scheduler', set from the start of the last r...)<br>news-feed-poller (set after Redpanda acknowledgement from the START of the ...)<br>news-homepage-differ (set from the START of the last poll (poll_started_at + 60...)<br>news-sitemap-poller (set from the START of the last poll (poll_started_at + 60...)<br>registry-writer (now() on insert only)<br>tg-bot-channel-receiver (set from the START of the last check: check_started_at + ...)<br>tg-channel-posts-poller (set from the START of the last poll (poll_started_at + in...)<br>tg-discussion-receiver (next_poll_at = check_started_at + 24 h, from the START of...)<br>tg-message-search ('The scheduler keeps next_poll_at' per keyword set; the n...)<br>tt-client-videos-fetcher (selection `next_poll_at <= now()`; set after Redpanda ack...)<br>tt-hashtag-feed-poller (scheduler selects next_poll_at <= now(); this service wri...)<br>tt-keyword-search (scheduler selects next_poll_at <= now(); next run set fro...)<br>tt-profile-videos-poller (selection next_poll_at <= now(); set after Redpanda ackno...)<br>web-gdelt-poller (scheduler selects next_poll_at <= now(); set to run_start...)<br>web-search-mojeek (scheduler selects next_poll_at <= now(); set from the STA...)<br>web-search-perplexity (scheduler selects next_poll_at <= now(); set to the run s...)<br>x-recent-search (read: due when <= now(); write: from the START of the las...)<br>x-user-timeline-poller (read: due when <= now(); write: poll_started_at + interva...)<br>yt-pubsub-receiver (via request to registry-writer: set to now when a lease l...)<br>yt-uploads-reconciler (direct write after acknowledgement: run_started_at + 24 h...) | fb-group-posts-poller, fb-keyword-search, fb-page-feed-poller, ig-account-media-poller, ig-hashtag-search, ig-mentions-fetcher, li-client-posts-poller, li-company-posts-poller, li-post-search, news-feed-poller, news-homepage-differ, news-sitemap-poller, +14 more | fb-client-webhook-receiver, li-org-resolver, x-full-archive-search |
+| `next_poll_at` |  | backfill-orchestrator (set to now() on completion, capped or 'no history route')<br>fb-backfill (set to now() when done or capped is written, so fb-page-feed-poller picks the Page up on its next scan)<br>fb-group-posts-poller (read: next_poll_at <= now(); written after Redpanda ack as poll_started_at + interval; kept on failure, on quota deny and when the flag i...)<br>fb-keyword-search (read: next_poll_at <= now(); written after ack as poll_started_at + interval; failed job keeps it; untouched when the flag is off; = now(...)<br>fb-page-feed-poller (read: next_poll_at <= now(); write by this service after Redpanda ack, = poll_started_at + interval (fixed cadence); failed job keeps the...)<br>ig-account-media-poller (direct write by the service after Redpanda ack: `poll_started_at + interval` (fixed cadence from the START of the last poll); a failed jo...)<br>ig-hashtag-search (set from the start of the last poll on Redpanda ack; on a ledger deny set to the earliest window expiry)<br>li-client-posts-poller (read by the scheduler (<= now()); set after Redpanda acknowledges to poll_started_at + interval (30 min priority list, 60 min others); a ...)<br>li-company-posts-poller (read by the scheduler (<= now()); set after Redpanda acknowledges to poll_started_at + interval; kept on skip (flag off, government-only)...)<br>li-post-search (kept by 'the scheduler', set from the start of the last run; rule stays due on wait-until or deny)<br>news-feed-poller (set after Redpanda acknowledgement from the START of the last poll (poll_started_at + interval); a failed job keeps the old value)<br>news-homepage-differ (set from the START of the last poll (poll_started_at + 60 minutes); a failed job keeps the old value)<br>news-sitemap-poller (set from the START of the last poll (poll_started_at + 60 minutes), advanced after acknowledgement; a failed job keeps the old value)<br>registry-writer (now() on insert only)<br>tg-bot-channel-receiver (set from the START of the last check: check_started_at + 24 h; a failed check keeps its old value; writer mechanism not stated beyond 'is...)<br>tg-channel-posts-poller (set from the START of the last poll (poll_started_at + interval) after Redpanda acknowledges; now() after a backfill; a failed job or a q...)<br>tg-discussion-receiver (next_poll_at = check_started_at + 24 h, from the START of the last check; a failed check keeps its old value; write mechanism not stated)<br>tg-message-search ('The scheduler keeps next_poll_at' per keyword set; the next run is set from the start of the last run; write mechanism not stated)<br>tt-client-videos-fetcher (selection `next_poll_at <= now()`; set after Redpanda acknowledges to poll_started_at + 60 minutes; a failed job and a quota `deny` keep ...)<br>tt-hashtag-feed-poller (scheduler selects next_poll_at <= now(); this service writes it, set from the start of the last poll (fixed cadence))<br>tt-keyword-search (scheduler selects next_poll_at <= now(); next run set from the start of the last run)<br>tt-profile-videos-poller (selection next_poll_at <= now(); set after Redpanda acknowledges to poll_started_at + interval; a failed job keeps the old value)<br>web-gdelt-poller (scheduler selects next_poll_at <= now(); set to run_started_at + 1 h on Redpanda's acknowledgement (write mechanism not stated))<br>web-search-mojeek (scheduler selects next_poll_at <= now(); set from the START of the run plus the interval on Redpanda's acknowledgement (write mechanism n...)<br>web-search-perplexity (scheduler selects next_poll_at <= now(); set to the run start plus the interval on Redpanda's acknowledgement (write mechanism not stated))<br>x-recent-search (read: due when <= now(); write: from the START of the last run (fixed cadence) after the Redpanda ack; a failed job keeps its old value)<br>x-user-timeline-poller (read: due when <= now(); write: poll_started_at + interval after the Redpanda ack; kept on failure or deny; set to now() when a rule is d...)<br>yt-pubsub-receiver (via request to registry-writer: set to now when a lease lapses)<br>yt-uploads-reconciler (direct write after acknowledgement: run_started_at + 24 h (not for backfill); failed or denied job keeps the old value) | fb-group-posts-poller, fb-keyword-search, fb-page-feed-poller, ig-account-media-poller, ig-hashtag-search, ig-mentions-fetcher, li-client-posts-poller, li-company-posts-poller, li-post-search, news-feed-poller, news-homepage-differ, news-sitemap-poller, tg-bot-channel-receiver, tg-channel-posts-poller, tg-discussion-receiver, tg-message-search, tt-client-videos-fetcher, tt-hashtag-feed-poller, tt-keyword-search, tt-profile-videos-poller, web-gdelt-poller, web-search-mojeek, web-search-perplexity, x-recent-search, x-user-timeline-poller, yt-uploads-reconciler | fb-client-webhook-receiver, li-org-resolver, x-full-archive-search |
 | `notes` | jsonb (proposed alternative) (news-site-resolver) | fb-backfill (reason for capped)<br>registry-writer |  | news-site-resolver |
 | `organization URN mapping (column name not stated)` |  |  | li-notification-receiver |  |
-| `owned_by_client` | bool (keyword-matcher); false (li-company-posts-poller); true (fb-client-webhook-receiver); true (ig-mentions-fetcher); true (ig-own-comments-fetcher); true ... | registry-writer (insert) | comment-decay-scheduler, fb-backfill, fb-client-webhook-receiver, fb-page-feed-poller, fb-page-resolver, fb-post-comments-fetcher, fb-reactions-fetcher, ig-mentions-fetcher, ig-own-comments-fetcher, ig-webhook-receiver, keyword-matcher, li-client-posts-poller, +5 more | li-org-resolver, tg-bot-channel-receiver, tg-discussion-receiver |
+| `owned_by_client` | bool (keyword-matcher); false (li-company-posts-poller); true (fb-client-webhook-receiver); true (ig-mentions-fetcher); true (ig-own-comments-fetcher); true ... | registry-writer (insert) | comment-decay-scheduler, fb-backfill, fb-client-webhook-receiver, fb-page-feed-poller, fb-page-resolver, fb-post-comments-fetcher, fb-reactions-fetcher, ig-mentions-fetcher, ig-own-comments-fetcher, ig-webhook-receiver, keyword-matcher, li-client-posts-poller, li-company-posts-poller, li-notification-receiver, qualifier, retention-purger, tt-client-videos-fetcher | li-org-resolver, tg-bot-channel-receiver, tg-discussion-receiver |
 | `page identifier (column name not stated)` |  |  | li-company-posts-poller |  |
-| `platform` | facebook (fb-group-posts-poller); facebook (fb-keyword-search); facebook (fb-page-feed-poller); instagram (ig-account-media-poller); instagram (ig-hashtag-se... | registry-writer (insert/upsert; part of the unique key) | fb-group-posts-poller, fb-keyword-search, fb-page-feed-poller, ig-account-media-poller, ig-hashtag-search, ig-keyword-search, ig-mentions-fetcher, li-client-posts-poller, li-company-posts-poller, li-notification-receiver, li-post-search, news-feed-poller, +18 more | news-site-resolver |
-| `platform_id` |  | ig-hashtag-search (if null, call ig_hashtag_search and 'store the id on the ...)<br>registry-writer (insert; part of the unique key)<br>tt-hashtag-feed-poller (learned from the newest raw.items video whose hashtag ent...) | fb-group-posts-poller, fb-page-search, ig-hashtag-search, ig-mentions-fetcher, ig-webhook-receiver, tg-message-search, tt-hashtag-feed-poller, x-compliance-sync, x-filtered-stream, x-recent-search, x-user-timeline-poller, yt-comments-fetcher, +2 more | ig-account-resolver, news-site-resolver |
+| `platform` | facebook (fb-group-posts-poller); facebook (fb-keyword-search); facebook (fb-page-feed-poller); instagram (ig-account-media-poller); instagram (ig-hashtag-se... | registry-writer (insert/upsert; part of the unique key) | fb-group-posts-poller, fb-keyword-search, fb-page-feed-poller, ig-account-media-poller, ig-hashtag-search, ig-keyword-search, ig-mentions-fetcher, li-client-posts-poller, li-company-posts-poller, li-notification-receiver, li-post-search, news-feed-poller, news-homepage-differ, news-sitemap-poller, tg-channel-posts-poller, tg-message-search, tt-client-videos-fetcher, tt-hashtag-feed-poller, tt-keyword-search, tt-profile-videos-poller, web-commoncrawl-scanner, web-gdelt-poller, web-search-mojeek, web-search-perplexity, x-recent-search, x-user-timeline-poller, yt-channel-resolver, yt-keyword-search, yt-uploads-reconciler, yt-web-search-bridge | news-site-resolver |
+| `platform_id` |  | ig-hashtag-search (if null, call ig_hashtag_search and 'store the id on the source' (mechanism not stated))<br>registry-writer (insert; part of the unique key)<br>tt-hashtag-feed-poller (learned from the newest raw.items video whose hashtag entries carry the name, or from the vendor; stored 'once learned') | fb-group-posts-poller, fb-page-search, ig-hashtag-search, ig-mentions-fetcher, ig-webhook-receiver, tg-message-search, tt-hashtag-feed-poller, x-compliance-sync, x-filtered-stream, x-recent-search, x-user-timeline-poller, yt-comments-fetcher, yt-pubsub-receiver, yt-replies-fetcher | ig-account-resolver, news-site-resolver |
 | `retention_class` | news_excerpt (news-site-resolver) | registry-writer (insert) | normalize-item, x-replies-fetcher, yt-comments-fetcher, yt-pubsub-receiver, yt-replies-fetcher, yt-uploads-reconciler, yt-video-details-fetcher | news-site-resolver |
-| `route` | amber (fb-group-posts-poller); amber (fb-keyword-search); amber (ig-keyword-search); amber (tg-channel-posts-poller); amber (tg-channel-resolver); amber (tt-... | registry-writer (insert; update decision emits updated with previous) | fb-group-posts-poller, fb-keyword-search, fb-page-feed-poller, fb-page-resolver, ig-account-media-poller, ig-hashtag-search, ig-keyword-search, ig-mentions-fetcher, ig-webhook-receiver, li-client-posts-poller, li-company-posts-poller, source-health-canary, +8 more | li-notification-receiver, news-site-resolver, tg-bot-channel-receiver, tg-discussion-receiver |
-| `source_id` | uuid (registry-writer) | registry-writer (gen_random_uuid() on insert) | fb-client-webhook-receiver, fb-page-feed-poller, fb-page-resolver, ig-account-media-poller, ig-account-resolver, news-robots-checker, search-hit-router, tg-bot-channel-receiver, tg-channel-posts-poller, tg-channel-resolver, tt-client-videos-fetcher, tt-hashtag-feed-poller, +8 more |  |
-| `source_type` | account (x-user-timeline-poller); account, creator (ig-account-media-poller); account, creator (ig-account-resolver); account, creator (ig-mentions-fetcher);... | registry-writer (insert) | backfill-orchestrator, fb-backfill, fb-group-posts-poller, fb-keyword-search, fb-page-feed-poller, fb-page-resolver, ig-account-media-poller, ig-hashtag-search, ig-keyword-search, ig-mentions-fetcher, li-client-posts-poller, li-company-posts-poller, +15 more | ig-account-resolver, news-site-resolver, tg-channel-resolver, tg-discussion-receiver |
+| `route` | amber (fb-group-posts-poller); amber (fb-keyword-search); amber (ig-keyword-search); amber (tg-channel-posts-poller); amber (tg-channel-resolver); amber (tt-... | registry-writer (insert; update decision emits updated with previous) | fb-group-posts-poller, fb-keyword-search, fb-page-feed-poller, fb-page-resolver, ig-account-media-poller, ig-hashtag-search, ig-keyword-search, ig-mentions-fetcher, ig-webhook-receiver, li-client-posts-poller, li-company-posts-poller, source-health-canary, tg-channel-posts-poller, tg-channel-resolver, tt-client-videos-fetcher, tt-profile-videos-poller, tt-video-stats-refresher, x-filtered-stream, x-user-timeline-poller, yt-uploads-reconciler | li-notification-receiver, news-site-resolver, tg-bot-channel-receiver, tg-discussion-receiver |
+| `source_id` | uuid (registry-writer) | registry-writer (gen_random_uuid() on insert) | fb-client-webhook-receiver, fb-page-feed-poller, fb-page-resolver, ig-account-media-poller, ig-account-resolver, news-robots-checker, search-hit-router, tg-bot-channel-receiver, tg-channel-posts-poller, tg-channel-resolver, tt-client-videos-fetcher, tt-hashtag-feed-poller, tt-keyword-search, tt-profile-videos-poller, tt-video-comments-fetcher, web-gdelt-poller, web-search-mojeek, web-search-perplexity, yt-channel-resolver, yt-keyword-search |  |
+| `source_type` | account (x-user-timeline-poller); account, creator (ig-account-media-poller); account, creator (ig-account-resolver); account, creator (ig-mentions-fetcher);... | registry-writer (insert) | backfill-orchestrator, fb-backfill, fb-group-posts-poller, fb-keyword-search, fb-page-feed-poller, fb-page-resolver, ig-account-media-poller, ig-hashtag-search, ig-keyword-search, ig-mentions-fetcher, li-client-posts-poller, li-company-posts-poller, li-post-search, tg-channel-posts-poller, tg-message-search, tt-hashtag-feed-poller, tt-keyword-search, tt-profile-videos-poller, web-gdelt-poller, web-search-mojeek, web-search-perplexity, x-full-archive-search, x-recent-search, x-user-timeline-poller, yt-keyword-search, yt-uploads-reconciler, yt-web-search-bridge | ig-account-resolver, news-site-resolver, tg-channel-resolver, tg-discussion-receiver |
 | `stored uploads playlist id` |  |  | yt-uploads-reconciler | yt-channel-resolver |
-| `tier` | 1 (analysis-sentiment); 1, 2, 3 (web-search-mojeek); 1, 2, 3 (web-search-perplexity); 1, 2, 3 (yt-keyword-search); 1, 2, 3, dormant (li-org-resolver); 1, 2, ... | fb-client-webhook-receiver (changes requested from registry-writer (promotion of a do...)<br>fb-keyword-search (read: ordering by tier (the client's priority); write: st...)<br>registry-writer (insert; on conflict least_tier(sources.tier, EXCLUDED.tie...) | analysis-sentiment, backfill-orchestrator, comment-decay-scheduler, fb-client-webhook-receiver, fb-group-posts-poller, fb-keyword-search, fb-page-feed-poller, fb-page-resolver, ig-account-media-poller, ig-account-resolver, ig-hashtag-search, ig-keyword-search, +31 more | fb-backfill, fb-group-comments-fetcher, fb-post-comments-fetcher, ig-comments-fetcher, li-client-posts-poller, li-org-resolver, li-post-search, news-site-resolver, +2 more |
+| `tier` | 1 (analysis-sentiment); 1, 2, 3 (web-search-mojeek); 1, 2, 3 (web-search-perplexity); 1, 2, 3 (yt-keyword-search); 1, 2, 3, dormant (li-org-resolver); 1, 2, ... | fb-client-webhook-receiver (changes requested from registry-writer (promotion of a dormant Page back to push; return to reach tier on audit failure or token 401/403)...)<br>fb-keyword-search (read: ordering by tier (the client's priority); write: step 6 'promote or demote dormancy' after ack (mechanism not stated))<br>registry-writer (insert; on conflict least_tier(sources.tier, EXCLUDED.tier) or restore from retired; tier decisions update it) | analysis-sentiment, backfill-orchestrator, comment-decay-scheduler, fb-client-webhook-receiver, fb-group-posts-poller, fb-keyword-search, fb-page-feed-poller, fb-page-resolver, ig-account-media-poller, ig-account-resolver, ig-hashtag-search, ig-keyword-search, ig-mentions-fetcher, ig-webhook-receiver, li-company-posts-poller, news-feed-poller, news-homepage-differ, news-robots-checker, news-sitemap-poller, qualifier, search-hit-router, source-health-canary, tg-bot-channel-receiver, tg-channel-posts-poller, tg-discussion-receiver, tt-hashtag-feed-poller, tt-keyword-search, tt-profile-videos-poller, web-commoncrawl-scanner, web-gdelt-poller, web-search-mojeek, web-search-perplexity, x-filtered-stream, x-recent-search, x-user-resolver, x-user-timeline-poller, yt-channel-resolver, yt-keyword-search, yt-pubsub-receiver, yt-text-purger, yt-uploads-reconciler, yt-video-details-fetcher, yt-web-search-bridge | fb-backfill, fb-group-comments-fetcher, fb-post-comments-fetcher, ig-comments-fetcher, li-client-posts-poller, li-org-resolver, li-post-search, news-site-resolver, tg-channel-resolver, tt-client-videos-fetcher |
 | `url` |  | registry-writer | fb-group-posts-poller | news-site-resolver |
 | `vendor` | None (tg-bot-channel-receiver); harvestapi (li-company-posts-poller); sociavault (ig-keyword-search); telemetrio (tg-channel-resolver) | registry-writer (insert; update decision) | ig-keyword-search, li-company-posts-poller, source-health-canary, tt-video-stats-refresher | news-site-resolver, tg-bot-channel-receiver, tg-channel-resolver |
 
@@ -1747,7 +1761,7 @@ In CONVENTIONS: yes. Named by 26 PRD(s).
 
 | Column as written | Type and values as stated | Written by (how) | Read by | Mentioned by |
 |---|---|---|---|---|
-| `(key state; column not named)` | degraded (tt-keyword-search) | tt-keyword-search (on HTTP 401 or 403 'the vendor key is marked `degraded` i...) |  |  |
+| `(key state; column not named)` | degraded (tt-keyword-search) | tt-keyword-search (on HTTP 401 or 403 'the vendor key is marked `degraded` in `vendor_keys`') |  |  |
 | `(unnamed) key degraded mark` | degraded (web-search-mojeek); degraded (web-search-perplexity) | web-search-mojeek (not stated)<br>web-search-perplexity (not stated) |  |  |
 | `(unnamed) Mojeek API key` |  |  | web-search-mojeek |  |
 | `(unnamed) Perplexity API key` |  |  | web-search-perplexity |  |
@@ -1839,12 +1853,12 @@ In CONVENTIONS: **no**. Named by 2 PRD(s).
 | `first_seen_at` |  | fb-group-comments-fetcher<br>fb-post-comments-fetcher |  |  |
 | `id` |  | fb-group-comments-fetcher (per post and comment; the comment id if any) | fb-group-comments-fetcher |  |
 | `last_complete_sweep_at` |  | fb-group-comments-fetcher (per post)<br>fb-post-comments-fetcher (per post; after a complete read) |  |  |
-| `last_fetch_at` |  | fb-group-comments-fetcher (per post; written after Redpanda acknowledges the whole b...)<br>fb-post-comments-fetcher (per post; after Redpanda acknowledges the whole batch) |  |  |
+| `last_fetch_at` |  | fb-group-comments-fetcher (per post; written after Redpanda acknowledges the whole batch)<br>fb-post-comments-fetcher (per post; after Redpanda acknowledges the whole batch) |  |  |
 | `last_seen_at` |  | fb-group-comments-fetcher<br>fb-post-comments-fetcher |  |  |
-| `state` | active, superseded, deleted (fb-group-comments-fetcher); active, superseded, deleted (fb-post-comments-fetcher) | fb-group-comments-fetcher (old row superseded on an edit candidate; deleted on a com...)<br>fb-post-comments-fetcher (superseded on an edit candidate; deleted on a complete read) | fb-group-comments-fetcher, fb-post-comments-fetcher |  |
+| `state` | active, superseded, deleted (fb-group-comments-fetcher); active, superseded, deleted (fb-post-comments-fetcher) | fb-group-comments-fetcher (old row superseded on an edit candidate; deleted on a complete read)<br>fb-post-comments-fetcher (superseded on an edit candidate; deleted on a complete read) | fb-group-comments-fetcher, fb-post-comments-fetcher |  |
 | `superseded_by` |  | fb-post-comments-fetcher |  |  |
 | `text_hash` |  | fb-group-comments-fetcher (sha256(created_time + text); compared to detect edits) | fb-group-comments-fetcher |  |
-| `the hash` |  | fb-post-comments-fetcher (sha256(created_time + text); stop rule and edit/deletion ...) | fb-post-comments-fetcher |  |
+| `the hash` |  | fb-post-comments-fetcher (sha256(created_time + text); stop rule and edit/deletion detection) | fb-post-comments-fetcher |  |
 
 #### `comment_series`
 
@@ -1867,7 +1881,7 @@ In CONVENTIONS: **no**. Named by 3 PRD(s).
 | `lane` | metrics, (comments) (comment-decay-scheduler) | comment-decay-scheduler |  |  |
 | `last_fetched_at` |  | comment-decay-scheduler | comment-decay-scheduler |  |
 | `last_new_count` |  | comment-decay-scheduler |  |  |
-| `last_total` |  | comment-decay-scheduler (updated from completions; stale completions only update i...) | comment-decay-scheduler |  |
+| `last_total` |  | comment-decay-scheduler (updated from completions; stale completions only update it if newer) | comment-decay-scheduler |  |
 | `next_due_at` |  | comment-decay-scheduler (anchor + offset) | comment-decay-scheduler |  |
 | `next_step` |  | comment-decay-scheduler | comment-decay-scheduler |  |
 | `profile` | fb_page, fb_group, ig_own, ig_other, tt, x, yt, li_own, li_other, tg_own, news (comment-decay-scheduler) | comment-decay-scheduler |  |  |
@@ -1920,16 +1934,16 @@ In CONVENTIONS: **no**. Named by 7 PRD(s).
 | `articles_per_day_estimate` |  | news-site-resolver (as feeds) | news-feed-poller, news-site-resolver |  |
 | `comments_provider` | disqus (news-article-extractor); disqus, none (news-comments-fetcher); disqus, none (news-site-resolver) | news-site-resolver (as feeds) | news-comments-fetcher, news-site-resolver | news-article-extractor |
 | `disqus_shortname` |  | news-site-resolver (as feeds) | news-comments-fetcher, news-site-resolver |  |
-| `feeds` |  | news-site-resolver (candidate row by this service; profile mapped by registry...) | news-feed-poller, news-site-resolver |  |
+| `feeds` |  | news-site-resolver (candidate row by this service; profile mapped by registry-writer from site_profile) | news-feed-poller, news-site-resolver |  |
 | `homepage_diff` | boolean (news-homepage-differ); boolean (news-site-resolver); True, False (news-homepage-differ); True, False (news-site-resolver) | news-site-resolver (as feeds) | news-homepage-differ, news-site-resolver |  |
 | `identifier template` |  |  | news-comments-fetcher |  |
 | `last_article_at` |  | news-site-resolver (as feeds) | news-site-resolver |  |
 | `news_sitemap` |  | news-site-resolver (as feeds) | news-site-resolver, news-sitemap-poller |  |
-| `profile_version` |  | news-site-resolver (part of this service's state row; a replay leaves it unch...) |  |  |
+| `profile_version` |  | news-site-resolver (part of this service's state row; a replay leaves it unchanged) |  |  |
 | `resolved_at` |  | news-site-resolver (part of this service's state row) |  |  |
 | `sitemaps` |  | news-site-resolver (as feeds) | news-site-resolver |  |
 | `source_id` |  |  |  | news-site-resolver |
-| `status` | candidate (news-site-resolver) | news-site-resolver (this service writes news_sites with status candidate (5.2...) |  |  |
+| `status` | candidate (news-site-resolver) | news-site-resolver (this service writes news_sites with status candidate (5.2 step 10)) |  |  |
 
 #### `news_stories`
 
@@ -1953,12 +1967,12 @@ In CONVENTIONS: **no**. Named by 5 PRD(s).
 
 | Column as written | Type and values as stated | Written by (how) | Read by | Mentioned by |
 |---|---|---|---|---|
-| `canonical_url_hash` |  | news-article-extractor (written with done; looked up at step 7 to detect duplicat...) | news-article-extractor |  |
+| `canonical_url_hash` |  | news-article-extractor (written with done; looked up at step 7 to detect duplicate_canonical) | news-article-extractor |  |
 | `fetched_at` |  | news-article-extractor (written with done) |  |  |
 | `first_seen_at` |  | news-article-extractor |  |  |
 | `found_via` |  | news-article-extractor |  |  |
 | `source_id` |  | news-article-extractor |  |  |
-| `status` | done, gone, not_article, paywalled, skipped_policy, failed (news-article-extractor) | news-article-extractor (done written only after Redpanda acknowledges (5.2 step 8...) | news-article-extractor |  |
+| `status` | done, gone, not_article, paywalled, skipped_policy, failed (news-article-extractor) | news-article-extractor (done written only after Redpanda acknowledges (5.2 step 8); skipped_policy at step 2; done or gone ends processing at step 1) | news-article-extractor |  |
 | `url` |  | news-article-extractor |  |  |
 | `url_hash` |  | news-article-extractor (computed per message and looked up first (5.2 step 1)) | news-article-extractor, news-feed-poller, news-homepage-differ, news-sitemap-poller |  |
 
@@ -2002,18 +2016,18 @@ In CONVENTIONS: **no**. Named by 4 PRD(s).
 
 | Column as written | Type and values as stated | Written by (how) | Read by | Mentioned by |
 |---|---|---|---|---|
-| `candidate_key` |  | fb-page-resolver (Pages cached by key)<br>yt-channel-resolver (looked up by key or alias (5.2 step 1); written with the ...) | fb-page-resolver, yt-channel-resolver |  |
+| `candidate_key` |  | fb-page-resolver (Pages cached by key)<br>yt-channel-resolver (looked up by key or alias (5.2 step 1); written with the emit (8)) | fb-page-resolver, yt-channel-resolver |  |
 | `candidate_key_hash` |  | ig-account-resolver (SHA-256 of candidate_key; lookup key) | ig-account-resolver |  |
 | `expires_at` |  | fb-page-resolver (30 days for Pages and for individuals' hashes)<br>ig-account-resolver (resolved_at + 30 days)<br>x-user-resolver (30 days)<br>yt-channel-resolver (30 days after resolution) | fb-page-resolver, ig-account-resolver, x-user-resolver, yt-channel-resolver |  |
 | `fetched_at` |  | fb-page-resolver (refresh loop orders by oldest fetched_at)<br>x-user-resolver (refresh order: oldest fetched_at first)<br>yt-channel-resolver (refresh loop orders by oldest fetched_at) | fb-page-resolver, x-user-resolver, yt-channel-resolver |  |
-| `handle aliases` |  | yt-channel-resolver (a resolved handle is cached under both the handle and the...) | yt-channel-resolver |  |
+| `handle aliases` |  | yt-channel-resolver (a resolved handle is cached under both the handle and the channel id) | yt-channel-resolver |  |
 | `keyed hash (individuals)` |  | fb-page-resolver (only the hash of the key for individuals) | fb-page-resolver |  |
 | `resolved_at` |  | ig-account-resolver | ig-account-resolver |  |
-| `result` |  | ig-account-resolver (the outcome, negative ones included; for individuals only...) | ig-account-resolver |  |
+| `result` |  | ig-account-resolver (the outcome, negative ones included; for individuals only the hash is held (13.3 L179)) | ig-account-resolver |  |
 | `the profile` |  | fb-page-resolver (stored for 30 days on a Page answer) | fb-page-resolver |  |
-| `the profile or verdict` | resolved, unavailable (yt-channel-resolver) | yt-channel-resolver (cached for 30 days, written with the emit so a replay ans...) | yt-channel-resolver |  |
-| `verdict` |  | x-user-resolver (individuals and unavailable accounts: keyed hashes, verdi...) | x-user-resolver |  |
-| `x:<user id> / x:<handle> keys` |  | x-user-resolver (profiles cached under both keys; individuals and unavaila...) | x-user-resolver |  |
+| `the profile or verdict` | resolved, unavailable (yt-channel-resolver) | yt-channel-resolver (cached for 30 days, written with the emit so a replay answers identically) | yt-channel-resolver |  |
+| `verdict` |  | x-user-resolver (individuals and unavailable accounts: keyed hashes, verdict and expires_at only) | x-user-resolver |  |
+| `x:<user id> / x:<handle> keys` |  | x-user-resolver (profiles cached under both keys; individuals and unavailable accounts only as keyed hashes) | x-user-resolver |  |
 
 #### `registry`
 
@@ -2058,16 +2072,16 @@ In CONVENTIONS: **no**. Named by 2 PRD(s).
 | `derived_deleted` |  | yt-text-purger |  |  |
 | `emitted` |  | retention-purger<br>yt-text-purger |  |  |
 | `executor` | yt-text-purger (yt-text-purger) | yt-text-purger |  |  |
-| `failures` |  | yt-text-purger (items that ended neither refreshed nor completely deleted...) |  |  |
+| `failures` |  | yt-text-purger (items that ended neither refreshed nor completely deleted; must be 0 to pass) |  |  |
 | `finished_at` |  | retention-purger<br>yt-text-purger |  |  |
 | `holds` |  | retention-purger<br>yt-text-purger |  |  |
 | `oldest_remaining_age_seconds` |  | retention-purger<br>yt-text-purger |  |  |
 | `parent_run_id` |  | yt-text-purger (retention-purger's run) |  |  |
-| `refresh_missed` |  | yt-text-purger (items whose refresh did not land in time and fell back to...) |  |  |
+| `refresh_missed` |  | yt-text-purger (items whose refresh did not land in time and fell back to deletion) |  |  |
 | `refreshed` |  | yt-text-purger |  |  |
 | `run_id` |  | retention-purger (append-only insert, one row per run)<br>yt-text-purger (one append-only row per run) |  |  |
 | `started_at` |  | retention-purger<br>yt-text-purger |  |  |
-| `status` | pass, fail (retention-purger); pass, fail (yt-text-purger) | retention-purger<br>yt-text-purger (pass only when failures = 0 and every verification count ...) |  |  |
+| `status` | pass, fail (retention-purger); pass, fail (yt-text-purger) | retention-purger<br>yt-text-purger (pass only when failures = 0 and every verification count is 0) |  |  |
 | `text_deleted` |  | yt-text-purger |  |  |
 | `trigger` | retention_sweep (yt-text-purger) | yt-text-purger |  |  |
 | `verification` |  | retention-purger (query text, result count, executed at)<br>yt-text-purger (object {query, result, executed_at}) |  |  |
@@ -2187,10 +2201,10 @@ In CONVENTIONS: yes. Named by 7 PRD(s).
 | `keyword_id` | string (uuid) (aggregator) | aggregator (grain; sorting key) |  |  |
 | `mentions` | integer (aggregator) | aggregator (distinct items) |  |  |
 | `platform` | string (aggregator) | aggregator (grain) |  |  |
-| `reach` | integer (aggregator) | aggregator (followers of the posting source summed over its mentions ...) |  |  |
+| `reach` | integer (aggregator) | aggregator (followers of the posting source summed over its mentions (gross); individuals 0) |  |  |
 | `retention_class` | string (aggregator) | aggregator (grain) |  |  |
 | `sentiment` | string (aggregator); (analysis-sentiment labels), pending, unscored (aggregator) | aggregator (grain) |  |  |
-| `source_id` | string (uuid) (aggregator) | aggregator (the poster's author_source_id; individuals under the nil ...) |  |  |
+| `source_id` | string (uuid) (aggregator) | aggregator (the poster's author_source_id; individuals under the nil UUID) |  |  |
 | `topic_id` | string (aggregator); (analysis-topics ids), unassigned (aggregator) | aggregator (grain; one row per topic (fan-out)) |  |  |
 | `version` | integer (epoch seconds) (aggregator) | aggregator (now() as epoch seconds; ReplacingMergeTree(version)) |  |  |
 | `views` | integer (aggregator) | aggregator |  |  |
@@ -2270,17 +2284,17 @@ In CONVENTIONS: yes. Named by 15 PRD(s).
 | `author_ref` | string (store-writer) | store-writer (column TTL) |  |  |
 | `author_source_id` | string (uuid) (store-writer) | store-writer | aggregator |  |
 | `author_type` | string (store-writer) | store-writer |  |  |
-| `client_ids` |  | deletion-propagator (client scope: new version removes this client's id from s...) | deletion-propagator |  |
+| `client_ids` |  | deletion-propagator (client scope: new version removes this client's id from shared items) | deletion-propagator |  |
 | `comments_count` | integer (store-writer) | store-writer (projected from metrics_snapshot) |  |  |
-| `content_expires_at` | string ('2106-01-01 00:00:00') (store-writer) | store-writer (the message's expires_at; sentinel 2106-01-01 00:00:00 wh...) |  |  |
+| `content_expires_at` | string ('2106-01-01 00:00:00') (store-writer) | store-writer (the message's expires_at; sentinel 2106-01-01 00:00:00 when no content expiry) |  |  |
 | `content_hash` | string (store-writer) | store-writer |  |  |
-| `created_at` | string ('2026-10-06 08:51:40.000') (store-writer) | store-writer (partition toYYYYMM(created_at); never changes between ver...) |  |  |
+| `created_at` | string ('2026-10-06 08:51:40.000') (store-writer) | store-writer (partition toYYYYMM(created_at); never changes between versions) |  |  |
 | `dialect` | string (store-writer) | store-writer |  |  |
 | `dialect_conf` | number (store-writer) | store-writer |  |  |
 | `fetched_at` | string ('2026-10-06 09:13:58.000') (store-writer) | store-writer | retention-purger, yt-text-purger |  |
 | `hashtags` |  | store-writer (column TTL) |  |  |
 | `idempotency_key` | string (store-writer) | store-writer |  |  |
-| `is_deleted` | 1, 0 (deletion-propagator) | deletion-propagator (tombstone rows inserted with is_deleted = 1, permanent, n...) |  |  |
+| `is_deleted` | 1, 0 (deletion-propagator) | deletion-propagator (tombstone rows inserted with is_deleted = 1, permanent, no TTL) |  |  |
 | `item_id` | string (uuid) (store-writer) | store-writer (sorting key; identity) | aggregator, deletion-propagator, retention-purger, x-compliance-sync |  |
 | `kind` | string (store-writer); video (yt-text-purger) | store-writer (routing: comment or reply -> comments, else items) | yt-text-purger |  |
 | `lang` | string (store-writer) | store-writer |  |  |
@@ -2303,7 +2317,7 @@ In CONVENTIONS: yes. Named by 15 PRD(s).
 | `root_id` | null (store-writer) | store-writer |  |  |
 | `route` | string (store-writer) | store-writer |  |  |
 | `row_expires_at` | string ('2036-10-06 08:51:40') (store-writer) | store-writer (table TTL deletes the row; from retention_classes.row_ttl) |  |  |
-| `row_version` | integer (store-writer) | store-writer ((version << 32) \| produced_at (epoch seconds); Replacing...) |  |  |
+| `row_version` | integer (store-writer) | store-writer ((version << 32) \| produced_at (epoch seconds); ReplacingMergeTree version column) |  |  |
 | `script` | string (store-writer) | store-writer |  |  |
 | `service` | string (store-writer) | store-writer |  |  |
 | `shares` | integer (store-writer) | store-writer (projected from metrics_snapshot) |  |  |
@@ -2313,7 +2327,7 @@ In CONVENTIONS: yes. Named by 15 PRD(s).
 | `title` |  | store-writer (column TTL) |  |  |
 | `url` |  | deletion-propagator (emptied for purge_text)<br>store-writer (column TTL) |  |  |
 | `vendor` | null (store-writer) | store-writer |  |  |
-| `version` | integer (store-writer) | deletion-propagator (tombstone version = deletion time, greater than any conte...)<br>store-writer |  |  |
+| `version` | integer (store-writer) | deletion-propagator (tombstone version = deletion time, greater than any content version)<br>store-writer |  |  |
 | `views` | null (store-writer) | store-writer (projected from metrics_snapshot) |  |  |
 
 #### `keywords_dim`
@@ -2474,8 +2488,9 @@ Columns as written: `table`; `is_done`.
 | `raw response archive (path not stated)` |  |  | yt-web-search-bridge | yt-web-search-bridge 8 L148 |
 | `raw-archiver manifests` |  | retention-purger |  | retention-purger 5.2 L52; 6.1 L90 |
 | `raw/<route>/<platform>/<yyyy>/<mm>/<dd>/<service>/<batch>.jsonl.zst` | raw-archiver | normalize-item, raw-archiver | lang-dialect-id | lang-dialect-id 5.1 L45; normalize-item 5.1 L45; 6.1 L88; raw-archiver 2 L13; 3 L19; +2 more |
-| `raw/<route>/<platform>/<yyyy>/<mm>/<dd>/<service>/<batch>.jsonl.zst (per-service prefixes)` | x-compliance-sync |  | fb-backfill, fb-client-webhook-receiver, fb-group-comments-fetcher, fb-group-posts-poller, fb-keyword-search, fb-page-feed-poller, fb-page-search, fb-post-comments-fetcher, ig-account-media-poller, ig-comments-fetcher, ig-keyword-search, ig-mentions-fetcher, ig-own-comments-fetcher, ig-webhook-receiver, li-client-posts-poller, li-company-posts-poller, li-notification-receiver, li-own-comments-fetcher, li-post-comments-fetcher, li-post-search, news-article-extractor, tg-bot-channel-receiver, tg-channel-posts-poller, tg-discussion-receiver, tt-client-videos-fetcher, tt-profile-videos-poller, tt-video-comments-fetcher, web-gdelt-poller, web-search-mojeek, web-search-perplexity, x-filtered-stream, x-full-archive-search, x-replies-fetcher, x-user-timeline-poller, yt-comments-fetcher, yt-pubsub-receiver, yt-replies-fetcher, yt-text-purger, yt-uploads-reconciler | fb-backfill 6.2 L102; fb-client-webhook-receiver 6.2 L124; 8 L151; fb-group-comments-fetcher 6.2 L119; fb-group-posts-poller 5.2 L60; 6.2 L116; fb-keyword-search 6.2 L111; fb-page-feed-poller 5.2 L58; 6.2 L122; fb-page-search 8 L138; fb-post-comments-fetcher 6.2 L114; ig-account-media-poller 5.2 L62; 6.2 L118; ig-comments-fetcher 6.2 L107; 9 L143; ig-keyword-search 5.2 L62; 6.2 L110; ig-mentions-fetcher 5.2 L59; 6.2 L118; ig-own-comments-fetcher 6.2 L121; ig-webhook-receiver 6.2 L117; li-client-posts-poller 5.2 L60; 6.2 L119; li-company-posts-poller 5.2 L60; 6.2 L116; li-notification-receiver 6.2 L127; li-own-comments-fetcher 5.2 L63; 6.2 L120; +1 more; li-post-comments-fetcher 5.2 L65; 6.2 L122; li-post-search 6.2 L83; news-article-extractor 6.2 L105; 5.3 L75; tg-bot-channel-receiver 6.2 L128; tg-channel-posts-poller 5.2 L65; 6.2 L121; tg-discussion-receiver 6.2 L132; tt-client-videos-fetcher 6.2 L108; tt-profile-videos-poller 5.2 L61; 6.2 L119; tt-video-comments-fetcher 5.2 L61; 6.2 L113; +1 more; web-gdelt-poller 4 L35; 6.2 L108; web-search-mojeek 4 L36; 6.2 L104; web-search-perplexity 4 L35; 6.2 L105; x-compliance-sync 5.2 L56; 6.2 L97; +2 more; x-filtered-stream 5.2 L63; 6.2 L129; x-full-archive-search 5.2 L54; 6.2 L121; x-replies-fetcher 5.2 L60; 6.2 L127; x-user-timeline-poller 5.2 L59; 6.2 L127; yt-comments-fetcher 5.2 L57; 6.2 L129; yt-pubsub-receiver 6.2 L117; yt-replies-fetcher 5.2 L54; 6.2 L118; yt-text-purger 5.3 L112; 13.4 L253; yt-uploads-reconciler 6.2 L122; 8 L156 |
+| `raw/<route>/<platform>/<yyyy>/<mm>/<dd>/<service>/<batch>.jsonl.zst (per-service prefixes)` |  |  | fb-backfill, fb-client-webhook-receiver, fb-group-comments-fetcher, fb-group-posts-poller, fb-keyword-search, fb-page-feed-poller, fb-page-search, fb-post-comments-fetcher, ig-account-media-poller, ig-comments-fetcher, ig-keyword-search, ig-mentions-fetcher, ig-own-comments-fetcher, ig-webhook-receiver, li-client-posts-poller, li-company-posts-poller, li-notification-receiver, li-own-comments-fetcher, li-post-comments-fetcher, li-post-search, news-article-extractor, tg-bot-channel-receiver, tg-channel-posts-poller, tg-discussion-receiver, tt-client-videos-fetcher, tt-profile-videos-poller, tt-video-comments-fetcher, web-gdelt-poller, web-search-mojeek, web-search-perplexity, x-filtered-stream, x-full-archive-search, x-replies-fetcher, x-user-timeline-poller, yt-comments-fetcher, yt-pubsub-receiver, yt-replies-fetcher, yt-text-purger, yt-uploads-reconciler | fb-backfill 6.2 L102; fb-client-webhook-receiver 6.2 L124; 8 L151; fb-group-comments-fetcher 6.2 L119; fb-group-posts-poller 5.2 L60; 6.2 L116; fb-keyword-search 6.2 L111; fb-page-feed-poller 5.2 L58; 6.2 L122; fb-page-search 8 L138; fb-post-comments-fetcher 6.2 L114; ig-account-media-poller 5.2 L62; 6.2 L118; ig-comments-fetcher 6.2 L107; 9 L143; ig-keyword-search 5.2 L62; 6.2 L110; ig-mentions-fetcher 5.2 L59; 6.2 L118; ig-own-comments-fetcher 6.2 L121; ig-webhook-receiver 6.2 L117; li-client-posts-poller 5.2 L60; 6.2 L119; li-company-posts-poller 5.2 L60; 6.2 L116; li-notification-receiver 6.2 L127; li-own-comments-fetcher 5.2 L63; 6.2 L120; +1 more; li-post-comments-fetcher 5.2 L65; 6.2 L122; li-post-search 6.2 L83; news-article-extractor 6.2 L105; 5.3 L75; tg-bot-channel-receiver 6.2 L128; tg-channel-posts-poller 5.2 L65; 6.2 L121; tg-discussion-receiver 6.2 L132; tt-client-videos-fetcher 6.2 L108; tt-profile-videos-poller 5.2 L61; 6.2 L119; tt-video-comments-fetcher 5.2 L61; 6.2 L113; +1 more; web-gdelt-poller 4 L35; 6.2 L108; web-search-mojeek 4 L36; 6.2 L104; web-search-perplexity 4 L35; 6.2 L105; x-filtered-stream 5.2 L63; 6.2 L129; x-full-archive-search 5.2 L54; 6.2 L121; x-replies-fetcher 5.2 L60; 6.2 L127; x-user-timeline-poller 5.2 L59; 6.2 L127; yt-comments-fetcher 5.2 L57; 6.2 L129; yt-pubsub-receiver 6.2 L117; yt-replies-fetcher 5.2 L54; 6.2 L118; yt-text-purger 5.3 L112; 13.4 L253; yt-uploads-reconciler 6.2 L122; 8 L156 |
 | `raw/_quarantine/` | raw-archiver |  |  | raw-archiver 8 L138 |
+| `raw/green/x/<yyyy>/<mm>/<dd>/x-compliance-sync/<run_id>.jsonl.zst` | x-compliance-sync |  |  | x-compliance-sync 5.2 L56; 6.2 L97; +2 more |
 | `standard raw path (scan per-host aggregate)` | web-commoncrawl-scanner |  |  | web-commoncrawl-scanner 5.2 L54; 8 L123 |
 | `versioned model bundle (fastText, dialect model, CAMeL Tools data, KLPT data)` |  | lang-dialect-id |  | lang-dialect-id 6.1 L100; 11 L158 |
 
@@ -3520,7 +3535,7 @@ Every key, id, hash or cursor format a PRD defines, as written, grouped by name.
 
 One row per PRD: the contracts it touches, for a build session to find its own line. W = writes or produces, R = reads or consumes.
 
-| Service | Session | Folder | Header | Topics W | Topics R | Queues consumed (kinds) | Queues produced into | Tables written | Budget tags | Flags read | Retention |
+| Service | Session | Folder | Header | Topics W | Topics R | Queues consumed (kinds) | Queues produced into | Tables written | Budget tags | Vendor route flags read | Retention |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | aggregator | C15 | shared | Shared, shared, Processing |  | deletions, source.events | jobs.aggregator (recompute) |  | aggregates_daily, aggregates_hourly, aggregates_monthly, cursors, mv_aggregates_hourly, service_runs |  |  |  |
 | alert-evaluator | A5 | shared | Shared, shared, Processing |  | deletions, item.hits, source.events |  |  | alert_deliveries, alert_rules, alert_watch_items, alerts, service_runs |  |  |  |
@@ -3592,7 +3607,7 @@ One row per PRD: the contracts it touches, for a build session to find its own l
 | web-gdelt-poller | W4 | web | Web, green, Discover and qualify | raw.items, search.results |  | jobs.web-gdelt-poller (rotation) |  | budgets, cursors, review_queue, service_runs, sources | gdelt_doc_api |  | news_excerpt |
 | web-search-mojeek | W2 | web | Web, green, Discover and qualify | raw.items, search.results |  | jobs.web-search-mojeek (rotation) |  | budgets, cursors, review_queue, service_runs, sources | mojeek_search |  | news_excerpt |
 | web-search-perplexity | W1 | web | Web, green, Discover and qualify | raw.items, search.results |  | jobs.web-search-perplexity (rotation, site_search) |  | budgets, cursors, review_queue, service_runs, sources | perplexity_search |  | news_excerpt |
-| x-compliance-sync | X7 | x | X, green, Support | deletions |  | jobs.x-compliance-sync (ops_force) |  | service_runs, sources, x_compliance_audit, x_compliance_runs | x_pay_per_use |  | x_24h_sync |
+| x-compliance-sync | X7 | x | X, green, Support | deletions |  | jobs.x-compliance-sync (ops_force) |  | service_runs, x_compliance_audit, x_compliance_runs | x_pay_per_use |  | x_24h_sync |
 | x-filtered-stream | X4 | x | X, green, Fetch posts | raw.items | jobs.completed, source.events |  | jobs.x-full-archive-search, jobs.x-recent-search | cursors, review_queue, service_runs | x_pay_per_use |  | x_24h_sync |
 | x-full-archive-search | X5 | x | X, green, Fetch posts | jobs.completed, raw.items, source.events | jobs.completed | jobs.x-full-archive-search (backfill, keyword_history, replies) |  | cursors, service_runs, sources | x_pay_per_use |  | x_24h_sync |
 | x-recent-search | X1 | x | X, green, Discover and qualify | discovery.hits, raw.items | source.events | jobs.x-recent-search (rotation, first_run, gap_backfill, ops_force) | jobs.x-full-archive-search | cursors, review_queue, service_runs, sources | x_pay_per_use |  | x_24h_sync |
