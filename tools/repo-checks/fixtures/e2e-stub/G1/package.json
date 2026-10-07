@@ -1,0 +1,8 @@
+{
+  "name": "e2e-stub-g1",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "e2e": "node -e \"console.log('stub suite ran for G1')\""
+  }
+}

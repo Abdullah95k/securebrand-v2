@@ -5,3 +5,18 @@ CLAUDE.local.md
 .env
 .env.*
 fixtures/*/raw/
+
+# Toolchain outputs (F1)
+node_modules/
+dist/
+coverage/
+.turbo/
+*.tsbuildinfo
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+supabase/.temp/
+supabase/.branches/
+*.log

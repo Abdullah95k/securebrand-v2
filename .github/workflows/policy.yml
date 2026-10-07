@@ -1,0 +1,59 @@
+# The pull request policy (make policy runs the same checks locally). It runs again when labels
+# change, so labelling a contract-change pull request re-checks it without re-running CI. Values
+# that pull request authors control reach the scripts through env, never through the run lines.
+# The checks run the base branch's copy of scripts/ against the pull request's checkout, so a pull
+# request cannot loosen the checks it is judged by (only the first pull request, before main has
+# the scripts, runs its own copy).
+name: Policy
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, labeled, unlabeled]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: policy-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  policy:
+    name: policy
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      POLICY_BASE: origin/${{ github.base_ref }}
+      POLICY_BRANCH: ${{ github.head_ref }}
+      PR_LABELS: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: The base branch's copy of the policy scripts
+        run: |
+          kit="$RUNNER_TEMP/policy-kit"
+          mkdir -p "$kit"
+          if git cat-file -e "$POLICY_BASE:scripts/policy/check-contract-paths.sh" 2>/dev/null; then
+            git archive "$POLICY_BASE" scripts | tar -x -C "$kit"
+          else
+            echo "::notice::$POLICY_BASE has no policy scripts yet; this pull request's copy runs"
+            git archive HEAD scripts | tar -x -C "$kit"
+          fi
+          echo "POLICY_SCRIPTS=$kit/scripts" >> "$GITHUB_ENV"
+      - name: Contract paths change only under the contract-change label
+        run: '"$POLICY_SCRIPTS/policy/check-contract-paths.sh"'
+      - name: A lane that changes code has its handoff and a closed review
+        if: ${{ !cancelled() }}
+        run: '"$POLICY_SCRIPTS/policy/check-handoff-review.sh"'
+      - name: Every new runtime dependency has a row in docs/dependencies.md
+        if: ${{ !cancelled() }}
+        run: '"$POLICY_SCRIPTS/policy/check-dependencies.sh"'
+      - name: Fixtures are scrubbed
+        if: ${{ !cancelled() }}
+        run: '"$POLICY_SCRIPTS/check-fixtures.sh"'

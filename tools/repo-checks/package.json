@@ -1,0 +1,22 @@
+{
+  "name": "repo-checks",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run test/unit",
+    "test:acceptance": "vitest run test/acceptance --no-file-parallelism"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-s3": "catalog:",
+    "@confluentinc/kafka-javascript": "catalog:",
+    "@types/node": "catalog:",
+    "@types/pg": "catalog:",
+    "pg": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:",
+    "yaml": "catalog:"
+  }
+}

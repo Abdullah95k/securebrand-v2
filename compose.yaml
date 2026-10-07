@@ -1,0 +1,167 @@
+# The local stack: Redpanda, ClickHouse and SeaweedFS (local S3). Supabase runs beside it through
+# the Supabase CLI (supabase/config.toml). Start it with `make up`, which reads the image pins from
+# stack/versions.env and waits for every service to be healthy; `make down` removes it with its
+# volumes. One fixed project name, so every worktree of this repository shares one stack (tests
+# keep apart through TEST_NAMESPACE, see scripts/test-namespace.sh). Ports are published on
+# localhost only; stack/README.md lists them with the variables scripts/stack-env.sh prints.
+name: securebrand
+
+# The configuration files of ClickHouse and SeaweedFS, which compose writes into their containers
+# when it creates them. They live here rather than in bind-mounted files: a bind mount names a path
+# inside one worktree, so a make up from another worktree would change the service and recreate
+# its container under every other worktree's tests. Compose recreates a container when its service
+# changes, not when only a config's content does, so each service also carries the content of its
+# configs in a label (the aliases below). Compose interpolates the content: write a $ as $$.
+configs:
+  # Local development settings: quiet logs, a modest memory cap, no system log tables that only
+  # churn the disk. Production settings belong to I1.
+  clickhouse-local:
+    content: &clickhouse-local |
+      <clickhouse>
+        <logger>
+          <level>warning</level>
+          <console>1</console>
+        </logger>
+        <max_server_memory_usage_to_ram_ratio>0.5</max_server_memory_usage_to_ram_ratio>
+        <trace_log remove="1"/>
+        <text_log remove="1"/>
+        <metric_log remove="1"/>
+        <asynchronous_metric_log remove="1"/>
+        <processors_profile_log remove="1"/>
+        <part_log remove="1"/>
+        <latency_log remove="1"/>
+        <error_log remove="1"/>
+        <query_metric_log remove="1"/>
+      </clickhouse>
+  # The local stack's ClickHouse user; the values match stack/local.env (development only).
+  clickhouse-users:
+    content: &clickhouse-users |
+      <clickhouse>
+        <users>
+          <listening>
+            <password>listening-dev-only</password>
+            <networks>
+              <ip>::/0</ip>
+            </networks>
+            <profile>default</profile>
+            <quota>default</quota>
+            <access_management>1</access_management>
+            <named_collection_control>1</named_collection_control>
+          </listening>
+        </users>
+      </clickhouse>
+  # The local S3 identity; the values match stack/local.env (development only).
+  seaweedfs-s3:
+    content: &seaweedfs-s3 |
+      {
+        "identities": [
+          {
+            "name": "listening",
+            "credentials": [
+              {
+                "accessKey": "listening-local",
+                "secretKey": "listening-dev-only"
+              }
+            ],
+            "actions": ["Admin", "Read", "Write", "List", "Tagging"]
+          }
+        ]
+      }
+
+services:
+  redpanda:
+    image: ${REDPANDA_REPO}:${REDPANDA_TAG}
+    command:
+      - redpanda
+      - start
+      - --mode=dev-container
+      - --smp=1
+      - --memory=1G
+      - --default-log-level=warn
+      - --kafka-addr=internal://0.0.0.0:9092,external://0.0.0.0:19092
+      - --advertise-kafka-addr=internal://redpanda:9092,external://127.0.0.1:19092
+      - --pandaproxy-addr=internal://0.0.0.0:8082,external://0.0.0.0:18082
+      - --advertise-pandaproxy-addr=internal://redpanda:8082,external://127.0.0.1:18082
+      - --schema-registry-addr=internal://0.0.0.0:8081,external://0.0.0.0:18081
+      - --rpc-addr=redpanda:33145
+      - --advertise-rpc-addr=redpanda:33145
+    ports:
+      - 127.0.0.1:19092:19092
+      - 127.0.0.1:18081:18081
+      - 127.0.0.1:18082:18082
+      - 127.0.0.1:9644:9644
+    volumes:
+      - redpanda-data:/var/lib/redpanda/data
+    healthcheck:
+      test: ["CMD-SHELL", "rpk cluster health | grep -Eq 'Healthy:[[:space:]]+true'"]
+      interval: 2s
+      timeout: 5s
+      retries: 60
+      start_period: 5s
+
+  # No fixed nofile ulimit: some hosts (the cloud containers) refuse to raise it, and ClickHouse
+  # lifts its own soft limit to the hard limit at start.
+  clickhouse:
+    image: ${CLICKHOUSE_REPO}:${CLICKHOUSE_TAG}
+    ports:
+      - 127.0.0.1:8123:8123
+      - 127.0.0.1:9000:9000
+    volumes:
+      - clickhouse-data:/var/lib/clickhouse
+    configs:
+      - source: clickhouse-local
+        target: /etc/clickhouse-server/config.d/local.xml
+      - source: clickhouse-users
+        target: /etc/clickhouse-server/users.d/listening.xml
+    labels:
+      securebrand.config.clickhouse-local: *clickhouse-local
+      securebrand.config.clickhouse-users: *clickhouse-users
+    healthcheck:
+      test: ["CMD", "clickhouse-client", "--query", "SELECT 1"]
+      interval: 2s
+      timeout: 5s
+      retries: 60
+      start_period: 5s
+
+  seaweedfs:
+    image: ${SEAWEEDFS_REPO}:${SEAWEEDFS_TAG}
+    command:
+      - server
+      - -dir=/data
+      - -ip=127.0.0.1
+      - -ip.bind=0.0.0.0
+      # Every bucket is a collection of seven volumes, and every worktree's tests create a bucket:
+      # a fixed number of slots (volumes are sparse files, so an unused slot costs no disk), not
+      # the default, free disk divided by the volume size (21 slots on a 22 GB disk).
+      - -master.volumeSizeLimitMB=1024
+      - -volume.max=200
+      - -filer
+      - -s3
+      - -s3.port=8333
+      - -s3.config=/etc/seaweedfs/s3.json
+    ports:
+      - 127.0.0.1:8333:8333
+      - 127.0.0.1:9333:9333
+      - 127.0.0.1:8888:8888
+    volumes:
+      - seaweedfs-data:/data
+    configs:
+      - source: seaweedfs-s3
+        target: /etc/seaweedfs/s3.json
+    labels:
+      securebrand.config.seaweedfs-s3: *seaweedfs-s3
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget -q -O /dev/null http://127.0.0.1:8888/ && wget -q -O /dev/null http://127.0.0.1:8333/healthz",
+        ]
+      interval: 2s
+      timeout: 5s
+      retries: 90
+      start_period: 5s
+
+volumes:
+  redpanda-data:
+  clickhouse-data:
+  seaweedfs-data:

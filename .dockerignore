@@ -1,0 +1,17 @@
+# Service images build from the repository root; keep the context small.
+.git
+**/node_modules
+**/dist
+**/.turbo
+**/coverage
+**/.venv
+**/__pycache__
+**/.pytest_cache
+**/.ruff_cache
+.build-state
+.claude
+docs
+build-plan
+fixtures
+**/.env
+**/.env.*

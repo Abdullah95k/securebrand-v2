@@ -18,7 +18,11 @@ Social-media and news listening for the Iraqi market: 86 services, one per PRD i
 - `make test SERVICE=<name>` (pre-approved; runs the service's unit and acceptance tests, TypeScript or Python)
 - `pnpm --filter <service> test` and `uv run pytest` work too, but ask for approval each time
 - `make e2e GATE=G1`: the end-to-end suite of a gate
-- `pnpm new:service <name>`: scaffold a service from `services/_template`
+- `pnpm new:service <name>`: scaffold a service from `services/_template` (`--lang python`: from `services/_template-py`)
+- `make bootstrap` installs the pinned toolchain and dependencies; `make doctor` checks them against the pins
+- `make smoke`: a round trip through every stack service; `make ps`, `make logs SERVICE=<name>`
+- `make ns-clean`: remove this worktree's test topics, schemas, databases and bucket (`TEST_NAMESPACE`, from `scripts/test-namespace.sh`)
+- `make migrate`: apply the migrations to the local stack; `make fmt`: Prettier and ruff format; `make policy`: the pull request checks, locally
 
 ## Layout
 
@@ -27,6 +31,8 @@ Social-media and news listening for the Iraqi market: 86 services, one per PRD i
 - `supabase/migrations`, `clickhouse/migrations`
 - `fixtures/<platform>/`: recorded, scrubbed responses from probe sessions
 - `tools/probes/<platform>/`: the only code allowed to call real platforms
+- `compose.yaml`, `stack/` (image pins in `stack/versions.env`), `supabase/config.toml`: the local stack
+- `tools/repo-checks` (tests of the toolchain), `tools/new-service`, `tools/gates/` (E2), `tests/e2e/<gate>/` (E1), `infra/` (I1)
 - `docs/`: prds, decisions (ADRs), contracts, plans, handoffs, reviews, probes, proposals, issues, gates, patterns
 - `build-plan/`: session briefs, gates, templates
 
