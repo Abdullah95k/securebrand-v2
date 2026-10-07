@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { cleanEnv, run, script, TempRepo } from "../helpers/repo.js";
+import { script, TempRepo } from "../helpers/repo.js";
 
 // A small workspace shaped like this repository: TypeScript packages with a dependency edge
 // (b depends on a), tools and end-to-end workspaces, and independent Python projects, one of
@@ -128,13 +128,8 @@ describe("scripts/check-changed.sh", () => {
 
   beforeAll(() => {
     repo = new TempRepo("check-changed-");
+    // No install: the script runs the turbo that ships with it on any workspace.
     buildWorkspace(repo);
-    const install = run("pnpm", ["install", "--offline", "--silent"], {
-      cwd: repo.dir,
-      env: cleanEnv(),
-      timeoutMs: 240_000,
-    });
-    expect(install.code, install.output).toBe(0);
     repo.commit("base");
   }, 300_000);
 

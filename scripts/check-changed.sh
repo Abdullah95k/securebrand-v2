@@ -43,6 +43,12 @@ fi
 ROOT_TOOLING='^(Makefile|compose\.ya?ml|package\.json|pnpm-workspace\.yaml|turbo\.json|tsconfig\.base\.json|eslint\.config\.js|\.prettierrc\.json|\.prettierignore|\.npmrc|\.node-version|\.python-version|uv\.toml|ruff\.toml|\.gitignore|\.gitattributes|CLAUDE\.md|supabase/config\.toml)$|^(scripts|stack|\.github|\.claude|tools/new-service|services/_template[^/]*)/|^(docs/[a-z]+|tests/e2e|tools/gates|tools/probes|fixtures|infra)/README\.md$'
 
 # --- TypeScript: Turborepo resolves the changed workspaces and their dependants. -----------------
+# The turbo that ships with these scripts (the pnpm catalog pin); pnpm's when it is not installed.
+if [ -x "$SB_KIT_ROOT/node_modules/.bin/turbo" ]; then
+  TURBO=("$SB_KIT_ROOT/node_modules/.bin/turbo" --skip-infer)
+else
+  TURBO=(pnpm exec turbo)
+fi
 TASKS=(lint typecheck test)
 [ "$ACCEPTANCE" = 1 ] && TASKS+=(test:acceptance)
 TS_PACKAGES=""
@@ -54,7 +60,7 @@ if [ -f package.json ] && [ -f turbo.json ]; then
       TURBO_FILTERS+=("--filter=repo-checks")
     fi
   fi
-  TS_PACKAGES="$(pnpm exec turbo ls ${TURBO_FILTERS[@]+"${TURBO_FILTERS[@]}"} --output json 2>/dev/null |
+  TS_PACKAGES="$("${TURBO[@]}" ls ${TURBO_FILTERS[@]+"${TURBO_FILTERS[@]}"} --output json 2>/dev/null |
     node -e 'const j = JSON.parse(require("fs").readFileSync(0, "utf8"));
              console.log(j.packages.items.map((p) => p.name).sort().join(" "));')" ||
     sb_die "turbo could not list the workspaces (run pnpm install)"
@@ -120,12 +126,12 @@ if [ -n "$TS_PACKAGES" ]; then
   echo "== turbo ${TASKS[*]}"
   filters=()
   for pkg in $TS_PACKAGES; do filters+=("--filter=$pkg"); done
-  if ! pnpm exec turbo run lint typecheck test "${filters[@]}" --continue --output-logs=errors-only; then
+  if ! "${TURBO[@]}" run lint typecheck test "${filters[@]}" --continue --output-logs=errors-only; then
     FAILED+=("turbo")
   fi
   # Acceptance suites share one local stack, so they run one package at a time.
   if [ "$ACCEPTANCE" = 1 ] &&
-    ! pnpm exec turbo run test:acceptance "${filters[@]}" --concurrency=1 --continue --output-logs=full; then
+    ! "${TURBO[@]}" run test:acceptance "${filters[@]}" --concurrency=1 --continue --output-logs=full; then
     FAILED+=("turbo test:acceptance")
   fi
 fi
