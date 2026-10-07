@@ -1,5 +1,8 @@
+import { cpSync, mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { cleanEnv, script, TempRepo } from "../helpers/repo.js";
+import { cleanEnv, run, SCRIPTS, script, TempRepo } from "../helpers/repo.js";
 
 describe("scripts/policy/check-contract-paths.sh", () => {
   let repo: TempRepo;
@@ -70,6 +73,23 @@ describe("scripts/policy/check-contract-paths.sh", () => {
     const result = check([]);
     expect(result.code).not.toBe(0);
     expect(result.output).toContain("packages/contracts/src/topics.ts");
+  });
+
+  it("runs quietly from a copy of scripts/ alone, as the policy job runs the base branch's copy", () => {
+    const kit = mkdtempSync(join(tmpdir(), "policy-kit-"));
+    try {
+      cpSync(SCRIPTS, join(kit, "scripts"), { recursive: true });
+      repo.write("services/demo/src/index.ts", "export {};\n").commit();
+      const result = run(
+        "bash",
+        [join(kit, "scripts", "policy", "check-contract-paths.sh"), "--base", "main"],
+        { cwd: repo.dir },
+      );
+      expect(result.code, result.output).toBe(0);
+      expect(result.stderr).toBe("");
+    } finally {
+      rmSync(kit, { recursive: true, force: true });
+    }
   });
 
   it("passes when no contract path changed", () => {

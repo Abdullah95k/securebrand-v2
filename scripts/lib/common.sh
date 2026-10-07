@@ -23,7 +23,9 @@ sb_die() {
 sb_select_node() {
   [ "${NODE_AUTOSELECT:-1}" = "0" ] && return 0
   local want dir bin
-  want="$(tr -d '[:space:]' <"$SB_KIT_ROOT/.node-version" 2>/dev/null)" || return 0
+  # A copy of scripts/ alone (the policy job runs the base branch's) has no .node-version.
+  [ -r "$SB_KIT_ROOT/.node-version" ] || return 0
+  want="$(tr -d '[:space:]' <"$SB_KIT_ROOT/.node-version")" || return 0
   [ -n "$want" ] || return 0
   [ "$(node --version 2>/dev/null)" = "v$want" ] && return 0
   for dir in "${NVM_DIR:-}" "$HOME/.nvm" /opt/nvm /usr/local/nvm; do
