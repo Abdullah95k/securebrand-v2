@@ -11,6 +11,10 @@ docs/dependencies.md
 # Plans are kept exactly as approved.
 docs/plans/*.md
 !docs/plans/README.md
+# The contract inventory and conflicts (D1) are wide tables that the reviews cite by line number;
+# Prettier would pad them to several megabytes and move every cited line.
+docs/contracts/*.md
+!docs/contracts/README.md
 # Fixtures stay byte for byte as recorded or written.
 fixtures/
 # Generated files and outputs.
