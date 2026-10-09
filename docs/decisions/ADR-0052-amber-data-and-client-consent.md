@@ -19,7 +19,7 @@ Depends on: ADR-0021 (the government exclusion, and the automatic fallback of on
 
 ## Options
 
-1. **Amber by explicit consent, never on a client's own properties** (chosen, with ADR-0021's automatic fallback of a blocked client-owned property): its rules are under Decision.
+1. **Amber by explicit consent, never on a client's own properties** (chosen, with ADR-0021's automatic fallback of a client-owned property once its green access is lost, of the one source or of its route; the user's answer of 9 Oct 2026): its rules are under Decision.
 2. **Option 1, but an accepting client's own properties may also be read through the vendor:** daily reconciliation and outage gap fill (the amber pollers also select green push sources of accepting clients, AU-091 option 1) and an opt-in 90-day Telegram pre-join history, marked amber. Consequences: no lost Telegram posts after a long outage, history for new channels, and the view counts the bot lacks (`tg-bot-channel-receiver §5.4 L103`); a daily vendor read per owned property; mixed provenance on a client's own channel.
 3. **Government flag only, as CONVENTIONS L7 says.** Consequences: no consent column; every non-government client receives amber data while a flag is on, even one whose contract excludes it.
 
