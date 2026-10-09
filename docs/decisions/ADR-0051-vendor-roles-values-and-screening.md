@@ -16,7 +16,7 @@ CONVENTIONS lists five flags, each "off, or the vendor name" (L238), adds `TG_PO
 At stake: which vendor is paid and named to clients, and whether an unverified owner slips past the no-Israeli-vendor rule.
 
 Settles: CF-097, CF-103, fb-group-posts-poller §14 Q3, fb-group-posts-poller §14 Q4, fb-keyword-search §14 Q1, li-company-posts-poller §14 Q4, li-post-comments-fetcher §14 Q6, tg-channel-resolver §14 Q3, tg-message-search §14 Q2.
-Depends on: ADR-0050 (flags in a control-plane table, fallback set only by the canary, the X plan gate).
+Depends on: ADR-0050 (flags in a control-plane table, fallback a health state set by the canary or, for one blocked source, by the automatic fallback of ADR-0021, the X plan gate).
 
 ## Options
 

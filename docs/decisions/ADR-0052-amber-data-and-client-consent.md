@@ -15,7 +15,7 @@ CONVENTIONS makes amber services optional, flagged, disclosed and "excluded from
 At stake: a commercial client receiving vendor-bought data it never agreed to, and vendor money spent on data no client may use.
 
 Settles: AU-038, AU-060, AU-071, AU-087, AU-091, AU-092, fb-group-comments-fetcher §14 Q4, tg-bot-channel-receiver §14 Q6, tt-profile-videos-poller §14 Q3.
-Depends on: ADR-0021 (the government exclusion), ADR-0050 (flags and the canary-only fallback).
+Depends on: ADR-0021 (the government exclusion, and the automatic fallback of one blocked source), ADR-0050 (flags, and fallback as a health state).
 
 ## Options
 

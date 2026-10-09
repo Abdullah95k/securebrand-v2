@@ -15,8 +15,8 @@ Settles: CF-106, AU-080, li-own-comments-fetcher §14 Q4, store-writer §14 Q3, 
 ## Options
 
 1. **Item-level derived rows follow their item's class; aggregates keep ten years except per-channel YouTube rollups; the 30-day rule covers all stored YouTube text** (chosen): its rules are under Decision.
-2. **Ten years for every derived row and aggregate, as CONVENTIONS L81 says;** the YouTube and LinkedIn limits apply only to raw text and identities. Consequences: the longest history for clients; per-item YouTube scores and metrics outlive the 36 months the fact sheet quotes, a risk at YouTube's audit ("audit at any time", L209).
-3. **Per-class lifetimes for both item rows and aggregates:** every YouTube-derived aggregate also capped at 36 months. Consequences: the most conservative; YouTube disappears from ten-year trend lines after three years.
+2. **Ten years for every derived row and aggregate, as CONVENTIONS L81 says;** the YouTube and LinkedIn limits apply only to raw text and identities. _Not taken: the user's choice keeps YouTube and LinkedIn items only as long as their terms allow._ Consequences: the longest history for clients; per-item YouTube scores and metrics outlive the 36 months the fact sheet quotes, a risk at YouTube's audit ("audit at any time", L209).
+3. **Per-class lifetimes for both item rows and aggregates:** _Not taken: the user's choice keeps counts and trends ten years._ every YouTube-derived aggregate also capped at 36 months. Consequences: the most conservative; YouTube disappears from ten-year trend lines after three years.
 
 ## Decision
 
