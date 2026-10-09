@@ -7,8 +7,8 @@ Social-media and news listening for the Iraqi market: 86 services, one per PRD i
 - No Israeli-owned or Israel-affiliated vendor, API or hosted service anywhere. The excluded and flagged lists are in the first section of `docs/prds/_shared/CONVENTIONS.md`. Every new runtime dependency gets a line in `docs/dependencies.md` (name, licence, owner, country) in the same pull request.
 - Only the routes a PRD names. Never build a red route: no logged-in scraping, no account pools, no CAPTCHA solving, no residential proxies on platform APIs, and never rotate accounts or IPs to get around a block. Proxies exist only in the news crawler, for challenged hosts.
 - Amber (vendor) code runs only behind its flag (`FB_VENDOR_ROUTE`, `IG_VENDOR_ROUTE`, `TT_VENDOR_ROUTE`, `LI_VENDOR_ROUTE`, `TG_VENDOR_ROUTE`, `TG_POSTS_ACTOR`), off by default.
-- Individuals are never profiled: authors are hashed references, and individuals are never backfilled.
-- Every output carries provenance (route, vendor, service, fetched_at) and `retention_class`.
+- Private individuals are never profiled, listed or backfilled: every author is a keyed reference (`author_ref`). Public accounts as defined in ADR-0010 (registered sources, organisations, pages, channels and media, and verified or widely followed accounts, where the platform's terms allow) may be listed and ranked.
+- Every data output (a message that carries or derives from a platform fetch) carries provenance (route, vendor, service, fetched_at) and `retention_class`; job and control messages carry `producer` (ADR-0003).
 - IMPORTANT: contracts are frozen. Never edit `packages/contracts`, `supabase/migrations` or `clickhouse/migrations` (a hook blocks it). If you need a change, write `docs/proposals/<session>-<topic>.md` from `build-plan/templates/PROPOSAL.md` and stop.
 
 ## Commands
@@ -44,7 +44,7 @@ Social-media and news listening for the Iraqi market: 86 services, one per PRD i
 - Use `listening-sdk` for jobs, retries, DLQ, cursors, quota, canary, logging and metrics. Never re-implement them.
 - No network in tests: fixtures and the fake-platform harness only.
 - Replaying a job or message must change nothing. Cursors advance only after the producer acknowledges.
-- Errors: 429 and vendor rate limits back off 30 s to 15 min with jitter; 401 and 403 mark the route degraded and stop the batch; after 5 attempts the job goes to `dlq.<service>`.
+- Errors: 429 and vendor rate limits back off 30 s to 15 min with jitter. 401 and 403 are classified by reason: a quota one goes to quota-governor and waits, an item-scoped one ends that item only, and an authorisation one marks the credential revoked or the source blocked and stops the batch; a blocked source falls back to its vendor route automatically where that route's flag is on, never for a government-watched green source or a client-owned property, with an n8n notice to ops (ADR-0021). Route-wide states come only from the canary. After 5 attempts the job goes to `dlq.<service>`.
 - When the PRD, CONVENTIONS, an ADR or a handoff disagree, or the PRD is silent: ask me with AskUserQuestion. Do not guess. Record the answer in the plan and the handoff.
 - If a dependency does not behave as its handoff says: write a failing test, record it in `docs/issues/`, and stop.
 - Never print, log or commit secrets. Do not read `.env` files; code reads credentials from the environment at run time.
