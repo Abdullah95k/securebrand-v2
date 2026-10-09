@@ -101,7 +101,7 @@ Only what `search.results` carries: the result (rank, title, URL, snippet, date)
 ```json
 {
   "schema": "discovery.hits/v1",
-  "message_id": "dh:search-hit-router:instagram:example_creator_iq:sha256:5d18c2…",
+  "message_id": "01M47KA7QGXC5Q420EVYV9KKZ5",
   "produced_at": "2026-10-06T03:15:02Z",
   "service": "search-hit-router", "route": "green", "vendor": null,
   "type": "account", "platform": "instagram",
@@ -121,8 +121,7 @@ Ids in this example follow ADR-0006; where its other fields differ from an ADR, 
 ```json
 {
   "schema": "article.urls/v1",
-  "message_id": "au:search-hit-router:sha256:9c1e4b…",
-  "idempotency_key": "news:article:sha256:9c1e4b…",
+  "message_id": "01M47KA7QGHFH4KH2ZXEXBBCCA",
   "service": "search-hit-router", "found_by": "web_search",
   "source_id": "a41f7d02-93be-4c58-8e16-2b5d70c9f3e4",
   "url": "https://www.example-daily.iq/economy/2026/10/05/fiberx-wasit?utm_source=fb",
@@ -162,7 +161,7 @@ Owner (ADR-0025): `search_url_seen`, `search_candidate_seen` and `search_parked_
 
 - Throughput: sized for the sum of the producers; to be measured in the pilot; scaling on partition lag.
 - Latency: seconds from arrival to routing; p95 measured in the pilot.
-- Idempotency: `message_id` is deterministic (`dh:…:<candidate_key>:<canonical_url_hash>`, `au:…:<canonical_url_hash>`); `article.urls` carries `news:article:<canonical_url_hash>`.
+- Idempotency: `message_id` is deterministic, a ULID derived as ADR-0006 describes from `candidate_key` and `canonical_url_hash` on `discovery.hits` and from `canonical_url_hash` on `article.urls` (ADR-0002); `article.urls` carries no article key, which the extractor derives from the page's canonical URL (ADR-0036).
 - Security: no secrets beyond database credentials from Vault; the router never fetches a URL; logs carry `message_id`, `engine` and outcome, not snippets; Node (TypeScript); the classifier lives in `listening-sdk`.
 
 ## 10. Metrics and alerts
@@ -187,7 +186,7 @@ Owner (ADR-0025): `search_url_seen`, `search_candidate_seen` and `search_parked_
 1. The same article arriving from perplexity, mojeek and gdelt with different tracking parameters yields one routed message inside the window, and `search_url_seen` shows 3 sightings and 3 engines.
 2. For each row of the 5.3 table at least two fixture URLs give the expected platform, `type` and `candidate_key`, including `youtu.be`, `twitter.com`, `m.facebook.com`, `instagram.com/p/…` and `/reel/…`.
 3. `t.me/+abc` and `t.me/joinchat/…` produce no `discovery.hits` and the outcome `unroutable` with reason `private_invite`; `x.com/i/…`, `/search` and `/hashtag/…` produce none.
-4. A news URL on a registered domain yields one `article.urls` message with that site's `source_id` and `idempotency_key = news:article:<canonical_url_hash>`; a second sighting yields none.
+4. A news URL on a registered domain yields one `article.urls` message with that site's `source_id`, `found_via = web_search` and no article key (ADR-0036); a second sighting yields none.
 5. A news-like URL on an unregistered domain yields one `discovery.hits` of type `site` and is parked; when `source.events` adds that domain, the parked URL is released once.
 6. A URL that is not news-like on an unregistered domain yields no output and the outcome `web`.
 7. Replaying 1,000 messages adds no output and no sightings; with Redpanda down nothing is committed and the outputs appear once it is back.

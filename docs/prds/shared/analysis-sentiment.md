@@ -91,7 +91,7 @@ Re-run policy: every output is stamped with `model_version` and `preproc_version
 ```json
 {
   "schema": "items.analysis/v1",
-  "message_id": "01J9W4Z6D3N8P2Q4R5S6T7U8V9",
+  "message_id": "01M487XQ80XCWC8XCQWNVDW2FK",
   "produced_at": "2026-10-06T09:15:12Z",
   "producer": {"service": "analysis-sentiment", "version": "0.3.0", "job_id": "01M4886GG018V1FH131HTSP75D"},
   "analysis_key": "6f1d2c3e-9a4b-5c6d-8e7f-0a1b2c3d4e5f:sentiment:sent-iq-2026.11",

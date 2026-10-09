@@ -86,7 +86,7 @@ The published-crawl list and the index of the latest crawl; `sources` (news site
 ```json
 {
   "schema": "discovery.hits/v1",
-  "message_id": "dh:web-commoncrawl-scanner:news:example-daily.iq:CC-MAIN-2026-38",
+  "message_id": "01M4F72A8REMR4FEX05GZTT6JA",
   "produced_at": "2026-10-09T02:14:55Z",
   "service": "web-commoncrawl-scanner", "route": "green", "vendor": null,
   "type": "site", "platform": "news",
@@ -99,6 +99,8 @@ The published-crawl list and the index of the latest crawl; `sources` (news site
   "keyword_rule_id": null, "client_ids": []
 }
 ```
+
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 The field set beyond `type`, `platform` and `candidate_key` follows poster-resolver's approved schema where it differs (open question 3). Also `service_runs` and `dlq.web-commoncrawl-scanner` after 5 failed attempts.
 

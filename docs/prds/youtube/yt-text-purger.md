@@ -149,7 +149,7 @@ Example `deletions` message:
              "item_ids": ["e68d6e4b-56fd-52b1-9f72-f7018e8fe162", "3ed679f4-bac6-52e0-ba34-8d00cf816ef4"],
              "fetched_before": "2026-10-06T02:00:00Z"},
   "client_id": null,
-  "requested_by": "yt-text-purger", "run_id": "01J9P9C6E2G8J4L0N5Q1S7U3WY",
+  "requested_by": "yt-text-purger", "run_id": "01M47F0V80FZGG928KMD5XX36J",
   "parent_run_id": "01J9P8A3V5N7B2D4F6H0K1M9QS",
   "signal_at": "2026-10-06T02:00:00Z", "due_at": "2026-10-06T19:42:10Z",
   "emitted_at": "2026-10-06T02:07:31Z"
@@ -162,7 +162,7 @@ The audit record is a `retention_audit` row. retention-purger treats this row as
 
 ```json
 {
-  "run_id": "01J9P9C6E2G8J4L0N5Q1S7U3WY", "parent_run_id": "01J9P8A3V5N7B2D4F6H0K1M9QS",
+  "run_id": "01M47F0V80FZGG928KMD5XX36J", "parent_run_id": "01J9P8A3V5N7B2D4F6H0K1M9QS",
   "executor": "yt-text-purger", "trigger": "retention_sweep",
   "class": "youtube_30d_text", "clock": "30 days", "cutoff": "2026-09-06T02:00:00Z",
   "started_at": "2026-10-06T02:00:00Z", "finished_at": "2026-10-07T01:31:44Z",
@@ -175,6 +175,8 @@ The audit record is a `retention_audit` row. retention-purger treats this row as
   "status": "pass", "holds": []
 }
 ```
+
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 Verification runs without `FINAL` so that superseded versions count. The same count runs on `items`.
 

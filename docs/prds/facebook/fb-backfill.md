@@ -95,17 +95,19 @@ The same post objects as fb-page-feed-poller (section 5.4 there). It does not ge
     "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11",
     "platform_id": "100064583471102_1176002458962861",
     "idempotency_key": "facebook:post:100064583471102_1176002458962861",
-    "job_id": "01J9N3A1C7Q2W8E5R4T6Y9U0I3", "attempt": 2,
+    "job_id": "01M48DXKW00GHZSJPM5NRWV7R3", "attempt": 2,
     "fetched_at": "2026-10-06T11:02:17Z",
     "retention_class": "meta_on_request",
     "client_ids": ["0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"],
-    "batch": "raw/green/facebook/2026/10/06/fb-backfill/000007.jsonl.zst",
+    "raw_ref": "raw/green/facebook/2026/10/06/fb-backfill/000007.jsonl.zst#4",
     "job_kind": "backfill",
     "context": {"window": {"start": "2026-07-08T11:00:00Z", "end": "2026-10-06T11:00:00Z"}}
   },
   "payload": { "id": "100064583471102_1176002458962861", "message": "...", "created_time": "2026-08-19T14:03:55+0000", "...": "unchanged post object" }
 }
 ```
+
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 Also `source.events` `updated` (with `backfill_status`), `sources.backfill_status`, `next_poll_at`, the fb-page-feed-poller cursor, `service_runs`, `dlq.fb-backfill`.
 
