@@ -1,0 +1,41 @@
+# ADR-0033 · Poster profiles and Iraqi signals
+
+2026-10-07 · decided by: the user, relayed by the orchestrator on 2026-10-07 · status: accepted
+Applies to: F2, F3, listening-sdk (F4, F6), poster-resolver, qualifier, registry-writer, lang-dialect-id, and the eight resolvers: fb-page-resolver, ig-account-resolver, tt-user-resolver, x-user-resolver, li-org-resolver, tg-channel-resolver, yt-channel-resolver, news-site-resolver
+Source: D2-Q033 (technical decision; the recommended option, approved) in `docs/decisions/D2-PROPOSALS.md` · ratification: the user's merge of Abdullah95k/securebrand-v2#6 · line references are to CONVENTIONS v1 and the PRDs as they stood before D2's edits
+
+## Context
+
+The qualifier reads "every field listed in the `poster-resolver` PRD" (`qualifier §5.4 L71`): a flat message with `account_type`, `individual`, `cached`, `unresolvable`, `country_signals {iraqi_place, phone_964, iq_domain, outlet_link, seed_list}` and `lang_share {ar_iq, ckb, ar_msa, en}` (`poster-resolver §6.2 L89`). The eight resolvers write four nested and four other flat layouts, with five names for the classification and four for the cache flag (CF-013), nine signal vocabularies in three JSON types (CF-014), and keys that change with the outcome, one of which can carry an individual's handle (CF-013 f). `ar_iq` and `ar_msa` are labels lang-dialect-id never returns (`lang-dialect-id §3 L22`, `§5.3 L67`). The profile lacks what rules 4 and 6 read, and three resolvers expect outcomes the rules do not produce (AU-009). Two open questions ask where the Iraqi city, governorate and outlet lists live: "a list in `keywords` or a static list in the SDK" (`poster-resolver §14 Q4 L156`, `qualifier §14 Q2 L153`). What is at stake: a signal counted on one platform and missed on another, and rules the qualifier cannot evaluate.
+
+Settles: CF-013, CF-014, AU-009, ig-account-resolver §14 Q4, li-org-resolver §14 Q3, poster-resolver §14 Q4, qualifier §14 Q2.
+Depends on: ADR-0010 (`author_ref`), ADR-0032 (resolvers publish profiles).
+
+## Options
+
+1. **One flat schema built from the ten rules, closed vocabularies, one shared reference table** (chosen): its rules are under Decision.
+2. **One envelope plus a per-platform `profile` object, with a required common block of the qualifier's fields (CF-013 option 2).** Consequences: resolvers keep most of their layouts, but the vocabularies of option 1 are still needed and every consumer parses two levels.
+3. **Each resolver keeps its block, and the qualifier documents a mapping per platform (CF-014 option 3).** Consequences: no resolver changes, but nine mappings to test, and `sources.country_signals` holds blocks that cannot be compared.
+
+## Decision
+
+`poster.profiles/v1` is one flat message whose fields follow the qualifier's ten rules, with closed vocabularies for `country_signals` and `lang_share`. One SDK function computes the signals from one control-plane reference table of Iraqi places and outlets. An ordinary individual's answer is minimised; a public person's carries the identity fields ADR-0010 allows.
+
+- `poster.profiles/v1`, flat, with ADR-0002's metadata, ADR-0003's provenance and `retention_class` (the class of the route that fetched the profile, ADR-0003). Required, null where the platform gives nothing: `candidate_key`, `source_id` (refreshes), `platform`, `source_type`, `account_type`, `individual`, `public_account` (ADR-0010), `status` (`resolved`, `review`, `unresolvable`) with a closed `reason`, `platform_id`, `handle`, `url`, `display_name`, `followers`, `verified`, `posts_30d`, `last_post_at`, `posts_per_day`, `duplicate_text_share`, `default_avatar`, `account_created_at`, `owned_by_client`, `country_signals`, `lang_share`, `client_ids`, `keyword_ids`, `route`, `vendor`, `resolved_at`, `cached`, `cached_until`, `review_flags`. Resolver-specific fields (category, `uploads_playlist_id`, growth, the news `site_profile`) go in an optional `extras` object. One name each: `account_type` (`individual` is true exactly when `account_type` is `individual`), `cached`, and `post_count`, which x-full-archive-search reads instead of `tweet_count` (`x-full-archive-search §5.2 L52`). A news site's profile (news-site-resolver's `proposed_source`) also carries the pre-allocated `proposed_source_id`, which the qualifier's `add` passes on (ADR-0040).
+- Expected outcomes: `review` with its reason covers Telegram's `not_indexed` and age-gated Instagram accounts; `review_flags` carry watchlist-only X passes and hidden YouTube subscriber counts; an empty LinkedIn sample sets `last_post_at = null`, which rule 3 reads as dormant, as li-org-resolver intends.
+- Keys: partition key `candidate_key` as issued (a refresh uses the source's id form). An ordinary individual's answer (`public_account` false) is keyed by `author_ref` (ADR-0010), carries no handle, no handle-based key and none of `display_name`, `url`, `country_signals` or `signal_evidence`, only what the qualifier may read of an individual (the hash, follower count and verified flag, `qualifier §5.4 L71`), plus the resolve `job_id` so poster-resolver can match it (`x-user-resolver §6.2 L132` already does this). A public person's answer (`public_account` true, as ADR-0010 adds) is keyed by its `candidate_key` as issued and carries the identity fields an organisation's carries: handle, display name, URL, followers and verified flag.
+- `country_signals`: six booleans, `iraqi_place` (an Iraqi city or governorate named in the location, bio, title or masthead), `platform_country_iq` (the platform's or vendor's own country field says Iraq), `phone_964`, `iq_domain`, `outlet_link`, `seed_list`, plus `signal_evidence` (what matched, and where) for review cards. Rule 2 counts `iraqi_place` or `platform_country_iq` as one location signal, never two, as two resolvers assume (`tg-channel-resolver §5.4 L67`, `tt-user-resolver §12 L150`).
+- `lang_share`: shares over the sample keyed by lang-dialect-id's labels (`ar`, `ckb`, `en`, `mixed`, `other`, `und`), plus `ar_iraqi` (posts labelled `ar` with dialect `iraqi`) and `sample`; rule 2 reads `ar_iraqi + ckb`. Below a minimum sample (a setting, tuned in the pilot) it is null and not counted. The sample is the posts the resolver's own call returns (Instagram Business Discovery media, the LinkedIn Actor's posts, news titles), else the candidate's items already labelled in ClickHouse, found by `author_ref`.
+- Each resolver computes the signals with one SDK function. Its lists (Iraqi governorates and cities in Arabic, Sorani and Latin spellings; Iraqi outlet domains, registered news sites included) live in one control-plane reference table read through the SDK, created and seeded by F3, edited through the admin console (D3 specifies the writer).
+
+Why: The qualifier's rules define what a profile must say, so the schema follows them, and fixed keys make rule 2 count the same evidence on every platform. One table keeps resolvers and review cards on the same lists; a static SDK list would change only with a release, and rows in `keywords` are per client, so a candidate could be Iraqi for one client and not another.
+
+## Consequences
+
+F2 types one message; every resolver's example changes; the qualifier reads the rule-4 and rule-6 fields and the location rule above; approved PRDs move under ADR-0001 (the qualifier, poster-resolver, li-org-resolver, tg-channel-resolver, news-site-resolver); F3 adds the reference table.
+
+- CONVENTIONS v1.1: the keys and types of `country_signals` and `lang_share` (v1 L36); the location signal counted once, from `iraqi_place` or `platform_country_iq` (rule 2, v1 L243); the reference table among the control-plane tables (v1 L30).
+- F2 types `poster.profiles/v1`, `public_account` and a public person's identity fields included (ADR-0010); F3 creates and seeds the reference table, which the admin console edits (D3 specifies the writer).
+- `DEFERRED.md`: the minimum language sample below which `lang_share` is null (owner C9, from the pilot).
+
+Sessions that must read this: F2, F3, F4, C3, C7, C8, C9, FB1, IG1, VTT3, X2, X5, VLI2, VTG2, YT1, N2.

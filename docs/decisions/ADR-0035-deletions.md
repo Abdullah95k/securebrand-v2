@@ -1,0 +1,45 @@
+# ADR-0035 · Deletions
+
+2026-10-07 · decided by: the user, relayed by the orchestrator on 2026-10-07 · status: accepted
+Applies to: F2, F3, F8, listening-sdk (F4, F6), deletion-propagator, store-writer, aggregator, alert-evaluator, comment-decay-scheduler, raw-archiver, retention-purger, yt-text-purger, x-compliance-sync, poster-resolver, news-article-extractor, news-comments-fetcher, analysis-media, A0, and every `deletions` producer: the lanes Fetch posts, Comments and Comments and stats
+Source: D2-Q035 (technical decision; the recommended option, approved) in `docs/decisions/D2-PROPOSALS.md` · ratification: the user's merge of Abdullah95k/securebrand-v2#6 · line references are to CONVENTIONS v1 and the PRDs as they stood before D2's edits
+
+## Context
+
+deletion-propagator requires `reason`, `scope` and a target (`deletion-propagator §5.4 L80`). Producers send a long form with `source_id` and `client_id` at the top (`retention-purger §6.2 L96-L107`), a short form with just `idempotency_key` and `detected_at` (`fb-post-comments-fetcher §6.2 L125`; CF-020), and unlisted values (CF-076, AU-076): `text_only`, `fetched_before`, `derived` with `purge_derived` (`yt-text-purger §5.3 L106`, `L118`), `withhold` with `countries` and `user_ids` (`x-compliance-sync §5.3 L77`, `L81`), a TikTok revocation reason. aggregator reconciles on the topic before the item is gone (`aggregator §5.1 L37`), alert-evaluator needs `item_id` (`alert-evaluator §14 Q3 L165`; AU-013), several stores sit outside the purge registry (`deletion-propagator §5.3 L68`; AU-077), and deletion-propagator waits for a `done` aggregator never sends (CF-021, CF-093, AU-082). `deletion_requests` mixes people's requests with per-message state (CF-055), and the resurrection guard exists twice: tombstones that store-writer's version formula ranks below content, and a check by `item_id` on a table keyed by `deletion_id` (`deletion-propagator §5.3 L62`, `store-writer §5.2 L49`, `§5.3 L67`; AU-022). Open questions: a removed parent's replies (`yt-replies-fetcher §14 Q4 L193`) and X withholding (`x-compliance-sync §14 Q4 L201`, `§14 Q5 L202`). What is at stake: deletions rejected, stalled or undone by a replay, under X's 24-hour rule.
+
+Settles: CF-020, CF-021, CF-055, CF-076, CF-093, AU-013, AU-022, AU-076, AU-077, AU-082, alert-evaluator §14 Q3, deletion-propagator §14 Q2, retention-purger §14 Q2, tt-client-videos-fetcher §14 Q3, x-compliance-sync §14 Q4, x-compliance-sync §14 Q5, yt-replies-fetcher §14 Q4.
+Depends on: ADR-0006 (the `item_id` helper), ADR-0010 (`author_ref`), ADR-0017 (`jobs.completed`).
+
+## Options
+
+1. **One schema, one remover, one guard** (chosen): its rules are under Decision.
+2. **A short form beside the long form, and every holder consuming `deletions` itself (CF-020 option 2, CF-021 option 2).** Consequences: each holder builds its own purge and report, and more consumers must meet X's 24 hours.
+3. **`deletions` for removal only; YouTube text purges and X withholding through their own paths (CF-076 option 3).** Consequences: deletion-propagator stays as written, but two producers build their own purge or hide logic, each with its own archive rewrite.
+
+## Decision
+
+One `deletions/v1` message, built through the SDK, with closed lists of reasons, scopes and modes. deletion-propagator is the only service that removes data; every store of item text, ids or hashes joins the SDK purge registry; a tombstone that outranks every content version keeps a deleted item from coming back on a replay.
+
+- `deletions/v1`, deletion-propagator's 5.4 completed: ADR-0002's metadata, `deletion_id` (an SDK hash of the whole sorted target), `reason`, `scope`, `mode`, `target`, `retention_class`, `signal_at`, `due_at`, optional `requested_by`, `run_id`, `event_at`. `source_id` appears once, at the top, as the partition key (author scope `author_ref`, client scope `client_id`, ADR-0004). Fetchers build it with the SDK from the item's key, so an item-scope target carries `item_ids` (ADR-0006) besides `platform`, `kind` and `platform_ids`; `detected_at` becomes `signal_at`.
+- Closed lists in F2. Reasons: `platform_sync` (X compliance included), `retention`, `author_request`, `client_offboarding`, `legal`, `authorization_revoked` (`tiktok_display`, ADR-0054; the alert spelt the same). Scopes: `item`, `author`, `source`, `client`. Modes: `delete`, `purge_text`, `purge_derived` (rows and analysis removed, no recompute; anchor per ADR-0056), `withhold`. Target extras: `fetched_before`, `countries`, and `user_ids` for registered X sources only (an individual is targeted by `author_ref`, ADR-0010). yt-text-purger sends `text_only` as `item` with `purge_text`, as retention-purger does (`retention-purger §6.2 L99`), and `derived` as `item` with `purge_derived`.
+- `withhold` (Iraq among `countries`) hides the item from clients, recomputes and notifies, erasing nothing; content withheld only outside Iraq is counted, with no message, as proposed. The X fetchers do not request `withheld` in v1; the daily compliance run is the one source unless its results prove to carry no country codes (`x-compliance-sync §14 Q2 L199`).
+- Only deletion-propagator removes data. Every store of item text, ids or hashes joins the SDK purge registry: the text index, both news caches (ADR-0022), the annotation store, A0's evaluation sets and any training set that holds platform content (ADR-0068), analysis-media's OCR and transcripts (media through raw-archiver's references), x-replies-fetcher's reply index, fb-post-comments-fetcher's `comment_ledger`, poster-resolver's cache and every service-private table under ADR-0025's rule. alert-evaluator (from its watch set, whose rows the registry clears), comment-decay-scheduler and retention-purger still read the topic to react; aggregator stops.
+- Cascades by `parent_id`: a deleted post removes its comments and a deleted comment its replies, except on X (`deletion-propagator §5.3 L60`); yt-replies-fetcher emits nothing.
+- Recompute: deletion-propagator sends bucket-list `recompute` jobs (`source_id`, hours, keyword ids) for any age; aggregator (which also takes the admin API's date-range job) reports on `jobs.completed`, closing the `recomputed` step; a frozen bucket (`aggregator §5.3 L61`) is reported as such and accepted.
+- Tables: `deletion_requests` keeps people's requests only (contact, handle until hashed, status, resulting `deletion_id`s); a propagation table keyed by `deletion_id`, with a child table of resolved `item_id`s, holds state, verification, notices and `sla_met`, written by deletion-propagator, read by the purgers and raw-archiver's replay filter.
+- Guard: tombstones only: `items` and `comments` gain `is_deleted`, one SDK version formula ranks a tombstone above every content version, store-writer drops upserts for tombstoned ids and its `deletion_requests` check goes. Re-ingestion after an author request is ADR-0069's (`retention-purger §14 Q2 L171`).
+
+It also answers: A client's revocation of a TikTok Display grant deletes its items with reason `authorization_revoked`, one of the closed reasons (`tt-client-videos-fetcher §14 Q3`). X `withheld` status is requested by every X reader and recorded on the item, never as a deletion (`x-compliance-sync §14 Q5`).
+
+Why: One missed store is a breach, so one service removes everything and proves it, from one message built the same way by every producer; one version rule makes a deletion survive replays.
+
+## Consequences
+
+One schema and one remover to test; F3 adds two tables, F8 a column; fetchers stop hand-building messages, fb-reactions-fetcher included (an approved PRD moves under ADR-0001, with ADR-0062); aggregates change once per deletion.
+
+- CONVENTIONS v1.1: the `deletions` topic and its closed lists (v1 L24); `deletion_requests` and the propagation tables among the control-plane tables (v1 L30); `is_deleted` on `items` and `comments` (v1 L32); missing comments become deletions through the SDK helper (v1 L63, with ADR-0062).
+- F2 types `deletions/v1` and its closed lists; F3 creates the propagation table and its child table of resolved `item_id`s beside `deletion_requests`; F8 adds `is_deleted`, and F4 the version formula that ranks a tombstone first.
+- `DEFERRED.md`: reversing an X withholding once X lifts it (owner X7).
+
+Sessions that must read this: F2, F3, F8, F4, C2, C4, C6, C13, C14, C15, A1, A2, A3, A4, A5, FB4, FB5, FB7, VFB3, IG6, TT1, VTT5, VTT6, X6, X7, LI1, LI2, LI3, VLI4, YT2, YT4, YT5, YT6, YT7, N8.
