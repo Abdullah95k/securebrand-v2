@@ -36,7 +36,7 @@ Measurable target: zero lost records (offsets commit only after the insert is ac
 
 ### 5.1 Trigger and rotation
 
-Trigger: topics `items.normalized`, `items.analysis`, `item.metrics`, `item.hits`, `discovery.hits` and `source.events`, one consumer group `store-writer`. Partitions follow `source_id` (or the poster key), so one worker handles one source in order; there is no ordering between topics, so an analysis row can arrive before its item, which is harmless because the tables are independent. Offsets commit only after every table in the batch is acknowledged by ClickHouse. A timer drives dimension sync: `keywords` and `clients` are polled every `DIM_POLL_SECONDS` (default 30); `sources_dim` follows `source.events`.
+Trigger: topics `items.normalized`, `items.analysis`, `item.metrics`, `item.hits`, `discovery.hits` and `source.events`, one consumer group `store-writer`. Partitions follow `source_id` (ADR-0004), so one worker handles one source in order; there is no ordering between topics, so an analysis row can arrive before its item, which is harmless because the tables are independent. Offsets commit only after every table in the batch is acknowledged by ClickHouse. A timer drives dimension sync: `keywords` and `clients` are polled every `DIM_POLL_SECONDS` (default 30); `sources_dim` follows `source.events`.
 
 Replay: a model, mapper or rule change re-runs the backlog from the raw archive through raw-archiver's replay path (normalize-item republishes, the analysis services re-score, keyword-matcher re-matches). The messages reach this service under consumer group `store-writer-replay-<version>`, rate-capped, and write the same keys with a newer `row_version`, so the old rows are replaced, not duplicated.
 

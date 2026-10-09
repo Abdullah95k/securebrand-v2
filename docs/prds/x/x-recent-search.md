@@ -50,7 +50,7 @@ Every X keyword rule is searched on a fixed cadence (tier 1 every 15 minutes, ev
 
 ### 5.2 Step by step
 
-1. Consume a job (`source_id`, `tier`, `attempt`, `reason` = rotation | first_run | gap_backfill | ops_force); read the `sources`, `keywords` and `cursors` rows.
+1. Consume a job (`source_id`, `tier`, `attempt`, `kind` = rotation | reconciliation | ops_force; ADR-0011, ADR-0064); read the `sources`, `keywords` and `cursors` rows.
 2. Build the queries (5.3); a query over the length limit (to be measured in the pilot) is split by variant group.
 3. Ask quota-governor for allowance under `budget_tag = x_pay_per_use`, sized at the rule's trailing average of new posts per run; `wait-until` requeues for that time, `deny` counts `quota_denied_total`.
 4. Call with `since_id` from the cursor and `max_results=100`; follow `meta.next_token` until absent.

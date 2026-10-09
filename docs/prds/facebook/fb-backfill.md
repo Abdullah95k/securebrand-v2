@@ -85,7 +85,7 @@ The same post objects as fb-page-feed-poller (section 5.4 there). It does not ge
 
 ### 6.2 Writes
 
-`raw.items`, one message per post, kind `post`, envelope identical to fb-page-feed-poller's except `service` and `metrics_observation`:
+`raw.items`, one message per post, kind `post`, envelope identical to fb-page-feed-poller's except `service` and `metrics_observation`, with `window` as a declared field of the envelope's `context` (ADR-0005, ADR-0070):
 
 ```json
 {

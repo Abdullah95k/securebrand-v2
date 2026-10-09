@@ -110,7 +110,7 @@ Telegram updates; `jobs.tg-bot-channel-receiver` (kind `reconciliation`, `ops_fo
 
 ### 6.2 Writes
 
-`raw.items`, one message per post or edit, the `channel_post` object unchanged:
+`raw.items`, one message per post or edit, each update as returned (`channel_post`, or `edited_channel_post` for an edit, which reuses the post's key; ADR-0009, ADR-0070):
 
 ```json
 {

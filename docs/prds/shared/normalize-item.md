@@ -38,7 +38,7 @@ Measurable target: 100% of raw records accounted for (published, deduplicated, m
 
 ### 5.1 Trigger and rotation
 
-Trigger: the `raw.items` topic, consumer group `normalize-item`. Partitions follow `source_id`, so every record of one source is processed in order by one worker; records without a `source_id` (keyword searches, hashtag feeds, search results) are keyed by the producer on `<platform>:<poster platform_id>`, which keeps a poster's post and its later comments together. Offsets are committed only after Redpanda acknowledges the batch on `items.normalized`; a crash replays the batch and dedup makes that harmless.
+Trigger: the `raw.items` topic, consumer group `normalize-item`. Partitions follow `source_id`, so every record of one source is processed in order by one worker; a search find carries its keyword-rule or hashtag row as `source_id`, and there is no poster key (ADR-0004). Offsets are committed only after Redpanda acknowledges the batch on `items.normalized`; a crash replays the batch and dedup makes that harmless.
 
 Ordering: a comment can arrive before its post (Page webhooks, newest-first comment APIs). It is published with `parent_id` set and `parent_seen = false`; store-writer and comment-decay-scheduler tolerate orphans and link them when the post arrives.
 
@@ -88,7 +88,7 @@ What it does not get, by route: commenter identity or comment ids under PPCA; us
 - Object storage `raw/` for replay; ClickHouse `items` and `comments` for dedup lookups.
 
 ### 6.2 Writes
-`items.normalized` (keyed by `source_id` or poster key), `item.metrics`, `dlq.normalize-item`, `review_queue`.
+`items.normalized` (keyed by `source_id`, ADR-0004), `item.metrics`, `dlq.normalize-item`, `review_queue`.
 
 ```json
 {
@@ -119,6 +119,8 @@ What it does not get, by route: commenter identity or comment ids under PPCA; us
   "raw_ref": "raw/green/facebook/2026/10/06/fb-page-feed-poller/0007.jsonl.zst#1532"
 }
 ```
+
+The schema also carries `lang_pending` (true while language detection is pending), `text_full_ref` (news articles, the 7-day cache) and, for registered sources only, `author_followers`, which this example omits (ADR-0070).
 
 ### 6.3 State
 Consumer offsets per partition; the LRU dedup cache (rebuilt lazily after a restart); the registry cache version (last `source.events` offset); replay progress in `cursors` keyed `service = normalize-item`, `cursor = replay:<version>:<last object key>`; a `service_runs` row with lag and error counts.

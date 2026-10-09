@@ -77,7 +77,7 @@ It does not get page text or titles, feed or sitemap status, authorship, whether
 
 ### 6.1 Reads
 
-The published-crawl list and the index of the latest crawl; `sources` (news site rows, all tiers); `service_runs`; the service-private table `cc_hosts_seen` (host, first and last emitted, captures at emission, state `emitted`, `pending` or `suppressed`).
+The published-crawl list and the index of the latest crawl; `sources` (news site rows, all tiers); `source.events` (for `accept_rate`, ADR-0070); `service_runs`; the service-private table `cc_hosts_seen` (host, first and last emitted, captures at emission, state `emitted`, `pending` or `suppressed`).
 
 ### 6.2 Writes
 

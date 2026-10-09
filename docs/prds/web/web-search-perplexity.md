@@ -52,7 +52,7 @@ search-hit-router (sole consumer of `search.results`); raw-archiver (`raw/green/
 1. Read the job; load the rule, its `keywords` row, the opt-outs and the cursor.
 2. Ask quota-governor for allowance under `budget_tag = perplexity_search` (or the tag a `site_search` job carries) for 2 requests; `wait-until` requeues the job for that time; `deny` counts `quota_denied_total` and keeps `next_poll_at`.
 3. Build the 9 variants and pack them into 2 requests of 5 and 4 queries, both for the same keyword, so attribution is safe at keyword level even if the API merges results across queries.
-4. Call the API; write each full response body to `raw.items` with `kind_hint = search_response` and `normalize = skip`.
+4. Call the API; write each full response body to `raw.items` as the archive-only record kind `search_response`, which normalize-item skips (ADR-0008, ADR-0070).
 5. Parse the results; compute `canonical_url` and `canonical_url_hash` with the shared canonicaliser; publish one `search.results` message per result.
 6. On Redpanda's acknowledgement, advance the cursor, update `last_polled_at` and `next_poll_at`, report `cost_units = 2` to the governor, write `service_runs`.
 
@@ -86,7 +86,7 @@ It does not get page text beyond the snippet, author identity, engagement counts
 - Control plane: `sources`, `keywords`, `clients` (opt-out, government flag), `cursors`, `budgets` through quota-governor, `vendor_keys`, `canary_targets`, `service_runs`.
 
 ### 6.2 Writes
-- `raw.items`: one record per API response; envelope `service`, `route = green`, `vendor = perplexity`, `platform = web`, `source_id` (the rule), `job_id`, `job_kind`, `kind_hint = search_response`, `fetched_at`, `api_version`, `raw_ref`; partition key `web:<source_id>`.
+- `raw.items`: one record per API response; envelope `service`, `route = green`, `vendor = perplexity`, `platform = web`, `source_id` (the rule), `job_id`, `job_kind`, `kind = search_response` (ADR-0070), `fetched_at`, `api_version`, `raw_ref`; partition key `web:<source_id>`.
 - `search.results`, partition key `canonical_url_hash`, so every engine's sighting of one URL lands on one partition for search-hit-router:
 
 ```json

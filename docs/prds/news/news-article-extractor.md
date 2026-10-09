@@ -117,7 +117,7 @@ Title, excerpt, author, published time, canonical URL, language, image URLs and 
     "text_expires_at": "2026-10-13T05:52:30Z",
     "text_sha256": "5d0c9a7e1b3f4682a1c0d9e7b5f34a86c2d1e0f9a7b5c3d18e6f4a2b0c9d7e53",
     "title_sha256": "b3f60a1d9c7e4825f1a0d3c9b7e65a24d8f1c0b9a7e3d5f21c6b4a0e9d8f7c13",
-    "http_status": 200, "extractor": "trafilatura"
+    "http_status": 200, "extractor": "trafilatura", "extractor_version": "1.12.2"
   }
 }
 ```
@@ -164,7 +164,7 @@ Standard set: `items_fetched_total`, `items_new_total`, `jobs_total{status}`, `f
 ## 12. Risks and mitigations
 
 - Law No. 3 of 1971 and full-text use: excerpt-only persistence, 7-day expiry, hashes; counsel review before launch.
-- trafilatura fails on unusual templates: `not_article` and low-excerpt-length rates per site trigger resolver refresh; extraction code versioned in the payload.
+- trafilatura fails on unusual templates: `not_article` and low-excerpt-length rates per site trigger resolver refresh; extraction code versioned in the payload as `extractor` and `extractor_version` (ADR-0070).
 - Cloudflare challenges: the challenged quarter costs proxy bytes; only `proxy` hosts use egress.
 - Publishers object to crawling: the user agent names the company and a contact address; a disallowed host is dropped at once.
 

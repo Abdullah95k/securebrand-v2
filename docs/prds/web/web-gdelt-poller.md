@@ -54,7 +54,7 @@ search-hit-router (consumer of `search.results`); raw-archiver (`raw/green/web/<
 2. Build the query (the rule's forms in one parenthesised OR group) and the time window.
 3. Ask quota-governor for allowance under `gdelt_doc_api` for 1 request; `wait-until` holds the job until then; `deny` counts `quota_denied_total` and keeps `next_poll_at`.
 4. Call the API. A body that is not JSON is `query_rejected`, not an empty result.
-5. Write the full response to `raw.items` with `kind_hint = search_response` and `normalize = skip`.
+5. Write the full response to `raw.items` as the archive-only record kind `search_response`, which normalize-item skips (ADR-0008, ADR-0070).
 6. If the response holds the maximum record count it is saturated: split the window in two and query both halves.
 7. Parse the articles; compute `canonical_url` and `canonical_url_hash` with the shared canonicaliser; publish one `search.results` message per article.
 8. On Redpanda's acknowledgement, advance the cursor to the run's start, update `last_polled_at` and `next_poll_at`, report `cost_units = 1` per request to the governor, write `service_runs`.
@@ -88,7 +88,7 @@ It does not get a snippet or article text, most Iraqi outlets, much Arabic or Ku
 
 ### 6.2 Writes
 
-- `raw.items`: one record per API response; envelope `service`, `route = green`, `vendor = gdelt`, `platform = web`, `source_id` (the rule), `job_id`, `job_kind`, `kind_hint = search_response`, `fetched_at`, `raw_ref`; partition key `web:<source_id>`.
+- `raw.items`: one record per API response; envelope `service`, `route = green`, `vendor = gdelt`, `platform = web`, `source_id` (the rule), `job_id`, `job_kind`, `kind = search_response` (ADR-0070), `fetched_at`, `raw_ref`; partition key `web:<source_id>`.
 - `search.results`, the shape of web-search-perplexity with `snippet` null and one optional addition, `hints` (domain, language, source country), partition key `canonical_url_hash`:
 
 ```json
