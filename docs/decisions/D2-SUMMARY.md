@@ -1,6 +1,6 @@
 # D2 summary · The decisions that need you
 
-D2 phase 1 · 7 Oct 2026 · Status: **questions for the user; nothing is decided.** The full text of every decision (context, citations, every option with its consequences) is in `docs/decisions/D2-PROPOSALS.md`; this page lists only what you need to answer.
+D2 phase 1 · 7 Oct 2026 · Status: **answered by the user on 7 Oct 2026** (see "Answers" at the end); the decisions are ADR-0001 to ADR-0070. The full text of every decision (context, citations, every option with its consequences) is in `docs/decisions/D2-PROPOSALS.md`; this page lists only what you need to answer.
 
 D2 grouped D1's 231 conflict entries (118 in `docs/contracts/CONFLICTS.md`, 113 in `CONFLICTS-ASSUMPTIONS.md`), the README's nine proposed decisions, the build plan's thirteen foundation choices, the 387 open questions of the PRDs and the eight review notes D1 left open into 70 decisions:
 
@@ -210,3 +210,30 @@ Each default spends quota or vendor money before any client asks.
 | D2-Q066 | How a client's own properties, and the sources it asks for, enter the registry                                        | Owned properties as direct `add` decisions, requested sources through the manual path, nothing through `discovery.hits`                                                                        |
 | D2-Q067 | One interface for the n8n flows, and who specifies and builds them                                                    | One documented n8n interface, the flows specified by D3, the build assigned by the orchestrator                                                                                                |
 | D2-Q070 | One editorial pass: the documents that disagree with themselves                                                       | One editorial pass, each point decided here so F2 has one spelling                                                                                                                             |
+
+## Answers
+
+The user answered on 7 Oct 2026, through the orchestrator. Their words, verbatim:
+
+> Approve all. Except Q010 as the client should be able to see a list of individuals and be able to filter or rank them in order then use them later to further understand the segments. Q021 automatic switching should be considered. Expand Q048 more. Q054, Q055, and Q056 data retention should be up to 10 years. I dont understand Q059 question nor recommendation. Q068 we will download some of the content and if it does not break any rules then we will use it for training as well.
+
+The orchestrator then put the open points back to the user, who chose, with these exact wordings:
+
+- Q010: "Public accounts only". Clients can list, filter, rank and save public accounts: pages, channels, media, creators and public figures (verified, or above a follower count the user sets). Ordinary people stay anonymous and show up only in segments, as counts by language, dialect, region, sentiment and topic. The platforms' terms are respected.
+- Q054 to Q056: "10 years where allowed". Every item is kept 10 years on X, Meta, Telegram, news, web and vendor routes, with deletion requests honoured. YouTube, LinkedIn and TikTok items are kept as long as their terms allow, and their counts and trends are kept 10 years.
+- Q048: "Add 4 alert types in v1". Engagement-spike, topic-spike, entity or logo, and story alerts are also built in v1. Alerts then launch after the analysis services. Per-post LinkedIn history is kept only if counsel says LinkedIn allows it.
+- Q059: "Maximum history". This is option 3.
+
+D2 phase 2 recorded them as follows, one ADR per decision (ADR-nnnn records D2-Qnnn):
+
+| Decision                                                       | Recorded as                                                                                                                                                                                                                                                        |
+| -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Every decision not named below, the 51 technical ones included | the recommended option, as written in `D2-PROPOSALS.md`                                                                                                                                                                                                            |
+| D2-Q010                                                        | option 1 for ordinary people, who appear only in anonymous segments; public accounts may be listed, filtered, ranked and saved, where the platform's terms allow (ADR-0010)                                                                                        |
+| D2-Q021                                                        | option 3 with limits: a 401 or 403 classified by reason, and a blocked source falling back to its vendor automatically where that route's flag is on, never for a government-watched green source or a client-owned property, with an n8n notice to ops (ADR-0021) |
+| D2-Q048                                                        | option 3: every slice of option 1 and all nine alert types in v1, with per-post LinkedIn history only once counsel confirms (ADR-0048)                                                                                                                             |
+| D2-Q054, D2-Q055, D2-Q056                                      | ten years wherever the rules allow, otherwise the platform's, vendor's or copyright limit; aggregates ten years, except rollups of one YouTube channel at 36 months (ADR-0054, ADR-0055, ADR-0056)                                                                 |
+| D2-Q059                                                        | option 3: automatic 90-day X keyword history, X replies to day 30 and a Common Crawl URL lister for news, under the budget priorities (ADR-0059)                                                                                                                   |
+| D2-Q068                                                        | evaluation and Content Signals as recommended; training and media downloads only where an entry of the register of permitted uses allows them (ADR-0068)                                                                                                           |
+
+What still waits on the user or counsel is in `docs/decisions/DEFERRED.md`, sections 1 and 2.
