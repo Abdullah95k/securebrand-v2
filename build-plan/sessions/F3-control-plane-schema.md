@@ -35,7 +35,7 @@ Supabase migrations for every control-plane table, indexes, row-level security, 
 - Client users see only their clients' rows; services use the service role
 - Advisory-lock keys for leader election must be unique per service
 - Seed the comment series profiles and budget tags from the conventions tables, not by hand
-- Seed `permitted_uses` with the 'not allowed' rows ADR-0068 lists (YouTube video and audio downloads; Facebook and Instagram training), each with its clause: a missing row means allowed, so only the seed keeps a forbidden use out (ADR-0068)
+- Seed `permitted_uses` with the 'not allowed' rows ADR-0068 lists (YouTube video and audio downloads; Facebook and Instagram training), each with its clause: YouTube's terms for the two downloads; for Facebook and Instagram training, the user's own choice, the user's answer of 9 Oct 2026 ('Start as not allowed'). A missing row means allowed, so only the seed keeps an excluded use out (ADR-0068)
 - Start this session with ALLOW_CONTRACT_EDITS=1: it is one of the few allowed to write the contract paths
 
 ## Done when

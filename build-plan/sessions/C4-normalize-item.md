@@ -47,7 +47,7 @@ Service `normalize-item` · PRD `docs/prds/shared/normalize-item.md` · lane Pro
 - Only the fake platform's mapper here; each platform session adds its own
 - When lang-dialect-id is down: lang = und with the TypeScript fold and lang_pending
 - Unknown shapes are archived and parked as schema_unknown, never dropped
-- Where mappers live: ADR-0008 puts the registry keyed (service, api_version) in listening-sdk, the kit puts mappers under services/normalize-item/src/mappers/<platform>/; MAPPERS.md names the one place, agreed with F4, before wave 3 (DEFERRED.md section 3)
+- Where mappers live: ADR-0008 puts the registry keyed (service, api_version) in listening-sdk, the kit puts mappers under services/normalize-item/src/mappers/<platform>/; MAPPERS.md names the one place, decided from F4's handoff, before wave 3 (DEFERRED.md section 3)
 - Stateless where the PRD says so; replay from raw-archiver must reproduce the same output for the same model version
 
 ## Done when

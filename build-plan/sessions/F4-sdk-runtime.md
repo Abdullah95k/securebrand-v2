@@ -34,7 +34,7 @@ listening-sdk core: producer and consumer partitioned by source_id, envelope val
 - A cursor never advances before the producer acknowledges the batch
 - Backoff 30 s to 15 min with jitter, 5 attempts, then dlq.<service> and an alert
 - Prove with a test that no token or secret can reach a log line
-- ADR-0008's mapper registry, keyed (service, api_version), is in listening-sdk; agree with C4 where producers' mappers sit (DEFERRED.md section 3)
+- ADR-0008's mapper registry, keyed (service, api_version), is in listening-sdk; record in your handoff where the registry sits in the package and how a mapper registers in it, so that C4 can decide from it where producers' mappers sit (DEFERRED.md section 3)
 - The comment in services/_template/src/adapter.ts L3-L4 still says 401 and 403 mark the route degraded; reword it to ADR-0021's rule: 401 and 403 are classified by reason, an authorisation one setting credential or source state, never a route state, and stopping the batch (ADR-0021)
 
 ## Done when
