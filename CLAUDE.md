@@ -40,12 +40,12 @@ Social-media and news listening for the Iraqi market: 86 services, one per PRD i
 
 - Start from the session brief `build-plan/sessions/<ID>-*.md` and stay inside its scope: one service per session.
 - Read the PRD in full, then only the CONVENTIONS sections and ADRs the brief lists, and the handoff notes of the sessions in its "Needs first". Do not read other services' code unless a handoff points to it.
-- Acceptance tests from PRD section 13 first, then code. Show test output; never claim a result you did not run.
+- Acceptance tests from PRD section 13, as amended by the ADRs that apply (ADR-0001), first, then code. Show test output; never claim a result you did not run.
 - Use `listening-sdk` for jobs, retries, DLQ, cursors, quota, canary, logging and metrics. Never re-implement them.
 - No network in tests: fixtures and the fake-platform harness only.
 - Replaying a job or message must change nothing. Cursors advance only after the producer acknowledges.
-- Errors: 429 and vendor rate limits back off 30 s to 15 min with jitter. 401 and 403 are classified by reason: a quota one goes to quota-governor and waits, an item-scoped one ends that item only, and an authorisation one marks the credential revoked or the source blocked and stops the batch; a blocked source falls back to its vendor route automatically where that route's flag is on, never for a government-watched green source or a client-owned property, with an n8n notice to ops (ADR-0021). Route-wide states come only from the canary. After 5 attempts the job goes to `dlq.<service>`.
-- When the PRD, CONVENTIONS, an ADR or a handoff disagree, or the PRD is silent: ask me with AskUserQuestion. Do not guess. Record the answer in the plan and the handoff.
+- Errors: 429 and vendor rate limits back off 30 s to 15 min with jitter. 401 and 403 are classified by reason: a quota one goes to quota-governor and waits, an item-scoped one ends that item only, and an authorisation one marks the credential revoked or the source blocked and stops the batch; a blocked source falls back to its vendor route automatically where that route's flag is on, never for a government-watched green source, with an n8n notice to ops (ADR-0021). Route-wide states come only from the canary. After 5 attempts the job goes to `dlq.<service>`.
+- When the PRD and an ADR disagree, the ADR wins (ADR-0001): follow it and name it in the plan. When the PRD, CONVENTIONS or a handoff disagree in a way no ADR settles, or the PRD is silent: ask me with AskUserQuestion. Do not guess. Record the answer in the plan and the handoff.
 - If a dependency does not behave as its handoff says: write a failing test, record it in `docs/issues/`, and stop.
 - Never print, log or commit secrets. Do not read `.env` files; code reads credentials from the environment at run time.
 - Finish with `make check` output, `docs/handoffs/<ID>.md` from `build-plan/templates/HANDOFF.md`, and `/code-review`.
@@ -55,7 +55,7 @@ Social-media and news listening for the Iraqi market: 86 services, one per PRD i
 - TypeScript strict, ES modules; no `any` without a comment saying why. Contract types come from `packages/contracts` only; never redeclare one.
 - Python version pinned in `.python-version`; typed; ruff-clean; Pydantic models generated from the contracts.
 - Tests: Vitest and pytest. Test names state the behaviour, for example `emits a deletion when a comment disappears from a complete sweep`.
-- Logs are structured JSON with `job_id`, `source_id`, `route`, `vendor`; metric names are the ones in the PRD's section 10.
+- Logs are structured JSON with `job_id`, `source_id`, `route`, `vendor`; metric names are the ones in the PRD's section 10, less any an ADR drops or renames (ADR-0001).
 
 ## When compacting
 
