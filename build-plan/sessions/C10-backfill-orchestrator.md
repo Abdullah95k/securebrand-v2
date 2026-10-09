@@ -44,7 +44,7 @@ Service `backfill-orchestrator` · PRD `docs/prds/shared/backfill-orchestrator.m
 
 - Single writer of backfill_status
 - A failed or slow backfill ends capped and the source joins the rotation anyway
-- registry-writer is the only writer of the sources table and of source.events (per D2)
+- registry-writer is the only writer of the registry's identity and policy columns and of source.events; each operational column has one named owner (ADR-0013, ADR-0014)
 
 ## Done when
 

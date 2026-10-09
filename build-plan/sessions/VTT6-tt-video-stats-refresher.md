@@ -41,7 +41,7 @@ Service `tt-video-stats-refresher` · PRD `docs/prds/tiktok/tt-video-stats-refre
 ## Watch for
 
 - Only comment-decay-scheduler emits these jobs; report counts on every job
-- Amber: runs only behind its flag (off by default); provenance says route = amber and names the vendor; its data is excluded from government contracts, and a source a government client watches never falls back to it; the quota governor stretches it from 80% of budget
+- Amber: runs only behind its flag (off by default); provenance says route = amber and names the vendor; only clients that accept amber receive its data, never government clients (ADR-0052), and a source a government client watches or a client-owned property never falls back to it (ADR-0021); from 80% of budget the SDK scheduling kit stretches its intervals by the governor's factor (ADR-0057)
 
 ## Done when
 

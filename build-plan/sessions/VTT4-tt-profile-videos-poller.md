@@ -42,10 +42,10 @@ Service `tt-profile-videos-poller` · PRD `docs/prds/tiktok/tt-profile-videos-po
 
 ## Watch for
 
-- next_poll_at is set from the start of the last poll; order by next_poll_at then tier; most stale first when behind, with rotation_behind
+- The due time is next_due_at in this service's own cursors row, set from the start of the last poll; order by it then tier; most stale first when behind, with rotation_behind (ADR-0015)
 - Incremental reads only newer than the cursor; full re-reads happen only in backfill jobs from backfill-orchestrator
 - The cursor advances only after the producer acknowledges the batch
-- Amber: runs only behind its flag (off by default); provenance says route = amber and names the vendor; its data is excluded from government contracts, and a source a government client watches never falls back to it; the quota governor stretches it from 80% of budget
+- Amber: runs only behind its flag (off by default); provenance says route = amber and names the vendor; only clients that accept amber receive its data, never government clients (ADR-0052), and a source a government client watches or a client-owned property never falls back to it (ADR-0021); from 80% of budget the SDK scheduling kit stretches its intervals by the governor's factor (ADR-0057)
 
 ## Done when
 

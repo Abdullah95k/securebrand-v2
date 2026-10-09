@@ -45,7 +45,7 @@ Service `qualifier` · PRD `docs/prds/shared/qualifier.md` · lane Registry · r
 
 - A review left 24 h defaults to reject
 - Route caps and budgets are checked through quota-governor
-- registry-writer is the only writer of the sources table and of source.events (per D2)
+- registry-writer is the only writer of the registry's identity and policy columns and of source.events; each operational column has one named owner (ADR-0013, ADR-0014)
 
 ## Done when
 

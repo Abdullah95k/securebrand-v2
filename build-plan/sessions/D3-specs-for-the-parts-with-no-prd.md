@@ -4,7 +4,7 @@ Wave 0 · Decide and freeze · track Decide · size M (1 to 2 days with review) 
 
 ## Builds
 
-PRDs in the same 14-section template for the query API, client portal (onboarding, OAuth connect, keywords and sources, review queue, provenance, deletion requests), dashboard (with the Meta App Review slice) and admin console.
+PRDs in the same 14-section template for the query API, client portal (onboarding, OAuth connect, keywords and sources, review queue, provenance, deletion requests), dashboard (with the Meta App Review slice) and admin console, with the n8n flows (one per channel and per card type, ADR-0067).
 
 ## Needs first (merged, with a closed review)
 

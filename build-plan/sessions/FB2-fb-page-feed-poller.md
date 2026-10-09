@@ -51,7 +51,7 @@ Service `fb-page-feed-poller` · PRD `docs/prds/facebook/fb-page-feed-poller.md`
 - About 600 ranked posts per Page per year on /feed
 - Error 80001 means too many calls to this Page
 - System-user token per client, injected per job
-- next_poll_at is set from the start of the last poll; order by next_poll_at then tier; most stale first when behind, with rotation_behind
+- The due time is next_due_at in this service's own cursors row, set from the start of the last poll; order by it then tier; most stale first when behind, with rotation_behind (ADR-0015)
 - Incremental reads only newer than the cursor; full re-reads happen only in backfill jobs from backfill-orchestrator
 - The cursor advances only after the producer acknowledges the batch
 

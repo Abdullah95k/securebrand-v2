@@ -40,8 +40,8 @@ Service `source-health-canary` · PRD `docs/prds/shared/source-health-canary.md`
 
 ## Watch for
 
-- 401 or 403 = blocked, no automatic fallback
-- A source a government client watches never falls back to amber
+- Route-wide states come only from the canary; a blocked source falls back to its vendor automatically where that flag is on, with an n8n notice to ops, never an approval card (ADR-0021)
+- A source a government client watches, or a client-owned property, never falls back to amber (ADR-0021)
 - Deletion and retention actions are audited before they run, so a replay changes nothing
 
 ## Done when

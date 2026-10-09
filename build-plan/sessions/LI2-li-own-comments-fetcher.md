@@ -41,8 +41,8 @@ Service `li-own-comments-fetcher` · PRD `docs/prds/linkedin/li-own-comments-fet
 ## Watch for
 
 - Only comment-decay-scheduler emits comment, reply and metrics jobs; this service never schedules its own
-- Report new_count, seen_count, pages and cost_units on every job: the scheduler decides early stop and extension from them
-- Edits become new versions; deletions only when the API response is complete (reason platform_sync)
+- Return new_count, seen_count, pages, cost_units and reply_candidates to the SDK job wrapper, which reports them on jobs.completed; the scheduler decides early stop and extension from them (ADR-0017, ADR-0019)
+- Compare with the stored set through the SDK comment-state helper: an edit is a new version where the platform gives comment ids, a new comment otherwise; a missing comment is a deletion (platform_sync) only after a confirmed second miss or a platform signal, never on a route whose reads are not complete listings (ADR-0009, ADR-0046, ADR-0062)
 
 ## Done when
 

@@ -37,7 +37,7 @@ To keep a long build going until it is really done:
 2. The behaviours in PRD sections 5 and 8 that no criterion covers have tests: rotation or series timing, catch-up, 429, 401 and 403, empty 200, a 5xx in the middle of pagination, DLQ after five attempts, replay idempotency.
 3. `make check` passes, and no test touches the network.
 4. Contracts are untouched, or changed only through an applied proposal.
-5. Every output validates against its contract and carries provenance and `retention_class`.
+5. Every output validates against its contract, and every data output carries provenance and `retention_class` (ADR-0003).
 6. The metrics and alerts named in PRD section 10 exist under those names.
 7. No secret, token or private person's name appears in code, logs or fixtures, and a test proves the log scrubber works.
 8. Every new runtime dependency has its line in `docs/dependencies.md`.

@@ -107,17 +107,17 @@ FOUNDATION_SECTIONS = {
 }
 
 LANE_TRAPS = {
-    'Fetch posts': ['next_poll_at is set from the start of the last poll; order by next_poll_at then tier; most stale first when behind, with rotation_behind',
+    'Fetch posts': ['The due time is next_due_at in this service\'s own cursors row, set from the start of the last poll; order by it then tier; most stale first when behind, with rotation_behind (ADR-0015)',
                     'Incremental reads only newer than the cursor; full re-reads happen only in backfill jobs from backfill-orchestrator',
                     'The cursor advances only after the producer acknowledges the batch'],
     'Comments': ['Only comment-decay-scheduler emits comment, reply and metrics jobs; this service never schedules its own',
-                 'Report new_count, seen_count, pages and cost_units on every job: the scheduler decides early stop and extension from them',
-                 'Edits become new versions; deletions only when the API response is complete (reason platform_sync)'],
+                 'Return new_count, seen_count, pages, cost_units and reply_candidates to the SDK job wrapper, which reports them on jobs.completed; the scheduler decides early stop and extension from them (ADR-0017, ADR-0019)',
+                 'Compare with the stored set through the SDK comment-state helper: an edit is a new version where the platform gives comment ids, a new comment otherwise; a missing comment is a deletion (platform_sync) only after a confirmed second miss or a platform signal, never on a route whose reads are not complete listings (ADR-0009, ADR-0046, ADR-0062)'],
     'Comments and stats': ['Only comment-decay-scheduler emits these jobs; report counts on every job'],
     'Discover and qualify': ['Searches write items to raw.items with source_id = the keyword rule (search output rule); candidates are deduplicated by candidate_key downstream',
-                             'Individuals are never profiled: a mention keeps a hashed author reference'],
+                             'Private individuals are never profiled, listed or backfilled: a mention keeps a keyed author reference (author_ref); only public accounts, as ADR-0010 defines them, may be listed'],
     'Processing': ['Stateless where the PRD says so; replay from raw-archiver must reproduce the same output for the same model version'],
-    'Registry': ['registry-writer is the only writer of the sources table and of source.events (per D2)'],
+    'Registry': ['registry-writer is the only writer of the registry\'s identity and policy columns and of source.events; each operational column has one named owner (ADR-0013, ADR-0014)'],
     'Support': ['Deletion and retention actions are audited before they run, so a replay changes nothing'],
 }
 
@@ -304,7 +304,7 @@ def brief(s):
     if s['services']:
         traps += LANE_TRAPS.get(lane_of(s['services'][0]), [])
         if route_of(s['services'][0]) == 'amber':
-            traps.append('Amber: runs only behind its flag (off by default); provenance says route = amber and names the vendor; its data is excluded from government contracts, and a source a government client watches never falls back to it; the quota governor stretches it from 80% of budget')
+            traps.append('Amber: runs only behind its flag (off by default); provenance says route = amber and names the vendor; only clients that accept amber receive its data, never government clients (ADR-0052), and a source a government client watches or a client-owned property never falls back to it (ADR-0021); from 80% of budget the SDK scheduling kit stretches its intervals by the governor\'s factor (ADR-0057)')
     if s['kind'] == 'probe':
         traps.append(f"Cap: {CAPS[i]}")
         traps.append('Scrub before anything is committed: tokens, signed URLs, private individuals\' names, handles, ids and avatars')

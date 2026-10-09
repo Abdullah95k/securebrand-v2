@@ -49,7 +49,7 @@ Service `comment-decay-scheduler` · PRD `docs/prds/shared/comment-decay-schedul
 - Only this service emits comment, reply and metrics jobs
 - Early stop is armed after 5 stored comments or the +24 h step
 - On amber routes, hot-post extras go first above 80% of budget
-- registry-writer is the only writer of the sources table and of source.events (per D2)
+- registry-writer is the only writer of the registry's identity and policy columns and of source.events; each operational column has one named owner (ADR-0013, ADR-0014)
 
 ## Done when
 

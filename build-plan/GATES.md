@@ -20,7 +20,7 @@ Built by E1 in `tests/e2e/G1` and kept as the regression suite.
 4. An unknown poster in a keyword hit goes through poster-resolver and qualifier and is added, rejected or sent to review by the rules.
 5. Posts and comments are normalized with language, dialect and `text_norm`, matched against keywords, stored in ClickHouse, and the aggregates update.
 6. Every job and message replayed twice changes nothing.
-7. A burst of 429s backs off; a 401 marks the route degraded and stops it; a burst of empty 200s flips the canary; a source a government client watches never falls back to amber.
+7. A burst of 429s backs off; a 401 on a client token revokes that credential, blocks the sources only it reads and stops the batch, and a blocked source falls back to its amber route where ADR-0021 allows, with a notice to ops; a burst of empty 200s flips the canary; a source a government client watches, or a client-owned property, never falls back to amber (ADR-0021).
 8. At 80% of a budget, amber intervals stretch and hot-post extras stop; at 95%, only priorities 1 and 2 run.
 9. A deletion reaches ClickHouse, the archive and the aggregates; a retention purge removes raw text and keeps aggregates.
 10. A record with an unknown shape is archived and parked, never dropped.

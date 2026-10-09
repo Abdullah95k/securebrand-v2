@@ -41,7 +41,7 @@ Service `x-user-resolver` · PRD `docs/prds/x/x-user-resolver.md` · lane Discov
 ## Watch for
 
 - Searches write items to raw.items with source_id = the keyword rule (search output rule); candidates are deduplicated by candidate_key downstream
-- Individuals are never profiled: a mention keeps a hashed author reference
+- Private individuals are never profiled, listed or backfilled: a mention keeps a keyed author reference (author_ref); only public accounts, as ADR-0010 defines them, may be listed
 
 ## Done when
 

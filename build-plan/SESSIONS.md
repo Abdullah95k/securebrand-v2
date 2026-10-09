@@ -136,7 +136,7 @@ Tick a session when its pull request has merged with a closed review. "Needs fir
 | [ ] | **A2** | `analysis-topics` | F6, C4, A0, G1 | L | [brief](sessions/A2-analysis-topics.md) |
 | [ ] | **A3** | `analysis-entities` | F6, C4, A0, G1 | L | [brief](sessions/A3-analysis-entities.md) |
 | [ ] | **A4** | `analysis-media` | F6, C4, G1 | L | [brief](sessions/A4-analysis-media.md) |
-| [ ] | **A5** | `alert-evaluator` | C15, C5, G1 | M | [brief](sessions/A5-alert-evaluator.md) |
+| [ ] | **A5** | `alert-evaluator` | C15, C5, G1, A1, A2, A3, A4 | M | [brief](sessions/A5-alert-evaluator.md) |
 | [ ] | **U3** | Full dashboard | Q1, U2, A1, A2 | L | [brief](sessions/U3-full-dashboard.md) |
 
 ## Wave 7 · Amber vendor routes (optional)

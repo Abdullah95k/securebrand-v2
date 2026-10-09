@@ -45,7 +45,7 @@ Service `ig-hashtag-search` · PRD `docs/prds/instagram/ig-hashtag-search.md` ·
 
 - 30 unique hashtags per Instagram business account per 7 days
 - Searches write items to raw.items with source_id = the keyword rule (search output rule); candidates are deduplicated by candidate_key downstream
-- Individuals are never profiled: a mention keeps a hashed author reference
+- Private individuals are never profiled, listed or backfilled: a mention keeps a keyed author reference (author_ref); only public accounts, as ADR-0010 defines them, may be listed
 
 ## Done when
 

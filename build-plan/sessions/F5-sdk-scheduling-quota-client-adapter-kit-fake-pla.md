@@ -31,8 +31,8 @@ Rotation scheduler with leader election, quota client, HTTP adapter base with th
 
 ## Watch for
 
-- next_poll_at is set from the start of the last poll; order by next_poll_at then tier; most stale first when behind, with rotation_behind
-- 401 and 403 mark the route degraded and stop the batch; the kit never rotates accounts or IPs
+- Each service's due time is next_due_at in its own cursors row, set from the start of the last poll; order by it then tier; most stale first when behind, with rotation_behind (ADR-0015, ADR-0041)
+- 401 and 403 are classified by reason: a quota one waits for the reset, an item-scoped one ends that item, an authorisation one marks the credential revoked or the source blocked and stops the batch, never a route state (ADR-0021); the kit never rotates accounts or IPs
 - Empty-200 responses are counted per route for the canary
 
 ## Done when
