@@ -17,7 +17,7 @@ Read endpoints over ClickHouse with client scoping through Supabase Auth.
 
 1. This brief
 2. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Retention classes; Security and compliance in every service
-3. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+3. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 4. Handoff of D3: `docs/handoffs/D3.md`
 5. Handoff of C6: `docs/handoffs/C6.md`
 6. Handoff of C15: `docs/handoffs/C15.md`

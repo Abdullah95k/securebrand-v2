@@ -15,7 +15,7 @@ Zod schemas for every topic, job and envelope; JSON Schema export; Pydantic mode
 
 1. This brief
 2. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: the whole file
-3. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+3. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 4. Handoff of D2: `docs/handoffs/D2.md`
 5. Handoff of F1: `docs/handoffs/F1.md`
 6. `docs/contracts/INVENTORY.md`

@@ -6,7 +6,7 @@ The full plan, with the build map and every wave table, is the "Listening platfo
 
 1. **Decide and freeze the contracts first.** Topics, jobs, tables, keys and budget tags are defined once in `packages/contracts` and the migrations. Services never edit them; a change goes through a proposal, your decision and a contract-change session.
 2. **One service per session, from its PRD,** in its own worktree and branch.
-3. **Tests come from PRD section 13 first,** and no test calls a live platform.
+3. **Tests come from PRD section 13 first,** as amended by the ADRs that apply (ADR-0001), and no test calls a live platform.
 4. **A fresh session reviews.** The session that wrote the code never approves it.
 5. **Handoffs carry the knowledge.** The next session gets the handoff notes of its "Needs first", not transcripts.
 6. **Probe before you build an adapter.** Real calls happen only in probe sessions, under a cap, and become scrubbed fixtures.
@@ -33,12 +33,12 @@ To keep a long build going until it is really done:
 
 ## Definition of done
 
-1. Every acceptance criterion in PRD section 13 maps to a named test that passes; the map is in the plan, the evidence in the review.
-2. The behaviours in PRD sections 5 and 8 that no criterion covers have tests: rotation or series timing, catch-up, 429, 401 and 403, empty 200, a 5xx in the middle of pagination, DLQ after five attempts, replay idempotency.
+1. Every acceptance criterion in PRD section 13, as amended by the ADRs that apply (ADR-0001), maps to a named test that passes; the map is in the plan, the evidence in the review.
+2. The behaviours in PRD sections 5 and 8, as amended by the ADRs (ADR-0001), that no criterion covers have tests: rotation or series timing, catch-up, 429, 401 and 403, empty 200, a 5xx in the middle of pagination, DLQ after five attempts, replay idempotency.
 3. `make check` passes, and no test touches the network.
 4. Contracts are untouched, or changed only through an applied proposal.
 5. Every output validates against its contract, and every data output carries provenance and `retention_class` (ADR-0003).
-6. The metrics and alerts named in PRD section 10 exist under those names.
+6. The metrics and alerts named in PRD section 10, as amended by the ADRs (ADR-0001), exist under those names.
 7. No secret, token or private person's name appears in code, logs or fixtures, and a test proves the log scrubber works.
 8. Every new runtime dependency has its line in `docs/dependencies.md`.
 9. Each PRD section 14 question the build touched is answered in an ADR or listed in `docs/decisions/DEFERRED.md` with its owning session.

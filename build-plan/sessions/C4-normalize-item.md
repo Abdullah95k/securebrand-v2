@@ -19,7 +19,7 @@ Service `normalize-item` · PRD `docs/prds/shared/normalize-item.md` · lane Pro
 1. This brief
 2. The PRD in full: `docs/prds/shared/normalize-item.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Retention classes
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of F4: `docs/handoffs/F4.md`
 6. Handoff of F7: `docs/handoffs/F7.md`
 7. Handoff of C2: `docs/handoffs/C2.md`
@@ -47,6 +47,7 @@ Service `normalize-item` · PRD `docs/prds/shared/normalize-item.md` · lane Pro
 - Only the fake platform's mapper here; each platform session adds its own
 - When lang-dialect-id is down: lang = und with the TypeScript fold and lang_pending
 - Unknown shapes are archived and parked as schema_unknown, never dropped
+- Where mappers live: ADR-0008 puts the registry keyed (service, api_version) in listening-sdk, the kit puts mappers under services/normalize-item/src/mappers/<platform>/; MAPPERS.md names the one place, agreed with F4, before wave 3 (DEFERRED.md section 3)
 - Stateless where the PRD says so; replay from raw-archiver must reproduce the same output for the same model version
 
 ## Done when

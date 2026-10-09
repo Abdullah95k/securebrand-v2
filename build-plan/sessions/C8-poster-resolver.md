@@ -18,7 +18,7 @@ Service `poster-resolver` · PRD `docs/prds/shared/poster-resolver.md` · lane R
 1. This brief
 2. The PRD in full: `docs/prds/shared/poster-resolver.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Rotation policy; Qualifier rules; Quotas, budgets and the quota governor
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of F5: `docs/handoffs/F5.md`
 6. Handoff of C0: `docs/handoffs/C0.md`
 7. C0 ref-resolver (stands in for platform resolvers)
@@ -40,7 +40,7 @@ Service `poster-resolver` · PRD `docs/prds/shared/poster-resolver.md` · lane R
 ## Watch for
 
 - Candidates arrive from discovery.hits and from searches that emit directly: dedup by candidate_key
-- Individuals are never profiled
+- Private individuals are never profiled: an ordinary individual's poster.profiles answer (account_type individual, not public) is minimised and keyed by author_ref, with no handle, name or URL; a public account's, creator's or public figure's answer carries its identity fields (ADR-0010, ADR-0033)
 - registry-writer is the only writer of the registry's identity and policy columns and of source.events; each operational column has one named owner (ADR-0013, ADR-0014)
 
 ## Done when

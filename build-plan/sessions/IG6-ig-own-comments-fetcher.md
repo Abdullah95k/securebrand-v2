@@ -19,7 +19,7 @@ Service `ig-own-comments-fetcher` · PRD `docs/prds/instagram/ig-own-comments-fe
 1. This brief
 2. The PRD in full: `docs/prds/instagram/ig-own-comments-fetcher.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; Rotation policy (the comments part); Addendum: Comment series profiles; Quotas, budgets and the quota governor; Retention classes; Per-platform fact sheets: Instagram
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of IG3: `docs/handoffs/IG3.md`
 6. Handoff of IG4: `docs/handoffs/IG4.md`
 7. Handoff of C11: `docs/handoffs/C11.md`

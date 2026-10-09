@@ -20,7 +20,7 @@ Any-time track: earliest after W3 and N2; deadline none.
 1. This brief
 2. The PRD in full: `docs/prds/web/web-commoncrawl-scanner.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Qualifier rules; Quotas, budgets and the quota governor; Per-platform fact sheets: Web search
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of W3: `docs/handoffs/W3.md`
 6. Handoff of N2: `docs/handoffs/N2.md`
 7. The W0 probe report `docs/probes/web.md` and the fixtures in `fixtures/web/`

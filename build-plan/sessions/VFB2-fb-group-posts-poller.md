@@ -19,7 +19,7 @@ Service `fb-group-posts-poller` · PRD `docs/prds/facebook/fb-group-posts-poller
 1. This brief
 2. The PRD in full: `docs/prds/facebook/fb-group-posts-poller.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Rotation policy; Quotas, budgets and the quota governor; Retention classes; Per-platform fact sheets: Facebook
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of VFB0: `docs/handoffs/VFB0.md`
 6. Handoff of C10: `docs/handoffs/C10.md`
 7. Handoff of C11: `docs/handoffs/C11.md`
@@ -31,7 +31,7 @@ Service `fb-group-posts-poller` · PRD `docs/prds/facebook/fb-group-posts-poller
 - Topics read: `source.events`
 - Topics written: `raw.items`, `source.events`
 - Job queues in: `jobs.fb-group-posts-poller`; out: none
-- Tables read: `sources`, `clients`, `cursors`, `budgets`, `vendor_keys`; written or updated: `sources`, `cursors`, `budgets`, `service_runs`
+- Tables read: `sources`, `clients`, `cursors`, `budgets`, `credentials` (the PRD's `vendor_keys`, read and written only through the SDK's credential client, ADR-0016); written or updated: `sources`, `cursors`, `budgets`, `service_runs`
 - This list is extracted from the PRD's section 6 by name; the plan confirms each item against `packages/contracts` and the migrations, and anything missing becomes a proposal.
 
 ## Hands on
@@ -45,7 +45,7 @@ Service `fb-group-posts-poller` · PRD `docs/prds/facebook/fb-group-posts-poller
 - The due time is next_due_at in this service's own cursors row, set from the start of the last poll; order by it then tier; most stale first when behind, with rotation_behind (ADR-0015)
 - Incremental reads only newer than the cursor; full re-reads happen only in backfill jobs from backfill-orchestrator
 - The cursor advances only after the producer acknowledges the batch
-- Amber: runs only behind its flag (off by default); provenance says route = amber and names the vendor; only clients that accept amber receive its data, never government clients (ADR-0052), and a source a government client watches or a client-owned property never falls back to it (ADR-0021); from 80% of budget the SDK scheduling kit stretches its intervals by the governor's factor (ADR-0057)
+- Amber: runs only behind its flag (off by default); provenance says route = amber and names the vendor; only clients that accept amber receive its data, never government clients (ADR-0052), and a green source a government client watches never falls back to it, while a client-owned property falls back under the same conditions as any other source (ADR-0021); from 80% of budget the SDK scheduling kit stretches its intervals by the governor's factor (ADR-0057)
 
 ## Done when
 

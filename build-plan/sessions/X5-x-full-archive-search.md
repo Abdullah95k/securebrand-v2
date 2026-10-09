@@ -4,7 +4,7 @@ Wave 4 · YouTube, X, and Facebook in development mode · track X · size M (1 t
 
 ## Builds
 
-Backfill and gap fill from the full archive.
+Backfill, keyword history and the X reply steps to day 30 from the full archive (ADR-0059, ADR-0064).
 
 Service `x-full-archive-search` · PRD `docs/prds/x/x-full-archive-search.md` · lane Fetch posts · route green · 11 acceptance criteria (section 13) · 6 open questions (section 14)
 
@@ -18,7 +18,7 @@ Service `x-full-archive-search` · PRD `docs/prds/x/x-full-archive-search.md` ·
 1. This brief
 2. The PRD in full: `docs/prds/x/x-full-archive-search.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Rotation policy; Quotas, budgets and the quota governor; Retention classes; Per-platform fact sheets: X
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of X1: `docs/handoffs/X1.md`
 6. Handoff of C10: `docs/handoffs/C10.md`
 7. The X0 probe report `docs/probes/x.md` and the fixtures in `fixtures/x/`

@@ -15,7 +15,7 @@ Supabase migrations for every control-plane table, indexes, row-level security, 
 
 1. This brief
 2. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: the whole file
-3. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+3. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 4. Handoff of D2: `docs/handoffs/D2.md`
 5. Handoff of F1: `docs/handoffs/F1.md`
 6. `docs/contracts/INVENTORY.md` (tables)
@@ -35,6 +35,7 @@ Supabase migrations for every control-plane table, indexes, row-level security, 
 - Client users see only their clients' rows; services use the service role
 - Advisory-lock keys for leader election must be unique per service
 - Seed the comment series profiles and budget tags from the conventions tables, not by hand
+- Seed `permitted_uses` with the 'not allowed' rows ADR-0068 lists (YouTube video and audio downloads; Facebook and Instagram training), each with its clause: a missing row means allowed, so only the seed keeps a forbidden use out (ADR-0068)
 - Start this session with ALLOW_CONTRACT_EDITS=1: it is one of the few allowed to write the contract paths
 
 ## Done when

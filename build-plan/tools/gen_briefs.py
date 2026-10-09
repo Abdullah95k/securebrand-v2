@@ -160,7 +160,9 @@ def contracts_block(svc):
         rows.append(f"- Job queues in: {', '.join(f'`{j}`' for j in io['jobs_in']) or 'its own `jobs.' + svc + '`'}; out: {', '.join(f'`{j}`' for j in io['jobs_out']) or 'none'}")
     else:
         rows.append(f"- Job queue: `jobs.{svc}` if the PRD's section 5.1 schedules jobs")
-    rows.append(f"- Tables read: {', '.join(f'`{t}`' for t in io['reads_tables']) or 'see 6.1'}; written or updated: {', '.join(f'`{t}`' for t in io['writes_tables']) or 'see 6.2 and 6.3'}")
+    def tbl(t):
+        return "`credentials` (the PRD's `vendor_keys`, read and written only through the SDK's credential client, ADR-0016)" if t == 'vendor_keys' else f'`{t}`'
+    rows.append(f"- Tables read: {', '.join(tbl(t) for t in io['reads_tables']) or 'see 6.1'}; written or updated: {', '.join(tbl(t) for t in io['writes_tables']) or 'see 6.2 and 6.3'}")
     rows.append('- This list is extracted from the PRD\'s section 6 by name; the plan confirms each item against `packages/contracts` and the migrations, and anything missing becomes a proposal.')
     return '\n'.join(rows)
 
@@ -257,7 +259,7 @@ def brief(s):
         for svc in s['services']:
             items.append(f"The PRD in full: `docs/prds/{PRD[svc]['path']}`")
     items.append('CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: ' + '; '.join(sections_for(s)))
-    items.append('The ADRs in `docs/decisions/` whose "Applies to" line names this session\'s service, platform, lane or "all"')
+    items.append('The ADRs in `docs/decisions/` whose "Applies to" line names this session\'s ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session')
     for n in s['needs']:
         if BY_ID[n]['kind'] != 'gate':
             items.append(f"Handoff of {n}: `{handoff(n)}`")
@@ -304,7 +306,7 @@ def brief(s):
     if s['services']:
         traps += LANE_TRAPS.get(lane_of(s['services'][0]), [])
         if route_of(s['services'][0]) == 'amber':
-            traps.append('Amber: runs only behind its flag (off by default); provenance says route = amber and names the vendor; only clients that accept amber receive its data, never government clients (ADR-0052), and a source a government client watches or a client-owned property never falls back to it (ADR-0021); from 80% of budget the SDK scheduling kit stretches its intervals by the governor\'s factor (ADR-0057)')
+            traps.append('Amber: runs only behind its flag (off by default); provenance says route = amber and names the vendor; only clients that accept amber receive its data, never government clients (ADR-0052), and a green source a government client watches never falls back to it, while a client-owned property falls back under the same conditions as any other source (ADR-0021); from 80% of budget the SDK scheduling kit stretches its intervals by the governor\'s factor (ADR-0057)')
     if s['kind'] == 'probe':
         traps.append(f"Cap: {CAPS[i]}")
         traps.append('Scrub before anything is committed: tokens, signed URLs, private individuals\' names, handles, ids and avatars')

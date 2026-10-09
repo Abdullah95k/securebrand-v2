@@ -19,7 +19,7 @@ Service `ig-comments-fetcher` · PRD `docs/prds/instagram/ig-comments-fetcher.md
 1. This brief
 2. The PRD in full: `docs/prds/instagram/ig-comments-fetcher.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; Rotation policy (the comments part); Addendum: Comment series profiles; Quotas, budgets and the quota governor; Retention classes; Per-platform fact sheets: Instagram
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of VIG0: `docs/handoffs/VIG0.md`
 6. Handoff of IG3: `docs/handoffs/IG3.md`
 7. Handoff of C11: `docs/handoffs/C11.md`
@@ -31,7 +31,7 @@ Service `ig-comments-fetcher` · PRD `docs/prds/instagram/ig-comments-fetcher.md
 - Topics read: none named in 6.1
 - Topics written: `raw.items`
 - Job queues in: `jobs.ig-comments-fetcher`; out: none
-- Tables read: `sources`, `clients`, `cursors`, `budgets`, `vendor_keys`; written or updated: `clients`, `cursors`, `budgets`, `service_runs`
+- Tables read: `sources`, `clients`, `cursors`, `budgets`, `credentials` (the PRD's `vendor_keys`, read and written only through the SDK's credential client, ADR-0016); written or updated: `clients`, `cursors`, `budgets`, `service_runs`
 - This list is extracted from the PRD's section 6 by name; the plan confirms each item against `packages/contracts` and the migrations, and anything missing becomes a proposal.
 
 ## Hands on
@@ -45,7 +45,7 @@ Service `ig-comments-fetcher` · PRD `docs/prds/instagram/ig-comments-fetcher.md
 - Only comment-decay-scheduler emits comment, reply and metrics jobs; this service never schedules its own
 - Return new_count, seen_count, pages, cost_units and reply_candidates to the SDK job wrapper, which reports them on jobs.completed; the scheduler decides early stop and extension from them (ADR-0017, ADR-0019)
 - Compare with the stored set through the SDK comment-state helper: an edit is a new version where the platform gives comment ids, a new comment otherwise; a missing comment is a deletion (platform_sync) only after a confirmed second miss or a platform signal, never on a route whose reads are not complete listings (ADR-0009, ADR-0046, ADR-0062)
-- Amber: runs only behind its flag (off by default); provenance says route = amber and names the vendor; only clients that accept amber receive its data, never government clients (ADR-0052), and a source a government client watches or a client-owned property never falls back to it (ADR-0021); from 80% of budget the SDK scheduling kit stretches its intervals by the governor's factor (ADR-0057)
+- Amber: runs only behind its flag (off by default); provenance says route = amber and names the vendor; only clients that accept amber receive its data, never government clients (ADR-0052), and a green source a government client watches never falls back to it, while a client-owned property falls back under the same conditions as any other source (ADR-0021); from 80% of budget the SDK scheduling kit stretches its intervals by the governor's factor (ADR-0057)
 
 ## Done when
 

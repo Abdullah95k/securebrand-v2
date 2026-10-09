@@ -17,7 +17,7 @@ Service `yt-uploads-reconciler` · PRD `docs/prds/youtube/yt-uploads-reconciler.
 1. This brief
 2. The PRD in full: `docs/prds/youtube/yt-uploads-reconciler.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Rotation policy; Quotas, budgets and the quota governor; Retention classes; Per-platform fact sheets: YouTube
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of YT1: `docs/handoffs/YT1.md`
 6. The YT0 probe report `docs/probes/youtube.md` and the fixtures in `fixtures/youtube/`
 7. `docs/patterns/ADAPTER-PATTERN.md` (from C0) and `docs/patterns/MAPPERS.md` (from C4)

@@ -18,7 +18,7 @@ Service `ig-keyword-search` · PRD `docs/prds/instagram/ig-keyword-search.md` ·
 1. This brief
 2. The PRD in full: `docs/prds/instagram/ig-keyword-search.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Qualifier rules; Quotas, budgets and the quota governor; Per-platform fact sheets: Instagram
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of VIG0: `docs/handoffs/VIG0.md`
 6. Handoff of IG2: `docs/handoffs/IG2.md`
 7. The VIG0 probe report `docs/probes/ig-vendor.md` and the fixtures in `fixtures/instagram-vendor/`
@@ -29,7 +29,7 @@ Service `ig-keyword-search` · PRD `docs/prds/instagram/ig-keyword-search.md` ·
 - Topics read: `source.events`
 - Topics written: `raw.items`, `item.hits`, `discovery.hits`
 - Job queues in: `jobs.ig-keyword-search`; out: none
-- Tables read: `sources`, `keywords`, `clients`, `cursors`, `budgets`, `vendor_keys`; written or updated: `clients`, `cursors`, `budgets`, `service_runs`
+- Tables read: `sources`, `keywords`, `clients`, `cursors`, `budgets`, `credentials` (the PRD's `vendor_keys`, read and written only through the SDK's credential client, ADR-0016); written or updated: `clients`, `cursors`, `budgets`, `service_runs`
 - This list is extracted from the PRD's section 6 by name; the plan confirms each item against `packages/contracts` and the migrations, and anything missing becomes a proposal.
 
 ## Hands on
@@ -42,7 +42,7 @@ Service `ig-keyword-search` · PRD `docs/prds/instagram/ig-keyword-search.md` ·
 
 - Searches write items to raw.items with source_id = the keyword rule (search output rule); candidates are deduplicated by candidate_key downstream
 - Private individuals are never profiled, listed or backfilled: a mention keeps a keyed author reference (author_ref); only public accounts, as ADR-0010 defines them, may be listed
-- Amber: runs only behind its flag (off by default); provenance says route = amber and names the vendor; only clients that accept amber receive its data, never government clients (ADR-0052), and a source a government client watches or a client-owned property never falls back to it (ADR-0021); from 80% of budget the SDK scheduling kit stretches its intervals by the governor's factor (ADR-0057)
+- Amber: runs only behind its flag (off by default); provenance says route = amber and names the vendor; only clients that accept amber receive its data, never government clients (ADR-0052), and a green source a government client watches never falls back to it, while a client-owned property falls back under the same conditions as any other source (ADR-0021); from 80% of budget the SDK scheduling kit stretches its intervals by the governor's factor (ADR-0057)
 
 ## Done when
 

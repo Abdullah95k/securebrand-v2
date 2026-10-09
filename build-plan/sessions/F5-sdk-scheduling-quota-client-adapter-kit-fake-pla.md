@@ -14,7 +14,7 @@ Rotation scheduler with leader election, quota client, HTTP adapter base with th
 
 1. This brief
 2. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Rotation policy; Quotas, budgets and the quota governor; Error handling, canaries and fallback; Addendum: Other shared decisions
-3. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+3. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 4. Handoff of F4: `docs/handoffs/F4.md`
 5. Fb-page-feed-poller section 5.1 (the rotation reference)
 6. Quota-governor section 6 (allowance API)

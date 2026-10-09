@@ -15,7 +15,7 @@ Recorded vendor responses (SociaVault or ScrapeCreators) and billing behaviour.
 
 1. This brief
 2. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Quotas, budgets and the quota governor; Security and compliance in every service; Per-platform fact sheets: Facebook
-3. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+3. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 4. Handoff of F5: `docs/handoffs/F5.md`
 5. Signed vendor contract
 6. FB_VENDOR_ROUTE value

@@ -4,7 +4,7 @@ Wave 6 · Insight layer · track Insight · size M (1 to 2 days with review) · 
 
 ## Builds
 
-Alert rules over aggregates and hits, routed through n8n.
+Alert rules over the aggregate views, metrics_timeseries and item_stories, routed through n8n (ADR-0047, ADR-0048).
 
 Service `alert-evaluator` · PRD `docs/prds/shared/alert-evaluator.md` · lane Processing · route shared · 12 acceptance criteria (section 13) · 5 open questions (section 14)
 
@@ -25,7 +25,7 @@ Any-time track: earliest after C15, C5, G1 and A1 to A4 (ADR-0048); deadline non
 1. This brief
 2. The PRD in full: `docs/prds/shared/alert-evaluator.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Retention classes
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of C15: `docs/handoffs/C15.md`
 6. Handoff of C5: `docs/handoffs/C5.md`
 7. Handoff of A1: `docs/handoffs/A1.md`

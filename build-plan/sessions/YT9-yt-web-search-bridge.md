@@ -21,7 +21,7 @@ Any-time track: earliest after W1, W2 and YT1; deadline none.
 1. This brief
 2. The PRD in full: `docs/prds/youtube/yt-web-search-bridge.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Qualifier rules; Quotas, budgets and the quota governor; Per-platform fact sheets: YouTube
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of W1: `docs/handoffs/W1.md`
 6. Handoff of W2: `docs/handoffs/W2.md`
 7. Handoff of YT1: `docs/handoffs/YT1.md`
@@ -33,7 +33,7 @@ Any-time track: earliest after W1, W2 and YT1; deadline none.
 - Topics read: none named in 6.1
 - Topics written: `search.results`
 - Job queues in: its own `jobs.yt-web-search-bridge`; out: `jobs.yt-channel-resolver`, `jobs.yt-video-details-fetcher`
-- Tables read: `sources`, `keywords`, `clients`, `cursors`, `budgets`, `vendor_keys`, `service_runs`; written or updated: `clients`, `cursors`, `budgets`, `service_runs`
+- Tables read: `sources`, `keywords`, `clients`, `cursors`, `budgets`, `credentials` (the PRD's `vendor_keys`, read and written only through the SDK's credential client, ADR-0016), `service_runs`; written or updated: `clients`, `cursors`, `budgets`, `service_runs`
 - This list is extracted from the PRD's section 6 by name; the plan confirms each item against `packages/contracts` and the migrations, and anything missing becomes a proposal.
 
 ## Hands on

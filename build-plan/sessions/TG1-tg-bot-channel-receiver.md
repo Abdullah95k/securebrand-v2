@@ -20,7 +20,7 @@ Service `tg-bot-channel-receiver` · PRD `docs/prds/telegram/tg-bot-channel-rece
 1. This brief
 2. The PRD in full: `docs/prds/telegram/tg-bot-channel-receiver.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Rotation policy; Quotas, budgets and the quota governor; Retention classes; Per-platform fact sheets: Telegram
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of TG0: `docs/handoffs/TG0.md`
 6. Handoff of I1: `docs/handoffs/I1.md`
 7. Handoff of C8: `docs/handoffs/C8.md`
@@ -32,7 +32,7 @@ Service `tg-bot-channel-receiver` · PRD `docs/prds/telegram/tg-bot-channel-rece
 - Topics read: `source.events`
 - Topics written: `raw.items`, `discovery.hits`, `source.events`
 - Job queues in: `jobs.tg-bot-channel-receiver`; out: none
-- Tables read: `sources`, `cursors`, `vendor_keys`, `canary_targets`; written or updated: `sources`, `cursors`, `service_runs`
+- Tables read: `sources`, `cursors`, `credentials` (the PRD's `vendor_keys`, read and written only through the SDK's credential client, ADR-0016), `canary_targets`; written or updated: `sources`, `cursors`, `service_runs`
 - This list is extracted from the PRD's section 6 by name; the plan confirms each item against `packages/contracts` and the migrations, and anything missing becomes a proposal.
 
 ## Hands on

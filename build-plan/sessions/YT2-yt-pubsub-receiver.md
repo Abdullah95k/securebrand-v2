@@ -18,7 +18,7 @@ Service `yt-pubsub-receiver` · PRD `docs/prds/youtube/yt-pubsub-receiver.md` ·
 1. This brief
 2. The PRD in full: `docs/prds/youtube/yt-pubsub-receiver.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Rotation policy; Quotas, budgets and the quota governor; Retention classes; Per-platform fact sheets: YouTube
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of YT1: `docs/handoffs/YT1.md`
 6. Handoff of I1: `docs/handoffs/I1.md`
 7. The YT0 probe report `docs/probes/youtube.md` and the fixtures in `fixtures/youtube/`
