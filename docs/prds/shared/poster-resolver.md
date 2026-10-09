@@ -64,8 +64,10 @@ Catch-up: if partition lag exceeds 15 minutes, hits are processed newest `hit_at
 No external call. The internal call is the `resolve` job:
 
 ```json
-{"job_id":"res:x:1234567890","kind":"resolve","candidate_key":"x:1234567890","platform":"x","platform_id":"1234567890","handle":"iraqi_outlet","hit_url":"https://x.com/iraqi_outlet/status/1","origin":"discovery","reply_to":"jobs.poster-resolver","attempt":1,"sample_posts":20}
+{"job_id":"01M48B92SGPW37317W8KMVR3EE","kind":"resolve","candidate_key":"x:1234567890","platform":"x","platform_id":"1234567890","handle":"iraqi_outlet","hit_url":"https://x.com/iraqi_outlet/status/1","origin":"discovery","reply_to":"jobs.poster-resolver","attempt":1,"sample_posts":20}
 ```
+
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 The resolver answers on `jobs.poster-resolver` with `kind: resolved` (profile fields, up to 20 recent post texts, the raw payload) or `kind: unresolvable`. Each resolver uses its own fact-sheet call: `x-user-resolver` calls `GET /2/users/by/username/{handle}?user.fields=public_metrics,verified,location,description,created_at` at USD 0.010 per user read; `yt-channel-resolver` calls `channels.list?part=snippet,statistics,brandingSettings` at 1 unit; `fb-page-resolver` calls `GET /pages/search?q=<name>&fields=id,name,location,link,is_verified` within the PPCA bucket.
 
@@ -86,8 +88,10 @@ Not obtained: comment text, follower lists, email addresses, audience data, Face
 - Topic `poster.profiles`, partition key `candidate_key`:
 
 ```json
-{"message_id":"pp:instagram:17841400000000000:2026-10-06T10:13:58Z","produced_at":"2026-10-06T10:14:02Z","service":"poster-resolver","schema_version":1,"candidate_key":"instagram:17841400000000000","platform":"instagram","platform_id":"17841400000000000","handle":"baghdad_eats","url":"https://instagram.com/baghdad_eats","display_name":"Baghdad Eats","account_type":"business","individual":false,"verified":false,"followers":48200,"posts_30d":22,"last_post_at":"2026-10-05T19:40:00Z","location_text":"Baghdad, Iraq","country_signals":{"iraqi_place":true,"phone_964":false,"iq_domain":false,"outlet_link":false,"seed_list":false},"lang_share":{"ar_iq":0.70,"ckb":0.00,"ar_msa":0.20,"en":0.10},"hits_30d":3,"keywords":["kw_0412"],"client_ids":["cl_17"],"route":"green","vendor":null,"resolver":"ig-account-resolver","resolved_at":"2026-10-06T10:13:58Z","cached":false,"unresolvable":null}
+{"message_id":"pp:instagram:17841400000000000:2026-10-06T10:13:58Z","produced_at":"2026-10-06T10:14:02Z","service":"poster-resolver","schema_version":1,"candidate_key":"instagram:17841400000000000","platform":"instagram","platform_id":"17841400000000000","handle":"baghdad_eats","url":"https://instagram.com/baghdad_eats","display_name":"Baghdad Eats","account_type":"business","individual":false,"verified":false,"followers":48200,"posts_30d":22,"last_post_at":"2026-10-05T19:40:00Z","location_text":"Baghdad, Iraq","country_signals":{"iraqi_place":true,"phone_964":false,"iq_domain":false,"outlet_link":false,"seed_list":false},"lang_share":{"ar_iq":0.70,"ckb":0.00,"ar_msa":0.20,"en":0.10},"hits_30d":3,"keywords":["0cd402b6-9015-45f8-86b4-d90cc086d320"],"client_ids":["0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"],"route":"green","vendor":null,"resolver":"ig-account-resolver","resolved_at":"2026-10-06T10:13:58Z","cached":false,"unresolvable":null}
 ```
+
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 - Topic `raw.items` with `kind: profile` (full payload for non-individuals, redacted envelope for individuals).
 - Queues `jobs.<resolver>` (`resolve` jobs).

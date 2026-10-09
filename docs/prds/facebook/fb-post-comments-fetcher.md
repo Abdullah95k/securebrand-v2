@@ -45,7 +45,7 @@ Every post on a green Facebook Page has its comments fetched on the decay series
 
 **Series.** +1 h, +6 h, +24 h, +3 d, +7 d, then weekly to day 30. comment-decay-scheduler applies the general rules to this service's report:
 
-- Early stop: a fetch that adds fewer than 5% new comments and fewer than 5 in absolute cancels the rest of the series.
+- Early stop: comment-decay-scheduler applies it from this service's report; this service never stops a series itself (ADR-0019).
 - Extension: if the day-7 fetch still adds 20% or more new comments, fetches continue every 2 days until day 30.
 - Hot posts: above 100 new comments an hour (`new_count` divided by the hours since the previous fetch), an extra fetch every hour for the next 6 hours.
 - Beyond day 30: no automatic fetch.
@@ -163,7 +163,7 @@ listening-sdk, comment-decay-scheduler, quota-governor, source-health-canary, ra
 ## 12. Risks and mitigations
 
 - No ids: an edit looks like a new comment plus a missing one, and identical comments in the same second collapse. Edits are labeled candidates, the collision rate is measured in the pilot, and client-owned Pages return ids.
-- Early stop can cancel the +24 h sweep on a quiet post, leaving late comments and edits unseen (open question 2).
+- Late comments and edits on a quiet post: the +24 h sweep always runs, even after early stop, so they are caught (ADR-0019).
 - Comments are the heaviest user of the Pages bucket, and a first fetch of a viral post is expensive: quota-governor can defer it, and hot-post fetches are dropped first.
 - If Meta alters `message` between fetches, false edits appear: checked in the pilot (open question 1).
 - App Review takes up to several weeks: the pilot runs on client-owned Pages, where ids are available.

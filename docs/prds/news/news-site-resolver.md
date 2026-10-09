@@ -89,7 +89,7 @@ Site identity, feeds with format and freshness, sitemaps with type and size, URL
     "platform_id": "example-daily.iq", "handle": "example-daily.iq",
     "url": "https://www.example-daily.iq/", "display_name": "Example Daily",
     "route": "green", "vendor": null, "retention_class": "news_excerpt", "followers": null,
-    "country_signals": {"tld_iq": true, "phone_964": true, "iraqi_place": "Baghdad", "seed_list": ["client_17"]},
+    "country_signals": {"tld_iq": true, "phone_964": true, "iraqi_place": "Baghdad", "seed_list": ["0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"]},
     "lang_share": {"msa": 0.90, "iraqi_ar": 0.05, "en": 0.05},
     "proposed_tier": 1, "added_by": "qualifier"
   },
@@ -104,12 +104,14 @@ Site identity, feeds with format and freshness, sitemaps with type and size, URL
     "last_article_at": "2026-10-06T08:41:00+03:00"
   },
   "discovered_by": "search-hit-router",
-  "service": "news-site-resolver", "job_id": "job_01JA5X7R2M",
+  "service": "news-site-resolver", "job_id": "01M486K7W0KPR5FKH5ET9K2SFS",
   "resolved_at": "2026-10-06T08:52:40Z"
 }
 ```
 
-registry-writer maps `proposed_source` onto the `sources` row (`tier` from the qualifier, `health = ok`, `backfill_status = pending`) and `site_profile` onto `news_sites`, keyed by `source_id`.
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
+
+registry-writer maps `proposed_source` onto the `sources` row, inserting it under the `proposed_source_id` this service allocated with the candidate row (`tier` from the qualifier, `health = ok`, `backfill_status` at its default, `pending`). `site_profile` stays in `news_sites`, which only this service writes, keyed by that `source_id` (ADR-0040, ADR-0020).
 
 ### 6.3 State
 

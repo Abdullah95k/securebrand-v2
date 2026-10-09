@@ -92,14 +92,14 @@ Per item: identity, `kind`, `source_id`, `author`, `text_norm`, `lang_model_vers
 - lang-dialect-id `/v1/fold`; ClickHouse `hits`, `items`, `comments`; the raw archive through the SDK reader.
 
 ### 6.2 Writes
-`item.hits` and `discovery.hits` (key `source_id`, the source that produced the item), `jobs.keyword-matcher`, `dlq.keyword-matcher`; `sources.last_hit_at`.
+`item.hits` (key `source_id`, the source that produced the item) and `discovery.hits` (key `candidate_key`; ADR-0004, ADR-0031), `jobs.keyword-matcher`, `dlq.keyword-matcher`; `sources.last_hit_at`. In the example, `message_id`, `producer.job_id` and `keyword_set_version` follow ADR-0006 and ADR-0070; where its other fields differ from an ADR, the ADR wins (ADR-0001, ADR-0031):
 
 ```json
 {
   "schema": "discovery.hits/v1",
-  "message_id": "01J9N4B2C6D8E0F2G4H6J8K0MA",
+  "message_id": "01M486JMB0K5QZM1RWBPZ5NJ95",
   "produced_at": "2026-10-06T09:14:41Z",
-  "producer": {"service": "keyword-matcher", "version": "1.0.0", "job_id": null},
+  "producer": {"service": "keyword-matcher", "version": "1.0.0", "job_id": "01M4871WM0NJ5SWYGET3ZGFGSP"},
   "hit_id": "b7e1c9d4-2a53-5f08-9c61-3d4e5f6a7b8c", "status": "active",
   "item_id": "6f1d2c3e-9a4b-5c6d-8e7f-0a1b2c3d4e5f", "item_version": 1,
   "platform": "x", "kind": "post", "source_id": "c41b7a90-3d2e-4f5a-8b6c-7d8e9f0a1b2c",

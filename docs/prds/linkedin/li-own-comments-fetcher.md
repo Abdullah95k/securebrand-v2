@@ -39,7 +39,7 @@ Every post of every client-administered page has its comments fetched at +6 h, +
 
 **Series for LinkedIn client posts.** After a post is first seen: +6 h, +24 h, +3 d. Replies come in the same call; there is no reply threshold and no separate replies job.
 
-**Early stop.** From the second fetch of a post onward, when a fetch adds fewer than 5% new comments and fewer than 5 absolute, the remaining series is cancelled. The percentage is `new_count` over the post's total comment count as the API reports it, not over comments held, because held comments expire at 48 hours.
+**Early stop.** comment-decay-scheduler applies it from this service's report; this service never stops a series itself. On this route the report carries the post's total comment count as the API reports it, and growth is measured over that count rather than over the comments held, because held comments expire at 48 hours (ADR-0019).
 
 **Extension.** When the last scheduled fetch (+3 d) still adds 20% or more new comments, the series continues every 2 days until day 30.
 
@@ -171,7 +171,7 @@ listening-sdk, comment-decay-scheduler, li-client-posts-poller, li-notification-
 ## 13. Acceptance criteria
 
 1. A post first seen at 08:00 receives comments jobs due at +6 h, +24 h and +3 d from comment-decay-scheduler only; this service emits none.
-2. A +24 h fetch adding 3 new of 100 total cancels the +3 d step; adding 4 of 40 does not; adding 5 of 200 does not (absolute threshold).
+2. A +24 h fetch adding 3 new comments reports them with the API's total count of 100 and cancels nothing itself; comment-decay-scheduler applies early stop over that count (ADR-0019).
 3. A +3 d fetch adding 25% new comments schedules fetches every 2 days to day 30; adding 19% does not.
 4. A fetch pages until the marker on a newest-first fixture and to exhaustion on an oldest-first fixture; `new_count`, `seen_count`, `pages`, `cost_units` are reported.
 5. An edited comment yields a second message with the same `idempotency_key` and a new hash; on a full read a held comment missing from the response yields one `deletions` message with reason `platform_sync`; a fetch that stopped at the marker yields none.

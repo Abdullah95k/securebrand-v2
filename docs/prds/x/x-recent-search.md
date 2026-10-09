@@ -108,7 +108,7 @@ What it does not get: posts older than 7 days; posts of protected, deleted or su
   "route": "green",
   "vendor": null,
   "service": "x-recent-search",
-  "job_id": "job_01J9R4V2PX",
+  "job_id": "01M487XBH07GQE33JRM29CMCMZ",
   "attempt": 1,
   "fetched_at": "2026-10-06T09:15:04Z",
   "retention_class": "x_24h_sync",
@@ -129,6 +129,8 @@ What it does not get: posts older than 7 days; posts of protected, deleted or su
   "includes": { "users": [ { "id": "1290000000000000045", "username": "abuali_basra" } ] }
 }
 ```
+
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 `discovery.hits` carries `platform`, `item_idempotency_key`, `author_platform_id`, `author_handle`, `keyword_rule_id`, `matched_terms`, `client_ids`, `lang`, `public_metrics`, `service`, `fetched_at`.
 

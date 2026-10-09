@@ -106,6 +106,8 @@ The field set beyond `type`, `platform` and `candidate_key` follows poster-resol
 
 The scan checkpoint (crawl id, partitions done, position inside a partition) as JSON on this service's `service_runs` row; `cc_hosts_seen`; in memory only the leader lock.
 
+Owner (ADR-0025): `cc_hosts_seen` is private to this service. No other service reads it, F3's `TABLE-OWNERS.md` lists it, and it is registered in the SDK purge registry where it holds item ids, hashes or URLs.
+
 ## 7. Limits, quotas and cost
 
 - Cost: USD 0 for the data. Common Crawl is free, with a monthly cadence. The addendum lists no budget tag for it and none is used; the service asks quota-governor for nothing.

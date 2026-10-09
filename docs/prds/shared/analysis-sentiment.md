@@ -93,7 +93,7 @@ Re-run policy: every output is stamped with `model_version` and `preproc_version
   "schema": "items.analysis/v1",
   "message_id": "01J9W4Z6D3N8P2Q4R5S6T7U8V9",
   "produced_at": "2026-10-06T09:15:12Z",
-  "producer": {"service": "analysis-sentiment", "version": "0.3.0", "job_id": "analysis-sentiment:priority:0007"},
+  "producer": {"service": "analysis-sentiment", "version": "0.3.0", "job_id": "01M4886GG018V1FH131HTSP75D"},
   "analysis_key": "6f1d2c3e-9a4b-5c6d-8e7f-0a1b2c3d4e5f:sentiment:sent-iq-2026.11",
   "item_id": "6f1d2c3e-9a4b-5c6d-8e7f-0a1b2c3d4e5f", "item_version": 1,
   "content_hash": "sha256:4b2e…", "input_hash": "sha256:91a7…",
@@ -110,6 +110,8 @@ Re-run policy: every output is stamped with `model_version` and `preproc_version
   }
 }
 ```
+
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 ### 6.3 State
 Consumer offsets; LRU of analysed keys and the hit-join buffer (rebuilt lazily); registry cache version; re-run progress in `cursors` (`service = analysis-sentiment`, `cursor = rerun:<model_version>:<last archive object key>`); `model_versions` rows; a `service_runs` row.

@@ -95,7 +95,7 @@ What it does not get, by route: commenter identity or comment ids under PPCA; us
   "schema": "items.normalized/v1",
   "message_id": "01J9W4Q7K2M8R3T5V6X7Y8Z9A0",
   "produced_at": "2026-10-06T09:14:03Z",
-  "producer": {"service": "normalize-item", "version": "1.4.0", "job_id": "fb-page-feed-poller:2026-10-06T09:00Z:7c1e"},
+  "producer": {"service": "normalize-item", "version": "1.4.0", "job_id": "01J9N2Q7Z4T8X1V6M3K0H5R2WB"},
   "item_id": "6f1d2c3e-9a4b-5c6d-8e7f-0a1b2c3d4e5f",
   "idempotency_key": "facebook:post:1234567890_9876543210",
   "platform": "facebook", "kind": "post",
@@ -120,7 +120,7 @@ What it does not get, by route: commenter identity or comment ids under PPCA; us
 }
 ```
 
-The schema also carries `lang_pending` (true while language detection is pending), `text_full_ref` (news articles, the 7-day cache) and, for registered sources only, `author_followers`, which this example omits (ADR-0070).
+The schema also carries `lang_pending` (true while language detection is pending), `text_full_ref` (news articles, the 7-day cache) and, for registered sources only, `author_followers`, which this example omits (ADR-0070). Its `producer.job_id` follows ADR-0006.
 
 ### 6.3 State
 Consumer offsets per partition; the LRU dedup cache (rebuilt lazily after a restart); the registry cache version (last `source.events` offset); replay progress in `cursors` keyed `service = normalize-item`, `cursor = replay:<version>:<last object key>`; a `service_runs` row with lag and error counts.

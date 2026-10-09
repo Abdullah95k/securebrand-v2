@@ -120,7 +120,7 @@ Telegram updates; `jobs.tg-bot-channel-receiver` (kind `reconciliation`, `ops_fo
     "source_id": "8c41f2d7-5a3e-4b96-a0d1-7e2c9b3f4a58",
     "platform_id": "iq_example_owned/5127",
     "idempotency_key": "telegram:post:iq_example_owned/5127",
-    "update_id": 704118532, "attempt": 1,
+    "job_id": "01M487XDFG8JDZ667B758J62C2", "attempt": 1, "context": {"update_id": 704118532},
     "fetched_at": "2026-10-06T09:15:02Z",
     "retention_class": "vendor_agreed",
     "owned_by_client": true,
@@ -130,6 +130,8 @@ Telegram updates; `jobs.tg-bot-channel-receiver` (kind `reconciliation`, `ops_fo
   "payload": { "...": "the channel_post object from 5.4, unchanged" }
 }
 ```
+
+Ids in this example follow ADR-0006: a ULID `job_id` made at receipt, with `attempt = 1`, and the delivery id in `context` (ADR-0005). Where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 Also `discovery.hits` (client-added candidate), `source.events` (`updated`, health), `service_runs`, `dlq.tg-bot-channel-receiver` after 5 failed attempts on a check.
 

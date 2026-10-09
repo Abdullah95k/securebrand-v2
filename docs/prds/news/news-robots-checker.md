@@ -58,7 +58,7 @@ Every registered news host has an unexpired policy row before its first non-poli
 6. Discover an RSL file (`License:` line, `<link rel="license" type="application/rsl+xml">` on the homepage, or a `Link` header); fetch and parse it.
 7. Probe the homepage once to detect a 402 and a Cloudflare challenge; choose the access mode (5.3).
 8. Compute `status`, `crawl_allowed`, `access_mode`, `crawl_delay_seconds`, `usage_signals`, `policy_version` (incremented on any change) and `changed_fields`.
-9. Upsert `crawl_policies`; on first check or any change, produce `crawl.policies`; on `crawl_allowed` flipping, registry-writer updates `sources.health`.
+9. Upsert `crawl_policies`; on first check or any change, produce `crawl.policies`. When `crawl_allowed` flips for a registered site, or at the `added` event of a site added while disallowed, send a source-level `health_change` decision on `registry.decisions` (reason `crawl_disallowed`, back to `ok` once allowed), which registry-writer applies; registry-writer reads no `crawl.policies` (ADR-0013, ADR-0040).
 
 ### 5.3 The call it makes
 
@@ -90,7 +90,7 @@ robots.txt rules and directives; `Content-Signal` values; RSL terms; the status 
 
 ### 6.2 Writes
 
-`crawl.policies`, one message per host on first check and on every change, keyed by `host`. Hosts in the example are illustrative.
+`crawl.policies`, one message per host on first check and on every change, keyed by `host`. Hosts in the example are illustrative. Its fields take the flat names of the `crawl_policies` row (ADR-0040, ADR-0070); where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 ```json
 {
@@ -115,11 +115,11 @@ robots.txt rules and directives; `Content-Signal` values; RSL terms; the status 
 }
 ```
 
-Also the `crawl_policies` row (same fields plus `next_refresh_at` and `next_slot_at`), `service_runs`, `dlq.news-robots-checker` after 5 failed attempts. registry-writer maps `crawl_allowed = false` onto `sources.health = blocked`.
+Also the `crawl_policies` row (the message's columns without its change fields `changed_fields`, `requested_by` and `kind`, plus `next_refresh_at`; no slot column), `service_runs`, `dlq.news-robots-checker` after 5 failed attempts, and the source-level `health_change` decisions of step 9 on `registry.decisions`; registry-writer reads no `crawl.policies` (ADR-0013, ADR-0040).
 
 ### 6.3 State
 
-`crawl_policies` (one row per host: `status`, `crawl_allowed`, `access_mode`, `crawl_delay_seconds`, `robots` including compiled rules, `usage_signals`, `rsl`, `payment`, `checked_at`, `expires_at`, `next_refresh_at`, `policy_version`, `next_slot_at`); job `attempt`; per-host cooldown timers in memory.
+`crawl_policies`, written only by this service, one row per host: `host`, `status`, `crawl_allowed`, `reason`, `access_mode`, `crawl_delay_seconds`, `robots_status`, `robots_rules` (group, compiled rules, sitemaps, hash), `usage_signals`, `rsl`, `payment`, `checked_at`, `expires_at`, `next_refresh_at`, `policy_version`. There is no slot column, since the host gate keeps its slots in `host_gate` (ADR-0040, ADR-0070). Also job `attempt`, and per-host cooldown timers in memory.
 
 ## 7. Limits, quotas and cost
 
@@ -144,7 +144,7 @@ Also the `crawl_policies` row (same fields plus `next_refresh_at` and `next_slot
 - Latency: first policy within 15 minutes; re-check within 15 minutes.
 - Idempotency: one row per host; messages keyed by `host` and `policy_version`; replayable jobs.
 - Scaling: one or two workers; one leader scheduler.
-- Security: proxy credentials from the vault per job, never logged; no cookies; no account pools; every policy keeps its `robots.sha256` as evidence.
+- Security: proxy credentials from the vault per job, never logged; no cookies; no account pools; every policy keeps its `robots_rules.sha256` as evidence (ADR-0070).
 
 ## 10. Metrics and alerts
 

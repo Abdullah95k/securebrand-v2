@@ -27,7 +27,7 @@ Measurable target: zero lost records (offsets commit only after the insert is ac
 
 ## 4. Users and consumers
 
-- aggregator builds `aggregates_hourly` from the tables written here; alert-evaluator reads `hits`, `items` and `aggregates_hourly`.
+- aggregator builds `aggregates_hourly` from the tables written here. alert-evaluator reads the aggregate views, not `hits` or `items`; for the alert types ADR-0048 adds, it also reads `metrics_timeseries` and `item_stories` (ADR-0047).
 - The client app and account managers query `items`, `comments`, `hits` and the masked views.
 - normalize-item and keyword-matcher run point lookups on `items`, `comments` and `hits`; deletion-propagator and retention-purger delete by the same keys.
 - Ops watch lag and DLQ and run replays.
@@ -36,7 +36,7 @@ Measurable target: zero lost records (offsets commit only after the insert is ac
 
 ### 5.1 Trigger and rotation
 
-Trigger: topics `items.normalized`, `items.analysis`, `item.metrics`, `item.hits`, `discovery.hits` and `source.events`, one consumer group `store-writer`. Partitions follow `source_id` (ADR-0004), so one worker handles one source in order; there is no ordering between topics, so an analysis row can arrive before its item, which is harmless because the tables are independent. Offsets commit only after every table in the batch is acknowledged by ClickHouse. A timer drives dimension sync: `keywords` and `clients` are polled every `DIM_POLL_SECONDS` (default 30); `sources_dim` follows `source.events`.
+Trigger: topics `items.normalized`, `items.analysis`, `item.metrics`, `item.hits`, `news.dedup` and `source.events`, one consumer group `store-writer`. `discovery.hits` carries candidates for poster-resolver only and stays out of ClickHouse (ADR-0022, ADR-0031, ADR-0047). Partitions follow `source_id` (ADR-0004; `news.dedup` follows `story_id`), so one worker handles one source in order; there is no ordering between topics, so an analysis row can arrive before its item, which is harmless because the tables are independent. Offsets commit only after every table in the batch is acknowledged by ClickHouse. A timer drives dimension sync: `keywords` and `clients` are polled every `DIM_POLL_SECONDS` (default 30); `sources_dim` follows `source.events`.
 
 Replay: a model, mapper or rule change re-runs the backlog from the raw archive through raw-archiver's replay path (normalize-item republishes, the analysis services re-score, keyword-matcher re-matches). The messages reach this service under consumer group `store-writer-replay-<version>`, rate-capped, and write the same keys with a newer `row_version`, so the old rows are replaced, not duplicated.
 
@@ -60,7 +60,7 @@ Replay: a model, mapper or rule change re-runs the backlog from the raw archive 
 | `comments` | `row_version` | `item_id` | `toYYYYMM(created_at)` | `items.normalized`, `kind` comment or reply; `parent_id` bloom index |
 | `analysis` | `analyzed_at` (ms) | `item_id, model` | `toYYYYMM(analyzed_at)` | `items.analysis`; a newer model version replaces the older |
 | `metrics_timeseries` | `observed_at` | `item_id, observed_at` | `toYYYYMM(observed_at)` | `item.metrics` |
-| `hits` | `row_version` | `client_id, keyword_id, item_id` | `toYYYYMM(hit_at)` | `item.hits`, `discovery.hits`; `status` active or retracted |
+| `hits` | `row_version` | `client_id, keyword_id, item_id` | `toYYYYMM(hit_at)` | `item.hits` only (ADR-0031, ADR-0047); `status` active or retracted |
 | `sources_dim` | `updated_at` | `source_id` | none | `source.events`, reading the current `sources` row |
 | `keywords_dim` | `updated_at` | `keyword_id` | none | `keywords` and `clients`, polled |
 

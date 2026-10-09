@@ -183,7 +183,7 @@ listening-sdk, quota-governor, source-health-canary, raw-archiver, normalize-ite
 6. A read that returns max posts items, all newer than the cursor, requeues the channel at once with a doubled cap; the cursor does not advance past the oldest unread gap.
 7. Replaying one job twice yields two `raw.items` messages with the same `idempotency_key`; normalize-item stores one item. The cursor does not advance when the Redpanda produce fails.
 8. At 80% of the `tg_apify_posts` monthly budget the governor stretches Tier 2 before Tier 1, no interval exceeds 24 hours, and backfill jobs are deferred first.
-9. A 429 is retried with backoff from 30 s to at most 15 min; the sixth failure lands in `dlq.tg-channel-posts-poller` with an alert. A 401 stops the batch, marks the token `degraded` and fires `token_degraded`.
+9. A 429 is retried with backoff from 30 s to at most 15 min; the fifth failed attempt lands in `dlq.tg-channel-posts-poller` with an alert (ADR-0057). A 401 stops the batch, marks the token `degraded` and fires `token_degraded`.
 10. Every `raw.items` message carries `route = amber`, `vendor`, `service`, `fetched_at`, `retention_class = vendor_agreed` and the raw item unchanged.
 
 ## 14. Open questions

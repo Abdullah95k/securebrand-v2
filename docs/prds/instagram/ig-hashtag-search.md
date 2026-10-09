@@ -33,8 +33,8 @@ Measurable target: rotation lag below one tier interval for 99% of hashtag sourc
 ## 4. Users and consumers
 
 - Clients (brands, companies, civilian government bodies) see the result as hashtag volume, sentiment and topics in dashboards, always aggregated and de-identified as Instagram Public Content Access requires.
-- poster-resolver and qualifier consume `discovery.hits` to find candidate business and creator accounts.
-- normalize-item, lang-dialect-id, keyword-matcher and store-writer consume `raw.items`.
+- No `discovery.hits`: this service's media name no poster, so they reach clients only as mentions in keyword-matcher's `item.hits` (ADR-0031).
+- normalize-item and raw-archiver consume `raw.items`; keyword-matcher and store-writer read what normalize-item publishes (ADR-0031).
 - comment-decay-scheduler reads `comments_count` on each post to decide whether a comment series is worth scheduling when `IG_VENDOR_ROUTE` is on.
 - Ops: hashtag budget view per client account; rotation lag.
 

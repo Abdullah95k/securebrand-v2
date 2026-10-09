@@ -109,10 +109,12 @@ Only what `search.results` carries: the result (rank, title, URL, snippet, date)
   "poster_ref": {"handle": "example_creator_iq", "platform_id": null, "url": "https://www.instagram.com/example_creator_iq/reel/Cx4kQ2LsT9m/", "post_ref": "Cx4kQ2LsT9m", "handle_hint": null},
   "origin": "web_search",
   "evidence": {"canonical_url_hash": "sha256:5d18c2…", "engines": ["perplexity", "mojeek"], "sightings": 3, "first_seen_at": "2026-10-05T03:14:09Z",
-               "keyword_rule_ids": ["7d2b0c4e-1f3a-4b5c-8d6e-9f0a1b2c3d4e"], "client_ids": ["cl_17"],
+               "keyword_rule_ids": ["7d2b0c4e-1f3a-4b5c-8d6e-9f0a1b2c3d4e"], "client_ids": ["0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"],
                "title": "…", "snippet": "…"}
 }
 ```
+
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 `article.urls`, partition key `source_id` (the news site's):
 
@@ -126,16 +128,20 @@ Only what `search.results` carries: the result (rank, title, URL, snippet, date)
   "url": "https://www.example-daily.iq/economy/2026/10/05/fiberx-wasit?utm_source=fb",
   "canonical_url": "https://www.example-daily.iq/economy/2026/10/05/fiberx-wasit",
   "canonical_url_hash": "sha256:9c1e4b…",
-  "engines": ["perplexity", "gdelt"], "keyword_rule_ids": ["7d2b0c4e-1f3a-4b5c-8d6e-9f0a1b2c3d4e"], "client_ids": ["cl_17"],
+  "engines": ["perplexity", "gdelt"], "keyword_rule_ids": ["7d2b0c4e-1f3a-4b5c-8d6e-9f0a1b2c3d4e"], "client_ids": ["0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"],
   "title": "…", "snippet": "…", "published_hint": "2026-10-05", "first_seen_at": "2026-10-05T03:14:09Z"
 }
 ```
+
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 The field set beyond `candidate_key`, `platform` and `type` follows poster-resolver's approved schema where it differs (open question 3). Also `service_runs`, `review_queue` (parked messages), `dlq.search-hit-router`.
 
 ### 6.3 State
 
 Three service-private Postgres tables, partitioned by month: `search_url_seen` (canonical URL hash, canonical URL, first and last seen, sightings, engines, bounded lists of rules and clients, platform, `candidate_key`, routed time, outcome), `search_candidate_seen` (candidate key, first emitted, evidence) and `search_parked_urls` (domain, URL, parked time). Rows expire 180 days after the last sighting, matching the qualifier's memory of rejected candidates. In memory: the registered-domain cache, refreshed from `source.events`.
+
+Owner (ADR-0025): `search_url_seen`, `search_candidate_seen` and `search_parked_urls` are private to this service. No other service reads them, F3's `TABLE-OWNERS.md` lists them, and they are registered in the SDK purge registry where they hold item ids, hashes or URLs.
 
 ## 7. Limits, quotas and cost
 

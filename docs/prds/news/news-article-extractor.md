@@ -86,7 +86,7 @@ Title, excerpt, author, published time, canonical URL, language, image URLs and 
 
 ### 6.2 Writes
 
-`raw.items` kind `article`, one message per article, envelope plus the record. Hosts in the example are illustrative.
+`raw.items` kind `article`, one message per article, envelope plus the record. Hosts in the example are illustrative. The extraction code is versioned as `extractor` and `extractor_version` (ADR-0070); where the example's other fields differ from an ADR, the ADR wins (ADR-0001).
 
 ```json
 {
@@ -126,7 +126,7 @@ Also `news_urls` rows, the cache objects, `jobs.news-robots-checker` (`recheck`)
 
 ### 6.3 State
 
-`news_urls` (`url_hash`, `source_id`, `url`, `found_via`, `first_seen_at`, `status` = done | gone | not_article | paywalled | skipped_policy | failed, `canonical_url_hash`, `fetched_at`), pruned after a period set in the pilot; `crawl_policies.next_slot_at`; the cache; in memory only the per-host queues and backoff state.
+`news_urls` (`url_hash`, `source_id`, `url`, `found_via`, `first_seen_at`, `status` = done | gone | not_article | paywalled | skipped_policy | failed | duplicate_canonical (ADR-0036), `canonical_url_hash`, `fetched_at`), pruned after a period set in the pilot; host-gate slots in `host_gate`, written only by the SDK gate (ADR-0040); the cache; in memory only the per-host queues and backoff state.
 
 ## 7. Limits, quotas and cost
 

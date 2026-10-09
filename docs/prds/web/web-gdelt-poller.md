@@ -88,17 +88,17 @@ It does not get a snippet or article text, most Iraqi outlets, much Arabic or Ku
 
 ### 6.2 Writes
 
-- `raw.items`: one record per API response; envelope `service`, `route = green`, `vendor = gdelt`, `platform = web`, `source_id` (the rule), `job_id`, `job_kind`, `kind = search_response` (ADR-0070), `fetched_at`, `raw_ref`; partition key `web:<source_id>`.
+- `raw.items`: one record per API response; envelope `service`, `route = green`, `vendor = gdelt`, `platform = web`, `source_id` (the rule), `job_id`, `job_kind`, `kind = search_response` (ADR-0070), `fetched_at`, `raw_ref`; partition key `source_id` (ADR-0004).
 - `search.results`, the shape of web-search-perplexity with `snippet` null and one optional addition, `hints` (domain, language, source country), partition key `canonical_url_hash`:
 
 ```json
 {
   "schema": "search.results/v1",
-  "message_id": "sr:gdelt:sha256:b27d93…:wgd-20261006-0905",
+  "message_id": "01M487CCJ069ZBDAYY9MKFA4FY",
   "produced_at": "2026-10-06T09:05:44Z",
   "service": "web-gdelt-poller", "engine": "gdelt", "route": "green", "vendor": "gdelt",
-  "job_id": "wgd-20261006-0905", "job_kind": "rotation", "attempt": 1,
-  "keyword_rule_id": "7d2b0c4e-1f3a-4b5c-8d6e-9f0a1b2c3d4e", "keyword_id": "kw_0412", "client_ids": ["cl_17"],
+  "job_id": "01M487B1K0HD8T2YTQZB9XYNWZ", "job_kind": "rotation", "attempt": 1,
+  "keyword_rule_id": "7d2b0c4e-1f3a-4b5c-8d6e-9f0a1b2c3d4e", "keyword_id": "0cd402b6-9015-45f8-86b4-d90cc086d320", "client_ids": ["0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"],
   "query": {"text": "(\"FiberX\" OR \"فايبر اكس\" OR \"فايبر إكس\")", "variant": "or_group", "lang": null, "country": null, "request_id": null},
   "result": {"rank": 2, "title": "FiberX expands fibre network in southern Iraq", "url": "https://www.example-gulf-news.com/2026/10/05/fiberx-expands", "snippet": null, "date": "2026-10-05", "last_updated": null},
   "hints": {"domain": "example-gulf-news.com", "language": "English", "source_country": "United Arab Emirates"},
@@ -109,6 +109,8 @@ It does not get a snippet or article text, most Iraqi outlets, much Arabic or Ku
   "retention_class": "news_excerpt"
 }
 ```
+
+Ids in this example follow ADR-0002 and ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 Also `service_runs` and `dlq.web-gdelt-poller` after 5 failed attempts.
 

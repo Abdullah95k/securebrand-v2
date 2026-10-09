@@ -86,17 +86,17 @@ It does not get page text beyond the snippet, author identity, engagement counts
 - Control plane: `sources`, `keywords`, `clients` (opt-out, government flag), `cursors`, `budgets` through quota-governor, `vendor_keys`, `canary_targets`, `service_runs`.
 
 ### 6.2 Writes
-- `raw.items`: one record per API response; envelope `service`, `route = green`, `vendor = perplexity`, `platform = web`, `source_id` (the rule), `job_id`, `job_kind`, `kind = search_response` (ADR-0070), `fetched_at`, `api_version`, `raw_ref`; partition key `web:<source_id>`.
+- `raw.items`: one record per API response; envelope `service`, `route = green`, `vendor = perplexity`, `platform = web`, `source_id` (the rule), `job_id`, `job_kind`, `kind = search_response` (ADR-0070), `fetched_at`, `api_version`, `raw_ref`; partition key `source_id` (ADR-0004).
 - `search.results`, partition key `canonical_url_hash`, so every engine's sighting of one URL lands on one partition for search-hit-router:
 
 ```json
 {
   "schema": "search.results/v1",
-  "message_id": "sr:perplexity:sha256:9c1e4b…:wsp-20261006-0117",
+  "message_id": "01M47K8KZ82WKA5373HTZ515SS",
   "produced_at": "2026-10-06T03:14:09Z",
   "service": "web-search-perplexity", "engine": "perplexity", "route": "green", "vendor": "perplexity",
-  "job_id": "wsp-20261006-0117", "job_kind": "rotation", "attempt": 1,
-  "keyword_rule_id": "7d2b0c4e-1f3a-4b5c-8d6e-9f0a1b2c3d4e", "keyword_id": "kw_0412", "client_ids": ["cl_17"],
+  "job_id": "01M47K8B60RM3M56CMJWGZ9C6G", "job_kind": "rotation", "attempt": 1,
+  "keyword_rule_id": "7d2b0c4e-1f3a-4b5c-8d6e-9f0a1b2c3d4e", "keyword_id": "0cd402b6-9015-45f8-86b4-d90cc086d320", "client_ids": ["0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"],
   "query": {"text": "\"فايبر اكس\" العراق", "variant": "arabic_context", "lang": "ar", "country": "IQ", "request_id": "pplx-01J9…"},
   "result": {"rank": 3, "title": "فايبر اكس تطلق باقة جديدة في واسط", "url": "https://www.example-daily.iq/economy/2026/10/05/fiberx-wasit?utm_source=fb", "snippet": "أعلنت شركة فايبر اكس عن …", "date": "2026-10-05", "last_updated": "2026-10-05"},
   "canonical_url": "https://www.example-daily.iq/economy/2026/10/05/fiberx-wasit",
@@ -106,6 +106,8 @@ It does not get page text beyond the snippet, author identity, engagement counts
   "retention_class": "news_excerpt"
 }
 ```
+
+Ids in this example follow ADR-0002 and ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 - `dlq.web-search-perplexity`; `service_runs`.
 
@@ -160,7 +162,7 @@ It does not get page text beyond the snippet, author identity, engagement counts
 4. Every result in a recorded response produces one `search.results` message with `canonical_url_hash`, `keyword_rule_id`, `client_ids`, `raw_ref` and `retention_class = news_excerpt`, partitioned by `canonical_url_hash`.
 5. Replaying a completed job republishes messages with identical `message_id` values and commits no second batch to `raw.items`.
 6. A rule whose only client has opted out of Perplexity produces no job here and still runs on web-search-mojeek.
-7. A 429 is retried with backoff starting at 30 s; the sixth failure lands in `dlq.web-search-perplexity` with an alert.
+7. A 429 is retried with backoff starting at 30 s; the fifth failed attempt lands in `dlq.web-search-perplexity` with an alert (ADR-0057).
 8. A 401 stops the run, marks the key `degraded` and fires an alert without a second request.
 9. A `site_search` job from yt-web-search-bridge is charged to the job's `budget_tag`, not to `perplexity_search`, verified in `budgets`.
 10. Over a 30-day pilot month with 200 rules, `cost_units_total` is at or below the governor cap and 99% of rules met their interval every day.

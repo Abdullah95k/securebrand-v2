@@ -31,7 +31,7 @@ Measurable target: rotation lag below one tier interval for 99% of hashtag sourc
 ## 4. Users and consumers
 
 - Clients running or watching a campaign tag, and clients watching a competitor's tag; amber provenance is shown on every item.
-- normalize-item and keyword-matcher: a video from a hashtag source counts as a hit for the hashtag's clients without text matching, split into `item.hits` or `discovery.hits` by whether the poster is registered; poster-resolver takes the discovery hits.
+- normalize-item and keyword-matcher: a video from a hashtag source is a hit for each of the hashtag's clients who passes the client gate, under the source's keyword, with `matched_by = source` when the text does not match. Every hit goes to `item.hits`, with a `discovery.hits` candidate for an unregistered poster (ADR-0031, ADR-0044); poster-resolver takes the candidates.
 - comment-decay-scheduler starts the comment series on each new video; aggregator builds the campaign view.
 - Ops: cost per hashtag, pages per run, rotation lag. Management: campaign coverage on TikTok as a sellable feature.
 
@@ -89,7 +89,7 @@ Per video: the platform video id, caption, creation time, author block (user id,
   "route": "amber",
   "vendor": "ensembledata",
   "service": "tt-hashtag-feed-poller",
-  "job_id": "job_01J9QA4N7X",
+  "job_id": "01M4872SXGZPDRA21SXW1ZYD7N",
   "attempt": 1,
   "fetched_at": "2026-10-06T09:00:41Z",
   "retention_class": "vendor_agreed",
@@ -104,6 +104,8 @@ Per video: the platform video id, caption, creation time, author block (user id,
   }
 }
 ```
+
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 ### 6.3 State
 
@@ -151,7 +153,7 @@ listening-sdk (adapter contract, scheduler helper, rate limiter, idempotency); q
 
 ## 13. Acceptance criteria
 
-1. With `TT_VENDOR_ROUTE = off`, no vendor call is made during a day of scheduled jobs and every job is counted as `flag_off`.
+1. With `TT_VENDOR_ROUTE = off`, no vendor call is made during a day: the scheduler emits no job, and a job already queued ends `skipped_flag_off` at its start, never as an attempt (ADR-0050, ADR-0017).
 2. With the flag set to `tikhub` and then `ensembledata`, the same hashtag produces `raw.items` messages that pass the normalize-item schema, with `vendor` set accordingly.
 3. A Tier 1 hashtag is polled at a fixed 60-minute cadence over 24 hours; Tier 2 and Tier 3 hashtags show 6-hour and 24-hour cadences; a dormant hashtag is polled weekly and returns to its tier on the next new video.
 4. After a simulated 3-hour outage, the most-stale hashtags are polled first and `rotation_behind` fires once, then clears.
@@ -159,7 +161,7 @@ listening-sdk (adapter contract, scheduler helper, rate limiter, idempotency); q
 6. A rotation poll stops at the first page holding no new video; `items_new_total` for a quiet hashtag is zero and `pages_per_poll` is one.
 7. A hashtag whose `client_ids` all belong to government clients never produces a job.
 8. Every message carries `route = amber`, `vendor`, `service`, `source_type = hashtag`, `fetched_at`, `retention_class = vendor_agreed` and an `idempotency_key` of the form `tiktok:video:<id>`.
-9. A stubbed 429 triggers backoff from 30 s with jitter, capped at 15 min; the sixth failure lands the job in `dlq.tt-hashtag-feed-poller` with an alert.
+9. A stubbed 429 triggers backoff from 30 s with jitter, capped at 15 min; the fifth failed attempt lands the job in `dlq.tt-hashtag-feed-poller` with an alert (ADR-0057).
 10. A stubbed run with more than 5% empty 200s over 15 minutes flips the route to `degraded` and the next job uses the alternate vendor.
 11. `cost_units_total` for a run equals the number of HTTP 200 responses in that run.
 
