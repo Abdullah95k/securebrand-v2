@@ -157,11 +157,11 @@ Metrics (likes, shares, views, comment counts) are refreshed at +24 h and +7 d, 
 
 Ten years is the default lifetime of every stored item, except where a platform's terms, a vendor contract or copyright set a shorter limit, which then applies. A deletion request (a person's, a client's or a platform's) removes what it names in any class. A record's class follows its route, except LinkedIn's, which follows its content. The classes are rows of `retention_classes` (ADR-0045), and counsel confirms each reading before production (ADR-0054, ADR-0055, ADR-0056).
 
-- `meta_on_request`: Meta Platform Data, kept until a deletion request, at most ten years: deleted on Meta's request, on the person's request and at the offboarding of the client it was fetched for (ADR-0054).
+- `meta_on_request`: Meta Platform Data, kept until a deletion request, at most ten years: deleted on Meta's request, on the person's request and at the offboarding of the last client it is held for (ADR-0054, ADR-0053).
 - `vendor_agreed`: data bought from a vendor (LinkedIn's excepted), per the vendor contract and our author notice: ten years where the contract allows it, otherwise the contract's limit (ADR-0054).
 - `x_24h_sync`: X content, ten years, with X deletions mirrored within 24 hours of X's compliance signal (ADR-0054, ADR-0069).
 - `news_excerpt`: news excerpts and metadata, and web-search results, ten years; full text only in a 7-day cache, which applies only where full text is cached (ADR-0054, ADR-0022).
-- `telegram_bot`: what our bot receives in channels and their discussion groups, ten years; deleted on the channel owner's, a member's or the client's request, and at offboarding (ADR-0054).
+- `telegram_bot`: what our bot receives in channels and their discussion groups, ten years; deleted on the channel owner's, a member's or the client's request (reason `client_request`, ADR-0035), and at offboarding (ADR-0054).
 - `tiktok_display`: a client's own TikTok videos and stats, kept while the client's authorisation lasts; deleted on revocation, at offboarding and on TikTok's request (ADR-0054).
 - `linkedin_48h`: member-authored LinkedIn content (comments, member posts, reposts of member posts) on every route, purged 48 hours after `fetched_at`; member profile data is never stored (ADR-0055).
 - `linkedin_org`: LinkedIn organisation posts and their counts on every route, six weeks after `fetched_at`, or six months if counsel confirms that our access counts as authenticated (ADR-0055).
