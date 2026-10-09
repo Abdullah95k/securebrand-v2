@@ -1,7 +1,7 @@
 # ADR-0052 · Amber data and client consent
 
 2026-10-07 · decided by: the user, relayed by the orchestrator on 2026-10-07 · status: accepted
-Applies to: F2, F3, comment-decay-scheduler, keyword-matcher, qualifier, registry-writer, source-health-canary, ig-hashtag-search, tt-client-videos-fetcher, tg-bot-channel-receiver, D3, and every amber service: fb-keyword-search, fb-group-posts-poller, fb-group-comments-fetcher, ig-keyword-search, ig-comments-fetcher, tt-keyword-search, tt-hashtag-feed-poller, tt-user-resolver, tt-profile-videos-poller, tt-video-comments-fetcher, tt-video-stats-refresher, li-post-search, li-org-resolver, li-company-posts-poller, li-post-comments-fetcher, tg-message-search, tg-channel-resolver, tg-channel-posts-poller
+Applies to: F2, F3, quota-governor, comment-decay-scheduler, keyword-matcher, qualifier, registry-writer, source-health-canary, ig-hashtag-search, tt-client-videos-fetcher, tg-bot-channel-receiver, D3, and every amber service: fb-keyword-search, fb-group-posts-poller, fb-group-comments-fetcher, ig-keyword-search, ig-comments-fetcher, tt-keyword-search, tt-hashtag-feed-poller, tt-user-resolver, tt-profile-videos-poller, tt-video-comments-fetcher, tt-video-stats-refresher, li-post-search, li-org-resolver, li-company-posts-poller, li-post-comments-fetcher, tg-message-search, tg-channel-resolver, tg-channel-posts-poller
 Source: D2-Q052 (user decision; the recommended option, approved) in `docs/decisions/D2-PROPOSALS.md` · ratification: the user's merge of Abdullah95k/securebrand-v2#6 · line references are to CONVENTIONS v1 and the PRDs as they stood before D2's edits
 
 ## Context
@@ -19,22 +19,22 @@ Depends on: ADR-0021 (the government exclusion, and the automatic fallback of on
 
 ## Options
 
-1. **Amber by explicit consent, never on a client's own properties** (chosen): its rules are under Decision.
+1. **Amber by explicit consent, never on a client's own properties** (chosen, with ADR-0021's automatic fallback of a blocked client-owned property): its rules are under Decision.
 2. **Option 1, but an accepting client's own properties may also be read through the vendor:** daily reconciliation and outage gap fill (the amber pollers also select green push sources of accepting clients, AU-091 option 1) and an opt-in 90-day Telegram pre-join history, marked amber. Consequences: no lost Telegram posts after a long outage, history for new channels, and the view counts the bot lacks (`tg-bot-channel-receiver §5.4 L103`); a daily vendor read per owned property; mixed provenance on a client's own channel.
 3. **Government flag only, as CONVENTIONS L7 says.** Consequences: no consent column; every non-government client receives amber data while a flag is on, even one whose contract excludes it.
 
 ## Decision
 
-A client receives amber data only if its contract accepts vendor data (`clients.accepts_amber`, off by default and always off for government clients); a client's own properties are never read through a vendor; a client's 31st Instagram hashtag in a week goes to the vendor only for a client that accepts amber, and otherwise waits.
+A client receives amber data only if its contract accepts vendor data (`clients.accepts_amber`, off by default and always off for government clients); a client's own properties are read through a vendor only in ADR-0021's automatic fallback, once their green access is lost (the user's answer of 9 Oct 2026); a client's 31st Instagram hashtag in a week goes to the vendor only for a client that accepts amber, and otherwise waits.
 
 - (a) `clients.accepts_amber`, off by default, set when the client's contract allows vendor data (D3 specifies the screen), always off for `client_type = government` (a check in F3). Amber schedulers select a source only if one of its clients accepts amber; amber jobs re-check at run time and end without a call if none does; amber records list only accepting clients in `client_ids`; keyword-matcher fans amber items out to accepting clients only (ADR-0053).
 - (b) comment-decay-scheduler, which then reads `clients`, opens an amber series only while the flag is on, an accepting client watches the source and its vendor spend is under the cap (rule 5, the per-source sub-counter of ADR-0042); it cancels open series when the flag goes off or the last accepting client leaves (its catch-up rule, `§5.1 L44`, applies if the flag returns).
 - (c) Rule 5 gains the Instagram cap (30 hashtags per business account per 7 days, L89). Over the cap of a client's account, the hashtag is registered `route = amber`, `vendor = sociavault` (read by ig-keyword-search) if that client accepts amber and `IG_VENDOR_ROUTE` is on; otherwise it is queued and the client told. ig-hashtag-search reports budget waits as `updated` with `budget_wait`, never `fallback_on` (qualifier and ig-hashtag-search, both approved, move under ADR-0001).
 - (d) The canary fallback for green hashtags is declared in `canary_targets` (`alternate_vendor = sociavault`, `flag_name = IG_VENDOR_ROUTE`, `scope = non_government`), as ig-hashtag-search expects; while it lasts, only accepting clients receive the items.
-- (e) A client's own green properties (TikTok Display accounts, Telegram bot channels, owned Pages and accounts) are never read through a vendor: no daily amber reconciliation, no outage gap fill, no pre-join history (tt-profile-videos-poller Q3 and tg-bot-channel-receiver Q6: no). The green read counts as complete; outages are reported to the client.
-- With ADR-0021's automatic fallback, (a) and (e) hold: a blocked green source moves to its amber route only when a client that accepts amber watches it, and a client-owned property never does.
+- (e) A client's own green properties (TikTok Display accounts, Telegram bot channels, owned Pages and accounts) are not read through a vendor beside their green read: no daily amber reconciliation, no outage gap fill, no pre-join history (tt-profile-videos-poller Q3 and tg-bot-channel-receiver Q6: no). The green read counts as complete; outages are reported to the client. When a property's green access is lost, ADR-0021's automatic fallback reads it through the vendor like any other source (the user's answer of 9 Oct 2026).
+- With ADR-0021's automatic fallback, (a) holds for one source and for a whole route: a blocked green source, a client-owned property included (the user's answer of 9 Oct 2026), moves to its amber route only when a client that accepts amber watches it and no government client does, and while a route is in `fallback` its amber reads take only the sources an accepting client watches; only accepting clients receive the records, so a property's owner receives them only if its own contract accepts amber (ADR-0021).
 
-Why: Amber data rests on the vendor's contract, not ours, so a client should take it knowingly; a property authorised through the platform's own route should not be quietly re-read through a scraper.
+Why: Amber data rests on the vendor's contract, not ours, so a client should take it knowingly; a property authorised through the platform's own route should not be re-read through a scraper while that route works; when it is lost, the fallback is announced to ops and the client is asked to grant access again (ADR-0021).
 
 ## Consequences
 

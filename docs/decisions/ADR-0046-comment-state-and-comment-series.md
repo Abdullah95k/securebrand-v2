@@ -1,7 +1,7 @@
 # ADR-0046 · Comment state and comment series
 
 2026-10-07 · decided by: the user, relayed by the orchestrator on 2026-10-07 · status: accepted
-Applies to: F2, F3, F8, listening-sdk, comment-decay-scheduler, deletion-propagator, and the lanes Comments and Comments and stats (every comment and replies fetcher)
+Applies to: F2, F3, F8, listening-sdk, comment-decay-scheduler, deletion-propagator, store-writer, and the lanes Comments and Comments and stats (every comment and replies fetcher)
 Source: D2-Q046 (technical decision; the recommended option, approved) in `docs/decisions/D2-PROPOSALS.md` · ratification: the user's merge of Abdullah95k/securebrand-v2#6 · line references are to CONVENTIONS v1 and the PRDs as they stood before D2's edits
 
 ## Context

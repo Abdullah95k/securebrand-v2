@@ -1,7 +1,7 @@
 # ADR-0020 · Backfill
 
 2026-10-07 · decided by: the user, relayed by the orchestrator on 2026-10-07 · status: accepted
-Applies to: F2, F3, backfill-orchestrator, registry-writer, comment-decay-scheduler, web-commoncrawl-scanner, and the lanes Discover and qualify and Fetch posts (every service in the route table)
+Applies to: F2, F3, listening-sdk (F4, F5), backfill-orchestrator, registry-writer, comment-decay-scheduler, web-commoncrawl-scanner, tg-discussion-receiver, and the lanes Discover and qualify and Fetch posts (every service in the route table)
 Source: D2-Q020 (technical decision; the recommended option, approved) in `docs/decisions/D2-PROPOSALS.md` · ratification: the user's merge of Abdullah95k/securebrand-v2#6 · line references are to CONVENTIONS v1 and the PRDs as they stood before D2's edits
 
 ## Context

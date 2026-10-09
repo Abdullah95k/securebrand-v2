@@ -1,7 +1,7 @@
 # ADR-0038 · Web pages as items
 
 2026-10-07 · decided by: the user, relayed by the orchestrator on 2026-10-07 · status: accepted
-Applies to: F2, search-hit-router, normalize-item, keyword-matcher, and web: web-search-perplexity, web-search-mojeek, web-gdelt-poller
+Applies to: F2, search-hit-router, normalize-item, keyword-matcher, yt-web-search-bridge, and web: web-search-perplexity, web-search-mojeek, web-gdelt-poller
 Source: D2-Q038 (user decision; the recommended option, approved) in `docs/decisions/D2-PROPOSALS.md` · ratification: the user's merge of Abdullah95k/securebrand-v2#6 · line references are to CONVENTIONS v1 and the PRDs as they stood before D2's edits
 
 ## Context

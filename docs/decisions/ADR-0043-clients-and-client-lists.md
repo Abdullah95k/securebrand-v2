@@ -12,7 +12,7 @@ Source: D2-Q043 (technical decision; the recommended option, approved) in `docs/
 At stake: every amber, X and government rule reads `clients`; one concept under four names means one filter per service, and a list edited in one place changes nothing for the services that read another.
 
 Settles: CF-039, CF-056, li-client-posts-poller §14 Q4, registry-writer §14 Q3, x-user-resolver §14 Q1.
-Depends on: ADR-0016 (`credentials`), ADR-0050 (the X gate), ADR-0052 (amber acceptance), ADR-0066 (the manual path for client-added candidates).
+Depends on: ADR-0010 (public accounts and the `saved` list), ADR-0016 (`credentials`), ADR-0050 (the X gate), ADR-0052 (amber acceptance), ADR-0056 (the YouTube text refresh, part of the service), ADR-0066 (the manual path for client-added candidates).
 
 ## Options
 
@@ -28,7 +28,7 @@ Depends on: ADR-0016 (`credentials`), ADR-0050 (the X gate), ADR-0052 (amber acc
 - Tokens, calling accounts and webhook secrets live in `credentials` (ADR-0016). `client_settings` (`client_id`, `service`, `settings` jsonb) holds per-service options; `qualifier_config` becomes the qualifier's row (an approved PRD moves under ADR-0001). Portal users and roles are D3's.
 - Priority: `client_sources.priority`, written by registry-writer from the portal's `add` or `update` decision. A source any client priority-lists is tier 1 whatever its followers and is exempt from decay while listed (`CONVENTIONS L45`, `qualifier §12 L134`); li-client-posts-poller's 30-minute list is this flag (answers `li-client-posts-poller §14 Q4 L190`); its cadence comes from an `owned_by_client` row of ADR-0049's cadence table, as these pages are not `push_covered`. Keyword priority is `keywords.priority` (ADR-0044).
 - Seed lists and watchlists: `client_lists` (`client_id`, `list` `seed`, `watch` or `saved`, `candidate_key` in ADR-0032's forms or, for a saved registered source, `source_id`, `added_at`, `added_by`), indexed by `candidate_key` and `source_id` and read by poster-resolver, the qualifier, x-user-resolver and news-site-resolver; a new seed or watch entry also goes down the manual path (ADR-0066).
-- The client portal and admin console write `clients`, `client_settings` and `client_lists` (D3 specifies the writer); services only read them.
+- The client portal and admin console write `clients`, `client_settings` and `client_lists` (D3 specifies the writer); services only read them, except that deletion-propagator removes the `client_lists` entries of an account a deletion removes, through the SDK purge registry (ADR-0035).
 - Saved lists (ADR-0010): a `saved` entry is a public account a client has saved, keyed by the account's candidate key or `source_id`; the client lists, filters, ranks and saves public accounts and uses a saved list as a segment, as D3 specifies.
 
 Why: Each concept gets one name and one home that fits what it acts on: a policy on the client, a priority on the source, a seed or watch entry on the candidate.

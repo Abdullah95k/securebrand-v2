@@ -1,7 +1,7 @@
 # ADR-0050 · Flags, fallback and the X plan gate
 
 2026-10-07 · decided by: the user, relayed by the orchestrator on 2026-10-07 · status: accepted
-Applies to: F3, listening-sdk (F4, F5, F6), keyword-matcher, quota-governor, poster-resolver, backfill-orchestrator, comment-decay-scheduler, source-health-canary, registry-writer, x (every X service), and every amber service: fb-keyword-search, fb-group-posts-poller, fb-group-comments-fetcher, ig-keyword-search, ig-comments-fetcher, tt-keyword-search, tt-hashtag-feed-poller, tt-user-resolver, tt-profile-videos-poller, tt-video-comments-fetcher, tt-video-stats-refresher, li-post-search, li-org-resolver, li-company-posts-poller, li-post-comments-fetcher, tg-message-search, tg-channel-resolver, tg-channel-posts-poller
+Applies to: F3, listening-sdk (F4, F5, F6), keyword-matcher, quota-governor, poster-resolver, qualifier, ig-hashtag-search, backfill-orchestrator, comment-decay-scheduler, source-health-canary, registry-writer, x (every X service), and every amber service: fb-keyword-search, fb-group-posts-poller, fb-group-comments-fetcher, ig-keyword-search, ig-comments-fetcher, tt-keyword-search, tt-hashtag-feed-poller, tt-user-resolver, tt-profile-videos-poller, tt-video-comments-fetcher, tt-video-stats-refresher, li-post-search, li-org-resolver, li-company-posts-poller, li-post-comments-fetcher, tg-message-search, tg-channel-resolver, tg-channel-posts-poller
 Source: D2-Q050 (technical decision; the recommended option, approved) in `docs/decisions/D2-PROPOSALS.md` · ratification: the user's merge of Abdullah95k/securebrand-v2#6 · line references are to CONVENTIONS v1 and the PRDs as they stood before D2's edits
 
 ## Context
@@ -13,7 +13,7 @@ Source: D2-Q050 (technical decision; the recommended option, approved) in `docs/
 At stake: amber code off in one service and on in another during a rollout, and X data reaching a client X's plan does not cover.
 
 Settles: CF-102, AU-095, quota-governor §14 Q3, x-user-timeline-poller §14 Q5.
-Depends on: ADR-0016 and ADR-0021 (health and fallback), ADR-0017 (`skipped_flag_off`), ADR-0042 (`source_id` on the governor's request), ADR-0051 (vendor values), ADR-0053 (X before Enterprise).
+Depends on: ADR-0010 (the follower threshold, a row of `feature_flags`), ADR-0016 and ADR-0021 (health and the automatic fallback), ADR-0017 (`skipped_flag_off`), ADR-0042 (`source_id` on the governor's request), ADR-0051 (vendor values), ADR-0053 (X before Enterprise).
 
 ## Options
 

@@ -1,7 +1,7 @@
 # ADR-0037 · Web-search results path
 
 2026-10-07 · decided by: the user, relayed by the orchestrator on 2026-10-07 · status: accepted
-Applies to: F2, raw-archiver, search-hit-router, yt-web-search-bridge, yt-video-details-fetcher, and web: web-search-perplexity, web-search-mojeek, web-gdelt-poller, web-commoncrawl-scanner
+Applies to: F2, raw-archiver, quota-governor, normalize-item, poster-resolver, fb-page-resolver, ig-account-resolver, yt-channel-resolver, search-hit-router, yt-web-search-bridge, yt-video-details-fetcher, and web: web-search-perplexity, web-search-mojeek, web-gdelt-poller, web-commoncrawl-scanner
 Source: D2-Q037 (technical decision; the recommended option, approved) in `docs/decisions/D2-PROPOSALS.md` · ratification: the user's merge of Abdullah95k/securebrand-v2#6 · line references are to CONVENTIONS v1 and the PRDs as they stood before D2's edits
 
 ## Context

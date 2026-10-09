@@ -24,7 +24,7 @@ Each part of README decision 8 is confirmed as the decisions it depends on shape
 - Edge hashing: confirmed and generalised to every route (ADR-0010), so TikTok comments (`tt-video-comments-fetcher §5.3 L68`) are no longer an exception.
 - Metrics: tt-client-videos-fetcher is a named producer of its own +24 h and +7 d observations, taken from the first hourly read at or after each mark (`tt-client-videos-fetcher §5.1 L51`; ADR-0012), anchored and published as ADR-0034 decides; comment-decay-scheduler opens no metrics lane for green TikTok videos, so they never reach the amber tt-video-stats-refresher (`tt-client-videos-fetcher §14 Q5 L180`).
 - `tiktok_display`: added by ADR-0054, kept while the client's authorisation lasts and deleted when it is revoked.
-- "`tier = push`": the Display API is polled, not pushed (`tt-client-videos-fetcher §5.1 L43`), so the account keeps `push_covered = false` and its reach tier, and takes its cadence from the `owned_by_client` row of the cadence table (hourly, ADR-0049); a green client account is never reconciled through tt-profile-videos-poller (ADR-0052).
+- "`tier = push`": the Display API is polled, not pushed (`tt-client-videos-fetcher §5.1 L43`), so the account keeps `push_covered = false` and its reach tier, and takes its cadence from the `owned_by_client` row of the cadence table (hourly, ADR-0049); a green client account is never reconciled through tt-profile-videos-poller (ADR-0052), though, when its grant is lost, it falls back to it as ADR-0021 allows.
 
 Why: Each part of the README survives with the precision its conflict needed, and TT1 has nothing left to guess.
 

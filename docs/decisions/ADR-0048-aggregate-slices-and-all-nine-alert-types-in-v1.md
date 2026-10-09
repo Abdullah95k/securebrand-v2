@@ -1,7 +1,7 @@
 # ADR-0048 · Aggregate slices and all nine alert types in v1
 
 2026-10-07 · decided by: the user, relayed by the orchestrator on 2026-10-07 · status: accepted
-Applies to: F8, aggregator, alert-evaluator, store-writer, analysis-sentiment, analysis-topics, analysis-entities, analysis-media, lang-dialect-id, news-dedup, ig-hashtag-search, fb-reactions-fetcher, tt-video-stats-refresher, yt-video-details-fetcher, yt-comments-fetcher, li-notification-receiver, li-own-comments-fetcher, li-post-comments-fetcher, D3
+Applies to: F8, aggregator, alert-evaluator, store-writer, analysis-sentiment, analysis-topics, analysis-entities, analysis-media, lang-dialect-id, news-dedup, ig-hashtag-search, fb-reactions-fetcher, tt-video-stats-refresher, yt-video-details-fetcher, yt-comments-fetcher, li-notification-receiver, li-own-comments-fetcher, li-post-comments-fetcher, D3, U3
 Source: D2-Q048 (user decision; changed by the user's answer) in `docs/decisions/D2-PROPOSALS.md` · ratification: the user's merge of Abdullah95k/securebrand-v2#6 · line references are to CONVENTIONS v1 and the PRDs as they stood before D2's edits
 
 ## Context
@@ -43,7 +43,7 @@ Option 3, with the per-post LinkedIn history gated by counsel. Every slice of op
 
 **Slices (option 1 (a) to (e) and (g); (f) under the LinkedIn history below)**
 
-- (a) The main grain gains `lang`, `dialect`, `route` and the item `kind` (`post`, `comment`, `article`, ADR-0008), so posts and comments count apart (aggregator Q3), and, on YouTube rows, the video's channel (`video_channel_id`), so YouTube figures stay per channel owner except where the carve-out allows totals (ADR-0056 sets their lifetime).
+- (a) The main grain gains `lang`, `dialect`, `route` and the item `kind` (`post`, `video`, `comment`, `article`, `result`, ADR-0008), so posts and comments count apart (aggregator Q3), and, on YouTube rows, the video's channel (`video_channel_id`), so YouTube figures stay per channel owner except where the carve-out allows totals (ADR-0056 sets their lifetime).
 - (b) `mixed` counts in every share's denominator and shows as its own share: negative share = negative ÷ (positive + neutral + negative + mixed), so the four shares add up to 100%; `pending` and `unscored` stay out; aggregator and alert-evaluator alike.
 - (c) `topic_id` = `<taxonomy_id>:<node_id>` (`global:outage`); a client taxonomy's topics appear only on that client's rows; label names as in `items.analysis/v1` (aggregator Q5).
 - (d) Entities, brands and media tags in their own aggregator rollup, keyed like the main table with that id in place of the topic, so two multi-valued slices never multiply rows; filled once A3 and A4 run. The governorates analysis-entities resolves from the places an item names (`analysis-entities §4 L33`) are entities of this rollup, which gives the anonymous segments of ADR-0010 their region or governorate.
@@ -59,7 +59,7 @@ Option 3, with the per-post LinkedIn history gated by counsel. Every slice of op
 
 - The five built types (`alert-evaluator §3 L22`): volume spike, negative share, new high-reach poster, keyword first seen, deletion of a high-reach post.
 - Four more, also built in v1:
-  - engagement spikes, from the engagement observations of ADR-0034, whose velocity alert-evaluator uses (`fb-reactions-fetcher §4 L33`, `tt-video-stats-refresher §4 L36`); X, LinkedIn, Telegram and Facebook-group counts are recorded at first sight only (ADR-0058);
+  - engagement spikes, from the engagement observations of ADR-0034, whose velocity alert-evaluator uses (`fb-reactions-fetcher §4 L33`, `tt-video-stats-refresher §4 L36`); X, LinkedIn, Telegram and Facebook-group counts are recorded at first sight only (ADR-0058), so those routes give no velocity, and in v1 an engagement spike fires only on Facebook Pages, Instagram, TikTok and YouTube, whose counts are refreshed at +24 h and +7 d (ADR-0034, ADR-0058);
   - topic spikes, from the `topic_id` slice of (c) (`analysis-topics §4 L37`);
   - entity or logo alerts, on a named institution or brand or a client's logo in high-reach media, from the rollup of (d) (`analysis-entities §4 L33`, `analysis-media §4 L34`);
   - story alerts, on unique stories rather than copies, from the `stories` measure of (e) and `item_stories` (ADR-0022, `news-dedup §4 L35`).
@@ -81,4 +81,4 @@ Every view has a ten-year source, the per-post LinkedIn history included once co
 - The seven PRDs that promise the four alert types (fb-reactions-fetcher, tt-video-stats-refresher, analysis-topics, analysis-entities, analysis-media, news-dedup and alert-evaluator) are not marked for a later release; alert-evaluator's "five rule types" (`alert-evaluator §3 L22`) are nine under this ADR.
 - `DEFERRED.md`: counsel on per-post LinkedIn rollups kept ten years (the user with counsel, before LinkedIn's go-live; C15 and F8 act on the answer); the minute grain (A5, after the pilot); a trending score (U3); reach frozen at first sight (C15); who approves alert defaults (the user, asked by A5); `keyword_first_seen` and the four new types for government clients (the user with counsel, before A5).
 
-Sessions that must read this: F8, then C15, A5, A1, A2, A3, A4, C3, N7, YT4, YT5, LI2, LI3, VLI4, FB4, VTT6, D3.
+Sessions that must read this: F8, then C15, A5, A1, A2, A3, A4, C3, N7, YT4, YT5, LI2, LI3, VLI4, FB4, VTT6, D3, U3 (the trending score, `DEFERRED.md`).

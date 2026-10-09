@@ -1,7 +1,7 @@
 # ADR-0032 · Resolvers and the resolve job
 
 2026-10-07 · decided by: the user, relayed by the orchestrator on 2026-10-07 · status: accepted
-Applies to: F2, listening-sdk (F4, F6), poster-resolver, qualifier, registry-writer, search-hit-router, web-commoncrawl-scanner, yt-web-search-bridge, news-feed-poller, news-sitemap-poller, news-homepage-differ, news-comments-fetcher, and the eight resolvers: fb-page-resolver, ig-account-resolver, tt-user-resolver, x-user-resolver, li-org-resolver, tg-channel-resolver, yt-channel-resolver, news-site-resolver
+Applies to: F2, listening-sdk (F4, F6), poster-resolver, qualifier, registry-writer, search-hit-router, web-commoncrawl-scanner, yt-web-search-bridge, news-feed-poller, news-sitemap-poller, news-homepage-differ, news-comments-fetcher, web-gdelt-poller, ig-hashtag-search, tt-video-stats-refresher, li-company-posts-poller, tg-channel-posts-poller, and the eight resolvers: fb-page-resolver, ig-account-resolver, tt-user-resolver, x-user-resolver, li-org-resolver, tg-channel-resolver, yt-channel-resolver, news-site-resolver
 Source: D2-Q032 (technical decision; the recommended option, approved) in `docs/decisions/D2-PROPOSALS.md` · ratification: the user's merge of Abdullah95k/securebrand-v2#6 · line references are to CONVENTIONS v1 and the PRDs as they stood before D2's edits
 
 ## Context

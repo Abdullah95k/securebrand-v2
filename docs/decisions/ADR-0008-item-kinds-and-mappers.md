@@ -1,7 +1,7 @@
 # ADR-0008 · Item kinds and mappers
 
 2026-10-07 · decided by: the user, relayed by the orchestrator on 2026-10-07 · status: accepted
-Applies to: F2, listening-sdk, normalize-item, store-writer, keyword-matcher, comment-decay-scheduler, raw-archiver, and the lanes Discover and qualify, Fetch posts, Comments and Comments and stats (every `raw.items` producer)
+Applies to: F2, listening-sdk, normalize-item, store-writer, keyword-matcher, comment-decay-scheduler, raw-archiver, poster-resolver, and the lanes Discover and qualify, Fetch posts, Comments and Comments and stats (every `raw.items` producer)
 Source: D2-Q008 (technical decision; the recommended option, approved) in `docs/decisions/D2-PROPOSALS.md` · ratification: the user's merge of Abdullah95k/securebrand-v2#6 · line references are to CONVENTIONS v1 and the PRDs as they stood before D2's edits
 
 ## Context

@@ -54,7 +54,7 @@ Items, not only aggregates, stay available up to ten years wherever the rules al
 - CONVENTIONS v1.1: the retention target (v1 L3) and the retention classes (v1 L73 to L81) rewritten as the table above.
 - F3 seeds `retention_classes` with these clocks (ADR-0045); F8 sets the ClickHouse TTLs from them; retention-purger, store-writer and raw-archiver apply them.
 - tt-client-videos-fetcher writes `tiktok_display`; tg-bot-channel-receiver and tg-discussion-receiver write `telegram_bot`.
-- F2 adds the deletion reason `client_request` to ADR-0035's closed list; a client's request reaches deletion-propagator through the admin API (ADR-0012), and D3 specifies the portal's deletion screen.
+- F2 adds the deletion reason `client_request` to ADR-0035's closed list; a client's request reaches deletion-propagator as a `deletions` message the admin API writes (ADR-0012), and D3 specifies the portal's deletion screen.
 - `DEFERRED.md`, counsel's confirmation of each reading before production (G4): Meta's "delete when no longer necessary" (CONVENTIONS v1 L163) under a ten-year ceiling with deletion on request, with the grace period of ADR-0069 (e) if counsel sets a necessity clock; the limit in each vendor's contract (one entry per vendor); ten years for X content with deletions mirrored; ten years for news excerpts and metadata under Law No. 3 of 1971, and for web results under the engines' terms; the `telegram_bot` and `tiktok_display` clocks.
 
 Sessions that must read this: F3 (it seeds `retention_classes`), F8 (TTLs by class), C6, C14, then TT1, TG1, TG2, W1, W2, W3, W4, YT9, C2, C13, I1.

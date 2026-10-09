@@ -1,7 +1,7 @@
 # ADR-0051 · Vendor roles, values and screening
 
 2026-10-07 · decided by: the user, relayed by the orchestrator on 2026-10-07 · status: accepted
-Applies to: F2, F3, qualifier, registry-writer, quota-governor, source-health-canary, web-search-perplexity, web-search-mojeek, web-gdelt-poller, D3, and every amber service: fb-keyword-search, fb-group-posts-poller, fb-group-comments-fetcher, ig-keyword-search, ig-comments-fetcher, tt-keyword-search, tt-hashtag-feed-poller, tt-user-resolver, tt-profile-videos-poller, tt-video-comments-fetcher, tt-video-stats-refresher, li-post-search, li-org-resolver, li-company-posts-poller, li-post-comments-fetcher, tg-message-search, tg-channel-resolver, tg-channel-posts-poller
+Applies to: F2, F3, listening-sdk (F4), qualifier, registry-writer, quota-governor, source-health-canary, web-search-perplexity, web-search-mojeek, web-gdelt-poller, yt-web-search-bridge, x (x-recent-search, x-user-resolver, x-user-timeline-poller, x-filtered-stream, x-full-archive-search, x-replies-fetcher), the vendor probes VFB0, VIG0, VTT0, VLI0 and VTG0, D3, and every amber service: fb-keyword-search, fb-group-posts-poller, fb-group-comments-fetcher, ig-keyword-search, ig-comments-fetcher, tt-keyword-search, tt-hashtag-feed-poller, tt-user-resolver, tt-profile-videos-poller, tt-video-comments-fetcher, tt-video-stats-refresher, li-post-search, li-org-resolver, li-company-posts-poller, li-post-comments-fetcher, tg-message-search, tg-channel-resolver, tg-channel-posts-poller
 Source: D2-Q051 (user decision; the recommended option, approved) in `docs/decisions/D2-PROPOSALS.md` · ratification: the user's merge of Abdullah95k/securebrand-v2#6 · line references are to CONVENTIONS v1 and the PRDs as they stood before D2's edits
 
 ## Context

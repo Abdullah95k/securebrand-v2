@@ -1,7 +1,7 @@
 # ADR-0036 · News URL and article keys
 
 2026-10-07 · decided by: the user, relayed by the orchestrator on 2026-10-07 · status: accepted
-Applies to: F2, F3, normalize-item, search-hit-router, web-commoncrawl-scanner, and news: news-feed-poller, news-sitemap-poller, news-homepage-differ, news-article-extractor, news-dedup, news-site-resolver
+Applies to: F2, F3, normalize-item, search-hit-router, web-commoncrawl-scanner, and news: news-feed-poller, news-sitemap-poller, news-homepage-differ, news-article-extractor, news-dedup, news-site-resolver, news-comments-fetcher
 Source: D2-Q036 (technical decision; the recommended option, approved) in `docs/decisions/D2-PROPOSALS.md` · ratification: the user's merge of Abdullah95k/securebrand-v2#6 · line references are to CONVENTIONS v1 and the PRDs as they stood before D2's edits
 
 ## Context

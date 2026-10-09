@@ -39,6 +39,6 @@ One implementation tested byte for byte in two languages, and a producer bug par
 
 - CONVENTIONS v1.1: the key section (who stamps and who checks the key, the `item_id` derivation, the byte rules) and the job section (`job_id`, deterministic ids, jobless records).
 - F2 writes the helper, the frozen namespaces (`ns_items` and one per other deterministic id) and the golden vectors. F3 and F8 type the id columns `uuid`.
-- PRD examples that show other id formats (`cl_17`, `kw_0412`, `job_…`, composites, `null`) are example errors; the formats above win under ADR-0001, approved PRDs included.
+- PRD examples that show other id formats (`cl_17`, `kw_0412`, `job_…`, UUID and dated job ids, composites, `null`, ULIDs as deletion `item_ids`) are corrected in this pull request, approved PRDs among them under ADR-0001, each corrected example citing this ADR.
 
 Sessions that must read this: F2, F3, F8, then F4, F6, C4, C6, C13, C14, X7, YT7 and every `raw.items` producer.

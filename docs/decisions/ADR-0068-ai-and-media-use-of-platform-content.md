@@ -24,12 +24,12 @@ Settles: analysis-entities §14 Q7, analysis-media §14 Q2, analysis-sentiment �
 
    Variant of (d): the no-download rule stays YouTube-only, as README decision 7 wrote it, and other platforms' audio and video are downloaded "where the terms allow" like images. Consequences: speech-to-text and frame OCR run in v1 where the team reads the terms as allowing it, before counsel confirms.
 
-2. **Train and evaluate on all collected content, de-identified, within each item's retention class.** _Not taken: training uses only what the register permits._ Consequences: the best dialect models soonest, but an exposure under Meta's "on behalf of its client" and TikTok's database rule that counsel may force the platform to unwind, with retraining.
+2. **Train and evaluate on all collected content, de-identified, within each item's retention class.** _Not taken: evaluation follows (a), and training leaves out every use the register marks "not allowed" and every host with `ai-train = no`._ Consequences: the best dialect models soonest, but an exposure under Meta's "on behalf of its client" and TikTok's database rule that counsel may force the platform to unwind, with retraining.
 3. **No platform content in any model set,** evaluation included. _Not taken._ Consequences: no exposure, but an evaluation set unlike the data clients see; A0's plan changes.
 
 ## Decision
 
-Evaluation sets follow (a) and Content Signals (c), as proposed. Training and media downloads follow a register of permitted uses: platform, vendor, client-owned, news and Telegram content may train models, and images, audio and video may be downloaded, wherever the register's entry for that source says its terms allow it. The user or the user's compliance owner sets the entries; an entry defaults to "not allowed", and `ai-train = no` always excludes a host.
+Evaluation sets follow (a) and Content Signals (c), as proposed. Training and media downloads follow a register of permitted uses, allowed by default (the user's answer of 9 Oct 2026): platform, vendor, client-owned, news and Telegram content may train models, and images, audio and video may be downloaded, unless the register marks that use "not allowed" for the item's platform, vendor or news host. The register is seeded with a "not allowed" row for every use a platform's terms or a vendor contract already forbids (below). The user or the user's compliance owner reviews and changes the entries, and `ai-train = no` always excludes a host.
 
 **(a) Evaluation, as proposed**
 
@@ -38,7 +38,7 @@ Evaluation sets follow (a) and Content Signals (c), as proposed. Training and me
 **(b) Training, by the register**
 
 - Licensed or public datasets, and synthetic and annotator-written examples, may train and fine-tune models without an entry.
-- Platform, vendor, client-owned, news and Telegram content may be used for training when the register's entry for that source says the source's terms allow it. Until an entry says so, the source's content stays out of every training set.
+- Platform, vendor, client-owned, news and Telegram content may be used for training unless the register marks training "not allowed" for the item's platform, vendor or news host. Facebook and Instagram are seeded "not allowed", client-owned Pages and accounts included (the user's answer of 9 Oct 2026).
 - `ai-train = no` always excludes a host's text, whatever its entry says.
 - A training set that holds platform content is a registered holder in the SDK purge registry, like the evaluation sets (ADR-0035).
 
@@ -48,25 +48,26 @@ Evaluation sets follow (a) and Content Signals (c), as proposed. Training and me
 
 **(d) Downloads, by the register**
 
-- Images, audio and video are downloaded wherever the register says the platform's terms and the vendor contract allow it, and stored under `media/<sha256>` through raw-archiver's media endpoint (ADR-0039), under the item's retention class.
-- YouTube stays thumbnails only unless the register says otherwise, because YouTube's terms forbid downloading video without YouTube's prior written permission (and the rights holders', where they apply); an entry that allows it names that permission as the clause relied on. This is the legal review README decision 7 left pending (`README L184`).
-- Speech-to-text and frame OCR run on media that was downloaded under the register; A4 builds them in v1, and they process nothing the register did not allow.
+- Images, audio and video are downloaded unless the register marks that download "not allowed" for the item's platform or vendor, and stored under `media/<sha256>` through raw-archiver's media endpoint (ADR-0039), under the item's retention class.
+- YouTube stays thumbnails only: its video and audio downloads are seeded "not allowed", because YouTube's terms forbid downloading video without YouTube's prior written permission (and the rights holders', where they apply); an entry that allows them names that permission as the clause relied on. This is the legal review README decision 7 left pending (`README L184`).
+- Speech-to-text and frame OCR run on media that was downloaded under the register; A4 builds them in v1, and they process nothing whose download the register marks "not allowed".
 
 **The register of permitted uses**
 
-- It lives in the control plane as an F3 table, `permitted_uses`: one row per subject (each platform, Disqus included, each vendor and each news host) and use (training; downloading images, audio or video), with whether the use is allowed (false by default, and false for a missing row), the terms or contract clause relied on, and who set it and when.
-- Its owner is the admin console, which writes it audited (D3 specifies the writer); the user, or the user's compliance owner, sets every entry.
+- It lives in the control plane as an F3 table, `permitted_uses`: one row per subject (each platform, Disqus included, each vendor and each news host) and use (training; downloading images, audio or video), with whether the use is allowed (true by default, and true for a missing row), the terms or contract clause relied on, and who set it and when. A use is not allowed when the row of the item's platform, vendor or news host says so.
+- F3 seeds a "not allowed" row, with its clause, for every use a platform's terms or a vendor contract already forbids as recorded in CONVENTIONS and the ADRs: YouTube, downloading video and downloading audio (YouTube's terms forbid downloading video without its prior written permission, above); Facebook and Instagram, training (Meta's Tech Provider "processes only on behalf of its client", CONVENTIONS v1 L163, which a model shared by all clients does not do, as option 1 (b) reads it; Instagram Public Content Access allows only "aggregated, de-identified output", v1 L171). A row is added as each further term or contract is read and found to forbid a use, such as each vendor contract and the Disqus terms counsel reads (`DEFERRED.md` section 1); news hosts are excluded by `ai-train = no` at run time, not by rows.
+- Its owner is the admin console, which writes it audited (D3 specifies the writer); after F3's seed, the user, or the user's compliance owner, reviews the rows and sets or changes every entry.
 - Services read it through the SDK: the training pipelines of A1 to A4 before a source's content enters a training set, and every service that downloads media (analysis-media and the fetch services, `raw-archiver §3 L29`) before each download.
 
-Why: The user wants content downloaded and used for training wherever that breaks no rule. A register makes "no rule broken" a recorded decision per source, made by the user or the compliance owner, rather than a reading each build session makes; defaulting to "not allowed" keeps everything out until someone has checked. Evaluation on de-identified samples and the Content Signals stay as proposed.
+Why: The user wants content downloaded and used for training wherever that breaks no rule, and on 9 Oct 2026 chose "Allowed by default". A register makes "no rule broken" a recorded decision per source, made by the user or the compliance owner, rather than a reading each build session makes; seeding it with every use a recorded term or contract forbids keeps the default from breaking a known rule. Evaluation on de-identified samples and the Content Signals stay as proposed.
 
 ## Consequences
 
-Models can train on real Iraqi content as soon as the register allows a source; media analysis covers what the register allows, YouTube thumbnails from the start; until an entry allows it, no source's content trains a model and no media beyond YouTube thumbnails is downloaded.
+Models can train on real Iraqi content from the start, from every source the register does not exclude (Facebook and Instagram stay out while their seeded rows stand); media analysis covers images, audio and video wherever the register does not exclude them, and YouTube thumbnails only; a use the register excludes stays out until the user changes its row.
 
 - CONVENTIONS v1.1, "Security and compliance in every service": the evaluation rule, training and downloads by the register, the three Content-Signal rules and the media rule; `permitted_uses` among the control-plane tables.
-- F3 creates `permitted_uses`; F2 adds the declared `usage_signals` field to `items.normalized`; D3 specifies the admin console's register screen.
-- A0 starts on real samples after G2, with no LinkedIn items; A1 to A4 train on public and annotated data first, then on the sources the register allows; A4 builds speech-to-text and frame OCR in v1.
-- `DEFERRED.md`: filling the register, owned by the user (or the user's compliance owner), before any training on platform content and any download beyond YouTube thumbnails; with each entry, what deleting a training item requires of a model already trained on it.
+- F3 creates `permitted_uses` with its seeded "not allowed" rows; F2 adds the declared `usage_signals` field to `items.normalized`; D3 specifies the admin console's register screen, where the user reviews them.
+- A0 starts on real samples after G2, with no LinkedIn items; A1 to A4 train on public and annotated data and on every source the register does not exclude; A4 builds speech-to-text and frame OCR in v1.
+- `DEFERRED.md`: reviewing the seeded register, owned by the user (or the user's compliance owner), before training on platform content and media downloads begin, though no session waits for it; with each source whose content trains a model, what deleting a training item requires of a model already trained on it.
 
 Sessions that must read this: F2 (the declared `usage_signals` field on `items.normalized`), A0 (its splits need only D2, A0 brief), then C4, C13, A1, A2, A3, A4, N1, N6, F3, D3.

@@ -1,7 +1,7 @@
 # ADR-0005 · The raw.items message
 
 2026-10-07 · decided by: the user, relayed by the orchestrator on 2026-10-07 · status: accepted
-Applies to: F2, listening-sdk (F4, F6), raw-archiver, normalize-item, and the lanes Discover and qualify, Fetch posts, Comments and Comments and stats (every `raw.items` producer)
+Applies to: F2, listening-sdk (F4, F6), raw-archiver, normalize-item, backfill-orchestrator, comment-decay-scheduler, and the lanes Discover and qualify, Fetch posts, Comments and Comments and stats (every `raw.items` producer)
 Source: D2-Q005 (technical decision; the recommended option, approved) in `docs/decisions/D2-PROPOSALS.md` · ratification: the user's merge of Abdullah95k/securebrand-v2#6 · line references are to CONVENTIONS v1 and the PRDs as they stood before D2's edits
 
 ## Context
@@ -25,7 +25,7 @@ Depends on: ADR-0002, ADR-0003, ADR-0006 (who computes the key), ADR-0008 (the r
 
 - Shape: `payload` holds the platform record as returned (minus identities, ADR-0010), with `includes` and other response parts inside it; the envelope holds everything else.
 - Envelope, always required: `platform`, `kind` (the record kind from ADR-0008, archive-only kinds such as `profile` and `search_response` included), `provenance` (ADR-0003), `retention_class`, `client_ids`, `job_id`, `attempt`, `job_kind`, `api_version`, `raw_ref`; plus `schema`, `message_id`, `produced_at`, `producer` (ADR-0002).
-- Required by condition: `source_id`, or `candidate_key` for a record about a candidate that is not yet a source (ADR-0004 names `candidate_key` as that record's key); `platform_id` and `idempotency_key` for item kinds, while archive-only kinds carry a defined key instead (for `search_response`, the rule's `source_id` plus the request time); on push and stream records, a `job_id` made at receipt (a ULID, ADR-0006) with `attempt = 1`, the delivery id (`update_id`, `connection_id`) going in `context`; on a comment, `parent_id`, `root_id` and the optional `redacted_fields`, as ADR-0009 defines them.
+- Required by condition: `source_id`, or `candidate_key` for a record about a candidate that is not yet a source (ADR-0004 names `candidate_key` as that record's key); `platform_id` and `idempotency_key` for item kinds, while archive-only kinds carry a defined key instead (for `search_response`, the rule's `source_id` plus the request time); on push and stream records, a `job_id` made at receipt (a ULID, ADR-0006) with `attempt = 1`, the delivery id (`update_id`, `connection_id`) going in `context`; on a comment, `parent_id`, `root_id` and the optional `redacted_fields`, as ADR-0009 defines them; `redacted_fields` is optional on any record, comments included (ADR-0009).
 - Optional: a typed `context` object, its keys declared per producer in the contracts package (the producer-specific fields go there, each defined). `batch` is dropped: `raw_ref` names the object and line.
 - The SDK producer fills the envelope from the job and the adapter, and stamps `retention_class` from the source row, else the route and platform default; normalize-item copies it. Services hand over the payload and the adapter's fields, never a hand-built envelope.
 - `job_kind` is the job's `kind` (for jobless receivers and the stream, the fixed values `push` and `stream`); it travels onto `items.normalized`, which is how backfilled records are recognised (AU-002, AU-015). `metrics_observation`, `origin`, `delivery` and `ingest_mode` are dropped; `item.metrics` labels derive from `job_kind` and the series step (ADR-0034).

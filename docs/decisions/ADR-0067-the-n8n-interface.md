@@ -9,7 +9,7 @@ Source: D2-Q067 (technical decision; the recommended option, approved) in `docs/
 Seven services call n8n, each its own way. alert-evaluator delivers email, Telegram and Slack alerts through "an n8n flow reached by a signed webhook call" with payload `alert/v1` (`alert-evaluator §3 L24`, `§5.3 L69`, `§6.2 L87`); the qualifier posts review cards to `POST /qualifier/review` with three buttons and a signed callback (`qualifier §5.3 L67`, `§9 L116`); source-health-canary sends state-change alerts and the approval card for `blocked` that README decision 5 requires (`source-health-canary §5.2 L57`, `§5.3 L77`; `README L182`); quota-governor's alerts, registry-writer's request notifications and li-org-resolver's review cards go through n8n (`quota-governor §4 L31`, `registry-writer §11 L133`, `li-org-resolver §6.2 L79`); x-compliance-sync takes ops' export requests through n8n (`x-compliance-sync §6.2 L130`). CONVENTIONS names n8n in the stack and for review cards (L3, L251). No document defines the flows, endpoints, payloads or signing, and no session builds them: D3 specifies the query API, client portal, dashboard and admin console (`build-plan/sessions/D3-specs-for-the-parts-with-no-prd.md` L7); I2 routes only the Prometheus alerts through n8n (`build-plan/sessions/I2-observability.md` L7, L31); C9 may stub the card webhook (`build-plan/sessions/C9-qualifier.md` L28). At stake: every caller invents its own endpoint, and nothing tests the far side.
 
 Settles: AU-097.
-Depends on: ADR-0012 (ops and client requests through the admin API).
+Depends on: ADR-0012 (ops and client requests through the admin API), ADR-0021 (the automatic-fallback notices that replace the `blocked` approval card).
 
 ## Options
 

@@ -1,7 +1,7 @@
 # ADR-0055 · LinkedIn retention
 
 2026-10-07 · decided by: the user, relayed by the orchestrator on 2026-10-07 · status: accepted
-Applies to: F3, F8, linkedin (li-post-search, li-org-resolver, li-client-posts-poller, li-company-posts-poller, li-notification-receiver, li-own-comments-fetcher, li-post-comments-fetcher), retention-purger, store-writer, poster-resolver
+Applies to: F3, F8, linkedin (li-post-search, li-org-resolver, li-client-posts-poller, li-company-posts-poller, li-notification-receiver, li-own-comments-fetcher, li-post-comments-fetcher), retention-purger, store-writer, poster-resolver, normalize-item, deletion-propagator
 Source: D2-Q055 (user decision; changed by the user's answer, which keeps the recommended option for LinkedIn) in `docs/decisions/D2-PROPOSALS.md` · ratification: the user's merge of Abdullah95k/securebrand-v2#6 · line references are to CONVENTIONS v1 and the PRDs as they stood before D2's edits
 
 ## Context

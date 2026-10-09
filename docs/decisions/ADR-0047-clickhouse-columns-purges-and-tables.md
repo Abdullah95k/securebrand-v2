@@ -1,7 +1,7 @@
 # ADR-0047 · ClickHouse columns, purges and tables
 
 2026-10-07 · decided by: the user, relayed by the orchestrator on 2026-10-07 · status: accepted
-Applies to: F8, listening-sdk (F4), store-writer, aggregator, alert-evaluator, deletion-propagator, retention-purger, yt-text-purger, x-compliance-sync, qualifier, keyword-matcher, ig-comments-fetcher, yt-comments-fetcher
+Applies to: F8, listening-sdk (F4), store-writer, aggregator, alert-evaluator, deletion-propagator, retention-purger, yt-text-purger, x-compliance-sync, qualifier, keyword-matcher, ig-comments-fetcher, yt-comments-fetcher, normalize-item, poster-resolver, search-hit-router, web-commoncrawl-scanner, fb-page-search
 Source: D2-Q047 (technical decision; the recommended option, approved) in `docs/decisions/D2-PROPOSALS.md` · ratification: the user's merge of Abdullah95k/securebrand-v2#6 · line references are to CONVENTIONS v1 and the PRDs as they stood before D2's edits
 
 ## Context
@@ -13,7 +13,7 @@ Source: D2-Q047 (technical decision; the recommended option, approved) in `docs/
 At stake: the sweep that drives dormancy for every source queries a column that does not exist, a YouTube title outlives the 30-day rule, and F8 needs one list.
 
 Settles: CF-049, CF-051, CF-052, keyword-matcher §14 Q1, store-writer §14 Q1.
-Depends on: ADR-0010 (`author_ref`), ADR-0011 (`post_ref.url`), ADR-0031 (item hits), ADR-0035 (tombstones and the guard), ADR-0056 (what YouTube's 30-day rule covers).
+Depends on: ADR-0010 (`author_ref` and `public_accounts_dim`), ADR-0011 (`post_ref.url`), ADR-0031 (item hits), ADR-0035 (tombstones and the guard), ADR-0048 (the alert types that read `metrics_timeseries` and `item_stories`), ADR-0056 (what YouTube's 30-day rule covers).
 
 ## Options
 

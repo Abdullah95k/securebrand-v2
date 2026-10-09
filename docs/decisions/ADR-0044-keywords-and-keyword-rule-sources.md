@@ -1,7 +1,7 @@
 # ADR-0044 · Keywords and keyword-rule sources
 
 2026-10-07 · decided by: the user, relayed by the orchestrator on 2026-10-07 · status: accepted
-Applies to: F2, F3, registry-writer, keyword-matcher, x-filtered-stream, D3 (the client portal and admin console), and the lane Discover and qualify (every search service)
+Applies to: F2, F3, registry-writer, keyword-matcher, store-writer, qualifier, x-filtered-stream, x-full-archive-search, D3 (the client portal and admin console), and the lane Discover and qualify (every search service)
 Source: D2-Q044 (technical decision; the recommended option, approved) in `docs/decisions/D2-PROPOSALS.md` · ratification: the user's merge of Abdullah95k/securebrand-v2#6 · line references are to CONVENTIONS v1 and the PRDs as they stood before D2's edits
 
 ## Context

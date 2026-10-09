@@ -26,7 +26,7 @@ Why: It matches the README and the scheduler as written and avoids a cost that i
 
 ## Consequences
 
-No extra spend; trend charts on these three platforms show counts as first seen; the question can come back after the pilot with measured costs.
+No extra spend; trend charts on these routes show counts as first seen, and the engagement-spike alerts of ADR-0048 have no count velocity on them in v1; the question can come back after the pilot with measured costs.
 
 - CONVENTIONS v1.1: the metrics rule (v1 L65) names the routes that refresh counts and those that record them at first sight.
 - tg-channel-posts-poller drops its `metrics` job.

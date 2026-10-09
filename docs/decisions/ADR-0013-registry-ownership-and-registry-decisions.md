@@ -1,7 +1,7 @@
 # ADR-0013 · Registry ownership and `registry.decisions`
 
 2026-10-07 · decided by: the user, relayed by the orchestrator on 2026-10-07 · status: accepted
-Applies to: F2, F3, registry-writer, qualifier, source-health-canary, retention-purger, yt-text-purger, listening-sdk, and the lanes Discover and qualify, Fetch posts and Comments (every poller, receiver and resolver)
+Applies to: F2, F3, registry-writer, qualifier, source-health-canary, retention-purger, yt-text-purger, quota-governor, keyword-matcher, backfill-orchestrator, listening-sdk, and the lanes Discover and qualify, Fetch posts and Comments (every poller, receiver and resolver)
 Source: D2-Q013 (technical decision; the recommended option, approved) in `docs/decisions/D2-PROPOSALS.md` · ratification: the user's merge of Abdullah95k/securebrand-v2#6 · line references are to CONVENTIONS v1 and the PRDs as they stood before D2's edits
 
 ## Context
@@ -36,7 +36,7 @@ Why: It keeps FC-02's guarantee (one writer, one audit row, one event) for every
 Registry-writer (approved, ADR-0001) accepts more producers, `push_coverage` and source-level `health_change`; the qualifier (approved) sends `tier_change` where it sent `tier_down`; the pollers and receivers of CF-033 b) and AU-063 replace direct writes with decisions; F3's `TABLE-OWNERS.md` names the owner of every `sources` column.
 
 - CONVENTIONS v1.1: `registry.decisions` (producers, schema and closed type list) and the owner of each `sources` column.
-- When registry-writer applies a source-level `blocked`, it applies ADR-0021's automatic fallback rule; on every route-wide change it enforces ADR-0021's exclusions (government-watched green sources and client-owned properties never move to a vendor).
+- When registry-writer applies a source-level `blocked`, it applies ADR-0021's automatic fallback rule; on every route-wide change it enforces ADR-0021's exclusion (a government-watched green source never moves to a vendor).
 - F2 types `registry.decisions/v1`, with the allowed producers per decision type as rows of ADR-0012's table; F3's `docs/contracts/TABLE-OWNERS.md` follows this ADR.
 
 Sessions that must read this: F2, F3, then C1, C5, C7, C9, C10, C12, C14, FB2, FB3, FB7, VFB1, VFB2, IG2, IG3, VTT2, VTT4, X1, X3, VLI3, TG1, VTG3, YT1, YT2, YT3, YT7, N1, N2, N3.

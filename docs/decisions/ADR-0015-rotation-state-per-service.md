@@ -1,7 +1,7 @@
 # ADR-0015 · Rotation state per service
 
 2026-10-07 · decided by: the user, relayed by the orchestrator on 2026-10-07 · status: accepted
-Applies to: listening-sdk (F5), and the lanes Discover and qualify and Fetch posts (every rotating service)
+Applies to: F3, registry-writer, backfill-orchestrator, listening-sdk (F5), and the lanes Discover and qualify and Fetch posts (every rotating service)
 Source: D2-Q015 (technical decision; the recommended option, approved) in `docs/decisions/D2-PROPOSALS.md` · ratification: the user's merge of Abdullah95k/securebrand-v2#6 · line references are to CONVENTIONS v1 and the PRDs as they stood before D2's edits
 
 ## Context

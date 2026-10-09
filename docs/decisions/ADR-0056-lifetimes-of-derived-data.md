@@ -1,7 +1,7 @@
 # ADR-0056 · Lifetimes of derived data
 
 2026-10-07 · decided by: the user, relayed by the orchestrator on 2026-10-07 · status: accepted
-Applies to: F3, F8, store-writer, aggregator, retention-purger, deletion-propagator, yt-text-purger, yt-channel-resolver, yt-comments-fetcher, yt-video-details-fetcher, li-client-posts-poller, li-own-comments-fetcher
+Applies to: F3, F8, store-writer, aggregator, retention-purger, deletion-propagator, yt-text-purger, yt-channel-resolver, yt-comments-fetcher, yt-video-details-fetcher, li-client-posts-poller, li-own-comments-fetcher, li-post-comments-fetcher
 Source: D2-Q056 (user decision; changed by the user's answer, which keeps the recommended option under the ten-year classes of ADR-0054) in `docs/decisions/D2-PROPOSALS.md` · ratification: the user's merge of Abdullah95k/securebrand-v2#6 · line references are to CONVENTIONS v1 and the PRDs as they stood before D2's edits
 
 ## Context
@@ -36,7 +36,7 @@ Why: It follows the fact sheet's wording where it is specific (36 months, 30 day
 
 One anchor (creation); YouTube trends older than three years survive only as cross-channel rollups; more refresh calls on the YouTube quota for titles and profiles (yt-text-purger already budgets them).
 
-- CONVENTIONS v1.1: what the 30-day clock covers, and the 36-month anchor (v1 L76); aggregates and derived scores ten years, with the per-channel YouTube exception (v1 L81).
+- CONVENTIONS v1.1: what the 30-day clock covers, and the 36-month anchor (v1 L76); item-level derived rows following their item's class, and aggregates and rollups ten years with the per-channel YouTube exception (v1 L81).
 - F3 seeds the `derived` and `row` parts of `retention_classes` (ADR-0045); F8 sets the TTLs, the per-channel YouTube rollups at 36 months.
 - `DEFERRED.md`: counsel's confirmation of the YouTube reading, ten years for cross-owner rollups under the carve-out included (owner YT7, before YouTube's go-live, G3).
 

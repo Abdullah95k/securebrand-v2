@@ -1,7 +1,7 @@
 # ADR-0009 · Comment records, content hash and edits
 
 2026-10-07 · decided by: the user, relayed by the orchestrator on 2026-10-07 · status: accepted
-Applies to: F2, listening-sdk, normalize-item, store-writer, deletion-propagator, fb-client-webhook-receiver, ig-webhook-receiver, and the lanes Comments and Comments and stats (every comment fetcher and receiver)
+Applies to: F2, listening-sdk, normalize-item, store-writer, deletion-propagator, fb-client-webhook-receiver, ig-webhook-receiver, tg-bot-channel-receiver, the probes FB0, VFB0, VIG0 and VLI0, and the lanes Comments and Comments and stats (every comment fetcher and receiver)
 Source: D2-Q009 (technical decision; the recommended option, approved) in `docs/decisions/D2-PROPOSALS.md` · ratification: the user's merge of Abdullah95k/securebrand-v2#6 · line references are to CONVENTIONS v1 and the PRDs as they stood before D2's edits
 
 ## Context
@@ -39,4 +39,4 @@ One field set and one helper in F2, with golden vectors; normalize-item (approve
 - The probes of the id-less routes confirm that creation times are stable across reads before those routes rely on the hash key: FB0 for PPCA comments, VFB0, VIG0 and VLI0 for the vendor routes (`DEFERRED.md`).
 - RN-13 is closed by this record.
 
-Sessions that must read this: F2, F4, then C4, C6, C13, FB5, FB7, VFB3, IG4, IG6, VIG2, LI2, LI3, VLI4, VTT5, X6, YT5, YT6, N8, TG1, TG2.
+Sessions that must read this: F2, F4, then C4, C6, C13, FB5, FB7, VFB3, IG4, IG6, VIG2, LI2, LI3, VLI4, VTT5, X6, YT5, YT6, N8, TG1, TG2, and the probes FB0, VFB0, VIG0 and VLI0 (creation times, above; `DEFERRED.md`).
