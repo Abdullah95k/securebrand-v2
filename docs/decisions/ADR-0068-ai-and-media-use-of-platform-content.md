@@ -49,7 +49,7 @@ Evaluation sets follow (a) and Content Signals (c), as proposed. Training and me
 **(d) Downloads, by the register**
 
 - Images, audio and video are downloaded wherever the register says the platform's terms and the vendor contract allow it, and stored under `media/<sha256>` through raw-archiver's media endpoint (ADR-0039), under the item's retention class.
-- YouTube stays thumbnails only unless the register says otherwise, because YouTube's terms forbid downloading video.
+- YouTube stays thumbnails only unless the register says otherwise, because YouTube's terms forbid downloading video without YouTube's prior written permission (and the rights holders', where they apply); an entry that allows it names that permission as the clause relied on. This is the legal review README decision 7 left pending (`README L184`).
 - Speech-to-text and frame OCR run on media that was downloaded under the register; A4 builds them in v1, and they process nothing the register did not allow.
 
 **The register of permitted uses**
