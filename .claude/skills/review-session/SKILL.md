@@ -14,7 +14,7 @@ Arguments given: $ARGUMENTS. If they include the word "recheck", this is a reche
 
 ## Context
 
-The brief (`ls build-plan/sessions/$0-*`), the PRD, the ADRs in `docs/decisions/` whose "Applies to" line names this service, its platform, its lane or "all" (an ADR wins over the PRD, ADR-0001), `docs/plans/$0.md` and `docs/handoffs/$0.md`. Then run `git fetch origin` and read the diff with `git diff origin/main...HEAD`. Worktrees branch from the remote's main, so a local `main` may be stale and show other sessions' merged work.
+The brief (`ls build-plan/sessions/$0-*`), the PRD, the ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (an ADR wins over the PRD, ADR-0001), the rows of `docs/decisions/DEFERRED.md` that name this session, `docs/plans/$0.md` and `docs/handoffs/$0.md`. Then run `git fetch origin` and read the diff with `git diff origin/main...HEAD`. Worktrees branch from the remote's main, so a local `main` may be stale and show other sessions' merged work.
 
 ## Checks
 
