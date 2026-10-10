@@ -19,7 +19,7 @@ Service `fb-page-resolver` · PRD `docs/prds/facebook/fb-page-resolver.md` · la
 1. This brief
 2. The PRD in full: `docs/prds/facebook/fb-page-resolver.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Qualifier rules; Quotas, budgets and the quota governor; Per-platform fact sheets: Facebook
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of FB0: `docs/handoffs/FB0.md`
 6. Handoff of C8: `docs/handoffs/C8.md`
 7. The FB0 probe report `docs/probes/meta.md` and the fixtures in `fixtures/facebook/`
@@ -42,7 +42,7 @@ Service `fb-page-resolver` · PRD `docs/prds/facebook/fb-page-resolver.md` · la
 ## Watch for
 
 - Searches write items to raw.items with source_id = the keyword rule (search output rule); candidates are deduplicated by candidate_key downstream
-- Individuals are never profiled: a mention keeps a hashed author reference
+- Private individuals are never profiled, listed or backfilled: a mention keeps a keyed author reference (author_ref); only public accounts, as ADR-0010 defines them, may be listed
 
 ## Done when
 

@@ -77,7 +77,7 @@ It does not get page text or titles, feed or sitemap status, authorship, whether
 
 ### 6.1 Reads
 
-The published-crawl list and the index of the latest crawl; `sources` (news site rows, all tiers); `service_runs`; the service-private table `cc_hosts_seen` (host, first and last emitted, captures at emission, state `emitted`, `pending` or `suppressed`).
+The published-crawl list and the index of the latest crawl; `sources` (news site rows, all tiers); `source.events` (for `accept_rate`, ADR-0070); `service_runs`; the service-private table `cc_hosts_seen` (host, first and last emitted, captures at emission, state `emitted`, `pending` or `suppressed`).
 
 ### 6.2 Writes
 
@@ -86,7 +86,7 @@ The published-crawl list and the index of the latest crawl; `sources` (news site
 ```json
 {
   "schema": "discovery.hits/v1",
-  "message_id": "dh:web-commoncrawl-scanner:news:example-daily.iq:CC-MAIN-2026-38",
+  "message_id": "01M4F72A8REMR4FEX05GZTT6JA",
   "produced_at": "2026-10-09T02:14:55Z",
   "service": "web-commoncrawl-scanner", "route": "green", "vendor": null,
   "type": "site", "platform": "news",
@@ -100,11 +100,15 @@ The published-crawl list and the index of the latest crawl; `sources` (news site
 }
 ```
 
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
+
 The field set beyond `type`, `platform` and `candidate_key` follows poster-resolver's approved schema where it differs (open question 3). Also `service_runs` and `dlq.web-commoncrawl-scanner` after 5 failed attempts.
 
 ### 6.3 State
 
 The scan checkpoint (crawl id, partitions done, position inside a partition) as JSON on this service's `service_runs` row; `cc_hosts_seen`; in memory only the leader lock.
+
+Owner (ADR-0025): `cc_hosts_seen` is private to this service. No other service reads it, F3's `TABLE-OWNERS.md` lists it, and it is registered in the SDK purge registry where it holds item ids, hashes or URLs.
 
 ## 7. Limits, quotas and cost
 

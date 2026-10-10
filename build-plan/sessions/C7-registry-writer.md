@@ -19,7 +19,7 @@ Service `registry-writer` · PRD `docs/prds/shared/registry-writer.md` · lane R
 1. This brief
 2. The PRD in full: `docs/prds/shared/registry-writer.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Rotation policy; Qualifier rules; Quotas, budgets and the quota governor
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of F4: `docs/handoffs/F4.md`
 6. Handoff of F3: `docs/handoffs/F3.md`
 7. Qualifier rules (CONVENTIONS)
@@ -45,7 +45,7 @@ Service `registry-writer` · PRD `docs/prds/shared/registry-writer.md` · lane R
 
 - Applying the same decision twice changes nothing
 - Rejected candidates are remembered 180 days
-- registry-writer is the only writer of the sources table and of source.events (per D2)
+- registry-writer is the only writer of the registry's identity and policy columns and of source.events; each operational column has one named owner (ADR-0013, ADR-0014)
 
 ## Done when
 

@@ -18,7 +18,7 @@ Service `li-org-resolver` · PRD `docs/prds/linkedin/li-org-resolver.md` · lane
 1. This brief
 2. The PRD in full: `docs/prds/linkedin/li-org-resolver.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Qualifier rules; Quotas, budgets and the quota governor; Per-platform fact sheets: LinkedIn
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of VLI0: `docs/handoffs/VLI0.md`
 6. Handoff of C8: `docs/handoffs/C8.md`
 7. The VLI0 probe report `docs/probes/li-vendor.md` and the fixtures in `fixtures/linkedin-vendor/`
@@ -29,7 +29,7 @@ Service `li-org-resolver` · PRD `docs/prds/linkedin/li-org-resolver.md` · lane
 - Topics read: none named in 6.1
 - Topics written: `raw.items`, `poster.profiles`
 - Job queues in: `jobs.li-org-resolver`; out: none
-- Tables read: `sources`, `clients`, `client_sources`, `budgets`, `decisions`, `vendor_keys`, `service_runs`; written or updated: `budgets`, `decisions`, `service_runs`
+- Tables read: `sources`, `clients`, `client_sources`, `budgets`, `decisions`, `credentials` (the PRD's `vendor_keys`, read and written only through the SDK's credential client, ADR-0016), `service_runs`; written or updated: `budgets`, `decisions`, `service_runs`
 - This list is extracted from the PRD's section 6 by name; the plan confirms each item against `packages/contracts` and the migrations, and anything missing becomes a proposal.
 
 ## Hands on
@@ -41,8 +41,8 @@ Service `li-org-resolver` · PRD `docs/prds/linkedin/li-org-resolver.md` · lane
 ## Watch for
 
 - Searches write items to raw.items with source_id = the keyword rule (search output rule); candidates are deduplicated by candidate_key downstream
-- Individuals are never profiled: a mention keeps a hashed author reference
-- Amber: runs only behind its flag (off by default); provenance says route = amber and names the vendor; its data is excluded from government contracts, and a source a government client watches never falls back to it; the quota governor stretches it from 80% of budget
+- Private individuals are never profiled, listed or backfilled: a mention keeps a keyed author reference (author_ref); only public accounts, as ADR-0010 defines them, may be listed
+- Amber: runs only behind its flag (off by default); provenance says route = amber and names the vendor; only clients that accept amber receive its data, never government clients (ADR-0052), and a green source a government client watches never falls back to it, while a client-owned property falls back under the same conditions as any other source (ADR-0021); from 80% of budget the SDK scheduling kit stretches its intervals by the governor's factor (ADR-0057)
 
 ## Done when
 

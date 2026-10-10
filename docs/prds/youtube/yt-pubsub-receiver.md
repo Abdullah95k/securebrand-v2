@@ -133,6 +133,8 @@ Also `deletions`, requests to registry-writer (push, promotion, `next_poll_at`, 
 
 `yt_subscriptions` (owned here): `source_id`, `topic`, `state` (requested, active, lapsed, unsubscribing, unsubscribed, failed), `verified_at`, `lease_expires_at`, `last_notification_at`, `consecutive_errors`. `cursors` (`source_id`, `yt-pubsub-receiver`): `cursor` = newest `updated`, `last_success_at` = last verified lease. Seen ledger (listening-sdk idempotency helper): per video `last_updated` and `version`, kept 90 days. In memory: the channel map and leader lock.
 
+Owner (ADR-0025): `yt_subscriptions` is private to this service. No other service reads it, F3's `TABLE-OWNERS.md` lists it, and it is registered in the SDK purge registry where it holds item ids, hashes or URLs.
+
 ## 7. Limits, quotas and cost
 
 - No `youtube_data_api` units, no budget tag, no quota-governor call; the hub costs USD 0 per call.

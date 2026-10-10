@@ -22,7 +22,7 @@ Any-time track: earliest when the above are met; deadline before X data reaches 
 1. This brief
 2. The PRD in full: `docs/prds/x/x-compliance-sync.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Retention classes; Quotas, budgets and the quota governor; Per-platform fact sheets: X
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of X0: `docs/handoffs/X0.md`
 6. Handoff of C13: `docs/handoffs/C13.md`
 7. Handoff of C14: `docs/handoffs/C14.md`

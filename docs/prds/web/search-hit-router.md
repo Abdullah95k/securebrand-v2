@@ -101,7 +101,7 @@ Only what `search.results` carries: the result (rank, title, URL, snippet, date)
 ```json
 {
   "schema": "discovery.hits/v1",
-  "message_id": "dh:search-hit-router:instagram:example_creator_iq:sha256:5d18c2…",
+  "message_id": "01M47KA7QGXC5Q420EVYV9KKZ5",
   "produced_at": "2026-10-06T03:15:02Z",
   "service": "search-hit-router", "route": "green", "vendor": null,
   "type": "account", "platform": "instagram",
@@ -109,33 +109,38 @@ Only what `search.results` carries: the result (rank, title, URL, snippet, date)
   "poster_ref": {"handle": "example_creator_iq", "platform_id": null, "url": "https://www.instagram.com/example_creator_iq/reel/Cx4kQ2LsT9m/", "post_ref": "Cx4kQ2LsT9m", "handle_hint": null},
   "origin": "web_search",
   "evidence": {"canonical_url_hash": "sha256:5d18c2…", "engines": ["perplexity", "mojeek"], "sightings": 3, "first_seen_at": "2026-10-05T03:14:09Z",
-               "keyword_rule_ids": ["7d2b0c4e-1f3a-4b5c-8d6e-9f0a1b2c3d4e"], "client_ids": ["cl_17"],
+               "keyword_rule_ids": ["7d2b0c4e-1f3a-4b5c-8d6e-9f0a1b2c3d4e"], "client_ids": ["0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"],
                "title": "…", "snippet": "…"}
 }
 ```
+
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 `article.urls`, partition key `source_id` (the news site's):
 
 ```json
 {
   "schema": "article.urls/v1",
-  "message_id": "au:search-hit-router:sha256:9c1e4b…",
-  "idempotency_key": "news:article:sha256:9c1e4b…",
+  "message_id": "01M47KA7QGHFH4KH2ZXEXBBCCA",
   "service": "search-hit-router", "found_by": "web_search",
   "source_id": "a41f7d02-93be-4c58-8e16-2b5d70c9f3e4",
   "url": "https://www.example-daily.iq/economy/2026/10/05/fiberx-wasit?utm_source=fb",
   "canonical_url": "https://www.example-daily.iq/economy/2026/10/05/fiberx-wasit",
   "canonical_url_hash": "sha256:9c1e4b…",
-  "engines": ["perplexity", "gdelt"], "keyword_rule_ids": ["7d2b0c4e-1f3a-4b5c-8d6e-9f0a1b2c3d4e"], "client_ids": ["cl_17"],
+  "engines": ["perplexity", "gdelt"], "keyword_rule_ids": ["7d2b0c4e-1f3a-4b5c-8d6e-9f0a1b2c3d4e"], "client_ids": ["0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"],
   "title": "…", "snippet": "…", "published_hint": "2026-10-05", "first_seen_at": "2026-10-05T03:14:09Z"
 }
 ```
+
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 The field set beyond `candidate_key`, `platform` and `type` follows poster-resolver's approved schema where it differs (open question 3). Also `service_runs`, `review_queue` (parked messages), `dlq.search-hit-router`.
 
 ### 6.3 State
 
 Three service-private Postgres tables, partitioned by month: `search_url_seen` (canonical URL hash, canonical URL, first and last seen, sightings, engines, bounded lists of rules and clients, platform, `candidate_key`, routed time, outcome), `search_candidate_seen` (candidate key, first emitted, evidence) and `search_parked_urls` (domain, URL, parked time). Rows expire 180 days after the last sighting, matching the qualifier's memory of rejected candidates. In memory: the registered-domain cache, refreshed from `source.events`.
+
+Owner (ADR-0025): `search_url_seen`, `search_candidate_seen` and `search_parked_urls` are private to this service. No other service reads them, F3's `TABLE-OWNERS.md` lists them, and they are registered in the SDK purge registry where they hold item ids, hashes or URLs.
 
 ## 7. Limits, quotas and cost
 
@@ -156,7 +161,7 @@ Three service-private Postgres tables, partitioned by month: `search_url_seen` (
 
 - Throughput: sized for the sum of the producers; to be measured in the pilot; scaling on partition lag.
 - Latency: seconds from arrival to routing; p95 measured in the pilot.
-- Idempotency: `message_id` is deterministic (`dh:…:<candidate_key>:<canonical_url_hash>`, `au:…:<canonical_url_hash>`); `article.urls` carries `news:article:<canonical_url_hash>`.
+- Idempotency: `message_id` is deterministic, a ULID derived as ADR-0006 describes from `candidate_key` and `canonical_url_hash` on `discovery.hits` and from `canonical_url_hash` on `article.urls` (ADR-0002); `article.urls` carries no article key, which the extractor derives from the page's canonical URL (ADR-0036).
 - Security: no secrets beyond database credentials from Vault; the router never fetches a URL; logs carry `message_id`, `engine` and outcome, not snippets; Node (TypeScript); the classifier lives in `listening-sdk`.
 
 ## 10. Metrics and alerts
@@ -181,7 +186,7 @@ Three service-private Postgres tables, partitioned by month: `search_url_seen` (
 1. The same article arriving from perplexity, mojeek and gdelt with different tracking parameters yields one routed message inside the window, and `search_url_seen` shows 3 sightings and 3 engines.
 2. For each row of the 5.3 table at least two fixture URLs give the expected platform, `type` and `candidate_key`, including `youtu.be`, `twitter.com`, `m.facebook.com`, `instagram.com/p/…` and `/reel/…`.
 3. `t.me/+abc` and `t.me/joinchat/…` produce no `discovery.hits` and the outcome `unroutable` with reason `private_invite`; `x.com/i/…`, `/search` and `/hashtag/…` produce none.
-4. A news URL on a registered domain yields one `article.urls` message with that site's `source_id` and `idempotency_key = news:article:<canonical_url_hash>`; a second sighting yields none.
+4. A news URL on a registered domain yields one `article.urls` message with that site's `source_id`, `found_via = web_search` and no article key (ADR-0036); a second sighting yields none.
 5. A news-like URL on an unregistered domain yields one `discovery.hits` of type `site` and is parked; when `source.events` adds that domain, the parked URL is released once.
 6. A URL that is not news-like on an unregistered domain yields no output and the outcome `web`.
 7. Replaying 1,000 messages adds no output and no sightings; with Redpanda down nothing is committed and the outputs appear once it is back.

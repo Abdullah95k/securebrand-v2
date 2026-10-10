@@ -54,7 +54,7 @@ search-hit-router (sole consumer of `search.results`); raw-archiver (`raw/green/
 1. Read the job; load the rule, its `keywords` row and the cursor; run the plan guard.
 2. Ask quota-governor for allowance under `budget_tag = mojeek_search` for 9 queries plus the canary; `wait-until` requeues the job for that time; `deny` counts `quota_denied_total` and keeps `next_poll_at`.
 3. Build the 9 variants with the shared generator.
-4. Call the API once per query, paced; write each full response body to `raw.items` with `kind_hint = search_response` and `normalize = skip`.
+4. Call the API once per query, paced; write each full response body to `raw.items` as the archive-only record kind `search_response`, which normalize-item skips (ADR-0008, ADR-0070).
 5. Parse the results; compute `canonical_url` and `canonical_url_hash` with the shared canonicaliser; publish one `search.results` message per result.
 6. On Redpanda's acknowledgement, advance the cursor, update `last_polled_at` and `next_poll_at`, report `cost_units = 9` to the governor, write `service_runs`.
 
@@ -85,17 +85,17 @@ It does not get page text beyond the snippet, author identity, engagement counts
 
 ### 6.2 Writes
 
-- `raw.items`: one record per API response; envelope `service`, `route = green`, `vendor = mojeek`, `platform = web`, `source_id` (the rule), `job_id`, `job_kind`, `kind_hint = search_response`, `fetched_at`, `api_version`, `raw_ref`; partition key `web:<source_id>`.
+- `raw.items`: one record per API response; envelope `service`, `route = green`, `vendor = mojeek`, `platform = web`, `source_id` (the rule), `job_id`, `job_kind`, `kind = search_response` (ADR-0070), `fetched_at`, `api_version`, `raw_ref`; partition key `source_id` (ADR-0004).
 - `search.results`, same shape as web-search-perplexity, partition key `canonical_url_hash`:
 
 ```json
 {
   "schema": "search.results/v1",
-  "message_id": "sr:mojeek:sha256:4be07a…:wsm-20261006-0231",
+  "message_id": "01M47P1SFRP93VMPD2QC6WP5HA",
   "produced_at": "2026-10-06T04:02:51Z",
   "service": "web-search-mojeek", "engine": "mojeek", "route": "green", "vendor": "mojeek",
-  "job_id": "wsm-20261006-0231", "job_kind": "rotation", "attempt": 1,
-  "keyword_rule_id": "7d2b0c4e-1f3a-4b5c-8d6e-9f0a1b2c3d4e", "keyword_id": "kw_0412", "client_ids": ["cl_17"],
+  "job_id": "01M47P07P0M1V49VADF6SRK5BM", "job_kind": "rotation", "attempt": 1,
+  "keyword_rule_id": "7d2b0c4e-1f3a-4b5c-8d6e-9f0a1b2c3d4e", "keyword_id": "0cd402b6-9015-45f8-86b4-d90cc086d320", "client_ids": ["0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"],
   "query": {"text": "\"فايبر اكس\" العراق", "variant": "arabic_context", "lang": "ar", "country": "IQ", "request_id": null},
   "result": {"rank": 5, "title": "فايبر اكس تطلق باقة جديدة في واسط", "url": "https://www.example-daily.iq/economy/2026/10/05/fiberx-wasit?utm_source=fb", "snippet": "أعلنت شركة فايبر اكس عن …", "date": "2026-10-05", "last_updated": null},
   "canonical_url": "https://www.example-daily.iq/economy/2026/10/05/fiberx-wasit",
@@ -105,6 +105,8 @@ It does not get page text beyond the snippet, author identity, engagement counts
   "retention_class": "news_excerpt"
 }
 ```
+
+Ids in this example follow ADR-0002 and ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 `country` records the region boost sent (`rb`), `lang` the language boost (`lb`); `request_id` is the engine's id when it returns one, else null. Also `service_runs` and `dlq.web-search-mojeek` after 5 failed attempts.
 
@@ -159,7 +161,7 @@ It does not get page text beyond the snippet, author identity, engagement counts
 4. Every result in a recorded response produces one `search.results` message with the same keys as web-search-perplexity's, `engine = mojeek`, `retention_class = news_excerpt`, partitioned by `canonical_url_hash`.
 5. Replaying a completed job republishes identical `message_id` values and commits no second batch to `raw.items`; the cursor does not advance when the produce fails.
 6. With a non-storable plan in `vendor_keys`, no query is sent and `plan_not_storable` fires.
-7. A 429 is retried with backoff starting at 30 s; the sixth failure lands in `dlq.web-search-mojeek` with an alert; a 401 stops the run, marks the key `degraded` and sends no second request.
+7. A 429 is retried with backoff starting at 30 s; the fifth failed attempt lands in `dlq.web-search-mojeek` with an alert (ADR-0057); a 401 stops the run, marks the key `degraded` and sends no second request.
 8. An edit to a rule's keyword forms is used by its next run without a restart.
 9. A canary query that returns nothing increments the empty-200 counter for the web route.
 10. Over a 30-day pilot month with 200 rules, queries are between 54,000 and 60,000, spend is at or below the governor cap and 99% of rules met their interval every day.

@@ -19,7 +19,7 @@ Service `fb-page-feed-poller` · PRD `docs/prds/facebook/fb-page-feed-poller.md`
 1. This brief
 2. The PRD in full: `docs/prds/facebook/fb-page-feed-poller.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Rotation policy; Quotas, budgets and the quota governor; Retention classes; Per-platform fact sheets: Facebook
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of FB1: `docs/handoffs/FB1.md`
 6. Handoff of C1: `docs/handoffs/C1.md`
 7. Handoff of C11: `docs/handoffs/C11.md`
@@ -51,7 +51,7 @@ Service `fb-page-feed-poller` · PRD `docs/prds/facebook/fb-page-feed-poller.md`
 - About 600 ranked posts per Page per year on /feed
 - Error 80001 means too many calls to this Page
 - System-user token per client, injected per job
-- next_poll_at is set from the start of the last poll; order by next_poll_at then tier; most stale first when behind, with rotation_behind
+- The due time is next_due_at in this service's own cursors row, set from the start of the last poll; order by it then tier; most stale first when behind, with rotation_behind (ADR-0015)
 - Incremental reads only newer than the cursor; full re-reads happen only in backfill jobs from backfill-orchestrator
 - The cursor advances only after the producer acknowledges the batch
 

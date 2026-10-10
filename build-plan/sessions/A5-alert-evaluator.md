@@ -4,7 +4,7 @@ Wave 6 · Insight layer · track Insight · size M (1 to 2 days with review) · 
 
 ## Builds
 
-Alert rules over aggregates and hits, routed through n8n.
+Alert rules over the aggregate views, metrics_timeseries and item_stories, routed through n8n (ADR-0047, ADR-0048).
 
 Service `alert-evaluator` · PRD `docs/prds/shared/alert-evaluator.md` · lane Processing · route shared · 12 acceptance criteria (section 13) · 5 open questions (section 14)
 
@@ -13,17 +13,25 @@ Service `alert-evaluator` · PRD `docs/prds/shared/alert-evaluator.md` · lane P
 - C15 aggregator: `docs/handoffs/C15.md`
 - C5 keyword-matcher: `docs/handoffs/C5.md`
 - G1 Gate: fake platform end to end: `docs/gates/G1.md` is green
+- A1 analysis-sentiment: `docs/handoffs/A1.md`
+- A2 analysis-topics: `docs/handoffs/A2.md`
+- A3 analysis-entities: `docs/handoffs/A3.md`
+- A4 analysis-media: `docs/handoffs/A4.md`
 
-Any-time track: earliest after C15, C5 and G1; deadline none.
+Any-time track: earliest after C15, C5, G1 and A1 to A4 (ADR-0048); deadline none.
 
 ## Give the session (read in this order)
 
 1. This brief
 2. The PRD in full: `docs/prds/shared/alert-evaluator.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Retention classes
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of C15: `docs/handoffs/C15.md`
 6. Handoff of C5: `docs/handoffs/C5.md`
+7. Handoff of A1: `docs/handoffs/A1.md`
+8. Handoff of A2: `docs/handoffs/A2.md`
+9. Handoff of A3: `docs/handoffs/A3.md`
+10. Handoff of A4: `docs/handoffs/A4.md`
 
 ## Contracts it touches (from PRD section 6)
 

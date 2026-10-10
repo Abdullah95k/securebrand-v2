@@ -14,7 +14,7 @@ Rotation scheduler with leader election, quota client, HTTP adapter base with th
 
 1. This brief
 2. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Rotation policy; Quotas, budgets and the quota governor; Error handling, canaries and fallback; Addendum: Other shared decisions
-3. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+3. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 4. Handoff of F4: `docs/handoffs/F4.md`
 5. Fb-page-feed-poller section 5.1 (the rotation reference)
 6. Quota-governor section 6 (allowance API)
@@ -31,8 +31,8 @@ Rotation scheduler with leader election, quota client, HTTP adapter base with th
 
 ## Watch for
 
-- next_poll_at is set from the start of the last poll; order by next_poll_at then tier; most stale first when behind, with rotation_behind
-- 401 and 403 mark the route degraded and stop the batch; the kit never rotates accounts or IPs
+- Each service's due time is next_due_at in its own cursors row, set from the start of the last poll; order by it then tier; most stale first when behind, with rotation_behind (ADR-0015, ADR-0041)
+- 401 and 403 are classified by reason: a quota one waits for the reset, an item-scoped one ends that item, an authorisation one marks the credential revoked or the source blocked and stops the batch, never a route state (ADR-0021); the kit never rotates accounts or IPs
 - Empty-200 responses are counted per route for the canary
 
 ## Done when

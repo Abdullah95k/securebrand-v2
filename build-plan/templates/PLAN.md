@@ -14,7 +14,7 @@ Brief: build-plan/sessions/<ID>-<slug>.md · PRD: docs/prds/<platform>/<service>
 |---|---|---|
 | Rotation or series timing | | |
 | Catch-up when behind | | |
-| 429 backoff, 401 and 403 degrade and stop, empty 200 counted | | |
+| 429 backoff; 401 and 403 classified by reason: a quota one waits, an item-scoped one ends that item, an authorisation one revokes the credential or blocks the source and stops the batch (ADR-0021); empty 200 counted | | |
 | 5xx in the middle of pagination | | |
 | DLQ after five attempts | | |
 | Replay changes nothing | | |

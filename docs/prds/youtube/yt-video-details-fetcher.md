@@ -158,6 +158,8 @@ Also `deletions` (reason `platform_sync`, with both `call_id`s that missed the i
 
 No cursors; jobs carry everything. Buffers live in worker memory and are rebuilt from uncommitted offsets after a crash; a lost missed-once mark only delays a deletion. `yt_live_watch` (`platform_id`, `source_id`, `live_state`, `next_check_at`); `budgets` through quota-governor; `service_runs`.
 
+Owner (ADR-0025): `yt_live_watch` is private to this service. No other service reads it, F3's `TABLE-OWNERS.md` lists it, and it is registered in the SDK purge registry where it holds item ids, hashes or URLs.
+
 ## 7. Limits, quotas and cost
 
 - `videos.list`: 1 unit per call of up to 50 ids, from the default 10,000 units a day shared by all YouTube services under `youtube_data_api`, bucket `ingest`. The planning split gives 1-unit endpoints about 4,000 to 5,000 units a day for 3.0M items a month; this service's share: to be measured in the pilot.

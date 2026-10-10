@@ -99,13 +99,15 @@ Reads: clock definitions, ClickHouse candidate ids and counts, `deletion_request
   "reason": "retention", "scope": "item", "mode": "purge_text",
   "retention_class": "vendor_agreed",
   "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11",
-  "target": {"platform": "tiktok", "kind": "post", "item_ids": ["01J9N2Q7Z4T8X1V6M3K0H5R2WB"]},
+  "target": {"platform": "tiktok", "kind": "post", "item_ids": ["3287bad6-f64e-566f-a071-6fdd4aca57dd"]},
   "client_id": null,
   "requested_by": "retention-purger", "run_id": "01J9P8A3V5N7B2D4F6H0K1M9QS",
   "signal_at": "2026-10-06T00:00:00Z", "due_at": "2026-10-06T06:00:00Z",
   "emitted_at": "2026-10-06T00:05:12Z"
 }
 ```
+
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 Audit record (`retention_audit`): `run_id`, `started_at`, `finished_at`, `class`, `clock`, `cutoff`, `candidates`, `emitted`, `completed`, `delegated_to`, `verification` (query text, result count, executed at), `oldest_remaining_age_seconds`, `status`, `holds`.
 

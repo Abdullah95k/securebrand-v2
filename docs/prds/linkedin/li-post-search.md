@@ -12,7 +12,7 @@ Without it the product has no LinkedIn mention detection: coverage stops at the 
 
 ## 2. Objective (the end state this service delivers)
 
-End state: every active LinkedIn keyword rule is searched once a day on the vendor route; every returned post is archived to `raw.items` with full provenance; normalize-item and keyword-matcher then place posts by registered company pages in `item.hits` and posts by unknown posters in `discovery.hits` for poster-resolver and li-org-resolver.
+End state: every active LinkedIn keyword rule is searched once a day on the vendor route; every returned post is archived to `raw.items` with full provenance; normalize-item and keyword-matcher then write every matching post to `item.hits`, and a candidate for each unregistered poster to `discovery.hits` for poster-resolver and li-org-resolver (ADR-0031).
 
 Target: 99% of active rules searched within their daily interval each day; zero jobs lost, `dlq.li-post-search` reviewed daily; LinkedIn vendor spend across li-post-search, li-company-posts-poller and li-post-comments-fetcher within about USD 225 to 300 a month at 0.15M items. The share search consumes is to be measured in the pilot.
 
@@ -87,7 +87,7 @@ It does not get comments (li-post-comments-fetcher), private posts, member profi
   "envelope": {
     "platform": "linkedin", "kind": "post", "route": "amber", "vendor": "harvestapi",
     "service": "li-post-search",
-    "job_id": "f3a9c2b1-5d7e-4c0a-9b2f-1e6d8a4c7b30",
+    "job_id": "01M4871WM0G35N2F2R5GBPWABM",
     "idempotency_key": "linkedin:post:urn:li:activity:7281234567890123456",
     "retention_class": "vendor_agreed",
     "fetched_at": "2026-10-06T03:12:44Z", "attempt": 1, "cost_units": 1
@@ -101,6 +101,8 @@ It does not get comments (li-post-comments-fetcher), private posts, member profi
   }
 }
 ```
+
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 The payload is the vendor record exactly as returned. The key uses the activity id where present, otherwise `linkedin:post:<sha256(url)>`.
 

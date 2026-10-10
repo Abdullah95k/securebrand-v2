@@ -31,7 +31,7 @@ Every enabled Telegram keyword set is searched once a day against Telemetrio; ev
 ## 4. Users and consumers
 
 - Clients (brands and companies) see Telegram mentions and newly discovered channels, each carrying the amber provenance statement naming Telemetrio.
-- poster-resolver and qualifier consume `discovery.hits`; normalize-item, lang-dialect-id and keyword-matcher consume `raw.items`; store-writer, aggregator and alert-evaluator sit downstream.
+- poster-resolver consumes `discovery.hits`; normalize-item and raw-archiver consume `raw.items`, and keyword-matcher reads what normalize-item publishes (ADR-0031); store-writer, aggregator and alert-evaluator sit downstream.
 - Ops reads `/metrics` and the DLQ; Abdullah reads vendor spend and hit counts to decide whether the flag stays on.
 
 ## 5. How it works
@@ -81,8 +81,8 @@ Example `discovery.hits` message:
   "platform": "telegram",
   "kind": "post",
   "poster": {"platform_id": "basra_prices", "handle": "basra_prices", "display_name": "أسعار البصرة", "source_type": "channel"},
-  "keyword_ids": ["kw_7f3a"],
-  "client_ids": ["cl_a1b2"],
+  "keyword_ids": ["c6f2f07f-9f2c-48b8-a5bf-b265fdb569d1"],
+  "client_ids": ["c7f12d45-b7c5-467d-aa82-e7826ed8abf2"],
   "route": "amber",
   "vendor": "telemetrio",
   "service": "tg-message-search",
@@ -90,6 +90,8 @@ Example `discovery.hits` message:
   "retention_class": "vendor_agreed"
 }
 ```
+
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 ### 6.3 State
 - One `cursors` row per keyword set: `cursor` holds the last window end as an ISO timestamp, plus `last_success_at`, `last_error`, `consecutive_errors`.
@@ -123,7 +125,7 @@ Standard: `items_fetched_total`, `items_new_total`, `jobs_total{status}`, `fetch
 
 ## 11. Dependencies
 
-`listening-sdk`; quota-governor; source-health-canary; poster-resolver and qualifier (consumers of `discovery.hits`); normalize-item, lang-dialect-id, keyword-matcher, raw-archiver (consumers of `raw.items`); registry-writer (keeps `sources` current for step 4); the Telemetrio contract, including the author notice the `vendor_agreed` retention class requires; the `TG_VENDOR_ROUTE` flag.
+`listening-sdk`; quota-governor; source-health-canary; poster-resolver (consumer of `discovery.hits`) and the qualifier; normalize-item and raw-archiver (consumers of `raw.items`) and keyword-matcher (reads `items.normalized`; ADR-0031); registry-writer (keeps `sources` current for step 4); the Telemetrio contract, including the author notice the `vendor_agreed` retention class requires; the `TG_VENDOR_ROUTE` flag.
 
 ## 12. Risks and mitigations
 

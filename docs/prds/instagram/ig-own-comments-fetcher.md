@@ -42,7 +42,7 @@ Every post on a client-owned Instagram account has its comments, and the replies
 
 **The series (green, Instagram client media).** Counted from the moment the post is first seen: +1 h, +6 h, +24 h, +3 d, +7 d, then weekly (+14 d, +21 d, +28 d) until day 30. Beyond day 30 nothing runs automatically; a client or ops can request a refresh of one post (`ops_force`), budget permitting.
 
-**Early stop.** When a fetch adds fewer than 5% new comments (new share = `new_count` over the comments stored before the fetch) and fewer than 5 in absolute terms, comment-decay-scheduler cancels the rest of the series. **Extension.** When the day-7 fetch still adds 20% or more, the series continues every 2 days until day 30. **Hot posts.** When velocity (new comments since the previous fetch, per hour) exceeds 100, an extra fetch is inserted every hour for the next 6 hours; on this green route these extras are deferred, never dropped, if quota-governor delays them.
+**Early stop.** comment-decay-scheduler applies it from this service's report; this service never stops a series itself (ADR-0019). **Extension.** When the day-7 fetch still adds 20% or more, the series continues every 2 days until day 30. **Hot posts.** When velocity (new comments since the previous fetch, per hour) exceeds 100, an extra fetch is inserted every hour for the next 6 hours; on this green route these extras are deferred, never dropped, if quota-governor delays them.
 
 **Paging and completeness.** Each fetch reads pages of 50 newest first (order to be confirmed in the pilot) and stops at the first comment already stored; a fetch that ends because the pagination is exhausted is a complete listing. The +7 d fetch and the last fetch of every series are full sweeps (read until exhausted). Only a full sweep may infer deletions.
 
@@ -176,7 +176,7 @@ listening-sdk, comment-decay-scheduler, ig-account-media-poller, ig-webhook-rece
 
 1. With 130 comments stored and 20 new, a fetch reads one page of 50, stops at the first stored id, and reports `new_count = 20`, `pages = 1`.
 2. With 0 stored and 120 comments on the post, the fetch reads 3 pages until exhaustion and reports `new_count = 120`.
-3. A fetch that adds 2 new comments to 100 stored is reported as under 5% and under 5 absolute, and the remaining series is cancelled.
+3. A fetch that adds 2 new comments to 100 stored reports both counts and cancels nothing itself; comment-decay-scheduler applies early stop (ADR-0019).
 4. A day-7 fetch that adds 25% new comments leads to a fetch every 2 days until day 30.
 5. A post with 150 new comments in one hour gets a fetch every hour for the next 6 hours.
 6. A comment with two nested replies yields three messages; each reply has `parent_id` = the comment id and the same `post_ref`.

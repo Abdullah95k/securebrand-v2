@@ -25,7 +25,7 @@ Measurable target: 100% of records carry `text_norm` and `lang_model_version` (`
 - `POST /v1/fold`, which keyword-matcher uses for client keywords; model and fold versioning; conformance fixtures shared with `listening-sdk`.
 
 ### Out of scope
-- Deciding that a post or poster is Iraqi: source geography decides (registry `country_signals`, qualifier rule 2). Dialect never filters or routes.
+- Deciding that a post or poster is Iraqi: source geography decides (`sources.country_signals`, ADR-0025; qualifier rule 2). Dialect never filters or routes.
 - Sentiment, topics, entities, OCR, speech (analysis-sentiment, analysis-topics, analysis-entities, analysis-media); translation; spelling correction; transliteration of Arabizi (Arabic in Latin letters).
 - Keyword matching (keyword-matcher); persistence (store-writer).
 
@@ -66,7 +66,7 @@ Replay: any change to a model, a threshold, the CAMeL Tools or KLPT version or t
 
 **B. Dialect scores (advisory).** For `ar`, a classifier over MADAR-style classes (CAMeL Tools `DialectIdentifier` as baseline, replaced by an Iraqi-tuned model after the pilot): the Baghdad, Basra and Mosul classes sum into `iraqi`; the rest collapse to `gulf`, `levantine`, `egyptian`, `maghrebi`, `msa`, `other`. `dialect` is the top class, `dialect_conf` its score. For `ckb`: `dialect = sorani`, `dialect_conf` = the `ckb` share of the Kurdish probability mass against `ku` (Kurmanji); a Kurmanji-dominant text is `lang = other`. Under `DIALECT_MIN_TOKENS` tokens: `dialect = null`.
 
-Country-level dialect identification scores 29 to 50 F1 in the literature, so the contract is fixed: `dialect` describes the wording of one text, never the author or the country, and no filter, route, alert or report may decide "Iraqi" on it. Source geography decides (registry `country_signals`; qualifier rule 2, where the Iraqi or Sorani share of the last 20 posts is one signal of five).
+Country-level dialect identification scores 29 to 50 F1 in the literature, so the contract is fixed: `dialect` describes the wording of one text, never the author or the country, and no filter, route, alert or report may decide "Iraqi" on it. Source geography decides (`sources.country_signals`, ADR-0025; qualifier rule 2, where the Iraqi or Sorani share of the last 20 posts is one signal of five).
 
 **C. Fold.** Detection runs on the raw text; the fold is chosen afterwards. The Arabic fold applies to `ar`, `en`, `other` and the Arabic-script tokens of `mixed`; the Sorani fold applies to `ckb` and to any token holding a Sorani-only letter. Steps, in order:
 

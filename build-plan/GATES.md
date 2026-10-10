@@ -20,7 +20,7 @@ Built by E1 in `tests/e2e/G1` and kept as the regression suite.
 4. An unknown poster in a keyword hit goes through poster-resolver and qualifier and is added, rejected or sent to review by the rules.
 5. Posts and comments are normalized with language, dialect and `text_norm`, matched against keywords, stored in ClickHouse, and the aggregates update.
 6. Every job and message replayed twice changes nothing.
-7. A burst of 429s backs off; a 401 marks the route degraded and stops it; a burst of empty 200s flips the canary; a source a government client watches never falls back to amber.
+7. A burst of 429s backs off; a 401 on a client token revokes that credential, blocks the sources only it reads and stops the batch, and a blocked source falls back to its amber route where ADR-0021 allows, with a notice to ops; a burst of empty 200s flips the canary; a green source a government client watches never falls back to amber, and a client-owned property falls back under the same conditions as any other source (ADR-0021).
 8. At 80% of a budget, amber intervals stretch and hot-post extras stop; at 95%, only priorities 1 and 2 run.
 9. A deletion reaches ClickHouse, the archive and the aggregates; a retention purge removes raw text and keeps aggregates.
 10. A record with an unknown shape is archived and parked, never dropped.
@@ -31,7 +31,7 @@ Built by E1 in `tests/e2e/G1` and kept as the regression suite.
 
 1. 72 hours of news and web on staging with real Iraqi sources and your keywords.
 2. The SLOs in CONVENTIONS hold: rotation lag below one tier interval for 99% of sources, comment series on time for 95% of posts, zero lost jobs, the DLQ reviewed daily with nothing unexplained.
-3. On a 200-item sample you label, language, dialect, duplicate stories, extraction completeness and keyword-hit precision meet the targets set in D2.
+3. On a 200-item sample you label, language, dialect, duplicate stories, extraction completeness and keyword-hit precision meet the targets you set before G2 (`docs/decisions/DEFERRED.md`, section 2).
 4. The crawl logs show no request against a site's robots, Content Signals, RSL or 402 policy.
 5. Cost per 1,000 items is within budget, and the quota governor's counters match the vendors' own dashboards.
 6. Restore drill: the control plane and one day of ClickHouse restored from backup into a scratch environment.
@@ -41,7 +41,7 @@ Built by E1 in `tests/e2e/G1` and kept as the regression suite.
 1. Every difference the platform's probe found is resolved in the PRD or an ADR.
 2. 72 hours on staging for that platform, meeting the G2 SLOs.
 3. Compliance checks for that platform pass: the YouTube 30-day purge in a dry run; an X post deleted on a team account disappears from every store within 24 hours; LinkedIn member data is gone after 48 hours; a Meta deletion request runs end to end; amber flags default to off and provenance is correct.
-4. A canary flip rehearsed on staging: revoke a token, see `degraded` and the alert.
+4. A canary flip rehearsed on staging: the canary moves a route to `degraded` or `fallback` and back to `ok`, with its alert; and a revoked client token turns its credential `revoked` and the sources only it reads `blocked`, or `fallback` where ADR-0021 allows, with the n8n notice to ops (ADR-0021).
 5. Runbook and dashboards in place; cost per 1,000 items within budget.
 
 ## G4 · Production readiness (before the first client sees data)

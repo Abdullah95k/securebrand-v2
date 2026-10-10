@@ -149,7 +149,7 @@ listening-sdk (canary hook, adapters), registry-writer, quota-governor, n8n, eve
 3. One target empty for the whole window while the others return data is quarantined and the route stays `ok`.
 4. 429 responses are classed `throttled` and never change health.
 5. 401 or 403 on every target and token produces `blocked`, no `fallback_on`, an approval card, and no call with any other token, account, proxy or IP.
-6. TikHub `degraded` with a clean EnsembleData canary and `TT_VENDOR_ROUTE` on yields `fallback_on` for every TikTok source; with the flag `off` the route stays `degraded`.
+6. EnsembleData, the primary, `degraded` with a clean canary on TikHub, the fallback once its owner is verified, and `TT_VENDOR_ROUTE` not `off` yields `fallback_on` for every TikTok source; with the flag `off` the route stays `degraded` (ADR-0050, ADR-0051).
 7. A green source watched by a government client receives no amber `fallback_on`.
 8. A clean primary window yields `fallback_off` and `health = ok`; a second flip inside 15 minutes of the last is refused.
 9. Probe intervals back off to at most 60 minutes while the primary stays bad.

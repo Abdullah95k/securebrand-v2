@@ -18,10 +18,10 @@ Service `source-health-canary` · PRD `docs/prds/shared/source-health-canary.md`
 1. This brief
 2. The PRD in full: `docs/prds/shared/source-health-canary.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Retention classes; Quotas, budgets and the quota governor
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of F5: `docs/handoffs/F5.md`
 6. Handoff of C7: `docs/handoffs/C7.md`
-7. ADR on fallback scope (decision 5)
+7. ADR-0021 (fallback scope; it supersedes README decision 5)
 8. Canary_targets
 
 ## Contracts it touches (from PRD section 6)
@@ -40,8 +40,8 @@ Service `source-health-canary` · PRD `docs/prds/shared/source-health-canary.md`
 
 ## Watch for
 
-- 401 or 403 = blocked, no automatic fallback
-- A source a government client watches never falls back to amber
+- Route-wide states come only from the canary; a blocked source falls back to its vendor automatically where that flag is on, with an n8n notice to ops, never an approval card (ADR-0021)
+- A green source a government client watches never falls back to amber; a client-owned property falls back under the same conditions as any other source, with the n8n notice to ops (ADR-0021)
 - Deletion and retention actions are audited before they run, so a replay changes nothing
 
 ## Done when

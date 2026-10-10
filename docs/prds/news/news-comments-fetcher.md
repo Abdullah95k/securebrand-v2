@@ -40,7 +40,7 @@ Every article on a site whose `comments_provider` is `disqus` has its comments f
 
 **Trigger.** A job on `jobs.news-comments-fetcher`, partitioned by `source_id`, emitted only by comment-decay-scheduler (this service has no scheduler of its own). A job carries `job_id` (ULID), `source_id`, `kind`, `due_at`, `attempt`, `post_ref` (article item id, canonical URL, `disqus_shortname`, thread identifier or thread id when known, newest stored comment time) and `series_step`.
 
-**Series.** For Disqus sites the profile is: +6 h, +24 h, +3 d after the article is first seen. The general rules of the addendum apply: early stop (when a fetch adds fewer than 5% new comments and fewer than 5 absolute, the remaining steps are cancelled); extension (when the last scheduled fetch, at +3 d, still adds 20% or more new comments, the series continues every 2 days until day 30); hot posts (when velocity exceeds 100 new comments an hour, an extra fetch every hour for the next 6 hours). Replies need no separate job: Disqus returns the whole thread, replies included, in the same call. Beyond day 30 no automatic fetch; a client may request a refresh of one article, budget permitting (`ops_force`).
+**Series.** For Disqus sites the profile is: +6 h, +24 h, +3 d after the article is first seen. The general rules of the addendum apply, each applied by comment-decay-scheduler from this service's report: early stop (this service never stops a series itself; ADR-0019); extension (when the last scheduled fetch, at +3 d, still adds 20% or more new comments, the series continues every 2 days until day 30); hot posts (when velocity exceeds 100 new comments an hour, an extra fetch every hour for the next 6 hours). Replies need no separate job: Disqus returns the whole thread, replies included, in the same call. Beyond day 30 no automatic fetch; a client may request a refresh of one article, budget permitting (`ops_force`).
 
 **Thread not yet created.** Disqus creates a thread when the embed first loads, so an unread article has none. A thread not found at +6 h is retried at +24 h; not found at +24 h, the series stops with `no_thread`.
 
@@ -168,7 +168,7 @@ Standard set: `items_fetched_total`, `items_new_total`, `jobs_total{status}`, `f
 ## 13. Acceptance criteria
 
 1. For an article first seen at 06:00, jobs are due at 12:00, 06:00 the next day and 06:00 three days later; each is executed within one hour of `due_at` in a fixture run.
-2. A fetch adding fewer than 5% new comments and fewer than 5 in absolute cancels the remaining steps; a +3 d fetch adding 20% or more extends the series every 2 days to day 30.
+2. A fetch reports its new comments and the comments stored before it and cancels no step itself, comment-decay-scheduler applying early stop (ADR-0019); a +3 d fetch adding 20% or more extends the series every 2 days to day 30.
 3. A fixture thread of 250 comments with 60 stored is paged newest-first and stops at the first page reaching a stored comment; the last scheduled fetch reads to the end.
 4. Replies arrive in the same call with `parent` set; no separate reply job exists.
 5. No output field, log line or message contains a commenter name, username, avatar or profile URL; guest hashes differ between two threads for the same name.

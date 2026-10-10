@@ -37,7 +37,7 @@ Measurable target: p95 normalization-to-hit latency below 60 s at about 1,000,00
 
 ### 5.1 Trigger and rotation
 
-Trigger: topic `items.normalized`, consumer group `keyword-matcher`. Partitions follow normalize-item's keys (`source_id`, or the poster key for search results), so one worker sees one source's items in order; offsets commit after Redpanda acknowledges the hit batch, and a replayed batch yields identical hits. No rotation. Control inputs: the `keywords` and `clients` tables are polled every `KEYWORD_POLL_SECONDS` (default 30) for a changed `updated_at`; `source.events` keeps the registry cache current. x-recent-search and tg-message-search may emit an early `discovery.hits` for the same candidate; poster-resolver deduplicates by `candidate_key`, so both paths are safe.
+Trigger: topic `items.normalized`, consumer group `keyword-matcher`. Partitions follow normalize-item's key, `source_id` (ADR-0004), so one worker sees one source's items in order; offsets commit after Redpanda acknowledges the hit batch, and a replayed batch yields identical hits. No rotation. Control inputs: the `keywords` and `clients` tables are polled every `KEYWORD_POLL_SECONDS` (default 30) for a changed `updated_at`; `source.events` keeps the registry cache current. x-recent-search and tg-message-search may emit an early `discovery.hits` for the same candidate; poster-resolver deduplicates by `candidate_key`, so both paths are safe.
 
 Replay: a new `lang_model_version` (fold change), a new matcher rule version or a bulk keyword change is re-run from the archive. Ops starts a replay of the affected days through raw-archiver's replay path (the one normalize-item uses); items return on `items.normalized` as new versions and are matched again, rate-capped. Hits are keyed by `hit_id`, so stores upsert. A single keyword edit uses a `rematch` job instead (5.3 H).
 
@@ -55,7 +55,7 @@ Replay: a new `lang_model_version` (fold change), a new matcher rule version or 
 
 **A. Keyword model.** `keywords` columns read (proposed here): `keyword_id`, `client_id`, `label`, `forms` (jsonb array of `{form_id, text, lang: ar|ckb|en, kind: term|handle|hashtag, boundary: clitic|word|exact}`), `exclusions` (array of `{text, lang}`), `purpose`, `enabled`, `version`, `updated_at`, `rematch_days`. Handles keep their `@`, hashtags their `#`.
 
-**B. Compile.** One automaton per client set. Every form is folded with lang-dialect-id `/v1/fold` (the SDK's identical TypeScript fold if the service is down) under both the Arabic and the Sorani fold; a Latin-only form folds alike and is stored once. So a keyword typed with Arabic letters matches a Sorani text and the reverse, and the folds cannot cross-match because they never produce the same ك/ک or ي/ی. Patterns carry `keyword_id`, `form_id`, `boundary`. Exclusions are folded the same way. A set is built per `lang_model_version` and identified by `set_version` = hash of (`keyword_id`, `version`, `enabled`) over the client's keywords. A new set replaces the old one between batches; the old one stays until the replay ends.
+**B. Compile.** One automaton per client set. Every form is folded with lang-dialect-id `/v1/fold` (the SDK's identical TypeScript fold if the service is down) under both the Arabic and the Sorani fold; a Latin-only form folds alike and is stored once. So a keyword typed with Arabic letters matches a Sorani text and the reverse, and the folds cannot cross-match because they never produce the same ك/ک or ي/ی. Patterns carry `keyword_id`, `form_id`, `boundary`. Exclusions are folded the same way. A set is built per `lang_model_version` and identified by `keyword_set_version` = hash of (`keyword_id`, `version`, `enabled`) over the client's keywords, rendered `cs:<hex>` (ADR-0070). A new set replaces the old one between batches; the old one stays until the replay ends.
 
 **C. Scan.** One linear pass over `text_norm` per candidate client, then a boundary test per match:
 - `word` (Latin, digits): neighbours must not be letters, digits or `_`.
@@ -74,7 +74,7 @@ A keyword is suppressed for the item when any of its exclusion forms occurs (sam
 - An unregistered post-like item (post, video, article, message, result) with a non-null `author_ref` goes to `discovery.hits` with a `candidate` block. normalize-item hashes authors, so `platform_id` and `handle` are read from the raw record at `raw_ref` with the SDK's per-platform extractor; `candidate_key` is `<platform>:<platform_id>` or `<platform>:<handle>`. If the raw object is not readable yet, the hit is sent at once with `candidate_pending = true` and a `candidate_retry` job on `jobs.keyword-matcher` (30 s to 15 min backoff, 5 attempts) re-sends it with the same `hit_id`.
 - Comments, replies and items with a null `author_ref` go to `item.hits` with `poster = {author_ref, author_type: "individual"}`: a mention, never a candidate (qualifier rule 7).
 
-**F. Identity of hits.** `hit_id = uuid_v5(ns_hits, "<item_id>:<client_id>:<keyword_id>")`; `message_id = kh:<hit_id>:<item_version>:<set_version>`. `hit_at` is the item's `created_at`.
+**F. Identity of hits.** `hit_id = uuid_v5(ns_hits, "<item_id>:<client_id>:<keyword_id>")`; `message_id` is a ULID whose time part is `hit_at` and whose random part is the first 10 bytes of SHA-256 over `hit_id`, `item_version` and `keyword_set_version`, so a replay reproduces it (ADR-0006, ADR-0070). `hit_at` is the item's `created_at`.
 
 **G. `last_hit_at`.** `sources.last_hit_at = greatest(current, hit_at)` for the item's `source_id` and its `author_source_id`, coalesced to one write per source per minute. Backfills and replays cannot refresh decay.
 
@@ -92,14 +92,14 @@ Per item: identity, `kind`, `source_id`, `author`, `text_norm`, `lang_model_vers
 - lang-dialect-id `/v1/fold`; ClickHouse `hits`, `items`, `comments`; the raw archive through the SDK reader.
 
 ### 6.2 Writes
-`item.hits` and `discovery.hits` (key `source_id`, the source that produced the item), `jobs.keyword-matcher`, `dlq.keyword-matcher`; `sources.last_hit_at`.
+`item.hits` (key `source_id`, the source that produced the item) and `discovery.hits` (key `candidate_key`; ADR-0004, ADR-0031), `jobs.keyword-matcher`, `dlq.keyword-matcher`; `sources.last_hit_at`. In the example, `message_id`, `producer.job_id` and `keyword_set_version` follow ADR-0006 and ADR-0070; where its other fields differ from an ADR, the ADR wins (ADR-0001, ADR-0031):
 
 ```json
 {
   "schema": "discovery.hits/v1",
-  "message_id": "kh:b7e1c9d4-2a53-5f08-9c61-3d4e5f6a7b8c:1:cs3f9a1c",
+  "message_id": "01M486JMB0K5QZM1RWBPZ5NJ95",
   "produced_at": "2026-10-06T09:14:41Z",
-  "producer": {"service": "keyword-matcher", "version": "1.0.0", "job_id": null},
+  "producer": {"service": "keyword-matcher", "version": "1.0.0", "job_id": "01M4871WM0NJ5SWYGET3ZGFGSP"},
   "hit_id": "b7e1c9d4-2a53-5f08-9c61-3d4e5f6a7b8c", "status": "active",
   "item_id": "6f1d2c3e-9a4b-5c6d-8e7f-0a1b2c3d4e5f", "item_version": 1,
   "platform": "x", "kind": "post", "source_id": "c41b7a90-3d2e-4f5a-8b6c-7d8e9f0a1b2c",

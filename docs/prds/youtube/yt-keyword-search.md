@@ -34,7 +34,7 @@ Measurable target: 100% of priority terms searched every day; 20 to 30 `search.l
 
 ## 4. Users and consumers
 
-- normalize-item deduplicates the raw video records; keyword-matcher turns them into `item.hits` (channel registered) or `discovery.hits` (channel unknown).
+- normalize-item deduplicates the raw video records; keyword-matcher turns every match into `item.hits`, with a `discovery.hits` candidate when the channel is unknown (ADR-0031).
 - poster-resolver, through yt-channel-resolver, turns `discovery.hits` into `poster.profiles` for the qualifier.
 - yt-video-details-fetcher receives first-sight jobs; quota-governor grants or denies the daily search allowance.
 - Client success managers curate the priority list of 20 to 30 terms; Abdullah reads the weekly discovery report (terms run, videos found, channels qualified).
@@ -110,7 +110,7 @@ Example `raw.items` message:
   "vendor": null,
   "service": "yt-keyword-search",
   "origin": "search",
-  "job_id": "yks-20261006-0042",
+  "job_id": "01M47JP18081JQQZ19WYHA1ZH3",
   "attempt": 1,
   "fetched_at": "2026-10-06T03:04:11Z",
   "retention_class": "youtube_30d_text",
@@ -119,6 +119,8 @@ Example `raw.items` message:
   "payload": { "kind": "youtube#searchResult", "id": { "videoId": "dQw4w9WgXcQ" }, "snippet": { "publishedAt": "2026-10-06T01:12:00Z", "channelId": "UCuAXFkgsw1L7xaCfnd5JJOw", "title": "...", "description": "..." } }
 }
 ```
+
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 `partial: true` tells normalize-item that statistics follow from yt-video-details-fetcher.
 
