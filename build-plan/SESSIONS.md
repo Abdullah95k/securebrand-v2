@@ -15,6 +15,7 @@ Tick a session when its pull request has merged with a closed review. "Needs fir
 | Done | Session | Builds | Needs first | Size | Brief |
 |---|---|---|---|---|---|
 | [ ] | **F1** | Repository, toolchain, local stack, CI, Claude kit | nothing | M | [brief](sessions/F1-repository-toolchain-local-stack-ci-claude-kit.md) |
+| [ ] | **F1b** | Kit follow-ups after D1 and D2 | F1, D2 | M | [brief](sessions/F1b-kit-follow-ups-after-d1-and-d2.md) |
 | [ ] | **F2** | Contracts package | D2, F1 | L | [brief](sessions/F2-contracts-package.md) |
 | [ ] | **F3** | Control-plane schema | D2, F1 | L | [brief](sessions/F3-control-plane-schema.md) |
 | [ ] | **F4** | SDK runtime (Node) | F2, F3 | L | [brief](sessions/F4-sdk-runtime.md) |
