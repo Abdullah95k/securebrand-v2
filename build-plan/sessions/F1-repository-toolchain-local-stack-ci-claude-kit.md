@@ -14,7 +14,7 @@ pnpm and Turborepo monorepo, TypeScript strict, Vitest, uv with ruff and pytest,
 
 1. This brief
 2. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment
-3. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+3. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 4. The kit and the PRDs, committed to main on day zero (KIT-README.md)
 
 ## Hands on

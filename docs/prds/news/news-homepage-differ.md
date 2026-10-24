@@ -119,7 +119,7 @@ Also `jobs.news-site-resolver` (`refresh`), `jobs.news-robots-checker` (`recheck
 
 ### 6.3 State
 
-`cursors.cursor` per (`source_id`, `news-homepage-differ`): JSON `{etag, last_modified, page_hash, link_hashes (last three snapshots), sections, render}`; `last_success_at`, `last_error`, `consecutive_errors`. `sources.last_polled_at`, `next_poll_at`, `health`. `crawl_policies.next_slot_at`. No page HTML is stored.
+`cursors.cursor` per (`source_id`, `news-homepage-differ`): JSON `{etag, last_modified, page_hash, link_hashes (last three snapshots), sections, render}`; `last_success_at`, `last_error`, `consecutive_errors`. `sources.last_polled_at`, `next_poll_at`, `health`. Host-gate slots live in `host_gate`, written only by the SDK gate (ADR-0040). No page HTML is stored.
 
 ## 7. Limits, quotas and cost
 

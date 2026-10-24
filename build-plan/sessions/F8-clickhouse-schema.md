@@ -15,7 +15,7 @@ Migrations for items, comments, analysis, metrics_timeseries, aggregates_hourly,
 
 1. This brief
 2. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment (analytics store); Retention classes
-3. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+3. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 4. Handoff of D2: `docs/handoffs/D2.md`
 5. Handoff of F2: `docs/handoffs/F2.md`
 6. Store-writer, aggregator and retention-purger PRDs
@@ -31,7 +31,7 @@ Migrations for items, comments, analysis, metrics_timeseries, aggregates_hourly,
 ## Watch for
 
 - Upserts keyed on item_id need an explicit version column (ReplacingMergeTree or equivalent) so a replay never wins over a newer edit
-- Raw text TTLs differ by retention class; aggregates are kept ten years
+- Raw text TTLs differ by retention class; item-level derived rows follow their item's class; aggregates keep ten years, per-channel YouTube rollups 36 months (ADR-0054, ADR-0056)
 - Start this session with ALLOW_CONTRACT_EDITS=1: it is one of the few allowed to write the contract paths
 
 ## Done when

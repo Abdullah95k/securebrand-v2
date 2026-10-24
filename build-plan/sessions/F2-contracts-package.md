@@ -15,7 +15,7 @@ Zod schemas for every topic, job and envelope; JSON Schema export; Pydantic mode
 
 1. This brief
 2. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: the whole file
-3. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+3. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 4. Handoff of D2: `docs/handoffs/D2.md`
 5. Handoff of F1: `docs/handoffs/F1.md`
 6. `docs/contracts/INVENTORY.md`
@@ -33,7 +33,7 @@ Zod schemas for every topic, job and envelope; JSON Schema export; Pydantic mode
 
 - When PRD examples disagree on a field, the ADR decides, never a majority of examples
 - Keys must be byte-identical in TypeScript and Python: fix Unicode normalisation and JSON canonicalisation in the golden vectors
-- Every topic payload carries provenance (route, vendor, service, fetched_at) and retention_class
+- Every data payload carries provenance (route, vendor, service, fetched_at) and retention_class; jobs, `jobs.completed` and `source.events` carry `producer` (ADR-0003)
 - Start this session with ALLOW_CONTRACT_EDITS=1: it is one of the few allowed to write the contract paths
 
 ## Done when

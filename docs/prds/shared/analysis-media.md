@@ -91,7 +91,7 @@ Media bytes by hash, `type`, `url`, `platform`, `kind`, `route`, `retention_clas
   "schema": "items.analysis/v1",
   "message_id": "01J9W4ZB2C4D6E8F0G1H2J3K4M",
   "produced_at": "2026-10-06T09:16:02Z",
-  "producer": {"service": "analysis-media", "version": "0.2.0", "job_id": "analysis-media:priority:0003"},
+  "producer": {"service": "analysis-media", "version": "0.2.0", "job_id": "01M4886GG0GDQ0Y9RD0QSBJD30"},
   "analysis_key": "6f1d2c3e-9a4b-5c6d-8e7f-0a1b2c3d4e5f:media_ocr:ocr-iq-2026.11",
   "item_id": "6f1d2c3e-9a4b-5c6d-8e7f-0a1b2c3d4e5f", "item_version": 1,
   "content_hash": "sha256:4b2e…", "input_hash": "sha256:5e19…",
@@ -109,6 +109,8 @@ Media bytes by hash, `type`, `url`, `platform`, `kind`, `route`, `retention_clas
   }
 }
 ```
+
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 ### 6.3 State
 Consumer offsets; the url-to-`sha256` lookup via `media_fetch` rows in ClickHouse `analysis`; LRU of recent hashes; re-run progress in `cursors` (`service = analysis-media`, `cursor = rerun:<task>:<model_version>:<last archive object key>`); `service_runs`.

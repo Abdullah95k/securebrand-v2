@@ -14,7 +14,7 @@ The PRD section or acceptance criterion that cannot be met without it, with the 
 
 ## Impact
 
-- Kind of change: additive (same version) | breaking (new version, dual-publish window)
+- Kind of change (ADR-0002): only adds an optional field (same version) | anything else (new version, dual-publish window)
 - Producers and consumers affected (from docs/contracts/INVENTORY.md)
 - Services whose tests will need updating
 

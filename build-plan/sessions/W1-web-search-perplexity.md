@@ -20,7 +20,7 @@ Service `web-search-perplexity` · PRD `docs/prds/web/web-search-perplexity.md` 
 1. This brief
 2. The PRD in full: `docs/prds/web/web-search-perplexity.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Qualifier rules; Quotas, budgets and the quota governor; Per-platform fact sheets: Web search
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of F5: `docs/handoffs/F5.md`
 6. Handoff of C1: `docs/handoffs/C1.md`
 7. Handoff of W0: `docs/handoffs/W0.md`
@@ -32,7 +32,7 @@ Service `web-search-perplexity` · PRD `docs/prds/web/web-search-perplexity.md` 
 - Topics read: none named in 6.1
 - Topics written: `raw.items`, `search.results`
 - Job queues in: `jobs.web-search-perplexity`; out: none
-- Tables read: `sources`, `keywords`, `clients`, `cursors`, `budgets`, `vendor_keys`, `canary_targets`, `service_runs`; written or updated: `sources`, `cursors`, `budgets`, `service_runs`
+- Tables read: `sources`, `keywords`, `clients`, `cursors`, `budgets`, `credentials` (the PRD's `vendor_keys`, read and written only through the SDK's credential client, ADR-0016), `canary_targets`, `service_runs`; written or updated: `sources`, `cursors`, `budgets`, `service_runs`
 - This list is extracted from the PRD's section 6 by name; the plan confirms each item against `packages/contracts` and the migrations, and anything missing becomes a proposal.
 
 ## Hands on
@@ -46,7 +46,7 @@ Service `web-search-perplexity` · PRD `docs/prds/web/web-search-perplexity.md` 
 - Budget perplexity_search; up to 5 queries per request
 - Search output rule: items to raw.items with source_id = the keyword rule
 - Searches write items to raw.items with source_id = the keyword rule (search output rule); candidates are deduplicated by candidate_key downstream
-- Individuals are never profiled: a mention keeps a hashed author reference
+- Private individuals are never profiled, listed or backfilled: a mention keeps a keyed author reference (author_ref); only public accounts, as ADR-0010 defines them, may be listed
 
 ## Done when
 

@@ -97,7 +97,7 @@ Re-run policy: every output is stamped with `model_version`, which includes the 
   "schema": "items.analysis/v1",
   "message_id": "01J9W4Z8H5K2M6N7P8Q9R0S1T2",
   "produced_at": "2026-10-06T09:15:15Z",
-  "producer": {"service": "analysis-topics", "version": "0.2.0", "job_id": "analysis-topics:priority:0011"},
+  "producer": {"service": "analysis-topics", "version": "0.2.0", "job_id": "01M4886GG040V4RTSSHFBF6ADK"},
   "analysis_key": "6f1d2c3e-9a4b-5c6d-8e7f-0a1b2c3d4e5f:topics:global:topics-iq-2026.11.tx7",
   "item_id": "6f1d2c3e-9a4b-5c6d-8e7f-0a1b2c3d4e5f", "item_version": 1,
   "content_hash": "sha256:4b2e…", "input_hash": "sha256:c03d…",
@@ -117,6 +117,8 @@ Re-run policy: every output is stamped with `model_version`, which includes the 
   }
 }
 ```
+
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 ### 6.3 State
 Consumer offsets; the LRU of done keys; registry and taxonomy caches (by `taxonomy_version`); centroid table of yesterday's clusters; re-run progress in `cursors` (`service = analysis-topics`, `cursor = rerun:<model_version>:<last archive object key>`); `service_runs`.

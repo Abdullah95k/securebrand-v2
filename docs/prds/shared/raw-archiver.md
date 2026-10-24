@@ -93,7 +93,7 @@ Messages of `raw.items`: the envelope (`platform`, `kind`, `route`, `vendor`, `s
 
 ### 6.2 Writes
 
-Objects: `raw/<route>/<platform>/<yyyy>/<mm>/<dd>/<service>/<batch>.jsonl.zst`, the manifest beside it, `archive/<platform>/<yyyy>/<mm>/<dd>-<part>.envelope.parquet` and `.payload.parquet`, `media/<sha256>` and `.refs`. Topic `raw.replay`, partitioned by `source_id`, one message per record:
+Objects: `raw/<route>/<platform>/<yyyy>/<mm>/<dd>/<service>/<batch>.jsonl.zst`, the manifest beside it, `archive/<platform>/<yyyy>/<mm>/<dd>-<part>.envelope.parquet` and `.payload.parquet`, `media/<sha256>` and `.refs`. Topic `raw.replay`, partitioned by `source_id`, one message per record (superseded: there is no `raw.replay` topic, and a replay reads through this service's read endpoint, ADR-0039, ADR-0070):
 
 ```json
 {

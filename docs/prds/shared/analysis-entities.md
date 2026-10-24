@@ -94,7 +94,7 @@ Re-run policy: every output is stamped with `model_version` and `kb_version`. A 
   "schema": "items.analysis/v1",
   "message_id": "01J9W4ZD5F7H9K1M3N5P7Q9R1S",
   "produced_at": "2026-10-06T09:15:14Z",
-  "producer": {"service": "analysis-entities", "version": "0.2.0", "job_id": "analysis-entities:priority:0009"},
+  "producer": {"service": "analysis-entities", "version": "0.2.0", "job_id": "01M4886GG00N55MK92G5KMGQ7G"},
   "analysis_key": "6f1d2c3e-9a4b-5c6d-8e7f-0a1b2c3d4e5f:entities:ent-iq-2026.11",
   "item_id": "6f1d2c3e-9a4b-5c6d-8e7f-0a1b2c3d4e5f", "item_version": 1,
   "content_hash": "sha256:4b2e…", "input_hash": "sha256:7a42…",
@@ -114,6 +114,8 @@ Re-run policy: every output is stamped with `model_version` and `kb_version`. A 
   }
 }
 ```
+
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 ### 6.3 State
 Consumer offsets; the KB and alias index in memory by `kb_version` (reloaded on release); registry cache; LRU of done keys; re-run and alias re-link progress in `cursors` (`service = analysis-entities`, `cursor = rerun:<model_version>:<last archive object key>`); `service_runs`.

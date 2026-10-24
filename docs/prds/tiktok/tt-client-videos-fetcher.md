@@ -40,7 +40,7 @@ Every client-authorised TikTok account has its own videos and their counts read 
 
 **Trigger.** A job on `jobs.tt-client-videos-fetcher`, partitioned by `source_id`, emitted by the rotation scheduler inside this service (one leader replica elected through a Postgres advisory lock; the scan period is an environment variable well inside 60 minutes). It selects `sources` rows with `platform = tiktok`, `route = green`, `owned_by_client = true`, `health != blocked`, `backfill_status in (done, capped)` and `next_poll_at <= now()`.
 
-**Cadence.** Every authorised account every 60 minutes, whatever its follower count or recent activity: the account is the client's own, a Display API read costs no money, and a client who posts after a quiet month expects to see it within the hour, so the dormant weekly step of the rotation policy is not used here. The registry marks these accounts `tier = push`, so tt-profile-videos-poller makes only its one reconciliation poll a day for them. Retired (authorisation revoked or expired, client offboarded): never polled.
+**Cadence.** Every authorised account every 60 minutes, whatever its follower count or recent activity: the account is the client's own, a Display API read costs no money, and a client who posts after a quiet month expects to see it within the hour, so the dormant weekly step of the rotation policy is not used here. The account keeps `push_covered = false` and its reach tier, and takes this hourly cadence from the `owned_by_client` row of the cadence table (ADR-0049); tt-profile-videos-poller never reconciles it (ADR-0052, ADR-0024). Retired (authorisation revoked or expired, client offboarded): never polled.
 
 **Keeping every account on rotation.** `next_poll_at` is set from the START of the last poll (`poll_started_at + 60 minutes`), so cadence is fixed and does not drift with fetch time. Jobs are ordered by `next_poll_at`, so no account is skipped twice in a row. An account is in at most one job at a time (partition key), which also means one token refresh at a time. A failed job keeps its old `next_poll_at`.
 
@@ -48,7 +48,7 @@ Every client-authorised TikTok account has its own videos and their counts read 
 
 **Backfill on add.** A newly authorised account arrives with `backfill_status = pending`; backfill-orchestrator emits a `kind = backfill` job, this service pages back 90 days or the API's cap, whichever is smaller, and the rotation takes over once `done` or `capped` is set.
 
-**Metrics.** Each hourly read returns counts with every video, so the observations at +24 h and +7 d after first sight come from the first read at or after each mark. Because this service supplies them, comment-decay-scheduler must not open TikTok metrics jobs for green videos (tt-video-stats-refresher is an amber, vendor-paid service).
+**Metrics.** Each hourly read returns counts with every video, so the observations at +24 h and +7 d after first sight come from the first read at or after each mark. Because this service supplies them, comment-decay-scheduler must not open TikTok metrics jobs for green videos (tt-video-stats-refresher is an amber, vendor-paid service; ADR-0012, ADR-0034, ADR-0024).
 
 ### 5.2 Step by step
 
@@ -114,9 +114,13 @@ Not obtained: comments, viewers, likers, audience demographics, other people's v
 
 Also `item.metrics` (one message per observation, label `plus_24h` or `plus_7d`, the four counts, `observed_at`, `first_seen_at`, `lateness_seconds`, same envelope fields), `source.events` (`updated` on a token state change, `retired` on revocation), `service_runs`, `dlq.tt-client-videos-fetcher` after 5 failed attempts. `retention_class = tiktok_display` is proposed and not yet in `retention_classes` (question 2).
 
+Decided since: `retention_class = tiktok_display` is ADR-0054's class, kept while the client's authorisation lasts and deleted when it is revoked, which answers question 2 (ADR-0024). Where this section differs from another ADR, that ADR wins (ADR-0001).
+
 ### 6.3 State
 
 `cursors.cursor` = `create_time` (ISO, UTC) of the newest stored video plus its id, with `last_success_at`, `last_error`, `consecutive_errors`; `sources.last_polled_at`, `next_poll_at`, `health`; `tt_client_video_state` (video id, `first_seen_at`, observation labels written); tokens and expiry times only in Vault; `budgets` counters under `tt_display:<client_id>`; in memory only the leader lock and backoff state.
+
+Owner (ADR-0025): `tt_client_video_state` is private to this service. No other service reads it, F3's `TABLE-OWNERS.md` lists it, and it is registered in the SDK purge registry where it holds item ids, hashes or URLs.
 
 ## 7. Limits, quotas and cost
 

@@ -174,7 +174,7 @@ listening-sdk, quota-governor, source-health-canary, raw-archiver, normalize-ite
 3. A pinned video older than the cursor at the top of the list does not stop the read: the newer videos behind it are fetched.
 4. Replaying one job twice yields two `raw.items` messages with the same `idempotency_key`; normalize-item stores one video.
 5. The cursor does not advance when the Redpanda produce fails; the next attempt re-emits the batch.
-6. With `TT_VENDOR_ROUTE = off`, no vendor call is made in a day of scheduled jobs and each job is counted as `flag_off`.
+6. With `TT_VENDOR_ROUTE = off`, no vendor call is made in a day: the scheduler emits no job, and a job already queued ends `skipped_flag_off` at its start, never as an attempt (ADR-0050, ADR-0017).
 7. With the flag set to `tikhub` and then `ensembledata`, the same creator yields messages that pass the normalize-item schema, `vendor` set accordingly, and no video is re-emitted as new after the switch.
 8. A simulated 429 backs off from 30 s to at most 15 min with `attempt + 1`; after 5 attempts the job is in `dlq.tt-profile-videos-poller` and an alert fired.
 9. At 80% of the monthly budget a Tier 1 interval stretches but never beyond 24 hours; a Tier 3 interval is unchanged.

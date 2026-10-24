@@ -18,7 +18,7 @@ Service `aggregator` · PRD `docs/prds/shared/aggregator.md` · lane Processing 
 1. This brief
 2. The PRD in full: `docs/prds/shared/aggregator.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Retention classes
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of C6: `docs/handoffs/C6.md`
 6. Handoff of F8: `docs/handoffs/F8.md`
 
@@ -39,7 +39,7 @@ Service `aggregator` · PRD `docs/prds/shared/aggregator.md` · lane Processing 
 ## Watch for
 
 - Aggregates rebuild from base tables after deletions
-- Keep per-channel YouTube aggregates separable (cross-owner aggregation question is open)
+- YouTube figures stay per channel owner except where the carve-out allows totals; per-channel YouTube rollups keep 36 months and cross-owner ones ten years until counsel answers (ADR-0048, ADR-0056)
 - Stateless where the PRD says so; replay from raw-archiver must reproduce the same output for the same model version
 
 ## Done when

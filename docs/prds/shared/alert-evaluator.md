@@ -104,6 +104,8 @@ For a government client the `source` object and `platform` are absent and `scope
 ### 6.3 State
 Alert state in Postgres (`alerts`, `alert_deliveries`, `alert_watch_items`, pruned when older than 7 days and resolved); consumer offsets; the rule cache; the registry cache (last `source.events` offset); the leader lock. No state is needed in memory to resume.
 
+Owners (ADR-0025): `alerts` is a shared control-plane table whose one writer is this service. `alert_rules` is shared; this service reads it, and the rule editor that D3 specifies writes it. `alert_deliveries` and `alert_watch_items` are private to this service: no other service reads them, F3's `TABLE-OWNERS.md` lists them, and they are registered in the SDK purge registry where they hold item ids, hashes or URLs.
+
 ## 7. Limits, quotas and cost
 
 No external API or vendor is called for detection: no `budget_tag`, no quota-governor round trip. Cost is a few batched ClickHouse queries per cycle over hourly rows, Postgres writes per alert, and the n8n and mail or chat volume. Rules per client, alerts a day and watch-set rows are to be measured in the pilot; each query touches at most the open window plus 7 days of hourly rows for the clients with rules. Email, Telegram and Slack delivery prices and limits belong to the n8n flows; USD costs are confirmed when providers are chosen.

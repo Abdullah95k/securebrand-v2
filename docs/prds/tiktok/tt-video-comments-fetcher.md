@@ -41,7 +41,7 @@ Every comment series that comment-decay-scheduler opens for a TikTok video runs 
 **Trigger.** Jobs on `jobs.tt-video-comments-fetcher`, partitioned by `source_id`, emitted only by comment-decay-scheduler; this service has no scheduler of its own. A job carries `job_id`, `source_id`, `kind` (comments or replies), `due_at`, `attempt`, `post_ref` (`tiktok:video:<id>`, or the parent comment's key for replies) and `series_step`.
 
 **Series.** From the moment a video is first seen: +1 h, +6 h, +24 h, +3 d, +7 d. There is no weekly tail on TikTok: the series ends at +7 d unless extended.
-- **Early stop.** When a fetch adds fewer than 5% new comments (against the comments already stored) and fewer than 5 in absolute terms, the remaining steps are cancelled.
+- **Early stop.** comment-decay-scheduler applies it from this service's report; this service never stops a series itself (ADR-0019).
 - **Extension.** When the +7 d fetch still adds 20% or more new comments, the series continues every 2 days until day 30.
 - **Hot posts.** When velocity exceeds 100 new comments an hour, comment-decay-scheduler inserts an hourly fetch for the next 6 hours. At 80% of the monthly budget quota-governor drops these extra fetches first.
 - **Replies.** The completion message lists comments reported with more than 10 replies; comment-decay-scheduler emits a `replies` job for each one whose reply count has grown since the last replies read.
@@ -165,7 +165,7 @@ listening-sdk, comment-decay-scheduler, quota-governor, source-health-canary, ra
 ## 13. Acceptance criteria
 
 1. Against a simulated vendor, a video first seen at 10:00 gets fetches at 11:00, 16:00, 10:00 next day, +3 d and +7 d; no TikTok series has a weekly step.
-2. A fetch that adds 2 comments to 100 stored (2%, fewer than 5) cancels the remaining steps; one that adds 4 to 20 stored (20%) does not.
+2. A fetch that adds 2 comments to 100 stored reports both counts and cancels no step itself; comment-decay-scheduler applies early stop (ADR-0019).
 3. A +7 d fetch adding 20% or more new comments leads to a fetch every 2 days until day 30.
 4. Velocity above 100 new comments an hour yields an hourly fetch for the next 6 hours; at 80% of the monthly budget those extra fetches are dropped first.
 5. Paging stops at the first page that holds a stored comment, and never exceeds the page ceiling.

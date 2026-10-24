@@ -17,7 +17,7 @@ Service `tt-hashtag-feed-poller` · PRD `docs/prds/tiktok/tt-hashtag-feed-poller
 1. This brief
 2. The PRD in full: `docs/prds/tiktok/tt-hashtag-feed-poller.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Qualifier rules; Quotas, budgets and the quota governor; Per-platform fact sheets: TikTok
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of VTT0: `docs/handoffs/VTT0.md`
 6. The VTT0 probe report `docs/probes/tt-vendor.md` and the fixtures in `fixtures/tiktok-vendor/`
 7. `docs/patterns/ADAPTER-PATTERN.md` (from C0) and `docs/patterns/MAPPERS.md` (from C4)
@@ -27,7 +27,7 @@ Service `tt-hashtag-feed-poller` · PRD `docs/prds/tiktok/tt-hashtag-feed-poller
 - Topics read: `raw.items`
 - Topics written: `raw.items`
 - Job queues in: `jobs.tt-hashtag-feed-poller`; out: none
-- Tables read: `sources`, `clients`, `cursors`, `budgets`, `vendor_keys`, `canary_targets`; written or updated: `sources`, `cursors`, `budgets`, `service_runs`
+- Tables read: `sources`, `clients`, `cursors`, `budgets`, `credentials` (the PRD's `vendor_keys`, read and written only through the SDK's credential client, ADR-0016), `canary_targets`; written or updated: `sources`, `cursors`, `budgets`, `service_runs`
 - This list is extracted from the PRD's section 6 by name; the plan confirms each item against `packages/contracts` and the migrations, and anything missing becomes a proposal.
 
 ## Hands on
@@ -39,8 +39,8 @@ Service `tt-hashtag-feed-poller` · PRD `docs/prds/tiktok/tt-hashtag-feed-poller
 ## Watch for
 
 - Searches write items to raw.items with source_id = the keyword rule (search output rule); candidates are deduplicated by candidate_key downstream
-- Individuals are never profiled: a mention keeps a hashed author reference
-- Amber: runs only behind its flag (off by default); provenance says route = amber and names the vendor; its data is excluded from government contracts, and a source a government client watches never falls back to it; the quota governor stretches it from 80% of budget
+- Private individuals are never profiled, listed or backfilled: a mention keeps a keyed author reference (author_ref); only public accounts, as ADR-0010 defines them, may be listed
+- Amber: runs only behind its flag (off by default); provenance says route = amber and names the vendor; only clients that accept amber receive its data, never government clients (ADR-0052), and a green source a government client watches never falls back to it, while a client-owned property falls back under the same conditions as any other source (ADR-0021); from 80% of budget the SDK scheduling kit stretches its intervals by the governor's factor (ADR-0057)
 
 ## Done when
 

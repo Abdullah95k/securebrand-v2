@@ -4,7 +4,7 @@ Wave 2 · Shared core · track Core · size M (1 to 2 days with review) · kind 
 
 ## Builds
 
-Keyword compile through /v1/fold, matching on text_norm, item.hits versus discovery.hits by registry membership.
+Keyword compile through /v1/fold, matching on text_norm, every keyword hit on item.hits, discovery.hits for candidates only (ADR-0031).
 
 Service `keyword-matcher` · PRD `docs/prds/shared/keyword-matcher.md` · lane Processing · route shared · 12 acceptance criteria (section 13) · 6 open questions (section 14)
 
@@ -20,7 +20,7 @@ Service `keyword-matcher` · PRD `docs/prds/shared/keyword-matcher.md` · lane P
 1. This brief
 2. The PRD in full: `docs/prds/shared/keyword-matcher.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Retention classes
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of F4: `docs/handoffs/F4.md`
 6. Handoff of F7: `docs/handoffs/F7.md`
 7. Handoff of F8: `docs/handoffs/F8.md`
@@ -43,7 +43,7 @@ Service `keyword-matcher` · PRD `docs/prds/shared/keyword-matcher.md` · lane P
 
 ## Watch for
 
-- keyword-matcher is the canonical writer of item.hits and discovery.hits for items (search output rule)
+- keyword-matcher is the only writer of item.hits, one per item, client and keyword whoever the poster is; it writes discovery.hits only for candidates, beside the other candidate writers (ADR-0031)
 - Stateless where the PRD says so; replay from raw-archiver must reproduce the same output for the same model version
 
 ## Done when

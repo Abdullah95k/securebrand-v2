@@ -102,13 +102,15 @@ ClickHouse `items` and `comments` (distinct ids, counts, `retention_class`); raw
   "reason": "platform_sync", "scope": "item", "mode": "delete",
   "retention_class": "x_24h_sync",
   "source_id": "3a7d9c21-5e4b-4f8a-b6c0-2d1e9f7a3b54",
-  "target": {"platform": "x", "kind": "post", "item_ids": ["01J9M4T6R8W2Y5B7D9F1H3K5N7"], "platform_ids": ["1842957310264891392"]},
+  "target": {"platform": "x", "kind": "post", "item_ids": ["537431ce-a994-5eee-93f1-30613cbc46a9"], "platform_ids": ["1842957310264891392"]},
   "platform_status": "deleted", "countries": null, "client_id": null,
   "requested_by": "x-compliance-sync", "run_id": "01J9PB2C4E6G8J0K2M4P6R8T0V", "x_job_id": "1843012947561203712",
   "event_at": "2026-10-05T19:42:07Z", "signal_at": "2026-10-06T02:47:31Z",
   "due_at": "2026-10-07T02:47:31Z", "emitted_at": "2026-10-06T02:51:09Z"
 }
 ```
+
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 Example audit record (illustrative values):
 
@@ -132,6 +134,8 @@ Example audit record (illustrative values):
 ### 6.3 State
 
 `x_compliance_runs` holds the run id, job ids and step status, so a new leader resumes the same run without creating jobs. The other state is the leader lock and the flags `X_COMPLIANCE_METERED`, `RUN_AT_UTC`, `RUN_WINDOW_HOURS`, `JOB_MAX_IDS` and `JOB_POLL_SECONDS`. There are no per-source cursors.
+
+Owners (ADR-0025): `x_compliance_audit` is a shared control-plane table whose one writer is this service. `x_compliance_runs` is private to this service: no other service reads it, F3's `TABLE-OWNERS.md` lists it, and it is registered in the SDK purge registry where it holds item ids, hashes or URLs.
 
 ## 7. Limits, quotas and cost
 
