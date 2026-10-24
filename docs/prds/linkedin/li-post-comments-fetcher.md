@@ -41,7 +41,7 @@ Every registered third-party post that comment-decay-scheduler selects has its c
 
 **Series for other posts, amber.** After a post is first seen: +24 h, +3 d. No replies.
 
-**Early stop.** From the second fetch of a post onward, when a fetch adds fewer than 5% new comments and fewer than 5 absolute, the remaining steps are cancelled. At +24 h there is nothing to compare with, and +3 d is the last step, so in practice the rule ends an extension early.
+**Early stop.** comment-decay-scheduler applies it from this service's report; this service never stops a series itself. On this route growth is measured over this service's running total of comments seen, which the report carries (ADR-0019).
 
 **Extension.** When the last scheduled fetch (+3 d) still adds 20% or more new comments, the series continues every 2 days until day 30. Each extension fetch asks quota-governor like any other step.
 
@@ -177,7 +177,7 @@ listening-sdk, comment-decay-scheduler, li-company-posts-poller, li-post-search,
 1. With `LI_VENDOR_ROUTE = off` no job runs and no Apify call is made; steps due while it was off are acknowledged `skipped_flag_off` and are not replayed after it is switched on.
 2. A post first seen at 08:41 receives comments jobs due at +24 h and +3 d only, emitted by comment-decay-scheduler; none at +1 h, +6 h or +7 d.
 3. A post whose page has only government clients is acknowledged `skipped_government` and no run starts.
-4. A +3 d fetch adding 25% new comments schedules fetches every 2 days to day 30; adding 19% does not; an extension fetch adding 2 of 100 cancels the remaining extensions.
+4. A +3 d fetch adding 25% new comments schedules fetches every 2 days to day 30; adding 19% does not; an extension fetch adding 2 of 100 reports them and cancels nothing itself, comment-decay-scheduler applying early stop (ADR-0019).
 5. A fetch implying 120 new comments an hour inserts hourly extras for 6 hours; at 80% of the monthly budget quota-governor denies the extras while series steps still run.
 6. No `raw.items` message contains a commenter name, headline, profile link or picture; `author.ref` is identical for the same commenter across runs; an unknown-shape item is archived redacted under the 48-hour prefix.
 7. An edited comment yields a message with the same key and a new hash; a held comment missing from a run that returned fewer items than max items yields one `deletions` message; a run that hit max items yields none.

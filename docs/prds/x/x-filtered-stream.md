@@ -118,7 +118,7 @@ The stream; `source.events`; `sources`, `keywords`, `client_sources`, `clients` 
     "source_id": "a4d2c9e1-5b7f-4e3a-8c60-2f1b9d7e4a35",
     "platform_id": "2107413571090333696",
     "idempotency_key": "x:post:2107413571090333696",
-    "job_id": null, "attempt": null, "connection_id": "01J9PB7XQ3M8D2V6K0R4T1H5ZW",
+    "job_id": "01M48B5V90W8B91YHW3K3BNVR2", "attempt": 1, "context": {"connection_id": "01J9PB7XQ3M8D2V6K0R4T1H5ZW"},
     "fetched_at": "2026-10-06T10:12:04Z",
     "paid": true,
     "retention_class": "x_24h_sync",
@@ -132,6 +132,8 @@ The stream; `source.events`; `sources`, `keywords`, `client_sources`, `clients` 
   "payload": { "...": "the line from 5.4, unchanged" }
 }
 ```
+
+Ids in this example follow ADR-0006: a ULID `job_id` made at receipt, with `attempt = 1`, and the delivery id in `context` (ADR-0005). Where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 The second client watches only the other account in the bucket, so it is not attributed. The two rules behind it:
 

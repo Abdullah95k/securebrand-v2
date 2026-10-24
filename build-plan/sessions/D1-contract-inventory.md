@@ -14,7 +14,7 @@ One inventory of every topic, job queue, table, column, budget tag, flag and ret
 
 1. This brief
 2. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: the whole file
-3. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+3. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 4. All 86 PRDs in `docs/prds/`
 5. The nine proposed decisions in `docs/prds/README.md`
 6. `docs/prds/OPEN-QUESTIONS.md`

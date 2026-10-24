@@ -18,7 +18,7 @@ Service `quota-governor` · PRD `docs/prds/shared/quota-governor.md` · lane Sup
 1. This brief
 2. The PRD in full: `docs/prds/shared/quota-governor.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Retention classes; Quotas, budgets and the quota governor
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of F5: `docs/handoffs/F5.md`
 6. ADR on priorities and modes (decision 2)
 7. Canonical budget tags (CONVENTIONS addendum)
@@ -28,7 +28,7 @@ Service `quota-governor` · PRD `docs/prds/shared/quota-governor.md` · lane Sup
 - Topics read: `source.events`
 - Topics written: none named in 6.2
 - Job queue: `jobs.quota-governor` if the PRD's section 5.1 schedules jobs
-- Tables read: `clients`, `client_sources`, `budgets`, `vendor_keys`, `x_read_ledger`, `ig_hashtag_ledger`, `budget_reservations`, `budget_history`; written or updated: `budgets`, `x_read_ledger`, `ig_hashtag_ledger`, `budget_reservations`, `budget_history`
+- Tables read: `clients`, `client_sources`, `budgets`, `credentials` (the PRD's `vendor_keys`, read and written only through the SDK's credential client, ADR-0016), `x_read_ledger`, `ig_hashtag_ledger`, `budget_reservations`, `budget_history`; written or updated: `budgets`, `x_read_ledger`, `ig_hashtag_ledger`, `budget_reservations`, `budget_history`
 - This list is extracted from the PRD's section 6 by name; the plan confirms each item against `packages/contracts` and the migrations, and anything missing becomes a proposal.
 
 ## Hands on

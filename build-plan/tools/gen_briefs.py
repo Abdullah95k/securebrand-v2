@@ -107,17 +107,17 @@ FOUNDATION_SECTIONS = {
 }
 
 LANE_TRAPS = {
-    'Fetch posts': ['next_poll_at is set from the start of the last poll; order by next_poll_at then tier; most stale first when behind, with rotation_behind',
+    'Fetch posts': ['The due time is next_due_at in this service\'s own cursors row, set from the start of the last poll; order by it then tier; most stale first when behind, with rotation_behind (ADR-0015)',
                     'Incremental reads only newer than the cursor; full re-reads happen only in backfill jobs from backfill-orchestrator',
                     'The cursor advances only after the producer acknowledges the batch'],
     'Comments': ['Only comment-decay-scheduler emits comment, reply and metrics jobs; this service never schedules its own',
-                 'Report new_count, seen_count, pages and cost_units on every job: the scheduler decides early stop and extension from them',
-                 'Edits become new versions; deletions only when the API response is complete (reason platform_sync)'],
+                 'Return new_count, seen_count, pages, cost_units and reply_candidates to the SDK job wrapper, which reports them on jobs.completed; the scheduler decides early stop and extension from them (ADR-0017, ADR-0019)',
+                 'Compare with the stored set through the SDK comment-state helper: an edit is a new version where the platform gives comment ids, a new comment otherwise; a missing comment is a deletion (platform_sync) only after a confirmed second miss or a platform signal, never on a route whose reads are not complete listings (ADR-0009, ADR-0046, ADR-0062)'],
     'Comments and stats': ['Only comment-decay-scheduler emits these jobs; report counts on every job'],
     'Discover and qualify': ['Searches write items to raw.items with source_id = the keyword rule (search output rule); candidates are deduplicated by candidate_key downstream',
-                             'Individuals are never profiled: a mention keeps a hashed author reference'],
+                             'Private individuals are never profiled, listed or backfilled: a mention keeps a keyed author reference (author_ref); only public accounts, as ADR-0010 defines them, may be listed'],
     'Processing': ['Stateless where the PRD says so; replay from raw-archiver must reproduce the same output for the same model version'],
-    'Registry': ['registry-writer is the only writer of the sources table and of source.events (per D2)'],
+    'Registry': ['registry-writer is the only writer of the registry\'s identity and policy columns and of source.events; each operational column has one named owner (ADR-0013, ADR-0014)'],
     'Support': ['Deletion and retention actions are audited before they run, so a replay changes nothing'],
 }
 
@@ -160,7 +160,9 @@ def contracts_block(svc):
         rows.append(f"- Job queues in: {', '.join(f'`{j}`' for j in io['jobs_in']) or 'its own `jobs.' + svc + '`'}; out: {', '.join(f'`{j}`' for j in io['jobs_out']) or 'none'}")
     else:
         rows.append(f"- Job queue: `jobs.{svc}` if the PRD's section 5.1 schedules jobs")
-    rows.append(f"- Tables read: {', '.join(f'`{t}`' for t in io['reads_tables']) or 'see 6.1'}; written or updated: {', '.join(f'`{t}`' for t in io['writes_tables']) or 'see 6.2 and 6.3'}")
+    def tbl(t):
+        return "`credentials` (the PRD's `vendor_keys`, read and written only through the SDK's credential client, ADR-0016)" if t == 'vendor_keys' else f'`{t}`'
+    rows.append(f"- Tables read: {', '.join(tbl(t) for t in io['reads_tables']) or 'see 6.1'}; written or updated: {', '.join(tbl(t) for t in io['writes_tables']) or 'see 6.2 and 6.3'}")
     rows.append('- This list is extracted from the PRD\'s section 6 by name; the plan confirms each item against `packages/contracts` and the migrations, and anything missing becomes a proposal.')
     return '\n'.join(rows)
 
@@ -257,7 +259,7 @@ def brief(s):
         for svc in s['services']:
             items.append(f"The PRD in full: `docs/prds/{PRD[svc]['path']}`")
     items.append('CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: ' + '; '.join(sections_for(s)))
-    items.append('The ADRs in `docs/decisions/` whose "Applies to" line names this session\'s service, platform, lane or "all"')
+    items.append('The ADRs in `docs/decisions/` whose "Applies to" line names this session\'s ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session')
     for n in s['needs']:
         if BY_ID[n]['kind'] != 'gate':
             items.append(f"Handoff of {n}: `{handoff(n)}`")
@@ -304,7 +306,7 @@ def brief(s):
     if s['services']:
         traps += LANE_TRAPS.get(lane_of(s['services'][0]), [])
         if route_of(s['services'][0]) == 'amber':
-            traps.append('Amber: runs only behind its flag (off by default); provenance says route = amber and names the vendor; its data is excluded from government contracts, and a source a government client watches never falls back to it; the quota governor stretches it from 80% of budget')
+            traps.append('Amber: runs only behind its flag (off by default); provenance says route = amber and names the vendor; only clients that accept amber receive its data, never government clients (ADR-0052), and a green source a government client watches never falls back to it, while a client-owned property falls back under the same conditions as any other source (ADR-0021); from 80% of budget the SDK scheduling kit stretches its intervals by the governor\'s factor (ADR-0057)')
     if s['kind'] == 'probe':
         traps.append(f"Cap: {CAPS[i]}")
         traps.append('Scrub before anything is committed: tokens, signed URLs, private individuals\' names, handles, ids and avatars')

@@ -19,7 +19,7 @@ Service `lang-dialect-id` · PRD `docs/prds/shared/lang-dialect-id.md` · lane P
 1. This brief
 2. The PRD in full: `docs/prds/shared/lang-dialect-id.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Retention classes
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of F6: `docs/handoffs/F6.md`
 6. Handoff of F7: `docs/handoffs/F7.md`
 7. F7 golden corpus

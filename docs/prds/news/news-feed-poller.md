@@ -45,7 +45,7 @@ Every registered site that has a usable feed is polled on its cadence (every 5 t
 
 **Catch-up.** `rotation_lag_seconds` is now minus `next_poll_at` of the most overdue site. Above one interval the scheduler switches to most-stale-first ordering and raises `rotation_behind`. A late poll still sees everything the feed still holds, so being behind costs freshness, not completeness, except on a very hot site whose feed has scrolled past unread entries; those gaps are closed by news-sitemap-poller's hourly pass.
 
-**Onboarding a new site.** news-site-resolver canonicalises the host, asks news-robots-checker for the host's policy and fetches nothing until `crawl.policies` arrives; the qualifier accepts, registry-writer writes the `sources` row and the `news_sites` profile and emits `source.events` `added`; backfill-orchestrator schedules the 90-day backfill through news-sitemap-poller or web-commoncrawl-scanner. This scheduler does not wait for the backfill: the site's first feed poll runs at the next scheduler tick after `added`.
+**Onboarding a new site.** news-site-resolver canonicalises the host, asks news-robots-checker for the host's policy and fetches nothing until `crawl.policies` arrives; the qualifier accepts, registry-writer writes the `sources` row under the `source_id` news-site-resolver allocated and emits `source.events` `added` (the `news_sites` profile is news-site-resolver's own row, ADR-0040); backfill-orchestrator schedules the 90-day backfill through news-sitemap-poller or web-commoncrawl-scanner. This scheduler does not wait for the backfill: the site's first feed poll runs at the next scheduler tick after `added`.
 
 ### 5.2 Step by step
 
@@ -63,7 +63,7 @@ Every registered site that has a usable feed is polled on its cadence (every 5 t
 No vendor API. Plain HTTP GETs under the host policy. Lane-wide rules, identical in every news service:
 
 - User agent from `CRAWLER_USER_AGENT`: `ListeningBot/1.0 (+<bot information page>; <contact mailbox>)`, naming the company and a contact address.
-- Per-host politeness through the shared host gate in `listening-sdk`: concurrency 1 per host across all news services, 2 to 5 seconds between requests (or the policy's `Crawl-delay` if larger), slot state in `crawl_policies.next_slot_at`.
+- Per-host politeness through the shared host gate in `listening-sdk`: concurrency 1 per host across all news services, 2 to 5 seconds between requests (or the policy's `Crawl-delay` if larger), slot state in the gate's own table, `host_gate`, written only by the SDK gate (ADR-0040).
 - The host's permissions come from news-robots-checker (robots.txt under RFC 9309, `Content-Signal`, RSL licence files, HTTP 402); this service reads the result and never evaluates robots.txt itself.
 - Egress follows the policy's `access_mode`: `direct`; `headless` (shared Playwright pool); `proxy` (Decodo or Oxylabs) only for Cloudflare-challenged hosts, about a quarter of Iraqi sites. No CAPTCHA solving; a feed behind an interactive challenge is `blocked`.
 
@@ -116,7 +116,7 @@ Also: `jobs.news-site-resolver` (`refresh`), `jobs.news-robots-checker` (`rechec
 
 ### 6.3 State
 
-`cursors.cursor` per (`source_id`, `news-feed-poller`): a JSON map from feed URL to `{etag, last_modified, newest_published_at, first50_hash}`, plus `last_success_at`, `last_error`, `consecutive_errors`. `sources.last_polled_at`, `next_poll_at`, `health`. `crawl_policies.next_slot_at` (host gate). In memory only the leader lock and backoff state.
+`cursors.cursor` per (`source_id`, `news-feed-poller`): a JSON map from feed URL to `{etag, last_modified, newest_published_at, first50_hash}`, plus `last_success_at`, `last_error`, `consecutive_errors`. `sources.last_polled_at`, `next_poll_at`, `health`. Host-gate slots live in `host_gate`, written only by the SDK gate (ADR-0040). In memory only the leader lock and backoff state.
 
 ## 7. Limits, quotas and cost
 

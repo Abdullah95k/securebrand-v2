@@ -15,7 +15,7 @@ ref-poller, ref-comments-fetcher, ref-resolver and ref-search against the fake p
 
 1. This brief
 2. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Rotation policy; Idempotency and deduplication; Error handling, canaries and fallback; Addendum: Comment series profiles; Addendum: Other shared decisions
-3. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+3. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 4. Handoff of F5: `docs/handoffs/F5.md`
 5. Fb-page-feed-poller and fb-post-comments-fetcher PRDs as the models
 6. F5 handoff

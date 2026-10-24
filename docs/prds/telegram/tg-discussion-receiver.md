@@ -124,7 +124,7 @@ Telegram updates; `jobs.tg-discussion-receiver` (kinds `reconciliation`, `ops_fo
     "idempotency_key": "telegram:comment:-1001849302999/9312",
     "post_ref": "iq_example_owned/5127", "unthreaded": false,
     "author_ref": "hmac:7f3a91c0d4e2b856", "minimized": true,
-    "update_id": 704118977, "attempt": 1,
+    "job_id": "01M4886V7RNKF111FA2SGP78XR", "attempt": 1, "context": {"update_id": 704118977},
     "fetched_at": "2026-10-06T09:20:11Z",
     "retention_class": "vendor_agreed",
     "owned_by_client": true,
@@ -135,11 +135,15 @@ Telegram updates; `jobs.tg-discussion-receiver` (kinds `reconciliation`, `ops_fo
 }
 ```
 
+Ids in this example follow ADR-0006: a ULID `job_id` made at receipt, with `attempt = 1`, and the delivery id in `context` (ADR-0005). Where its other fields differ from an ADR, the ADR wins (ADR-0001).
+
 Also `discovery.hits` (group candidate), `source.events` (health), `service_runs`, `dlq.tg-discussion-receiver`.
 
 ### 6.3 State
 
 `cursors.cursor` (JSON: linked chat id, linked `source_id`, newest message id stored), `last_success_at`, `last_error`, `consecutive_errors`; `sources.next_poll_at`, `last_polled_at`, `health`; the `getUpdates` offset; the thread map; in memory the group map and the leader lock.
+
+Owner (ADR-0025): `tg_thread_map` is private to this service. No other service reads it, F3's `TABLE-OWNERS.md` lists it, and it is registered in the SDK purge registry where it holds item ids, hashes or URLs.
 
 ## 7. Limits, quotas and cost
 

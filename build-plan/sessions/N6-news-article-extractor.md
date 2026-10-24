@@ -19,7 +19,7 @@ Service `news-article-extractor` · PRD `docs/prds/news/news-article-extractor.m
 1. This brief
 2. The PRD in full: `docs/prds/news/news-article-extractor.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Rotation policy; Quotas, budgets and the quota governor; Retention classes; Per-platform fact sheets: News websites
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of F6: `docs/handoffs/F6.md`
 6. Handoff of N1: `docs/handoffs/N1.md`
 7. Handoff of N0: `docs/handoffs/N0.md`
@@ -48,7 +48,7 @@ Service `news-article-extractor` · PRD `docs/prds/news/news-article-extractor.m
 
 - Beyond 7 days keep the excerpt and metadata only (news_excerpt)
 - Proxies only for challenged hosts and only in the news crawler
-- next_poll_at is set from the start of the last poll; order by next_poll_at then tier; most stale first when behind, with rotation_behind
+- The due time is next_due_at in this service's own cursors row, set from the start of the last poll; order by it then tier; most stale first when behind, with rotation_behind (ADR-0015)
 - Incremental reads only newer than the cursor; full re-reads happen only in backfill jobs from backfill-orchestrator
 - The cursor advances only after the producer acknowledges the batch
 

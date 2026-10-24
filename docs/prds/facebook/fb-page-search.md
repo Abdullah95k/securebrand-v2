@@ -111,10 +111,12 @@ What it does not get: posts, `fan_count`, `category`, `website`, `about` (fb-pag
     "location": {"city": "Basra", "country": "Iraq"}
   },
   "context": null,
-  "job_id": "01J9P7K2H9D4F1G6S8A3L5Z0QX",
+  "job_id": "01M47YF7J0TMKPRYDBNVW3319Z",
   "retention_class": "meta_on_request"
 }
 ```
+
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 Also `service_runs`, `dlq.fb-page-search`. It never writes `raw.items`: a search result is a candidate, not an item.
 

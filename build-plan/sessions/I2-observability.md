@@ -17,7 +17,7 @@ Any-time track: earliest after I1 and F4; deadline before G2.
 
 1. This brief
 2. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Observability and SLOs; Security and compliance in every service
-3. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+3. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 4. Handoff of I1: `docs/handoffs/I1.md`
 5. Handoff of F4: `docs/handoffs/F4.md`
 6. CONVENTIONS observability section

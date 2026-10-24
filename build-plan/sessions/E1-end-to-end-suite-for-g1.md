@@ -29,7 +29,7 @@ tests/e2e/G1: the twelve G1 scenarios against the fake platform, the synthetic-l
 
 1. This brief
 2. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions
-3. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+3. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 4. Handoff of C0: `docs/handoffs/C0.md`
 5. Handoff of C1: `docs/handoffs/C1.md`
 6. Handoff of C2: `docs/handoffs/C2.md`

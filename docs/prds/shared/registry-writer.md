@@ -92,8 +92,10 @@ From `registry.decisions`: the full decided row (see the `qualifier` PRD's examp
 - Topic `source.events`, partition key `source_id`:
 
 ```json
-{"message_id":"se:7f1c...:added","produced_at":"2026-10-06T10:14:41Z","service":"registry-writer","schema_version":1,"event":"added","source_id":"7f1c2a9e-5d1b-4c7e-9a3f-2b8e6d4c1a00","platform":"instagram","source_type":"account","platform_id":"17841400000000000","handle":"baghdad_eats","route":"green","vendor":null,"tier":2,"retention_class":"meta_on_request","client_ids":["cl_17"],"owned_by_client":false,"followers":48200,"previous":null,"decision_id":"01J9Z...","actor":"qualifier","at":"2026-10-06T10:14:40Z"}
+{"message_id":"01M48BAKM0NCCYDSZEC6V1PKHV","produced_at":"2026-10-06T10:14:41Z","service":"registry-writer","schema_version":1,"event":"added","source_id":"7f1c2a9e-5d1b-4c7e-9a3f-2b8e6d4c1a00","platform":"instagram","source_type":"account","platform_id":"17841400000000000","handle":"baghdad_eats","route":"green","vendor":null,"tier":2,"retention_class":"meta_on_request","client_ids":["0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"],"owned_by_client":false,"followers":48200,"previous":null,"decision_id":"01M48B9AKGRHAJW420WYJS5QK3","actor":"qualifier","at":"2026-10-06T10:14:40Z"}
 ```
+
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 A `tier_change` event carries `previous: {"tier": 3}`; a `fallback_on` event carries `previous: {"health": "ok", "route": "green", "vendor": null}` and the new `health: "fallback"`.
 
@@ -101,6 +103,7 @@ A `tier_change` event carries `previous: {"tier": 3}`; a `fallback_on` event car
 - `registry_audit`: the idempotency record and the outbox.
 - `service_runs`: lag, unpublished-event count, manual requests pending.
 - No cursors.
+- Owners (ADR-0025): `registry_audit` and `registry_outbox` are shared control-plane tables whose one writer is this service (ADR-0045).
 
 ## 7. Limits, quotas and cost
 

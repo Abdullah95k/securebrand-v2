@@ -100,9 +100,11 @@ It does not get member profiles, employee lists, the page's full "about" section
   "resolution": "resolved",
   "service": "li-org-resolver",
   "resolved_at": "2026-10-06T10:02:51Z",
-  "job_id": "2b6f0d9c-7a1e-4f3b-8c5d-9e0a1b2c3d4e"
+  "job_id": "01M48AMMG0BSDJZYJZ2V3SKTWF"
 }
 ```
+
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 ### 6.3 State
 

@@ -146,21 +146,23 @@ Example `deletions` message:
   "retention_class": "youtube_30d_text",
   "source_id": "2d7e9b41-5c3a-4f8e-b1d6-7a0c9e3f5b28",
   "target": {"platform": "youtube", "kind": "comment", "video_id": "dQ3x7Lk9PzA",
-             "item_ids": ["01J8Q4M2C7R5T9V3X6Z0B8D1FG", "01J8Q4M2C9K4N7P1S5W8Y2A6HJ"],
+             "item_ids": ["e68d6e4b-56fd-52b1-9f72-f7018e8fe162", "3ed679f4-bac6-52e0-ba34-8d00cf816ef4"],
              "fetched_before": "2026-10-06T02:00:00Z"},
   "client_id": null,
-  "requested_by": "yt-text-purger", "run_id": "01J9P9C6E2G8J4L0N5Q1S7U3WY",
+  "requested_by": "yt-text-purger", "run_id": "01M47F0V80FZGG928KMD5XX36J",
   "parent_run_id": "01J9P8A3V5N7B2D4F6H0K1M9QS",
   "signal_at": "2026-10-06T02:00:00Z", "due_at": "2026-10-06T19:42:10Z",
   "emitted_at": "2026-10-06T02:07:31Z"
 }
 ```
 
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
+
 The audit record is a `retention_audit` row. retention-purger treats this row as the delegate's confirmation, then runs its own verification. A run passes only when `failures` (items that ended neither refreshed nor completely deleted) is 0 and every verification count is 0. `refresh_missed` counts items whose refresh did not land in time; those items fell back to deletion.
 
 ```json
 {
-  "run_id": "01J9P9C6E2G8J4L0N5Q1S7U3WY", "parent_run_id": "01J9P8A3V5N7B2D4F6H0K1M9QS",
+  "run_id": "01M47F0V80FZGG928KMD5XX36J", "parent_run_id": "01J9P8A3V5N7B2D4F6H0K1M9QS",
   "executor": "yt-text-purger", "trigger": "retention_sweep",
   "class": "youtube_30d_text", "clock": "30 days", "cutoff": "2026-09-06T02:00:00Z",
   "started_at": "2026-10-06T02:00:00Z", "finished_at": "2026-10-07T01:31:44Z",
@@ -173,6 +175,8 @@ The audit record is a `retention_audit` row. retention-purger treats this row as
   "status": "pass", "holds": []
 }
 ```
+
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 Verification runs without `FINAL` so that superseded versions count. The same count runs on `items`.
 

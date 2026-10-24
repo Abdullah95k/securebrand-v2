@@ -42,7 +42,7 @@ For every selected third-party Instagram post, the first visible comments are re
 
 **The series (amber, Instagram other media).** Counted from the moment the post is first seen: +6 h, +24 h, +3 d. There is no +1 h step because the vendor shows only the first visible comments, and a first read after 6 hours is enough to see them.
 
-**Early stop.** When a fetch adds fewer than 5% new comments (new share = `new_count` over the comments stored before the fetch) and fewer than 5 absolute, the remaining series is cancelled; with about 15 visible comments this in practice means a fetch with no new comment. **Extension.** When the last scheduled fetch (+3 d) still adds 20% or more, the series continues every 2 days until day 30, and quota-governor may refuse each step. **Hot posts.** The rule (extra hourly fetch for 6 hours above 100 new comments an hour) is kept as written but cannot fire in practice, because one request shows about 15 comments; quota-governor drops hot extras first anyway when the monthly budget passes 80%.
+**Early stop.** comment-decay-scheduler applies it from this service's report (`new_count` and the comments stored before the fetch); this service never stops a series itself (ADR-0019). **Extension.** When the last scheduled fetch (+3 d) still adds 20% or more, the series continues every 2 days until day 30, and quota-governor may refuse each step. **Hot posts.** The rule (extra hourly fetch for 6 hours above 100 new comments an hour) is kept as written but cannot fire in practice, because one request shows about 15 comments; quota-governor drops hot extras first anyway when the monthly budget passes 80%.
 
 **Paging.** One request returns the visible set (about 15 comments); whether the vendor can page further: to be confirmed in the pilot. The fetch stops when it meets a comment already stored or the vendor offers no further page.
 
@@ -164,7 +164,7 @@ listening-sdk, comment-decay-scheduler, quota-governor, source-health-canary, ra
 2. With the flag `sociavault`, a post with `comments_count` above zero gets jobs at +6 h, +24 h and +3 d and no others; a post with `comments_count = 0` gets none.
 3. A source watched only by a government client never produces a job; on a source watched by both kinds, every message's `client_ids` lists the non-government clients only.
 4. Every message has `route = amber`, `vendor = sociavault`, `retention_class = vendor_agreed`; no username or author id appears in a message, an archive batch or a log line; one commenter on two posts has the same `author_ref`.
-5. A fetch with `new_count = 0` cancels the rest of the series; a fetch with 1 new comment against 15 stored does not.
+5. A fetch with `new_count = 0` reports it with the comments stored before the fetch and cancels nothing itself; comment-decay-scheduler applies early stop (ADR-0019).
 6. A +3 d fetch that adds 3 new comments against 15 stored continues the series every 2 days until day 30, subject to quota-governor.
 7. When quota-governor returns deny, no request is sent and `quota_denied_total` rises; at 80% of the monthly budget the hot-post extras are dropped first.
 8. `cost_units` per job equals the requests sent, and the `ig_vendor` counter equals credits times the contracted USD rate.

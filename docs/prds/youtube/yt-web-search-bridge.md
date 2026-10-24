@@ -115,13 +115,15 @@ Example `search.results` message:
   "handled_by": "yt-web-search-bridge",
   "source_id": "7b3e5f8a-1c2d-4e4f-9a6b-7c8d9e0f1a2b",
   "query": "site:youtube.com \"فايبر اكس\"",
-  "job_id": "ywb-20261006-0117",
+  "job_id": "01M47F78AGDCFWH3S8DKZZJENT",
   "fetched_at": "2026-10-06T02:03:44Z",
   "cost": { "currency": "GBP", "amount": 0.003 },
   "extracted": { "kind": "video", "video_id": "dQw4w9WgXcQ" },
   "payload": { "title": "...", "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ", "desc": "..." }
 }
 ```
+
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 The matching job message to `jobs.yt-video-details-fetcher` carries `kind = first_sight`, `origin = web_bridge`, the `source_id` of the rule and the list of video ids.
 

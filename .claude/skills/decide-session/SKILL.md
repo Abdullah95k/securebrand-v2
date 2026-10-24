@@ -20,4 +20,4 @@ Interview me with AskUserQuestion, one decision at a time, through `docs/contrac
 
 ## D3 · PRDs for the parts with no PRD
 
-For the query API, the client portal, the dashboard (including the slice for Meta's App Review) and the admin console, in turn: read every PRD whose section 4 names it as a consumer, interview me with AskUserQuestion, then write `docs/prds/apps/<name>.md` in the 14-section template of CONVENTIONS, with testable acceptance criteria.
+For the query API, the client portal, the dashboard (including the slice for Meta's App Review) and the admin console, in turn: read every PRD whose section 4 names it as a consumer, interview me with AskUserQuestion, then write `docs/prds/apps/<name>.md` in the 14-section template of CONVENTIONS, with testable acceptance criteria. Alongside the admin console, specify the n8n flows: one per channel and per card type, with the Telegram-to-email fall-through `alert-evaluator §5.3 L69` requires (ADR-0067).

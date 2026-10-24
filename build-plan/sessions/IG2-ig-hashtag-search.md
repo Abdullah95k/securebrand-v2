@@ -20,7 +20,7 @@ Service `ig-hashtag-search` · PRD `docs/prds/instagram/ig-hashtag-search.md` ·
 1. This brief
 2. The PRD in full: `docs/prds/instagram/ig-hashtag-search.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Qualifier rules; Quotas, budgets and the quota governor; Per-platform fact sheets: Instagram
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of FB0: `docs/handoffs/FB0.md`
 6. Handoff of C1: `docs/handoffs/C1.md`
 7. Handoff of C8: `docs/handoffs/C8.md`
@@ -45,7 +45,7 @@ Service `ig-hashtag-search` · PRD `docs/prds/instagram/ig-hashtag-search.md` ·
 
 - 30 unique hashtags per Instagram business account per 7 days
 - Searches write items to raw.items with source_id = the keyword rule (search output rule); candidates are deduplicated by candidate_key downstream
-- Individuals are never profiled: a mention keeps a hashed author reference
+- Private individuals are never profiled, listed or backfilled: a mention keeps a keyed author reference (author_ref); only public accounts, as ADR-0010 defines them, may be listed
 
 ## Done when
 

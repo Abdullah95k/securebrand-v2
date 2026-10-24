@@ -38,7 +38,7 @@ qualifier (consumes `poster.profiles`; news domains always qualify by type, the 
 - Trigger: jobs on `jobs.news-site-resolver`, `kind: resolve` (new host) or `kind: refresh` (registered site), produced by search-hit-router, web-commoncrawl-scanner, web-gdelt-poller, the seed-list flow and the qualifier.
 - Dedup: a host already in `sources` becomes a refresh; a host in the 180-day rejected memory (`decisions`) is dropped without a fetch.
 - Rotation: every registered site is refreshed every 30 days, and at once when source-health-canary flips it to `degraded` or a poller reports a feed or sitemap 404 or 410.
-- Onboarding contract: (1) canonicalise the host without touching the site (DNS and TLS only); (2) enqueue `jobs.news-robots-checker` and wait for the host's `crawl.policies` message, or read an unexpired `crawl_policies` row; (3) only with `crawl_allowed = true` fetch the homepage and feed candidates in the policy's access mode; (4) emit `poster.profiles`; (5) the qualifier decides, registry-writer writes the row and emits `source.events` `added`, backfill-orchestrator schedules the last 90 days through news-sitemap-poller (or web-commoncrawl-scanner where there is no sitemap); (6) the pollers pick the site up at their next tick: feeds every 5 to 15 minutes for hot sites and hourly for the rest, sitemaps hourly, homepage diff hourly for sites without feeds, and for Disqus sites comments on the decay series (+1 h, +6 h, +24 h, +3 d, +7 d, then weekly to day 30).
+- Onboarding contract: (1) canonicalise the host without touching the site (DNS and TLS only); (2) enqueue `jobs.news-robots-checker` and wait for the host's `crawl.policies` message, or read an unexpired `crawl_policies` row; (3) only with `crawl_allowed = true` fetch the homepage and feed candidates in the policy's access mode; (4) emit `poster.profiles`; (5) the qualifier decides, registry-writer writes the row and emits `source.events` `added`, backfill-orchestrator schedules the last 90 days through news-sitemap-poller (or web-commoncrawl-scanner where there is no sitemap); (6) the pollers pick the site up at their next tick: feeds every 5 to 15 minutes for hot sites and hourly for the rest, sitemaps hourly, homepage diff hourly for sites without feeds, and for Disqus sites comments on the short series (+6 h, +24 h, +3 d, extended every 2 days to day 30 while a thread still grows; ADR-0061).
 
 ### 5.2 Step by step
 
@@ -89,7 +89,7 @@ Site identity, feeds with format and freshness, sitemaps with type and size, URL
     "platform_id": "example-daily.iq", "handle": "example-daily.iq",
     "url": "https://www.example-daily.iq/", "display_name": "Example Daily",
     "route": "green", "vendor": null, "retention_class": "news_excerpt", "followers": null,
-    "country_signals": {"tld_iq": true, "phone_964": true, "iraqi_place": "Baghdad", "seed_list": ["client_17"]},
+    "country_signals": {"tld_iq": true, "phone_964": true, "iraqi_place": "Baghdad", "seed_list": ["0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"]},
     "lang_share": {"msa": 0.90, "iraqi_ar": 0.05, "en": 0.05},
     "proposed_tier": 1, "added_by": "qualifier"
   },
@@ -104,12 +104,14 @@ Site identity, feeds with format and freshness, sitemaps with type and size, URL
     "last_article_at": "2026-10-06T08:41:00+03:00"
   },
   "discovered_by": "search-hit-router",
-  "service": "news-site-resolver", "job_id": "job_01JA5X7R2M",
+  "service": "news-site-resolver", "job_id": "01M486K7W0KPR5FKH5ET9K2SFS",
   "resolved_at": "2026-10-06T08:52:40Z"
 }
 ```
 
-registry-writer maps `proposed_source` onto the `sources` row (`tier` from the qualifier, `health = ok`, `backfill_status = pending`) and `site_profile` onto `news_sites`, keyed by `source_id`.
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
+
+registry-writer maps `proposed_source` onto the `sources` row, inserting it under the `proposed_source_id` this service allocated with the candidate row (`tier` from the qualifier, `health = ok`, `backfill_status` at its default, `pending`). `site_profile` stays in `news_sites`, which only this service writes, keyed by that `source_id` (ADR-0040, ADR-0020).
 
 ### 6.3 State
 

@@ -18,7 +18,7 @@ Service `tg-discussion-receiver` · PRD `docs/prds/telegram/tg-discussion-receiv
 1. This brief
 2. The PRD in full: `docs/prds/telegram/tg-discussion-receiver.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; Rotation policy (the comments part); Addendum: Comment series profiles; Quotas, budgets and the quota governor; Retention classes; Per-platform fact sheets: Telegram
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of TG1: `docs/handoffs/TG1.md`
 6. Handoff of C11: `docs/handoffs/C11.md`
 7. The TG0 probe report `docs/probes/telegram.md` and the fixtures in `fixtures/telegram/`
@@ -29,7 +29,7 @@ Service `tg-discussion-receiver` · PRD `docs/prds/telegram/tg-discussion-receiv
 - Topics read: `source.events`
 - Topics written: `raw.items`, `discovery.hits`, `source.events`
 - Job queues in: `jobs.tg-discussion-receiver`; out: none
-- Tables read: `sources`, `cursors`, `vendor_keys`, `canary_targets`; written or updated: `sources`, `cursors`, `service_runs`
+- Tables read: `sources`, `cursors`, `credentials` (the PRD's `vendor_keys`, read and written only through the SDK's credential client, ADR-0016), `canary_targets`; written or updated: `sources`, `cursors`, `service_runs`
 - This list is extracted from the PRD's section 6 by name; the plan confirms each item against `packages/contracts` and the migrations, and anything missing becomes a proposal.
 
 ## Hands on
@@ -41,8 +41,8 @@ Service `tg-discussion-receiver` · PRD `docs/prds/telegram/tg-discussion-receiv
 ## Watch for
 
 - Only comment-decay-scheduler emits comment, reply and metrics jobs; this service never schedules its own
-- Report new_count, seen_count, pages and cost_units on every job: the scheduler decides early stop and extension from them
-- Edits become new versions; deletions only when the API response is complete (reason platform_sync)
+- Return new_count, seen_count, pages, cost_units and reply_candidates to the SDK job wrapper, which reports them on jobs.completed; the scheduler decides early stop and extension from them (ADR-0017, ADR-0019)
+- Compare with the stored set through the SDK comment-state helper: an edit is a new version where the platform gives comment ids, a new comment otherwise; a missing comment is a deletion (platform_sync) only after a confirmed second miss or a platform signal, never on a route whose reads are not complete listings (ADR-0009, ADR-0046, ADR-0062)
 
 ## Done when
 

@@ -41,7 +41,7 @@ Every video in an open comment series has each step fetched when due; every publ
 
 **Which videos.** A series opens when a video first reaches `items.normalized`: uploads on registered channels (yt-pubsub-receiver, with yt-uploads-reconciler catching missed pushes) and videos found by yt-keyword-search, whose `source_id` is the keyword-rule source.
 
-**Series.** +6 h, +24 h, +3 d, +7 d, +30 d after the video is first seen. Early stop: a fetch adding fewer than 5% new comments and fewer than 5 absolute cancels the rest; armed only once the video has 5 or more stored comments or after the +24 h step. Extension: when the last scheduled step before day 30 (+7 d) still adds 20% or more, a fetch every 2 days until day 30. Hot posts: above 100 new comments an hour, an extra hourly fetch for 6 hours. After the series nothing is automatic; a client can request a refresh through comment-decay-scheduler, budget permitting.
+**Series.** +6 h, +24 h, +3 d, +7 d, +30 d after the video is first seen. Early stop: comment-decay-scheduler applies it from this service's report; this service never stops a series itself (ADR-0019). Extension: when the last scheduled step before day 30 (+7 d) still adds 20% or more, a fetch every 2 days until day 30. Hot posts: above 100 new comments an hour, an extra hourly fetch for 6 hours. After the series nothing is automatic; a client can request a refresh through comment-decay-scheduler, budget permitting.
 
 **Staying on time.** Workers scale on partition lag; a video is in at most one job at a time. A late step still reads everything newer than the newest stored thread, so lateness costs freshness, not completeness. When quota is short, quota-governor's priorities decide which steps run (section 7).
 

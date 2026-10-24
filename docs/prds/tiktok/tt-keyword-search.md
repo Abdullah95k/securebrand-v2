@@ -30,7 +30,7 @@ Measurable target: 99% of keyword rules searched within their tier interval ever
 ## 4. Users and consumers
 
 - Clients on amber-enabled contracts: new mentions and newly discovered creators on TikTok, with amber provenance shown.
-- normalize-item reads the messages; keyword-matcher confirms the hit and splits it into `item.hits` or `discovery.hits`; poster-resolver consumes discovery hits and asks tt-user-resolver for the profile.
+- normalize-item reads the messages; keyword-matcher confirms the hit and writes it to `item.hits` whoever the poster is, with a `discovery.hits` candidate for an unregistered poster (ADR-0031); poster-resolver consumes the candidates and asks tt-user-resolver for the profile.
 - Ops: cost and precision per keyword, rotation lag. Management: proof that TikTok discovery is live, what it costs, and that no government client receives it.
 
 ## 5. How it works
@@ -83,11 +83,11 @@ Per video: the platform video id, caption, creation time, the author block (user
   "route": "amber",
   "vendor": "tikhub",
   "service": "tt-keyword-search",
-  "job_id": "job_01J9Q7M3K2",
+  "job_id": "01M48RGBQ08KKPCN8S96112V4X",
   "attempt": 1,
   "fetched_at": "2026-10-06T14:05:12Z",
   "retention_class": "vendor_agreed",
-  "context": { "keyword_id": "kw_zain_4g", "variant": "زين عراق", "country": "IQ", "page": 2 },
+  "context": { "keyword_id": "a2beaeb7-80aa-47d7-99dc-f276c8aa6678", "variant": "زين عراق", "country": "IQ", "page": 2 },
   "raw": {
     "aweme_id": "7421000000000000123",
     "desc": "تجربتي مع انترنت زين بالبصرة...",
@@ -99,6 +99,8 @@ Per video: the platform video id, caption, creation time, the author block (user
   }
 }
 ```
+
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 ### 6.3 State
 
@@ -142,14 +144,14 @@ listening-sdk (adapter contract, scheduler helper, rate limiter, idempotency); q
 
 ## 13. Acceptance criteria
 
-1. With `TT_VENDOR_ROUTE = off`, no vendor call is made during a day of scheduled jobs and every job is counted as `flag_off`.
+1. With `TT_VENDOR_ROUTE = off`, no vendor call is made during a day: the scheduler emits no job, and a job already queued ends `skipped_flag_off` at its start, never as an attempt (ADR-0050, ADR-0017).
 2. With the flag set to `tikhub` and then `ensembledata`, the same rule produces `raw.items` messages that pass the normalize-item schema, with `vendor` set accordingly.
 3. A Tier 1 rule runs at a fixed 60-minute cadence over 24 hours; Tier 2 and Tier 3 rules show 6-hour and 24-hour cadences.
 4. After a simulated 3-hour outage, the most-stale rules are searched first and `rotation_behind` fires once, then clears.
 5. A newly added rule completes a backfill reaching 90 days or the vendor's depth, sets `backfill_status` to `done` or `capped`, and joins the rotation.
 6. A rule whose `client_ids` all belong to government clients never produces a job.
 7. Every message carries `route = amber`, `vendor`, `service`, `fetched_at`, `retention_class = vendor_agreed` and an `idempotency_key` of the form `tiktok:video:<id>`.
-8. A stubbed 429 triggers backoff from 30 s with jitter, capped at 15 min; the sixth failure lands the job in `dlq.tt-keyword-search` with an alert.
+8. A stubbed 429 triggers backoff from 30 s with jitter, capped at 15 min; the fifth failed attempt lands the job in `dlq.tt-keyword-search` with an alert (ADR-0057).
 9. A stubbed run with more than 5% empty 200s over 15 minutes flips the route to `degraded` and the next job uses the alternate vendor.
 10. `cost_units_total` for a run equals the number of HTTP 200 responses in that run.
 

@@ -43,7 +43,7 @@ While the flag is on, every group post found by fb-group-posts-poller has its co
 
 **Series.** +1 h, +6 h, +24 h, +3 d. comment-decay-scheduler applies the general rules to this service's report:
 
-- Early stop: a fetch that adds fewer than 5% new comments and fewer than 5 in absolute cancels the rest of the series.
+- Early stop: comment-decay-scheduler applies it from this service's report; this service never stops a series itself (ADR-0019).
 - Extension: the series is short, so the rule for shorter series applies at the +3 d fetch: if it still adds 20% or more new comments, fetches continue every 2 days until day 30.
 - Hot posts: above 100 new comments an hour, an extra fetch every hour for the next 6 hours; on this paid route quota-governor drops these first when the monthly budget passes 80%.
 - Beyond day 30: no automatic fetch.

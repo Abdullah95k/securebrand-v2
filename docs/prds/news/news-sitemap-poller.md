@@ -128,7 +128,7 @@ Also `jobs.news-site-resolver` (`refresh`), `jobs.news-robots-checker` (`recheck
 
 ### 6.3 State
 
-`cursors.cursor` per (`source_id`, `news-sitemap-poller`): JSON map from sitemap URL to `{etag, last_modified, newest_date, urls_hash}`; `last_success_at`, `last_error`, `consecutive_errors`. `sources.last_polled_at`, `next_poll_at`, `health`, `backfill_status` (read). `crawl_policies.next_slot_at`.
+`cursors.cursor` per (`source_id`, `news-sitemap-poller`): JSON map from sitemap URL to `{etag, last_modified, newest_date, urls_hash}`; `last_success_at`, `last_error`, `consecutive_errors`. `sources.last_polled_at`, `next_poll_at`, `health`, `backfill_status` (read). Host-gate slots live in `host_gate`, written only by the SDK gate (ADR-0040).
 
 ## 7. Limits, quotas and cost
 

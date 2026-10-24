@@ -17,7 +17,7 @@ Service `retention-purger` · PRD `docs/prds/shared/retention-purger.md` · lane
 1. This brief
 2. The PRD in full: `docs/prds/shared/retention-purger.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Retention classes; Quotas, budgets and the quota governor
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of C13: `docs/handoffs/C13.md`
 6. Retention classes (CONVENTIONS)
 
@@ -26,7 +26,7 @@ Service `retention-purger` · PRD `docs/prds/shared/retention-purger.md` · lane
 - Topics read: `source.events`, `deletions`
 - Topics written: `registry.decisions`, `deletions`
 - Job queues in: its own `jobs.retention-purger`; out: `jobs.yt-text-purger`
-- Tables read: `sources`, `clients`, `client_sources`, `cursors`, `deletion_requests`, `retention_classes`, `vendor_keys`; written or updated: `cursors`, `deletion_requests`, `service_runs`
+- Tables read: `sources`, `clients`, `client_sources`, `cursors`, `deletion_requests`, `retention_classes`, `credentials` (the PRD's `vendor_keys`, read and written only through the SDK's credential client, ADR-0016); written or updated: `cursors`, `deletion_requests`, `service_runs`
 - This list is extracted from the PRD's section 6 by name; the plan confirms each item against `packages/contracts` and the migrations, and anything missing becomes a proposal.
 
 ## Hands on
@@ -38,7 +38,7 @@ Service `retention-purger` · PRD `docs/prds/shared/retention-purger.md` · lane
 ## Watch for
 
 - linkedin_48h, youtube_30d_text, news_excerpt and x_24h_sync each work differently
-- Purge raw text, never aggregates and derived scores
+- Purge by class: raw text on its class's clock, item-level derived rows (scores, hits, metrics) with their item; aggregates keep ten years and per-channel YouTube rollups 36 months, by F8's TTLs (ADR-0054, ADR-0056)
 - Deletion and retention actions are audited before they run, so a replay changes nothing
 
 ## Done when

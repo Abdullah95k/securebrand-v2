@@ -85,7 +85,7 @@ The same post objects as fb-page-feed-poller (section 5.4 there). It does not ge
 
 ### 6.2 Writes
 
-`raw.items`, one message per post, kind `post`, envelope identical to fb-page-feed-poller's except `service` and `metrics_observation`:
+`raw.items`, one message per post, kind `post`, envelope identical to fb-page-feed-poller's except `service` and `job_kind` (`backfill`), with `window` as a declared field of the envelope's `context` (ADR-0005, ADR-0070):
 
 ```json
 {
@@ -95,17 +95,19 @@ The same post objects as fb-page-feed-poller (section 5.4 there). It does not ge
     "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11",
     "platform_id": "100064583471102_1176002458962861",
     "idempotency_key": "facebook:post:100064583471102_1176002458962861",
-    "job_id": "01J9N3A1C7Q2W8E5R4T6Y9U0I3", "attempt": 2,
+    "job_id": "01M48DXKW00GHZSJPM5NRWV7R3", "attempt": 2,
     "fetched_at": "2026-10-06T11:02:17Z",
     "retention_class": "meta_on_request",
     "client_ids": ["0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"],
-    "batch": "raw/green/facebook/2026/10/06/fb-backfill/000007.jsonl.zst",
-    "metrics_observation": "backfill",
-    "window": {"start": "2026-07-08T11:00:00Z", "end": "2026-10-06T11:00:00Z"}
+    "raw_ref": "raw/green/facebook/2026/10/06/fb-backfill/000007.jsonl.zst#4",
+    "job_kind": "backfill",
+    "context": {"window": {"start": "2026-07-08T11:00:00Z", "end": "2026-10-06T11:00:00Z"}}
   },
   "payload": { "id": "100064583471102_1176002458962861", "message": "...", "created_time": "2026-08-19T14:03:55+0000", "...": "unchanged post object" }
 }
 ```
+
+Ids in this example follow ADR-0006; where its other fields differ from an ADR, the ADR wins (ADR-0001).
 
 Also `source.events` `updated` (with `backfill_status`), `sources.backfill_status`, `next_poll_at`, the fb-page-feed-poller cursor, `service_runs`, `dlq.fb-backfill`.
 
@@ -162,7 +164,7 @@ listening-sdk (shared `/feed` field list and envelope), backfill-orchestrator, q
 5. A fixture Page whose feed ends 40 days back despite a posting rate of several posts a day is marked `capped`; one that only started posting 40 days ago is marked `done`.
 6. A job for a source with `source_type != page` is rejected without any Graph call.
 7. The field list used in the request is byte-identical to fb-page-feed-poller's (shared SDK constant test).
-8. Every message carries `metrics_observation = backfill`, `retention_class = meta_on_request`, `route = green`, `fetched_at`, and the window.
+8. Every message carries `job_kind = backfill`, `retention_class = meta_on_request`, `route = green`, `fetched_at`, and the window in `context` (ADR-0005, ADR-0070).
 9. An on-demand re-run with a 200-day window is clipped to 90 days and logged as `reason = ops`; tokens never appear in logs or envelopes.
 
 ## 14. Open questions

@@ -4,7 +4,7 @@ Wave 6 · Insight layer · track Insight · size L (3 to 5 days with review) · 
 
 ## Builds
 
-Images, thumbnails, OCR; no YouTube audio or video download in v1.
+Images, thumbnails, OCR, frame OCR and speech-to-text on media the register of permitted uses does not exclude; YouTube thumbnails only (ADR-0068).
 
 Service `analysis-media` · PRD `docs/prds/shared/analysis-media.md` · lane Processing · route shared · 11 acceptance criteria (section 13) · 7 open questions (section 14)
 
@@ -19,7 +19,7 @@ Service `analysis-media` · PRD `docs/prds/shared/analysis-media.md` · lane Pro
 1. This brief
 2. The PRD in full: `docs/prds/shared/analysis-media.md`
 3. CONVENTIONS v1.1 (`docs/prds/_shared/CONVENTIONS.md`), these sections: Naming, repository, deployment; Idempotency and deduplication; Error handling, canaries and fallback; Observability and SLOs; Security and compliance in every service; Addendum: Other shared decisions; The registry; Retention classes
-4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's service, platform, lane or "all"
+4. The ADRs in `docs/decisions/` whose "Applies to" line names this session's ID, service, platform, lane or "all", or whose "Sessions that must read this" line names this session (ADR-0001); and the rows of `docs/decisions/DEFERRED.md` that name this session
 5. Handoff of F6: `docs/handoffs/F6.md`
 6. Handoff of C4: `docs/handoffs/C4.md`
 7. A3 brand ids when available
