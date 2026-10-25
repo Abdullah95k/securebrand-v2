@@ -61,6 +61,7 @@ from listening_contracts.registries import (
     is_listed_vendor,
     job_key_fields,
     queue_service,
+    refused_job_fields,
     required_job_fields,
     writer_conditions,
 )
@@ -1012,6 +1013,9 @@ def _jobs_completed(m: Json, out: _Issues, ctx: _Context) -> None:
         _check_job_key(out, m, queue, kind)
 
 
+_WHOLE_ITEM_KINDS = ("comments", "metrics", "first_sight")
+
+
 def _job(m: Json, out: _Issues, ctx: _Context) -> None:
     if m.get("kind") == "push" and m.get("due_at") != m.get("received_at"):
         out.add(["due_at"], "push_due", "a push job is due when received (ADR-0011)")
@@ -1025,6 +1029,14 @@ def _job(m: Json, out: _Issues, ctx: _Context) -> None:
             ["platform_id"],
             "resolve_identity",
             "a resolve job names the account by id, handle or url (ADR-0032)",
+        )
+    # Only a replies job names threads, and a refresh, reconciliation or ops_force may; comments,
+    # metrics and first_sight jobs read the whole item (plan L415; ADR-0011; review note 16).
+    if m.get("kind") in _WHOLE_ITEM_KINDS and "thread_ids" in _rec(m.get("post_ref")):
+        out.add(
+            ["post_ref", "thread_ids"],
+            "field_refused",
+            f"a {m.get('kind')} job reads the whole item, never thread_ids (plan L415)",
         )
     queue = ctx.queue
     if queue is None:
@@ -1050,6 +1062,21 @@ def _job(m: Json, out: _Issues, ctx: _Context) -> None:
                 "missing_field",
                 f"a {kind} on {queue} carries {name}",
             )
+    for name in refused_job_fields(queue, kind, service):
+        if has_value(m, name):
+            out.add(
+                cast(IssuePath, name.split(".")),
+                "field_refused",
+                f"a {kind} on {queue} carries no {name}",
+            )
+    # A reconciliation's reason is yt-uploads-reconciler's alone (plan L421; ADR-0064 L25): a rule
+    # in code, since a registry row would list the other queues.
+    if (
+        kind == "reconciliation"
+        and "reason" in m
+        and _derive(lambda: queue_service(queue)) != "yt-uploads-reconciler"
+    ):
+        out.add(["reason"], "field_refused", f"a reconciliation on {queue} carries no reason")
     _check_job_key(out, m, queue, kind)
 
 

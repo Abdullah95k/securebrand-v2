@@ -7,6 +7,13 @@ import { PATTERNS } from "../primitives.ts";
 import { loadRegistry } from "./load.ts";
 import { isKnownService, namesService } from "./services.ts";
 
+const fieldRow = z.object({
+  queues: z.array(z.string()),
+  kinds: z.array(z.string()),
+  producers: z.array(z.string()).optional(),
+  fields: z.array(z.string()),
+  from: z.string(),
+});
 const ProducersFile = z.object({
   rows: z.array(
     z.object({
@@ -16,15 +23,8 @@ const ProducersFile = z.object({
       from: z.string(),
     }),
   ),
-  required_fields: z.array(
-    z.object({
-      queues: z.array(z.string()),
-      kinds: z.array(z.string()),
-      producers: z.array(z.string()).optional(),
-      fields: z.array(z.string()),
-      from: z.string(),
-    }),
-  ),
+  required_fields: z.array(fieldRow),
+  refused_fields: z.array(fieldRow),
 });
 const TopicWritersFile = z.object({
   topics: z.record(z.string(), z.array(z.string())),
@@ -110,6 +110,10 @@ export function requiredFieldRows(): RequiredFieldRow[] {
   return producersFile.required_fields.map((r) => ({ ...r }));
 }
 
+export function refusedFieldRows(): RequiredFieldRow[] {
+  return producersFile.refused_fields.map((r) => ({ ...r }));
+}
+
 /** The services allowed to emit `kind` on `queue`; none for a (queue, kind) the table does not list. */
 export function allowedProducers(queue: string, kind: string): string[] {
   const out: string[] = [];
@@ -124,15 +128,29 @@ export function isAllowedProducer(queue: string, kind: string, service: string):
   return allowedProducers(queue, kind).includes(service);
 }
 
-/** The kind fields a (queue, kind) row requires of a job from `service` (dotted for nested fields). */
-export function requiredJobFields(queue: string, kind: string, service: string): string[] {
+function jobFields(
+  rows: readonly RequiredFieldRow[],
+  queue: string,
+  kind: string,
+  service: string,
+): string[] {
   const out: string[] = [];
-  for (const row of producersFile.required_fields) {
+  for (const row of rows) {
     if (!row.queues.includes(queue) || !row.kinds.includes(kind)) continue;
     if (row.producers && !resolveQueue(row.producers, queue).includes(service)) continue;
     for (const f of row.fields) if (!out.includes(f)) out.push(f);
   }
   return out;
+}
+
+/** The kind fields a (queue, kind) row requires of a job from `service` (dotted for nested fields). */
+export function requiredJobFields(queue: string, kind: string, service: string): string[] {
+  return jobFields(producersFile.required_fields, queue, kind, service);
+}
+
+/** The kind fields a (queue, kind) row refuses of a job from `service` (review note 16). */
+export function refusedJobFields(queue: string, kind: string, service: string): string[] {
+  return jobFields(producersFile.refused_fields, queue, kind, service);
 }
 
 /** The writers of every topic, keyed by schema id (registry.decisions: see the decision rows). */

@@ -3605,6 +3605,47 @@ def jobs() -> None:
         ["action"],
         "the action is one of the card's buttons (qualifier §5.3 L67)",
     )
+    # The job shapes the plan states (L415, L421, L425; review note 16), all field_refused.
+    whole_item = "a comments, metrics or first_sight job reads the whole item, never thread_ids"
+    for name, queue, base, thread in (
+        ("comments-thread-ids", "jobs.fb-post-comments-fetcher", cm, "1198837625012734_8811"),
+        ("metrics-thread-ids", "jobs.fb-reactions-fetcher", mj, "1198837625012734_8811"),
+        (
+            "first-sight-thread-ids",
+            "jobs.yt-video-details-fetcher",
+            fs,
+            "UgzK7pQ2mV9xR4tL1bN6AaABAg",
+        ),
+    ):
+        bad(
+            name,
+            queue,
+            with_(base, ("post_ref", "thread_ids"), [thread]),
+            ["post_ref", "thread_ids"],
+            f"{whole_item} (plan L415; ADR-0011)",
+        )
+    bad(
+        "x-replies-thread-ids",
+        "jobs.x-full-archive-search",
+        with_(xr, ("post_ref", "thread_ids"), ["1843201122334455668"]),
+        ["post_ref", "thread_ids"],
+        "an X replies job reads a window rather than thread_ids (plan L425; ADR-0060 L32)",
+    )
+    bad(
+        "replies-window-start",
+        "jobs.yt-replies-fetcher",
+        {**rep_job, "window_start": "2026-10-06T08:51:40Z"},
+        ["window_start"],
+        "a replies job off jobs.x-full-archive-search names its threads, not a window (plan L425)",
+    )
+    bad(
+        "x-gap-with-reason",
+        "jobs.x-recent-search",
+        {**xgap, "reason": "lease_lapsed"},
+        ["reason"],
+        "a reconciliation names a reason on yt-uploads-reconciler's queue only; the X gap job"
+        " none (plan L421; ADR-0064 L25)",
+    )
     tolerant(
         s,
         "unknown-field",

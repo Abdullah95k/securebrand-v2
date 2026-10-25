@@ -122,6 +122,7 @@ RequiredFieldRow = TypedDict(
 class _ProducersFile(TypedDict):
     rows: list[_FileRow]
     required_fields: list[RequiredFieldRow]
+    refused_fields: list[RequiredFieldRow]
 
 
 _producers = cast(_ProducersFile, registry("producers.json"))
@@ -167,6 +168,10 @@ def required_field_rows() -> list[RequiredFieldRow]:
     return [cast(RequiredFieldRow, dict(r)) for r in _producers["required_fields"]]
 
 
+def refused_field_rows() -> list[RequiredFieldRow]:
+    return [cast(RequiredFieldRow, dict(r)) for r in _producers["refused_fields"]]
+
+
 def allowed_producers(queue: str, kind: str) -> list[str]:
     """The services allowed to emit `kind` on `queue`; none for a (queue, kind) the table does not
     list."""
@@ -181,10 +186,9 @@ def is_allowed_producer(queue: str, kind: str, service: str) -> bool:
     return service in allowed_producers(queue, kind)
 
 
-def required_job_fields(queue: str, kind: str, service: str) -> list[str]:
-    """The kind fields a (queue, kind) row requires of a job from `service` (dotted when nested)."""
+def _job_fields(rows: list[RequiredFieldRow], queue: str, kind: str, service: str) -> list[str]:
     out: list[str] = []
-    for row in _producers["required_fields"]:
+    for row in rows:
         if queue not in row["queues"] or kind not in row["kinds"]:
             continue
         producers = row.get("producers")
@@ -192,6 +196,16 @@ def required_job_fields(queue: str, kind: str, service: str) -> list[str]:
             continue
         out.extend(f for f in row["fields"] if f not in out)
     return out
+
+
+def required_job_fields(queue: str, kind: str, service: str) -> list[str]:
+    """The kind fields a (queue, kind) row requires of a job from `service` (dotted when nested)."""
+    return _job_fields(_producers["required_fields"], queue, kind, service)
+
+
+def refused_job_fields(queue: str, kind: str, service: str) -> list[str]:
+    """The kind fields a (queue, kind) row refuses of a job from `service` (review note 16)."""
+    return _job_fields(_producers["refused_fields"], queue, kind, service)
 
 
 # The topic writers (CONVENTIONS v1.1 L25 to L40) and the decision rows (ADR-0013).

@@ -48,6 +48,14 @@
     "rule": "series_step = backfill goes (ADR-0065)",
     "queue": "jobs.fb-post-comments-fetcher"
   },
+  "comments-thread-ids.json": {
+    "path": [
+      "post_ref",
+      "thread_ids"
+    ],
+    "rule": "a comments, metrics or first_sight job reads the whole item, never thread_ids (plan L415; ADR-0011)",
+    "queue": "jobs.fb-post-comments-fetcher"
+  },
   "export-not-admin.json": {
     "path": [
       "producer",
@@ -75,6 +83,14 @@
       "series_step"
     ],
     "rule": "series_step goes from first_sight (ADR-0065)",
+    "queue": "jobs.yt-video-details-fetcher"
+  },
+  "first-sight-thread-ids.json": {
+    "path": [
+      "post_ref",
+      "thread_ids"
+    ],
+    "rule": "a comments, metrics or first_sight job reads the whole item, never thread_ids (plan L415; ADR-0011)",
     "queue": "jobs.yt-video-details-fetcher"
   },
   "hashtag-without-edge.json": {
@@ -110,6 +126,14 @@
       "series_step"
     ],
     "rule": "a metrics step is +24h, +7d or refresh:<request_id> (ADR-0034)",
+    "queue": "jobs.fb-reactions-fetcher"
+  },
+  "metrics-thread-ids.json": {
+    "path": [
+      "post_ref",
+      "thread_ids"
+    ],
+    "rule": "a comments, metrics or first_sight job reads the whole item, never thread_ids (plan L415; ADR-0011)",
     "queue": "jobs.fb-reactions-fetcher"
   },
   "missing-partition-key.json": {
@@ -235,6 +259,13 @@
     "rule": "a replay names who asked (ADR-0012 L34)",
     "queue": "jobs.normalize-item"
   },
+  "replies-window-start.json": {
+    "path": [
+      "window_start"
+    ],
+    "rule": "a replies job off jobs.x-full-archive-search names its threads, not a window (plan L425)",
+    "queue": "jobs.yt-replies-fetcher"
+  },
   "replies-without-thread-ids.json": {
     "path": [
       "post_ref",
@@ -292,12 +323,27 @@
     "rule": "a constant keeps its JSON type: 0 is not false and true is not 1 (finding 6)",
     "queue": "jobs.fb-page-feed-poller"
   },
+  "x-gap-with-reason.json": {
+    "path": [
+      "reason"
+    ],
+    "rule": "a reconciliation names a reason on yt-uploads-reconciler's queue only; the X gap job none (plan L421; ADR-0064 L25)",
+    "queue": "jobs.x-recent-search"
+  },
   "x-gap-without-window.json": {
     "path": [
       "window_start"
     ],
     "rule": "the X gap job names its window (ADR-0064)",
     "queue": "jobs.x-recent-search"
+  },
+  "x-replies-thread-ids.json": {
+    "path": [
+      "post_ref",
+      "thread_ids"
+    ],
+    "rule": "an X replies job reads a window rather than thread_ids (plan L425; ADR-0060 L32)",
+    "queue": "jobs.x-full-archive-search"
   },
   "x-replies-without-window.json": {
     "path": [

@@ -1,0 +1,25 @@
+{
+  "schema": "job/v1",
+  "message_id": "01M488RTE07ZJM20Y8KVKKK2AG",
+  "produced_at": "2026-10-06T09:30:00Z",
+  "producer": {
+    "service": "x-filtered-stream",
+    "version": "1.0.0",
+    "job_id": "01M488RTE0JFYQE99J4K97NKBX"
+  },
+  "job_id": "01M487XBH0B2C4D6E8F0G2H4J6",
+  "kind": "reconciliation",
+  "due_at": "2026-10-06T09:30:00Z",
+  "attempt": 1,
+  "source_id": "7c1d9a2e-55b4-4f1e-8a0c-3e9f6b2d4a71",
+  "query": "(\"دجلة تيليكوم\" OR \"Dijla Telecom\") lang:ar",
+  "window_start": "2026-10-06T08:55:00Z",
+  "window_end": "2026-10-06T09:25:00Z",
+  "source_ids": [
+    "7c1d9a2e-55b4-4f1e-8a0c-3e9f6b2d4a71"
+  ],
+  "client_ids": [
+    "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+  ],
+  "reason": "lease_lapsed"
+}

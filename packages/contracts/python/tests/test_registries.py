@@ -13,6 +13,7 @@ from listening_contracts.registries import (
     producer_rows,
     queue_service,
     raw_items_kinds,
+    refused_field_rows,
     required_field_rows,
     topic_writers,
 )
@@ -99,13 +100,23 @@ def test_every_producer_table_row_names_job_kinds_known_queues_and_known_produce
         assert is_known_service(queue_service(row["queue"])), row["queue"]
         for p in row["producers"]:
             assert is_known_service(p), (row["queue"], row["kind"], p)
-    for r in required_field_rows():
+    for r in [*required_field_rows(), *refused_field_rows()]:
         for q in r["queues"]:
             assert is_known_service(queue_service(q)), q
         for k in r["kinds"]:
             assert k in VOCABULARY["JOB_KINDS"]
         for p in r.get("producers", []):
             assert _known(p), p
+
+
+def test_no_field_is_both_required_and_refused_on_one_queue_and_kind() -> None:
+    """Note 16."""
+    for refused in refused_field_rows():
+        for required in required_field_rows():
+            if set(refused["queues"]) & set(required["queues"]) and set(refused["kinds"]) & set(
+                required["kinds"]
+            ):
+                assert not set(refused["fields"]) & set(required["fields"]), refused["from"]
 
 
 def test_every_topic_writer_is_known_and_raw_items_lists_each_writers_record_kinds() -> None:

@@ -1,5 +1,5 @@
 {
-  "description": "The producer table of ADR-0012: one row per (queue, kind) with the services allowed to emit it, written as the plan's table is (several queues or kinds per row). `@queue` names the queue's own service (`jobs.<service>` and `jobs.<service>.priority`). The SDK producer refuses, and the consumer's wrapper dead-letters, a job whose (queue, kind, producer.service) has no row; a kind with no row on a queue leaves that consumer. `required_fields` names the kind fields a row requires where one kind serves several queues or producers with different fields (dotted for a nested field); validate() checks both when it is given the queue.",
+  "description": "The producer table of ADR-0012: one row per (queue, kind) with the services allowed to emit it, written as the plan's table is (several queues or kinds per row). `@queue` names the queue's own service (`jobs.<service>` and `jobs.<service>.priority`). The SDK producer refuses, and the consumer's wrapper dead-letters, a job whose (queue, kind, producer.service) has no row; a kind with no row on a queue leaves that consumer. `required_fields` names the kind fields a row requires where one kind serves several queues or producers with different fields (dotted for a nested field), and `refused_fields`, in the same shape, the kind fields a row refuses (review note 16); validate() checks all three when it is given the queue.",
   "rows": [
     {
       "queues": [
@@ -529,6 +529,24 @@
       "producers": ["admin-api"],
       "fields": ["from", "to", "request_id", "requested_by"],
       "from": "ADR-0012 L34"
+    }
+  ],
+  "refused_fields": [
+    {
+      "queues": ["jobs.x-full-archive-search"],
+      "kinds": ["replies"],
+      "fields": ["post_ref.thread_ids"],
+      "from": "ADR-0060 L32 (\"rather than thread_ids\"), plan L425: an X replies job reads a window"
+    },
+    {
+      "queues": [
+        "jobs.fb-group-comments-fetcher",
+        "jobs.tt-video-comments-fetcher",
+        "jobs.yt-replies-fetcher"
+      ],
+      "kinds": ["replies"],
+      "fields": ["window_start"],
+      "from": "plan L425: a replies job off jobs.x-full-archive-search names its threads (ADR-0011)"
     }
   ]
 }

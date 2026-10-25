@@ -12,6 +12,7 @@ import {
   producerRows,
   queueService,
   rawItemsKinds,
+  refusedFieldRows,
   requiredFieldRows,
   topicWriters,
 } from "../../src/registries/index.ts";
@@ -151,10 +152,24 @@ describe("the registries name only known services, kinds and values", () => {
       for (const p of row.producers)
         expect(isKnownService(p), `${row.queue} ${row.kind} ${p}`).toBe(true);
     }
-    for (const r of requiredFieldRows()) {
+    for (const r of [...requiredFieldRows(), ...refusedFieldRows()]) {
       for (const q of r.queues) expect(isKnownService(queueService(q)), q).toBe(true);
       for (const k of r.kinds) expect(JOB_KINDS as readonly string[]).toContain(k);
       for (const p of r.producers ?? []) expect(known(p), p).toBe(true);
+    }
+  });
+
+  it("no field is both required and refused on one queue and kind (note 16)", () => {
+    for (const refused of refusedFieldRows()) {
+      for (const required of requiredFieldRows()) {
+        const queues = refused.queues.filter((q) => required.queues.includes(q));
+        const kinds = refused.kinds.filter((k) => required.kinds.includes(k));
+        if (queues.length === 0 || kinds.length === 0) continue;
+        expect(
+          refused.fields.filter((f) => required.fields.includes(f)),
+          refused.from,
+        ).toEqual([]);
+      }
     }
   });
 

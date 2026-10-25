@@ -48,6 +48,7 @@ import {
   isListedVendor,
   jobKeyFields,
   queueService,
+  refusedJobFields,
   requiredJobFields,
   writerConditions,
   type DecisionSubject,
@@ -804,6 +805,8 @@ const jobsCompleted: Rule = (m, out, ctx) => {
   if (readsRegistry) checkJobKey(out, m, queue, kind);
 };
 
+const WHOLE_ITEM_KINDS = ["comments", "metrics", "first_sight"];
+
 const job: Rule = (m, out, ctx) => {
   if (m.kind === "push" && m.due_at !== m.received_at)
     out.add(["due_at"], "push_due", "a push job is due when received (ADR-0011)");
@@ -817,6 +820,14 @@ const job: Rule = (m, out, ctx) => {
       ["platform_id"],
       "resolve_identity",
       "a resolve job names the account by id, handle or url (ADR-0032)",
+    );
+  // Only a replies job names threads, and a refresh, reconciliation or ops_force may; comments,
+  // metrics and first_sight jobs read the whole item (plan L415; ADR-0011; review note 16).
+  if (includes(WHOLE_ITEM_KINDS, m.kind) && rec(m.post_ref).thread_ids !== undefined)
+    out.add(
+      ["post_ref", "thread_ids"],
+      "field_refused",
+      `a ${String(m.kind)} job reads the whole item, never thread_ids (plan L415)`,
     );
   const queue = ctx.options.queue;
   if (queue === undefined) {
@@ -839,6 +850,18 @@ const job: Rule = (m, out, ctx) => {
     if (!hasValue(m, field))
       out.add(field.split("."), "missing_field", `a ${kind} on ${queue} carries ${field}`);
   }
+  for (const field of refusedJobFields(queue, kind, service)) {
+    if (hasValue(m, field))
+      out.add(field.split("."), "field_refused", `a ${kind} on ${queue} carries no ${field}`);
+  }
+  // A reconciliation's reason is yt-uploads-reconciler's alone (plan L421; ADR-0064 L25): a rule in
+  // code, since a registry row would list the other queues.
+  if (
+    kind === "reconciliation" &&
+    m.reason !== undefined &&
+    derive(() => queueService(queue)) !== "yt-uploads-reconciler"
+  )
+    out.add(["reason"], "field_refused", `a reconciliation on ${queue} carries no reason`);
   checkJobKey(out, m, queue, kind);
 };
 

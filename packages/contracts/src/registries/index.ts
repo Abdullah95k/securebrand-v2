@@ -18,6 +18,8 @@ export {
   producerRows,
   queueService,
   rawItemsKinds,
+  refusedFieldRows,
+  refusedJobFields,
   registrySchemaId,
   requiredFieldRows,
   requiredJobFields,
