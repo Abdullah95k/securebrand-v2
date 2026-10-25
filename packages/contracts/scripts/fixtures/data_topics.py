@@ -525,6 +525,13 @@ def hits() -> None:
     )
     invalid(
         s,
+        "matched-term-lone-surrogate",
+        with_(base, ("matched_term",), base["matched_term"] + "\ud83d"),
+        ["matched_term"],
+        "every string and key is well-formed Unicode (UTF-8 encodable, ADR-0006)",
+    )
+    invalid(
+        s,
         "source-with-offsets",
         with_(src_hit, ("offsets",), [[1, 2]]),
         ["offsets"],

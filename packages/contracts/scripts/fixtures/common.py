@@ -4,6 +4,7 @@ construction; validate() then checks them in both languages."""
 
 import copy
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -76,8 +77,18 @@ def _dir(schema: str, kind: str) -> Path:
     return d
 
 
-def _dump(path: Path, obj: Any) -> None:
+# A lone surrogate, which UTF-8 cannot hold: a fixture that carries one writes it as a \u escape.
+_LONE_SURROGATE = re.compile("[\ud800-\udfff]")
+
+
+def json_text(obj: Any) -> str:
+    """The JSON text a fixture is written as: UTF-8, except a lone surrogate's escape."""
     text = json.dumps(obj, ensure_ascii=False, indent=2) + "\n"
+    return _LONE_SURROGATE.sub(lambda m: f"\\u{ord(m.group()):04x}", text)
+
+
+def _dump(path: Path, obj: Any) -> None:
+    text = json_text(obj)
     rel = str(path.relative_to(ROOT))
     if rel in WRITTEN:
         raise SystemExit(f"written twice: {rel}")
@@ -208,8 +219,7 @@ def finish() -> None:
     for schema, entries in EXPECTED.items():
         base = "dlq/v1" if schema.startswith("dlq.") else schema
         (ROOT / base / "invalid" / "expected.json").write_text(
-            json.dumps(dict(sorted(entries.items())), ensure_ascii=False, indent=2) + "\n",
-            encoding="utf-8",
+            json_text(dict(sorted(entries.items()))), encoding="utf-8"
         )
     for k, entries in QUEUES.items():
         schema, kind = k.split("|")

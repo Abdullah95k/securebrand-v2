@@ -152,10 +152,29 @@ class _Issues:
 # --- JSON values --------------------------------------------------------------------------------
 
 
+NOT_UNICODE = (
+    "a string or key is well-formed Unicode, UTF-8 encodable (ADR-0006); this one holds a lone"
+    " surrogate"
+)
+
+
+def _well_formed(s: str) -> bool:
+    try:
+        s.encode("utf-8")
+    except UnicodeEncodeError:
+        return False
+    return True
+
+
 def _as_json(value: object, path: IssuePath, out: _Issues) -> object:
     """The value as JavaScript reads JSON: an integral float is an integer; NaN and the infinities
-    are not JSON."""
-    if isinstance(value, bool) or value is None or isinstance(value, (str, int)):
+    are not JSON; every string and key is well-formed Unicode, so a lone surrogate is refused alike
+    in both languages (review finding 5). Depth first, an object's keys before its values."""
+    if isinstance(value, str):
+        if not _well_formed(value):
+            out.add(path, "not_unicode", NOT_UNICODE)
+        return value
+    if isinstance(value, bool) or value is None or isinstance(value, int):
         return value
     if isinstance(value, float):
         if not math.isfinite(value):
@@ -165,7 +184,11 @@ def _as_json(value: object, path: IssuePath, out: _Issues) -> object:
     if isinstance(value, list):
         return [_as_json(v, [*path, i], out) for i, v in enumerate(cast(list[object], value))]
     if isinstance(value, dict):
-        return {k: _as_json(v, [*path, k], out) for k, v in cast(dict[str, object], value).items()}
+        items = cast(dict[str, object], value)
+        for k in items:
+            if not _well_formed(k):
+                out.add([*path, k], "not_unicode", NOT_UNICODE)
+        return {k: _as_json(v, [*path, k], out) for k, v in items.items()}
     out.add(path, "not_json", f"{type(value).__name__} is not a JSON value")
     return value
 

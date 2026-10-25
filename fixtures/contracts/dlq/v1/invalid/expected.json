@@ -18,6 +18,13 @@
     ],
     "rule": "a consumed entry names its consumer group (Q5)"
   },
+  "error-message-lone-surrogate.json": {
+    "path": [
+      "error",
+      "message"
+    ],
+    "rule": "every string and key is well-formed Unicode (UTF-8 encodable, ADR-0006)"
+  },
   "invented-class.json": {
     "path": [
       "retention_class"

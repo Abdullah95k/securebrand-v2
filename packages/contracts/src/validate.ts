@@ -129,6 +129,42 @@ class Issues {
   }
 }
 
+// --- JSON values -----------------------------------------------------------------------------------
+
+const isPlainObject = (v: unknown): v is Json =>
+  isRecord(v) && [Object.prototype, null].includes(Object.getPrototypeOf(v) as object | null);
+
+const NOT_UNICODE =
+  "a string or key is well-formed Unicode, UTF-8 encodable (ADR-0006); this one holds a lone surrogate";
+
+/**
+ * What a message must be as JSON before its schema runs, as Python checks it on reading: every string
+ * and key is well-formed Unicode, so a lone surrogate (what a UTF-16 slice through an emoji leaves) is
+ * refused alike in both languages (review finding 5). Depth first, an object's keys before its
+ * values, without recursion; it never throws.
+ */
+function jsonIssues(value: unknown): ValidationIssue[] {
+  const out: ValidationIssue[] = [];
+  const pending: [unknown, IssuePath][] = [[value, []]];
+  for (let next = pending.pop(); next !== undefined; next = pending.pop()) {
+    const [v, path] = next;
+    if (typeof v === "string") {
+      if (!v.isWellFormed()) out.push({ path, code: "not_unicode", message: NOT_UNICODE });
+    } else if (Array.isArray(v)) {
+      for (let i = v.length - 1; i >= 0; i--) pending.push([v[i], [...path, i]]);
+    } else if (isPlainObject(v)) {
+      const entries = Object.entries(v);
+      for (const [key] of entries)
+        if (!key.isWellFormed())
+          out.push({ path: [...path, key], code: "not_unicode", message: NOT_UNICODE });
+      // undefined is no JSON value: JSON.stringify drops it, and the schema judges a missing field.
+      for (const [key, x] of entries.reverse())
+        if (x !== undefined) pending.push([x, [...path, key]]);
+    }
+  }
+  return out;
+}
+
 // --- Zod issues ------------------------------------------------------------------------------------
 
 /** One issue per failing field: a union's branches are listed, and each unknown key gets its path. */
@@ -1166,6 +1202,8 @@ export function validate(
       issues: [{ path: ["schema"], code: "unknown_schema", message: `no schema ${schemaId}` }],
     };
   }
+  const json = jsonIssues(value);
+  if (json.length > 0) return { ok: false, issues: json };
   const parsed = schema.safeParse(value);
   if (!parsed.success) return { ok: false, issues: zodIssues(parsed.error.issues) };
   const id = catalogueId(schemaId);

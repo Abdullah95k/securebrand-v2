@@ -23,6 +23,7 @@ The marks on `account_type` (organisation kind or person kind, Q7) are data the 
 ## Producers validate strictly, consumers tolerantly
 
 - `validate(schemaId, value, mode, options)` in TypeScript and `validate(schema_id, value, mode, queue=..., client_type=...)` in Python run the schema, then the cross-field rules JSON Schema cannot express, then, in producer mode, the registry checks. Producer mode refuses an unknown field. Consumer mode accepts an unknown field of a known version and drops it (A32; the `tolerant/` fixtures).
+- Before the schema, both languages check the message as JSON, in both modes: every string and object key is well-formed Unicode, UTF-8 encodable (ADR-0006), so a lone surrogate is refused with `not_unicode` at its path (review finding 5). A producer cuts text by code point, never through a surrogate pair.
 - A consumer reads the versions it reads, skips a version the package knows that it does not read, and parks a version the package does not know (ADR-0002). `classifyVersion(schemaId, reads)` and `classify_version(schema_id, reads)` return `read`, `skip` or `park`.
 - The package ships a new version before any producer emits it (ADR-0002), so a consumer on the new package skips the new version until it reads it, and parks nothing.
 

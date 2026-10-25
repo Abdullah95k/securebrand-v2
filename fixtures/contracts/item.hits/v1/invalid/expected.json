@@ -11,6 +11,12 @@
     ],
     "rule": "hit_id = uuid_v5(ns_hits, item:client:keyword) (ADR-0006)"
   },
+  "matched-term-lone-surrogate.json": {
+    "path": [
+      "matched_term"
+    ],
+    "rule": "every string and key is well-formed Unicode (UTF-8 encodable, ADR-0006)"
+  },
   "message-id-not-replay-stable.json": {
     "path": [
       "message_id"

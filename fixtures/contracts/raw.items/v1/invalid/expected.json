@@ -151,6 +151,20 @@
     ],
     "rule": "partial is true when present (ADR-0065)"
   },
+  "payload-key-lone-surrogate.json": {
+    "path": [
+      "payload",
+      "\ud83d"
+    ],
+    "rule": "every string and key is well-formed Unicode (UTF-8 encodable, ADR-0006)"
+  },
+  "payload-lone-surrogate.json": {
+    "path": [
+      "payload",
+      "message"
+    ],
+    "rule": "every string and key is well-formed Unicode (UTF-8 encodable, ADR-0006)"
+  },
   "post-without-key.json": {
     "path": [
       "envelope",

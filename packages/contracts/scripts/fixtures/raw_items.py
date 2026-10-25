@@ -2466,6 +2466,21 @@ def invalids() -> None:
     tg = json.loads((ROOT / S / "valid" / "prd-tg-bot-channel-receiver.json").read_text())
     profile = json.loads((ROOT / S / "valid" / "profile.json").read_text())
     resp = json.loads((ROOT / S / "valid" / "search-response.json").read_text())
+    # A payload's strings and keys are well-formed Unicode too (finding 5).
+    invalid(
+        S,
+        "payload-lone-surrogate",
+        with_(base, ("payload", "message"), base["payload"]["message"] + "\ud83d"),
+        ["payload", "message"],
+        "every string and key is well-formed Unicode (UTF-8 encodable, ADR-0006)",
+    )
+    invalid(
+        S,
+        "payload-key-lone-surrogate",
+        with_(base, ("payload", "\ud83d"), 1),
+        ["payload", "\ud83d"],
+        "every string and key is well-formed Unicode (UTF-8 encodable, ADR-0006)",
+    )
     for f in ("schema", "message_id", "produced_at", "producer"):
         invalid(
             S,

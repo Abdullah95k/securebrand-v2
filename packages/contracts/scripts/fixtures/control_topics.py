@@ -3885,6 +3885,14 @@ def dlq() -> None:
         "each service writes its own dlq.<service> (CONVENTIONS v1.1 L41)",
     )
     invalid(s, "bad-base64", {**rawdl, "raw": "not base64!"}, ["raw"], "raw is base64")
+    # A message cut inside an emoji by a UTF-16 slice ends in a lone surrogate (finding 5).
+    invalid(
+        s,
+        "error-message-lone-surrogate",
+        with_(consume, ("error", "message"), consume["error"]["message"] + "\ud83d"),
+        ["error", "message"],
+        "every string and key is well-formed Unicode (UTF-8 encodable, ADR-0006)",
+    )
     invalid(
         s,
         "invented-class",
