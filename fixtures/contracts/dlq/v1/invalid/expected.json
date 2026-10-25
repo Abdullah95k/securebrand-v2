@@ -18,6 +18,12 @@
     ],
     "rule": "a consumed entry names its consumer group (Q5)"
   },
+  "invented-class.json": {
+    "path": [
+      "retention_class"
+    ],
+    "rule": "an author-, source- or client-scope deletion has no class to copy (F-42, D-1)"
+  },
   "message-and-raw.json": {
     "path": [
       "raw"
@@ -60,6 +66,18 @@
       "service"
     ],
     "rule": "each service writes its own dlq.<service> (CONVENTIONS v1.1 L41)"
+  },
+  "null-class-copied.json": {
+    "path": [
+      "retention_class"
+    ],
+    "rule": "a class is copied only from an original that has a valid one (F-42, D-1)"
+  },
+  "null-route-not-a-deletion.json": {
+    "path": [
+      "provenance"
+    ],
+    "rule": "a null route is copied only from an author-, source- or client-scope deletion (F-42, D-1)"
   },
   "produce-with-offset.json": {
     "path": [

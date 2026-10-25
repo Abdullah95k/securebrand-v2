@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { CATALOGUE } from "../../src/catalogue.ts";
 import { decisionRow, decisionRows, type DecisionQuery } from "../../src/registries/index.ts";
 import { validate } from "../../src/validate.ts";
+import { RETENTION_CLASSES } from "../../src/vocabulary.ts";
 import {
   copyOf,
   fixture,
@@ -24,6 +25,49 @@ const SAMPLE: Record<string, string> = {
   "deletions/v1": "prd-retention-purger.json",
   "registry.decisions/v1": "prd-qualifier.json",
 };
+
+const MODES = ["producer", "consumer"] as const;
+
+// The author-, source- and client-scope deletions, whose provenance is the signal's (F-08).
+const NON_ITEM_DELETIONS = [
+  "author-request.json",
+  "author-x-compliance.json",
+  "client-offboarding.json",
+  "client-request.json",
+  "source-authorization-revoked.json",
+];
+
+type Stage = "consume" | "produce";
+
+/** A dead letter of `message` on `topic`, written by `service`, with the top-level fields of `top`. */
+function deadLetter(stage: Stage, service: string, topic: string, message: Json, top: Json): Json {
+  const base = stage === "consume" ? "consume-data-message.json" : "produce-chunk.json";
+  const r = copyOf(fixture("dlq/v1", "valid", base));
+  delete r.provenance;
+  delete r.retention_class;
+  r.schema = `dlq.${service}/v1`;
+  (r.producer as Json).service = service;
+  (r.consumer as Json).service = service;
+  Object.assign(r.original as Json, {
+    topic,
+    schema: message.schema,
+    message_id: message.message_id,
+  });
+  return { ...r, message, ...top };
+}
+
+/** store-writer's dead letter of its items.normalized original, changed by `change`. */
+function deadLetterOfItem(change: (message: Json) => void, top: (message: Json) => Json): Json {
+  const message = copyOf(fixture("items.normalized/v1", "valid", "prd-normalize-item.json"));
+  change(message);
+  return deadLetter("consume", "store-writer", "items.normalized", message, top(message));
+}
+
+const copyBoth = (m: Json): Json => ({
+  provenance: m.provenance,
+  retention_class: m.retention_class,
+});
+const copyNothing = (): Json => ({});
 
 describe("provenance (ADR-0003, A18)", () => {
   it("every data schema requires provenance and retention_class", () => {
@@ -177,5 +221,162 @@ describe("provenance (ADR-0003, A18)", () => {
     const raw = fixture("dlq/v1", "valid", "consume-unparsed.json");
     expect((raw.value as Json).provenance).toBeUndefined();
     expect(validate("dlq.<service>/v1", raw.value).ok).toBe(true);
+  });
+
+  it("a dead letter of an author-, source- or client-scope deletion copies its provenance and no retention_class (F-42, F-08)", () => {
+    for (const file of NON_ITEM_DELETIONS) {
+      const deletion = copyOf(fixture("deletions/v1", "valid", file));
+      const provenance = deletion.provenance;
+      for (const stage of ["consume", "produce"] as const) {
+        // deletion-propagator consumes the deletions; the producing service dead-letters a failed send.
+        const service =
+          stage === "consume"
+            ? "deletion-propagator"
+            : ((deletion.producer as Json).service as string);
+        const id = `dlq.${service}/v1`;
+        const record = (top: Json) => deadLetter(stage, service, "deletions", deletion, top);
+        for (const mode of MODES) {
+          const name = `${file} ${stage} ${mode}`;
+          const faithful = validate(id, record({ provenance }), mode);
+          expect(faithful.ok ? [] : faithful.issues, name).toEqual([]);
+          for (const cls of RETENTION_CLASSES) {
+            const withClass = validate(id, record({ provenance, retention_class: cls }), mode);
+            expect(failsAt(withClass, ["retention_class"]), `${name} ${cls}`).toBe(true);
+          }
+          expect(failsAt(validate(id, record({}), mode), ["provenance"]), name).toBe(true);
+        }
+      }
+    }
+  });
+
+  it("validate() returns issues and never throws on a dead letter whose original's provenance holds a lone surrogate or a non-finite number", () => {
+    for (const [key, odd] of [
+      ["note", JSON.parse('"\\ud800"') as unknown],
+      ["x", JSON.parse("1e400") as unknown],
+    ] as const) {
+      const fourFields = (m: Json): Json => {
+        const rest = { ...(m.provenance as Json) };
+        delete rest[key];
+        return { provenance: rest, retention_class: m.retention_class };
+      };
+      const variants: Record<string, (m: Json) => Json> = {
+        "copies the four fields": fourFields,
+        "copies the whole provenance": copyBoth,
+        "copies nothing": copyNothing,
+      };
+      for (const [label, top] of Object.entries(variants)) {
+        const record = deadLetterOfItem((m) => {
+          (m.provenance as Json)[key] = odd;
+        }, top);
+        for (const mode of MODES) {
+          let result: ReturnType<typeof validate> | undefined;
+          expect(() => {
+            result = validate("dlq.store-writer/v1", record, mode);
+          }, `${key} ${label} ${mode}`).not.toThrow();
+          // A copy of the four fields is no copy of the original's provenance.
+          if (label === "copies the four fields") expect(result?.ok, `${key} ${mode}`).toBe(false);
+        }
+      }
+    }
+  });
+
+  it("a dead letter copies nothing from an original whose provenance fails its own type (D-12)", () => {
+    const failing: Record<string, (p: Json) => void> = {
+      "route RED": (p) => {
+        p.route = "RED";
+      },
+      "a null route on an items.normalized original": (p) => {
+        p.route = null;
+      },
+    };
+    for (const [label, change] of Object.entries(failing)) {
+      const changed = (m: Json) => change(m.provenance as Json);
+      for (const mode of MODES) {
+        const copied = validate("dlq.store-writer/v1", deadLetterOfItem(changed, copyBoth), mode);
+        expect(
+          failsAt(copied, ["provenance"]) || failsAt(copied, ["provenance", "route"]),
+          label,
+        ).toBe(true);
+        const neither = validate(
+          "dlq.store-writer/v1",
+          deadLetterOfItem(changed, copyNothing),
+          mode,
+        );
+        expect(neither.ok ? [] : neither.issues, `${label} ${mode}`).toEqual([]);
+      }
+    }
+    // An extra key: the producer's strict type refuses the copy; a consumer tolerates the unknown
+    // key, so it accepts the copy as well as a record that copies nothing.
+    const extra = (m: Json) => {
+      (m.provenance as Json).note = "a field this package does not know";
+    };
+    const copied = (mode: (typeof MODES)[number]) =>
+      validate("dlq.store-writer/v1", deadLetterOfItem(extra, copyBoth), mode);
+    const producer = copied("producer");
+    expect(!producer.ok && producer.issues.some((i) => i.path[0] === "provenance")).toBe(true);
+    const consumer = copied("consumer");
+    expect(consumer.ok ? [] : consumer.issues).toEqual([]);
+    for (const mode of MODES) {
+      const neither = validate("dlq.store-writer/v1", deadLetterOfItem(extra, copyNothing), mode);
+      expect(neither.ok ? [] : neither.issues, mode).toEqual([]);
+    }
+  });
+
+  it("an original whose retention_class is null, absent or unknown gives a record with the provenance copied and no class, in both languages", () => {
+    const classes: Record<string, (m: Json) => void> = {
+      null: (m) => {
+        m.retention_class = null;
+      },
+      absent: (m) => {
+        delete m.retention_class;
+      },
+      unknown: (m) => {
+        m.retention_class = "forever";
+      },
+    };
+    for (const [label, change] of Object.entries(classes)) {
+      for (const mode of MODES) {
+        const provenanceOnly = deadLetterOfItem(change, (m) => ({ provenance: m.provenance }));
+        const r = validate("dlq.store-writer/v1", provenanceOnly, mode);
+        expect(r.ok ? [] : r.issues, `${label} ${mode}`).toEqual([]);
+        for (const cls of RETENTION_CLASSES) {
+          const withClass = deadLetterOfItem(change, (m) => ({
+            provenance: m.provenance,
+            retention_class: cls,
+          }));
+          expect(
+            failsAt(validate("dlq.store-writer/v1", withClass, mode), ["retention_class"]),
+            `${label} ${cls} ${mode}`,
+          ).toBe(true);
+        }
+      }
+    }
+  });
+
+  it("validate's control set is the catalogue's control ids except dlq.<service>/v1 (F-42)", () => {
+    const provenance = {
+      route: "green",
+      vendor: null,
+      service: "fb-page-feed-poller",
+      fetched_at: "2026-10-06T09:13:58Z",
+    };
+    // The schemas whose control rule refuses a provenance (a dead letter's copy rule refuses a
+    // provenance that is not its original's, with another code).
+    const refuses: string[] = [];
+    for (const { id } of CATALOGUE.filter((e) => e.class === "control")) {
+      const f = fixtures(dirOf.get(id) ?? "", "valid")[0];
+      if (!f) throw new Error(`no fixture for ${id}`);
+      const r = validate(id, { ...copyOf(f), provenance }, "consumer", f.options);
+      if (!r.ok && r.issues.some((i) => i.code === "provenance_refused")) refuses.push(id);
+    }
+    expect(refuses).toEqual(
+      CATALOGUE.filter((e) => e.class === "control" && e.id !== "dlq.<service>/v1").map(
+        (e) => e.id,
+      ),
+    );
+    // The dead letter, classed control, still copies a data original's provenance and class.
+    const dlq = fixture("dlq/v1", "valid", "consume-data-message.json");
+    expect((dlq.value as Json).provenance).toBeDefined();
+    expect(validate("dlq.<service>/v1", dlq.value, "consumer").ok).toBe(true);
   });
 });

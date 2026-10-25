@@ -23,7 +23,10 @@ import { buildRegistryDecisions } from "./registry-decisions.ts";
 import { buildSearchResults } from "./search-results.ts";
 import { buildSourceEvents } from "./source-events.ts";
 
-/** Data messages carry provenance and a retention class; control messages carry neither (ADR-0003). */
+/**
+ * Data messages carry provenance and a retention class; control messages carry neither (ADR-0003),
+ * except the dead letter, which copies a data original's provenance and class (F-42).
+ */
 export type SchemaClass = "data" | "control";
 
 export interface CatalogueEntry {
@@ -49,6 +52,7 @@ export const CATALOGUE: readonly CatalogueEntry[] = [
   { id: "news.dedup/v1", class: "data", build: buildNewsDedup },
   { id: "jobs.completed/v1", class: "control", build: buildJobsCompleted },
   { id: "job/v1", class: "control", build: buildJob },
+  // Control, but a record copies its data original's provenance and class (F-42).
   { id: "dlq.<service>/v1", class: "control", build: buildDlq },
   // Producer-only notices over HTTP, not topics: producer, no provenance (F-51).
   { id: "n8n.alert/v1", class: "control", build: buildN8nAlert },

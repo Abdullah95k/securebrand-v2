@@ -10,10 +10,10 @@
 //    consumer's job wrapper dead-letters a job with no row (ADR-0012).
 // Layer 3 runs only when layer 2 found nothing, so an issue names the first rule broken.
 import type { z } from "zod";
-import type { Mode } from "./builder.ts";
+import { createBuilder, type Mode } from "./builder.ts";
 import { catalogueId, schemaFor } from "./catalogue.ts";
-import { canonicalJson } from "./canonical-json.ts";
 import { REPORT_KIND_FIELDS } from "./jobs-completed.ts";
+import { provenance, signalProvenance } from "./metadata.ts";
 import { PATTERNS } from "./primitives.ts";
 import {
   analysisKey,
@@ -57,6 +57,7 @@ import {
   PERSON_UNLISTABLE_PLATFORMS,
   PROFILE_REVIEW_REASONS,
   PROFILE_UNRESOLVABLE_REASONS,
+  RETENTION_CLASSES,
   type ContentKind,
   type Platform,
 } from "./vocabulary.ts";
@@ -90,7 +91,27 @@ const rec = (v: unknown): Json => (isRecord(v) ? v : {});
 const str = (v: unknown): string | undefined => (typeof v === "string" ? v : undefined);
 const includes = (list: readonly string[], v: unknown): boolean =>
   typeof v === "string" && list.includes(v);
-const sameJson = (a: unknown, b: unknown): boolean => canonicalJson(a) === canonicalJson(b);
+
+/** Structural JSON equality, key order aside; it walks without recursion and never throws. */
+function jsonEqual(a: unknown, b: unknown): boolean {
+  const pending: [unknown, unknown][] = [[a, b]];
+  for (let pair = pending.pop(); pair !== undefined; pair = pending.pop()) {
+    const [x, y] = pair;
+    if (Array.isArray(x) || Array.isArray(y)) {
+      if (!Array.isArray(x) || !Array.isArray(y) || x.length !== y.length) return false;
+      x.forEach((v, i) => pending.push([v, y[i]]));
+    } else if (isRecord(x) || isRecord(y)) {
+      if (!isRecord(x) || !isRecord(y)) return false;
+      const keys = Object.keys(x);
+      if (keys.length !== Object.keys(y).length) return false;
+      for (const k of keys) {
+        if (!Object.hasOwn(y, k)) return false;
+        pending.push([x[k], y[k]]);
+      }
+    } else if (x !== y) return false;
+  }
+  return true;
+}
 
 /** The value a key helper derives, or undefined when the helper refuses its input. */
 function derive<T>(f: () => T): T | undefined {
@@ -733,6 +754,28 @@ function originalData(message: unknown): { provenance?: unknown; retention_class
   return {};
 }
 
+const SIGNAL_SCOPES: readonly string[] = ["author", "source", "client"];
+const provenanceTypes = new Map<Mode, { data: z.ZodType; signal: z.ZodType }>();
+
+/**
+ * Whether an original's provenance passes the original's own type in `mode`: the signal provenance,
+ * whose route may be null, for an author-, source- or client-scope deletion, else the data one (D-1).
+ */
+function ownProvenance(message: Json, value: unknown, mode: Mode): boolean {
+  let types = provenanceTypes.get(mode);
+  if (!types) {
+    const b = createBuilder(mode);
+    types = { data: provenance(b), signal: signalProvenance(b) };
+    provenanceTypes.set(mode, types);
+  }
+  const signal = message.schema === "deletions/v1" && includes(SIGNAL_SCOPES, message.scope);
+  return value !== undefined && (signal ? types.signal : types.data).safeParse(value).success;
+}
+
+// A dead letter copies its original's provenance when the original's own type takes it, and its
+// retention_class only when that is a valid class too; otherwise neither (F-42, D-1, D-12). Null,
+// absent and unknown classes count alike. The producer's strict type decides whether a copy is due;
+// the mode's type judges a copy made, so a consumer tolerates a field a newer package added.
 const dlq: Rule = (m, out, ctx) => {
   const id = ctx.schemaId;
   if (id !== "dlq.<service>/v1" && m.schema !== id)
@@ -742,37 +785,47 @@ const dlq: Rule = (m, out, ctx) => {
   if (hasMessage && hasRaw) out.add(["raw"], "message_and_raw", "message or raw, exactly one (Q5)");
   if (!hasMessage && !hasRaw)
     out.add(["message"], "neither_message_nor_raw", "message or raw, exactly one (Q5)");
+  const message = rec(m.message);
   const original = originalData(m.message);
-  if (m.provenance !== undefined) {
-    if (!hasMessage)
-      out.add(
-        ["provenance"],
-        "provenance_without_message",
-        "provenance is copied only from a parsed data message (F-42)",
-      );
-    else if (original.provenance === undefined || !sameJson(m.provenance, original.provenance))
-      out.add(
-        ["provenance"],
-        "provenance_not_copied",
-        "the copied provenance equals the message's (F-42)",
-      );
-  } else if (original.provenance !== undefined) {
+  const validClass = includes(RETENTION_CLASSES, original.retention_class);
+  const copyable = ownProvenance(message, original.provenance, "producer");
+  const takes = ownProvenance(message, original.provenance, ctx.mode);
+  if (m.provenance !== undefined && !hasMessage) {
+    out.add(
+      ["provenance"],
+      "provenance_without_message",
+      "provenance is copied only from a parsed data message (F-42)",
+    );
+    return;
+  }
+  if (m.provenance !== undefined && !(takes && jsonEqual(m.provenance, original.provenance)))
+    out.add(
+      ["provenance"],
+      "provenance_not_copied",
+      "the copied provenance equals the message's, which its own type takes (F-42, D-1)",
+    );
+  if (m.provenance === undefined && copyable)
     out.add(
       ["provenance"],
       "provenance_not_copied",
       "a data message's provenance is copied to the top (F-42)",
     );
-  }
-  checkPairing(out, m);
-  if (
+  if (m.retention_class !== undefined && m.provenance === undefined)
+    out.add(["provenance"], "provenance_without_class", "retention_class travels with provenance");
+  else if (
     m.retention_class !== undefined &&
-    original.retention_class !== undefined &&
-    m.retention_class !== original.retention_class
+    !(takes && validClass && m.retention_class === original.retention_class)
   )
     out.add(
       ["retention_class"],
       "class_not_copied",
-      "the copied retention_class equals the message's (F-42)",
+      "the copied retention_class is the message's valid class (F-42, D-1)",
+    );
+  else if (m.retention_class === undefined && m.provenance !== undefined && takes && validClass)
+    out.add(
+      ["retention_class"],
+      "class_not_copied",
+      "a message's valid retention_class is copied with its provenance (F-42, D-1)",
     );
 };
 

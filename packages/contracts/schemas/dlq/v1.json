@@ -18,7 +18,7 @@
         },
         "raw": { "type": "string", "pattern": "^[A-Za-z0-9+/]*={0,2}$" },
         "error": { "$ref": "#/$defs/DeadLetterError" },
-        "provenance": { "$ref": "#/$defs/Provenance" },
+        "provenance": { "$ref": "#/$defs/SignalProvenance" },
         "retention_class": {
           "type": "string",
           "enum": [
@@ -67,7 +67,7 @@
         },
         "raw": { "type": "string", "pattern": "^[A-Za-z0-9+/]*={0,2}$" },
         "error": { "$ref": "#/$defs/DeadLetterError" },
-        "provenance": { "$ref": "#/$defs/Provenance" },
+        "provenance": { "$ref": "#/$defs/SignalProvenance" },
         "retention_class": {
           "type": "string",
           "enum": [
@@ -141,10 +141,12 @@
       "additionalProperties": false,
       "title": "DeadLetterError"
     },
-    "Provenance": {
+    "SignalProvenance": {
       "type": "object",
       "properties": {
-        "route": { "type": "string", "enum": ["green", "amber"] },
+        "route": {
+          "anyOf": [{ "type": "string", "enum": ["green", "amber"] }, { "type": "null" }]
+        },
         "vendor": {
           "anyOf": [{ "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" }, { "type": "null" }]
         },
@@ -156,7 +158,7 @@
       },
       "required": ["route", "vendor", "service", "fetched_at"],
       "additionalProperties": false,
-      "title": "Provenance"
+      "title": "SignalProvenance"
     },
     "ConsumedOriginal": {
       "type": "object",

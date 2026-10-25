@@ -18,7 +18,6 @@ layers 2 and 3 are the same in both languages.
 """
 
 import importlib
-import json
 import math
 from collections.abc import Callable
 from dataclasses import dataclass, field
@@ -38,6 +37,8 @@ from listening_contracts.keys import (
     parse_key,
     parse_raw_ref,
 )
+from listening_contracts.models.consumer import deletions_v1 as consumer_deletions
+from listening_contracts.models.strict import deletions_v1 as strict_deletions
 from listening_contracts.patterns import matches
 from listening_contracts.registries import (
     PLATFORM_GROUPS,
@@ -92,6 +93,7 @@ PERSON_UNLISTABLE_PLATFORMS = VOCABULARY["PERSON_UNLISTABLE_PLATFORMS"]
 PROFILE_REVIEW_REASONS = VOCABULARY["PROFILE_REVIEW_REASONS"]
 PROFILE_UNRESOLVABLE_REASONS = VOCABULARY["PROFILE_UNRESOLVABLE_REASONS"]
 GOVERNMENT_ALERT_RULE_TYPES = VOCABULARY["GOVERNMENT_ALERT_RULE_TYPES"]
+RETENTION_CLASSES = VOCABULARY["RETENTION_CLASSES"]
 X_SERVICES = PLATFORM_GROUPS.get("x", ())
 
 
@@ -103,10 +105,32 @@ def _str(value: object) -> str | None:
     return value if isinstance(value, str) else None
 
 
-def _same_json(a: object, b: object) -> bool:
-    return json.dumps(a, sort_keys=True, ensure_ascii=False) == json.dumps(
-        b, sort_keys=True, ensure_ascii=False
-    )
+def _json_equal(a: object, b: object) -> bool:
+    """Structural JSON equality, key order aside, as JavaScript compares values: a boolean is never
+    a number. It walks without recursion and never raises."""
+    pending: list[tuple[object, object]] = [(a, b)]
+    while pending:
+        x, y = pending.pop()
+        if isinstance(x, list) or isinstance(y, list):
+            if not (isinstance(x, list) and isinstance(y, list)):
+                return False
+            xs, ys = cast(list[object], x), cast(list[object], y)
+            if len(xs) != len(ys):
+                return False
+            pending.extend(zip(xs, ys, strict=True))
+        elif isinstance(x, dict) or isinstance(y, dict):
+            if not (isinstance(x, dict) and isinstance(y, dict)):
+                return False
+            xd, yd = cast(dict[str, object], x), cast(dict[str, object], y)
+            if xd.keys() != yd.keys():
+                return False
+            pending.extend((xd[k], yd[k]) for k in xd)
+        elif isinstance(x, bool) or isinstance(y, bool):
+            if x is not y:
+                return False
+        elif x != y:
+            return False
+    return True
 
 
 def _derive(f: Callable[[], str]) -> str | None:
@@ -806,6 +830,29 @@ def _original_data(message: object) -> tuple[object | None, object | None]:
     return None, None
 
 
+_SIGNAL_SCOPES = ("author", "source", "client")
+
+
+def _own_provenance(message: Json, value: object, mode: Mode) -> bool:
+    """Whether an original's provenance passes the original's own type in `mode`: the signal
+    provenance, whose route may be null, for an author-, source- or client-scope deletion, else the
+    data one (D-1)."""
+    if value is None:
+        return False
+    models = strict_deletions if mode == "producer" else consumer_deletions
+    signal = message.get("schema") == "deletions/v1" and message.get("scope") in _SIGNAL_SCOPES
+    model: type[BaseModel] = models.SignalProvenance if signal else models.Provenance
+    try:
+        model.model_validate(value, strict=True)
+    except ValidationError:
+        return False
+    return True
+
+
+# A dead letter copies its original's provenance when the original's own type takes it, and its
+# retention_class only when that is a valid class too; otherwise neither (F-42, D-1, D-12). Null,
+# absent and unknown classes count alike. The producer's strict type decides whether a copy is due;
+# the mode's type judges a copy made, so a consumer tolerates a field a newer package added.
 def _dlq(m: Json, out: _Issues, ctx: _Context) -> None:
     sid = ctx.schema_id
     if sid != "dlq.<service>/v1" and m.get("schema") != sid:
@@ -815,36 +862,47 @@ def _dlq(m: Json, out: _Issues, ctx: _Context) -> None:
         out.add(["raw"], "message_and_raw", "message or raw, exactly one (Q5)")
     if not has_message and not has_raw:
         out.add(["message"], "neither_message_nor_raw", "message or raw, exactly one (Q5)")
+    message = _rec(m.get("message"))
     original_provenance, original_class = _original_data(m.get("message"))
-    if "provenance" in m:
-        if not has_message:
-            out.add(
-                ["provenance"],
-                "provenance_without_message",
-                "provenance is copied only from a parsed data message (F-42)",
-            )
-        elif original_provenance is None or not _same_json(m["provenance"], original_provenance):
-            out.add(
-                ["provenance"],
-                "provenance_not_copied",
-                "the copied provenance equals the message's (F-42)",
-            )
-    elif original_provenance is not None:
+    valid_class = original_class in RETENTION_CLASSES
+    copyable = _own_provenance(message, original_provenance, "producer")
+    takes = _own_provenance(message, original_provenance, ctx.mode)
+    if "provenance" in m and not has_message:
+        out.add(
+            ["provenance"],
+            "provenance_without_message",
+            "provenance is copied only from a parsed data message (F-42)",
+        )
+        return
+    if "provenance" in m and not (takes and _json_equal(m["provenance"], original_provenance)):
+        out.add(
+            ["provenance"],
+            "provenance_not_copied",
+            "the copied provenance equals the message's, which its own type takes (F-42, D-1)",
+        )
+    if "provenance" not in m and copyable:
         out.add(
             ["provenance"],
             "provenance_not_copied",
             "a data message's provenance is copied to the top (F-42)",
         )
-    _check_pairing(out, m)
-    if (
-        "retention_class" in m
-        and original_class is not None
-        and m["retention_class"] != original_class
+    if "retention_class" in m and "provenance" not in m:
+        out.add(
+            ["provenance"], "provenance_without_class", "retention_class travels with provenance"
+        )
+    elif "retention_class" in m and not (
+        takes and valid_class and m["retention_class"] == original_class
     ):
         out.add(
             ["retention_class"],
             "class_not_copied",
-            "the copied retention_class equals the message's (F-42)",
+            "the copied retention_class is the message's valid class (F-42, D-1)",
+        )
+    elif "retention_class" not in m and "provenance" in m and takes and valid_class:
+        out.add(
+            ["retention_class"],
+            "class_not_copied",
+            "a message's valid retention_class is copied with its provenance (F-42, D-1)",
         )
 
 

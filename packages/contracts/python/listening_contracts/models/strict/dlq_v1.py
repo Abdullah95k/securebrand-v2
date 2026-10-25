@@ -47,9 +47,9 @@ class Vendor(RootModel[str]):
     root: Annotated[str, Field(pattern="^[a-z0-9]+(-[a-z0-9]+)*$")]
 
 
-class Provenance(BaseModel):
+class SignalProvenance(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    route: Literal["green", "amber"]
+    route: Literal["green", "amber"] | None
     vendor: Vendor | None
     service: Annotated[str, Field(pattern="^[a-z0-9]+(-[a-z0-9]+)*$")]
     fetched_at: Annotated[
@@ -114,7 +114,7 @@ class ConsumeDeadLetter(BaseModel):
     message: dict[str, Any] | MISSING = MISSING
     raw: Annotated[str | MISSING, Field(pattern="^[A-Za-z0-9+/]*={0,2}$")] = MISSING
     error: DeadLetterError
-    provenance: Provenance | MISSING = MISSING
+    provenance: SignalProvenance | MISSING = MISSING
     retention_class: (
         Literal[
             "meta_on_request",
@@ -148,7 +148,7 @@ class ProduceDeadLetter(BaseModel):
     message: dict[str, Any] | MISSING = MISSING
     raw: Annotated[str | MISSING, Field(pattern="^[A-Za-z0-9+/]*={0,2}$")] = MISSING
     error: DeadLetterError
-    provenance: Provenance | MISSING = MISSING
+    provenance: SignalProvenance | MISSING = MISSING
     retention_class: (
         Literal[
             "meta_on_request",

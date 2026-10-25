@@ -1,11 +1,14 @@
 // dlq.<service>/v1: the record a dead letter holds (Q5), one shared definition whose `schema` is a
 // pattern (F-52). Discriminated by `stage`: a produce-side entry has no consumed offset and no
 // consumer group (F-21). `message` holds the original as JSON, or `raw` its bytes in base64 when it
-// did not parse, exactly one. When `message` parses as a data message its provenance and class are
-// copied to the top level (F-42), a stated exception to ADR-0003 for `raw` entries.
+// did not parse, exactly one. When the original's provenance passes the original's own type, it is
+// copied to the top level, with the original's class when that is a valid one; otherwise neither
+// (F-42, D-1, D-12). A `raw` entry is a stated exception to ADR-0003. The top-level provenance is
+// typed as the signal's, so it holds a non-item deletion's null route; validate() binds it to the
+// original's own type.
 import { z } from "zod";
 import type { SchemaBuilder } from "./builder.ts";
-import { dlqMetadataShape, provenance, retentionClass } from "./metadata.ts";
+import { dlqMetadataShape, retentionClass, signalProvenance } from "./metadata.ts";
 import { PATTERNS, count, nonEmpty, serviceName, timestamp, token, ulid } from "./primitives.ts";
 import { DLQ_ERROR_CLASSES } from "./vocabulary.ts";
 
@@ -24,7 +27,7 @@ const shape = (b: SchemaBuilder) => ({
       last_failed_at: timestamp(),
     }),
   ),
-  provenance: provenance(b).optional(),
+  provenance: signalProvenance(b).optional(),
   retention_class: retentionClass().optional(),
 });
 

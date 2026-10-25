@@ -3492,6 +3492,10 @@ def dlq() -> None:
     root = __import__("common").ROOT
     norm = json.loads((root / "items.normalized/v1/valid/prd-normalize-item.json").read_text())
     dels = json.loads((root / "deletions/v1/valid/prd-retention-purger.json").read_text())
+    author_del, source_del, client_del = (
+        json.loads((root / f"deletions/v1/valid/{name}.json").read_text())
+        for name in ("author-request", "source-authorization-revoked", "client-offboarding")
+    )
     rawmsg = json.loads((root / "raw.items/v1/valid/prd-fb-page-feed-poller.json").read_text())
     job = json.loads((root / "job/v1/valid/keyword-history.json").read_text())
 
@@ -3681,6 +3685,96 @@ def dlq() -> None:
             retention_class=norm["retention_class"],
         ),
     )
+
+    # An author-, source- or client-scope deletion: its signal provenance is copied under its own
+    # type (a null route where the signal is no fetch) and no class, which it has none of (F-42, D-1).
+    def deletion_dl(
+        stage: str, service: str, deletion: dict[str, Any], key: str, at: str, name: str
+    ) -> dict[str, Any]:
+        consumed = stage == "consume"
+        return dl(
+            service,
+            at,
+            stage,
+            {
+                "topic": "deletions",
+                "partition": 4 if consumed else None,
+                "offset": 30211 if consumed else None,
+                "key": deletion[key],
+                "schema": deletion["schema"],
+                "message_id": deletion["message_id"],
+            },
+            {
+                "class": "attempts_exhausted",
+                "message": "ClickHouse refused the mutation five times: TOO_MANY_PARTS"
+                if consumed
+                else "the broker refused the deletion five times: NOT_ENOUGH_REPLICAS",
+                "attempts": 5,
+                "first_failed_at": "2026-10-07T09:01:00Z",
+                "last_failed_at": "2026-10-07T09:29:58Z",
+            },
+            {"service": service, "group": service if consumed else None},
+            name,
+            message=deletion,
+            provenance=copy.deepcopy(deletion["provenance"]),
+        )
+
+    author_dl = deletion_dl(
+        "consume", "deletion-propagator", author_del, "author_ref", "2026-10-07T09:30:00Z", "author"
+    )
+    valid(s, "consume-author-deletion", author_dl)
+    valid(
+        s,
+        "consume-source-deletion",
+        deletion_dl(
+            "consume",
+            "deletion-propagator",
+            source_del,
+            "source_id",
+            "2026-10-07T09:31:00Z",
+            "source",
+        ),
+    )
+    valid(
+        s,
+        "produce-client-offboarding",
+        deletion_dl(
+            "produce", "retention-purger", client_del, "client_id", "2026-10-07T09:32:00Z", "client"
+        ),
+    )
+
+    # An original whose provenance fails its own type: the record copies neither (D-12, plan L397).
+    def item_dl(message: dict[str, Any], name: str, **top: Any) -> dict[str, Any]:
+        return dl(
+            "store-writer",
+            "2026-10-06T09:24:00Z",
+            "consume",
+            {
+                "topic": "items.normalized",
+                "partition": 3,
+                "offset": 1907,
+                "key": message["source_id"],
+                "schema": message["schema"],
+                "message_id": message["message_id"],
+            },
+            {
+                "class": "invalid",
+                "message": "the message fails items.normalized/v1",
+                "attempts": 1,
+                "first_failed_at": "2026-10-06T09:23:59Z",
+                "last_failed_at": "2026-10-06T09:23:59Z",
+            },
+            {"service": "store-writer", "group": "store-writer"},
+            name,
+            message=message,
+            **top,
+        )
+
+    valid(
+        s,
+        "consume-malformed-provenance",
+        item_dl(with_(norm, ("provenance", "route"), "RED"), "malformed"),
+    )
     metadata_invalids("dlq.store-writer/v1", consume)
     invalid(
         s,
@@ -3767,6 +3861,39 @@ def dlq() -> None:
         "each service writes its own dlq.<service> (CONVENTIONS v1.1 L41)",
     )
     invalid(s, "bad-base64", {**rawdl, "raw": "not base64!"}, ["raw"], "raw is base64")
+    invalid(
+        s,
+        "invented-class",
+        {**author_dl, "retention_class": "meta_on_request"},
+        ["retention_class"],
+        "an author-, source- or client-scope deletion has no class to copy (F-42, D-1)",
+    )
+    null_class = with_(norm, ("retention_class",), None)
+    invalid(
+        s,
+        "null-class-copied",
+        item_dl(
+            null_class,
+            "null-class",
+            provenance=copy.deepcopy(null_class["provenance"]),
+            retention_class="meta_on_request",
+        ),
+        ["retention_class"],
+        "a class is copied only from an original that has a valid one (F-42, D-1)",
+    )
+    null_route = with_(norm, ("provenance", "route"), None)
+    invalid(
+        s,
+        "null-route-not-a-deletion",
+        item_dl(
+            null_route,
+            "null-route",
+            provenance=copy.deepcopy(null_route["provenance"]),
+            retention_class=null_route["retention_class"],
+        ),
+        ["provenance"],
+        "a null route is copied only from an author-, source- or client-scope deletion (F-42, D-1)",
+    )
     tolerant(s, "unknown-field", {**consume, "replayed": False})
 
 
