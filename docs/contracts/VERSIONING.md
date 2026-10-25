@@ -5,7 +5,7 @@ Written by F2 from ADR-0002 and the answer to Q1 in `docs/plans/F2.md`. Every ch
 ## Every message names its schema
 
 - Every message carries `schema`, `message_id` (a ULID), `produced_at` and `producer {service, version, job_id}`, and the SDK stamps all four (ADR-0002). `schema` is `<topic>/v<n>` on a topic and `job/v<n>` on every job queue. A dead-letter topic's records carry `dlq.<service>/v1`: one shared definition whose `schema` is a pattern, so `dlq.normalize-item/v1` is read as the schema id `dlq.<service>/v1` (Q5, F-52). An n8n notice carries `n8n.alert/v1` or `n8n.card/v1` (ADR-0067).
-- Times in messages are RFC 3339 in UTC with `Z`, seconds required, up to three fractional digits (F2's choice). Key and hash inputs render a time as exactly `YYYY-MM-DDTHH:MM:SSZ` (ADR-0006).
+- Times in messages are RFC 3339 in UTC with `Z`, seconds required, up to three fractional digits (F2's choice), on a calendar date from 0001-01-01 to 9999-12-31: the `timestamp` and `date` patterns refuse February 30, April 31, February 29 outside a leap year and the year 0000 (review note 18). Key and hash inputs render a time as exactly `YYYY-MM-DDTHH:MM:SSZ` (ADR-0006).
 - A data message (one that carries or derives from a platform fetch) carries `provenance {route, vendor, service, fetched_at}` and `retention_class`. A control message (`job/v1`, `jobs.completed/v1`, `source.events/v1`, the dead letters and the n8n notices) carries `producer` and no `provenance` (ADR-0003); a source event's `retention_class` is the source's registry column, not a class of the message. The exceptions are under "F2's readings".
 
 ## What stays in a version

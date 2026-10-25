@@ -13,6 +13,25 @@ import { messageTimeMillis } from "../../src/keys/time.ts";
 import { PATTERNS } from "../../src/primitives.ts";
 
 describe("primitives", () => {
+  it("takes calendar dates only, from 0001 to 9999 (note 18)", () => {
+    for (const date of ["2024-02-29", "2000-02-29", "0001-01-01", "9999-12-31"]) {
+      expect(PATTERNS.date.test(date), date).toBe(true);
+      expect(PATTERNS.timestamp.test(`${date}T09:15:42Z`), date).toBe(true);
+    }
+    for (const date of ["2100-02-29", "2026-02-30", "2026-04-31", "0000-01-01", "2026-02-29"]) {
+      expect(PATTERNS.date.test(date), date).toBe(false);
+      expect(PATTERNS.timestamp.test(`${date}T09:15:42Z`), date).toBe(false);
+    }
+    const ref = {
+      route: "green",
+      platform: "facebook",
+      service: "fb-page-feed-poller",
+      batch: 1,
+      line: 1,
+    };
+    expect(() => rawRef({ ...ref, date: "2026-02-30" })).toThrow(/bad_raw_ref/);
+  });
+
   it("rejects a non-UTC timestamp", () => {
     expect(PATTERNS.timestamp.test("2026-10-06T09:15:42Z")).toBe(true);
     expect(PATTERNS.timestamp.test("2026-10-06T09:15:42.123Z")).toBe(true);

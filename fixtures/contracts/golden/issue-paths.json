@@ -395,6 +395,8 @@
     {"schema":"job/v1","file":"invalid/ops-force-unknown-requester.json","mode":"consumer","check":"equal","paths":[]},
     {"schema":"job/v1","file":"invalid/ops-force-without-request.json","mode":"producer","check":"equal","paths":[["request_id"]]},
     {"schema":"job/v1","file":"invalid/ops-force-without-request.json","mode":"consumer","check":"equal","paths":[["request_id"]]},
+    {"schema":"job/v1","file":"invalid/produced-at-february-30.json","mode":"producer","check":"equal","paths":[["produced_at"]]},
+    {"schema":"job/v1","file":"invalid/produced-at-february-30.json","mode":"consumer","check":"equal","paths":[["produced_at"]]},
     {"schema":"job/v1","file":"invalid/producer-not-allowed.json","mode":"producer","check":"equal","paths":[["producer","service"]]},
     {"schema":"job/v1","file":"invalid/producer-not-allowed.json","mode":"consumer","check":"equal","paths":[["producer","service"]]},
     {"schema":"job/v1","file":"invalid/purge-refresh-without-deadline.json","mode":"producer","check":"equal","paths":[["must_finish_by"]]},

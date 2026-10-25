@@ -3646,6 +3646,13 @@ def jobs() -> None:
         "a reconciliation names a reason on yt-uploads-reconciler's queue only; the X gap job"
         " none (plan L421; ADR-0064 L25)",
     )
+    bad(
+        "produced-at-february-30",
+        "jobs.fb-page-feed-poller",
+        {**rot, "produced_at": "2026-02-30T03:00:00Z"},
+        ["produced_at"],
+        "message times are calendar times from 0001 to 9999 (note 18)",
+    )
     tolerant(
         s,
         "unknown-field",

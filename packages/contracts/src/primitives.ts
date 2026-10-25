@@ -5,16 +5,22 @@ import { z } from "zod";
 import { CONTENT_KINDS, PLATFORMS } from "./vocabulary.ts";
 
 const PLATFORM_GROUP = PLATFORMS.join("|");
+// A Gregorian calendar date from 0001-01-01 to 9999-12-31: any month's days 1 to 28, the 29th and 30th
+// of every month but February, the 31st of the seven long months, and February 29 of a leap year.
+const CALENDAR_DATE =
+  "(([0-9]{3}[1-9]|[0-9]{2}[1-9]0|[0-9][1-9]00|[1-9]000)-((0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-8])|(0[13-9]|1[0-2])-(29|30)|(0[13578]|1[02])-31)|([0-9]{2}(0[48]|[2468][048]|[13579][26])|(0[48]|[2468][048]|[13579][26])00)-02-29)";
 
 export const PATTERNS = {
   // Lower-case canonical UUID (ADR-0006, ADR-0042).
   uuid: /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
   // ULID: 26 Crockford base32 characters, the first at most 7 (ADR-0006).
   ulid: /^[0-7][0-9A-HJKMNP-TV-Z]{25}$/,
-  // RFC 3339 in UTC with Z, seconds required, up to three fractional digits (VERSIONING.md).
-  timestamp:
-    /^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\.[0-9]{1,3})?Z$/,
-  date: /^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/,
+  // RFC 3339 in UTC with Z, seconds required, up to three fractional digits, on a calendar date from
+  // 0001 to 9999: February 29 in leap years only (VERSIONING.md; review note 18).
+  timestamp: new RegExp(
+    `^${CALENDAR_DATE}T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$`,
+  ),
+  date: new RegExp(`^${CALENDAR_DATE}$`),
   sha256Hex: /^[0-9a-f]{64}$/,
   prefixedSha256: /^sha256:[0-9a-f]{64}$/,
   keywordSetVersion: /^cs:[0-9a-f]{64}$/,

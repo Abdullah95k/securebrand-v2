@@ -181,6 +181,13 @@
     "rule": "the admin API's ops_force names its request (ADR-0012 L34)",
     "queue": "jobs.fb-page-feed-poller"
   },
+  "produced-at-february-30.json": {
+    "path": [
+      "produced_at"
+    ],
+    "rule": "message times are calendar times from 0001 to 9999 (note 18)",
+    "queue": "jobs.fb-page-feed-poller"
+  },
   "producer-not-allowed.json": {
     "path": [
       "producer",

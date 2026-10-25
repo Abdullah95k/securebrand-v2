@@ -21,6 +21,18 @@ def _matches(name: str, value: str) -> bool:
     return re.fullmatch(PATTERNS[name], value) is not None
 
 
+def test_takes_calendar_dates_only_from_0001_to_9999() -> None:
+    """Note 18."""
+    for date in ("2024-02-29", "2000-02-29", "0001-01-01", "9999-12-31"):
+        assert _matches("date", date), date
+        assert _matches("timestamp", f"{date}T09:15:42Z"), date
+    for date in ("2100-02-29", "2026-02-30", "2026-04-31", "0000-01-01", "2026-02-29"):
+        assert not _matches("date", date), date
+        assert not _matches("timestamp", f"{date}T09:15:42Z"), date
+    with pytest.raises(ContractError, match="bad_raw_ref"):
+        raw_ref("green", "facebook", "2026-02-30", "fb-page-feed-poller", 1, 1)
+
+
 def test_rejects_a_non_utc_timestamp() -> None:
     assert _matches("timestamp", "2026-10-06T09:15:42Z")
     assert _matches("timestamp", "2026-10-06T09:15:42.123Z")
