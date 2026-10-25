@@ -3417,6 +3417,20 @@ def crawl() -> None:
     )
     invalid(
         s,
+        "recheck-unknown-requester",
+        {**base, "requested_by": "news-archive-crawler"},
+        ["requested_by"],
+        "a recheck's requester is a service the registry lists (F-09)",
+    )
+    invalid(
+        s,
+        "recheck-person-requester",
+        {**base, "requested_by": "person:01J9P2R4T6V8X0Z2B4D6F8H0KM"},
+        ["requested_by"],
+        "a recheck names the service that asked, never a person (F-43)",
+    )
+    invalid(
+        s,
         "refresh-with-requester",
         {**base, "kind": "refresh"},
         ["requested_by"],

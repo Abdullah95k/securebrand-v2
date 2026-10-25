@@ -179,6 +179,20 @@
     "rule": "reason is never the type (ADR-0011)",
     "queue": "jobs.fb-backfill"
   },
+  "recheck-person-requester.json": {
+    "path": [
+      "requested_by"
+    ],
+    "rule": "a recheck names the service whose host gate asked, never a person (ADR-0040)",
+    "queue": "jobs.news-robots-checker"
+  },
+  "recheck-unknown-requester.json": {
+    "path": [
+      "requested_by"
+    ],
+    "rule": "a recheck's requester is a service the registry lists (F-09)",
+    "queue": "jobs.news-robots-checker"
+  },
   "recheck-without-requester.json": {
     "path": [
       "requested_by"

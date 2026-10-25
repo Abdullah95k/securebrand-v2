@@ -20,6 +20,7 @@ import {
   prefixedSha256,
   rawRef,
   seriesStep,
+  serviceName,
   snakeName,
   timestamp,
   token,
@@ -146,7 +147,8 @@ export function buildJob(b: SchemaBuilder) {
         ...request(),
       }),
       kind("first_check", "FirstCheckJob", { host: host() }),
-      kind("recheck", "RecheckJob", { host: host(), requested_by: actor() }),
+      // The service whose host gate asked (ADR-0040), a service name the registry checks (F-09).
+      kind("recheck", "RecheckJob", { host: host(), requested_by: serviceName() }),
       kind("ops_force", "OpsForceJob", {
         post_ref: postRef(b).optional(),
         target_ids: z.array(platformId()).optional(),

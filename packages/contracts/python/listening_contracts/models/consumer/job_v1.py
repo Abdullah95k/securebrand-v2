@@ -707,7 +707,7 @@ class RecheckJob(BaseModel):
         Field(pattern="^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"),
     ] = MISSING
     request_id: Annotated[str | MISSING, Field(pattern="^[0-7][0-9A-HJKMNP-TV-Z]{25}$")] = MISSING
-    requested_by: Annotated[str, Field(max_length=256, min_length=1)]
+    requested_by: Annotated[str, Field(pattern="^[a-z0-9]+(-[a-z0-9]+)*$")]
     must_finish_by: Annotated[
         str | MISSING,
         Field(

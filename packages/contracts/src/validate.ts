@@ -613,6 +613,10 @@ const crawlPolicies: Rule = (m, out) => {
   const asked = m.kind === "recheck" || m.kind === "ops_force";
   if (asked && m.requested_by === null)
     out.add(["requested_by"], "requester_missing", "a recheck or ops_force names who asked (F-43)");
+  // A recheck's requester is the service whose host gate asked, never a person (F-43).
+  const requester = m.requested_by;
+  if (m.kind === "recheck" && typeof requester === "string" && !PATTERNS.service.test(requester))
+    out.add(["requested_by"], "requester_not_service", "a recheck names the service that asked");
   if (!asked && m.requested_by !== null)
     out.add(
       ["requested_by"],
@@ -996,6 +1000,13 @@ function registryChecks(out: Issues, id: string, m: Json): void {
       );
   }
   checkProvenance(out, head.provenance, [...prefix, "provenance"]);
+  // A requester that is a service by definition: a recheck's, the service whose host gate asked
+  // (ADR-0040; F-43), checked as producer.service is (F-09).
+  if ((id === "job/v1" || id === "crawl.policies/v1") && m.kind === "recheck") {
+    const requester = str(m.requested_by) ?? "";
+    if (!isKnownService(requester))
+      out.add(["requested_by"], "unknown_service", `${requester} is no service of the index (Q1)`);
+  }
   // Every other (route, vendor) pair a message names.
   if (id === "poster.profiles/v1" && m.route !== undefined && m.route !== null)
     checkVendor(out, ["vendor"], m.route, m.vendor);

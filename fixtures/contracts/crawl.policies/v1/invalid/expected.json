@@ -62,6 +62,18 @@
     ],
     "rule": "sha256 becomes hash (ADR-0040)"
   },
+  "recheck-person-requester.json": {
+    "path": [
+      "requested_by"
+    ],
+    "rule": "a recheck names the service that asked, never a person (F-43)"
+  },
+  "recheck-unknown-requester.json": {
+    "path": [
+      "requested_by"
+    ],
+    "rule": "a recheck's requester is a service the registry lists (F-09)"
+  },
   "recheck-without-requester.json": {
     "path": [
       "requested_by"

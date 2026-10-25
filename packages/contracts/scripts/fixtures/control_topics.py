@@ -3351,6 +3351,20 @@ def jobs() -> None:
         "a recheck names the service that asked (ADR-0022)",
     )
     bad(
+        "recheck-unknown-requester",
+        "jobs.news-robots-checker",
+        {**recheck, "requested_by": "news-archive-crawler"},
+        ["requested_by"],
+        "a recheck's requester is a service the registry lists (F-09)",
+    )
+    bad(
+        "recheck-person-requester",
+        "jobs.news-robots-checker",
+        {**recheck, "requested_by": "person:01J9P2R4T6V8X0Z2B4D6F8H0KM"},
+        ["requested_by"],
+        "a recheck names the service whose host gate asked, never a person (ADR-0040)",
+    )
+    bad(
         "candidate-retry-with-text",
         "jobs.keyword-matcher",
         {

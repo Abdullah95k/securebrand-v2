@@ -695,6 +695,11 @@ def _crawl_policies(m: Json, out: _Issues, ctx: _Context) -> None:
         out.add(
             ["requested_by"], "requester_extra", "a refresh or first check has no requester (F-43)"
         )
+    # A recheck's requester is the service whose host gate asked, never a person (F-43).
+    requester = m.get("requested_by")
+    is_recheck = m.get("kind") == "recheck"
+    if is_recheck and isinstance(requester, str) and not matches("service", requester):
+        out.add(["requested_by"], "requester_not_service", "a recheck names the service that asked")
 
 
 def _news_dedup(m: Json, out: _Issues, ctx: _Context) -> None:
@@ -1059,6 +1064,14 @@ def _registry_checks(out: _Issues, sid: str, m: Json) -> None:
                 f"{service} writes {sid} only with {condition['field']} = {condition['equals']}",
             )
     _check_provenance(out, head.get("provenance"), [*prefix, "provenance"])
+    # A requester that is a service by definition: a recheck's, the service whose host gate asked
+    # (ADR-0040; F-43), checked as producer.service is (F-09).
+    if sid in ("job/v1", "crawl.policies/v1") and m.get("kind") == "recheck":
+        requester = _str(m.get("requested_by")) or ""
+        if not is_known_service(requester):
+            out.add(
+                ["requested_by"], "unknown_service", f"{requester} is no service of the index (Q1)"
+            )
     # Every other (route, vendor) pair a message names.
     if sid == "poster.profiles/v1" and m.get("route") is not None:
         _check_vendor(out, ["vendor"], m.get("route"), m.get("vendor"))
