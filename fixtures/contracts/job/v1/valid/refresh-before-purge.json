@@ -1,0 +1,29 @@
+{
+  "schema": "job/v1",
+  "message_id": "01M47FK560C6AA0ZQP2SQT737T",
+  "produced_at": "2026-10-06T02:10:00Z",
+  "producer": {
+    "service": "yt-text-purger",
+    "version": "1.0.0",
+    "job_id": "01M47FK560EXDKKMZFDDJ8WXAW"
+  },
+  "job_id": "01M47F1V80FZGG928KMD5XX36J",
+  "kind": "refresh",
+  "due_at": "2026-10-06T02:10:00Z",
+  "attempt": 1,
+  "source_id": "2d7e9b41-5c3a-4f8e-b1d6-7a0c9e3f5b28",
+  "post_ref": {
+    "item_id": "d7341a9c-faec-55ce-8f6b-68b297f70dfe",
+    "platform": "youtube",
+    "platform_id": "dQw4w9WgXcQ",
+    "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "thread_ids": [
+      "UgzK7pQ2mV9xR4tL1bN6AaABAg"
+    ]
+  },
+  "run_id": "01M47F0V80FZGG928KMD5XX36J",
+  "must_finish_by": "2026-10-06T19:42:10Z",
+  "refresh_for_client_ids": [
+    "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+  ]
+}

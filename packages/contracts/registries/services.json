@@ -1,0 +1,116 @@
+{
+  "description": "The service index (CONVENTIONS v1.1 L372 to L384), grouped as it is there, and the names of the D3 writers that produce messages (Q4). Service names are registry data, not schema enums: a new service adds a name here inside the version (Q1, F-09). `platform_groups` are the 66 platform services of the Facebook to Web groups, which the producer table and the decision rows call `@platform`.",
+  "platform_groups": {
+    "facebook": [
+      "fb-page-search",
+      "fb-keyword-search",
+      "fb-page-resolver",
+      "fb-page-feed-poller",
+      "fb-backfill",
+      "fb-group-posts-poller",
+      "fb-client-webhook-receiver",
+      "fb-post-comments-fetcher",
+      "fb-group-comments-fetcher",
+      "fb-reactions-fetcher"
+    ],
+    "instagram": [
+      "ig-hashtag-search",
+      "ig-keyword-search",
+      "ig-account-resolver",
+      "ig-account-media-poller",
+      "ig-mentions-fetcher",
+      "ig-webhook-receiver",
+      "ig-own-comments-fetcher",
+      "ig-comments-fetcher"
+    ],
+    "tiktok": [
+      "tt-keyword-search",
+      "tt-hashtag-feed-poller",
+      "tt-user-resolver",
+      "tt-profile-videos-poller",
+      "tt-client-videos-fetcher",
+      "tt-video-comments-fetcher",
+      "tt-video-stats-refresher"
+    ],
+    "x": [
+      "x-recent-search",
+      "x-full-archive-search",
+      "x-user-resolver",
+      "x-filtered-stream",
+      "x-user-timeline-poller",
+      "x-replies-fetcher",
+      "x-compliance-sync"
+    ],
+    "linkedin": [
+      "li-post-search",
+      "li-org-resolver",
+      "li-client-posts-poller",
+      "li-company-posts-poller",
+      "li-notification-receiver",
+      "li-own-comments-fetcher",
+      "li-post-comments-fetcher"
+    ],
+    "telegram": [
+      "tg-message-search",
+      "tg-channel-resolver",
+      "tg-bot-channel-receiver",
+      "tg-channel-posts-poller",
+      "tg-discussion-receiver"
+    ],
+    "youtube": [
+      "yt-keyword-search",
+      "yt-web-search-bridge",
+      "yt-channel-resolver",
+      "yt-pubsub-receiver",
+      "yt-uploads-reconciler",
+      "yt-video-details-fetcher",
+      "yt-comments-fetcher",
+      "yt-replies-fetcher",
+      "yt-text-purger"
+    ],
+    "news": [
+      "news-site-resolver",
+      "news-robots-checker",
+      "news-feed-poller",
+      "news-sitemap-poller",
+      "news-homepage-differ",
+      "news-article-extractor",
+      "news-comments-fetcher",
+      "news-dedup"
+    ],
+    "web": [
+      "web-search-perplexity",
+      "web-search-mojeek",
+      "web-commoncrawl-scanner",
+      "web-gdelt-poller",
+      "search-hit-router"
+    ]
+  },
+  "shared_groups": {
+    "processing": [
+      "normalize-item",
+      "lang-dialect-id",
+      "keyword-matcher",
+      "analysis-sentiment",
+      "analysis-topics",
+      "analysis-media",
+      "analysis-entities",
+      "store-writer",
+      "aggregator",
+      "alert-evaluator"
+    ],
+    "registry_and_support": [
+      "poster-resolver",
+      "qualifier",
+      "registry-writer",
+      "backfill-orchestrator",
+      "comment-decay-scheduler",
+      "raw-archiver",
+      "retention-purger",
+      "deletion-propagator",
+      "source-health-canary",
+      "quota-governor"
+    ]
+  },
+  "d3_writers": ["admin-api", "client-portal", "admin-console"]
+}

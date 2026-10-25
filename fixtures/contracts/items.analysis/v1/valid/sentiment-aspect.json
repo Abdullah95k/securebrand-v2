@@ -1,0 +1,52 @@
+{
+  "schema": "items.analysis/v1",
+  "message_id": "01M487XR78QD7YPDTF7Q0ZD1RG",
+  "produced_at": "2026-10-06T09:15:13Z",
+  "producer": {
+    "service": "analysis-sentiment",
+    "version": "0.3.0",
+    "job_id": "01M4886GG018V1FH131HTSP75E"
+  },
+  "analysis_key": "729e4ef3-5f84-52f7-872f-06430a625fc6:sentiment_aspect:sent-iq-2026.11",
+  "input_hash": "sha256:9ca8a3f6fa3d0f4e2ed6a4914c2754a04f4cfeb263f01dc09d7442195164836d",
+  "item_id": "729e4ef3-5f84-52f7-872f-06430a625fc6",
+  "task": "sentiment_aspect",
+  "model_version": "sent-iq-2026.11",
+  "item_created_at": "2026-10-06T08:51:40Z",
+  "item_version": 1,
+  "content_hash": "sha256:96f6861fef1e2acd585acb98b44dbe97d39d2c126fc7a75f661225b47d2cb244",
+  "platform": "facebook",
+  "kind": "post",
+  "source_id": "a3c0f1e2-5b6d-4c7e-9f80-112233445566",
+  "run_kind": "live",
+  "lane": "priority",
+  "status": "ok",
+  "reason": null,
+  "lang": "ar",
+  "dialect": "iraqi",
+  "expires_at": null,
+  "result": {
+    "targets": [
+      {
+        "keyword_id": "9a8b7c6d-5e4f-4321-a0b9-c8d7e6f5a4b3",
+        "label": "negative",
+        "score": -0.7,
+        "matched_term": "النت",
+        "offsets": [
+          [
+            0,
+            3
+          ]
+        ],
+        "confidence": 0.71
+      }
+    ]
+  },
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "fb-page-feed-poller",
+    "fetched_at": "2026-10-06T09:13:58Z"
+  },
+  "retention_class": "meta_on_request"
+}

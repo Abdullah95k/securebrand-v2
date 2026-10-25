@@ -1,0 +1,36 @@
+{
+  "name": "text",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The Arabic and Sorani text fold of lang-dialect-id 5.3 C, its tokenizer helpers and its standard-library Python twin (F7)",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "data"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "export:schema": "node scripts/export-schema.ts",
+    "review-sheet": "node scripts/review-sheet.ts"
+  },
+  "dependencies": {
+    "contracts": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:",
+    "zod": "4.6.5"
+  }
+}

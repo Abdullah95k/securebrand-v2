@@ -53,3 +53,8 @@ Screened out and not used: Snyk, Trivy (Aqua Security), Wiz, JFrog, Checkmarx an
 | GitHub-hosted runner `ubuntu-24.04` | hosted service | 24.04 | proprietary (service); Ubuntu by Canonical | GitHub, Inc.; Canonical Ltd. | US; UK | CI | F1 | clear |
 | `ghcr.io/abdullah95k/securebrand-v2/clickhouse` | image (this repository's GHCR mirror of ClickHouse's Docker Official Image) | 26.3.38.2 | Apache-2.0 | ClickHouse, Inc.; copied by `.github/workflows/mirror-images.yml` | US | local stack (`compose.yaml`), CI | F1b | flagged vendor; open-source server, self-hosted, allowed by CONVENTIONS |
 | `docker.io/library/clickhouse` | image (upstream of the mirror; `IMAGE_REGISTRY=upstream`) | 26.3.38.2 | Apache-2.0 | ClickHouse, Inc.; Docker Official Images | US | `stack/versions.env` | F1b | flagged vendor; open-source server, self-hosted, allowed by CONVENTIONS |
+| `zod` | library (npm) | 4.6.5 | MIT | Colin McDonnell and the Zod maintainers (open source) | US | `packages/contracts` (the schemas, ADR-0030) | F2 | clear |
+| `canonicalize` | library (npm) | 5.1.0 | Apache-2.0 | Samuel Erdtman (open source) | Sweden | `packages/contracts` (RFC 8785 canonical JSON, ADR-0006) | F2 | clear |
+| `pydantic` | library (PyPI) | 2.13.5 | MIT | Pydantic Services Inc. (Samuel Colvin and maintainers) | UK; US | `packages/contracts` (the generated models, ADR-0030) | F2 | clear |
+| `rfc8785` | library (PyPI) | 0.1.4 | Apache-2.0 | Trail of Bits | US | `packages/contracts` (RFC 8785 canonical JSON, ADR-0006) | F2 | clear |
+| `datamodel-code-generator` | tool (PyPI, dev group) | 0.83.0 | MIT | Koudai Aono and maintainers (open source) | Japan | `packages/contracts` (`gen:python`: Pydantic models from the JSON Schemas, ADR-0030) | F2 | clear |

@@ -1,0 +1,71 @@
+{
+  "schema": "poster.profiles/v1",
+  "message_id": "01M48AMBPR3BMQQC2F2Q32M5YT",
+  "produced_at": "2026-10-06T10:02:31Z",
+  "producer": {
+    "service": "tt-user-resolver",
+    "version": "1.0.0",
+    "job_id": "01J9N6F1V8B3H5Q2Z7C4M0TXRA"
+  },
+  "platform": "tiktok",
+  "status": "resolved",
+  "reason": null,
+  "followers": 18400,
+  "verified": false,
+  "client_ids": [
+    "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+  ],
+  "resolved_at": "2026-10-06T10:02:31Z",
+  "cached": false,
+  "cached_until": null,
+  "candidate_key": "tiktok:6812345678901234567",
+  "source_id": null,
+  "source_type": "creator",
+  "account_type": "creator",
+  "individual": false,
+  "public_account": false,
+  "platform_id": "6812345678901234567",
+  "handle": "basra.store",
+  "url": "https://www.tiktok.com/@basra.store",
+  "display_name": "متجر البصرة",
+  "posts_30d": null,
+  "last_post_at": null,
+  "posts_per_day": null,
+  "duplicate_text_share": null,
+  "default_avatar": null,
+  "account_created_at": null,
+  "owned_by_client": false,
+  "country_signals": {
+    "iraqi_place": true,
+    "platform_country_iq": true,
+    "phone_964": false,
+    "iq_domain": true,
+    "outlet_link": false,
+    "seed_list": false,
+    "signal_evidence": [
+      {
+        "signal": "platform_country_iq",
+        "matched": "IQ",
+        "where": "region"
+      }
+    ]
+  },
+  "lang_share": null,
+  "keyword_ids": [],
+  "route": "amber",
+  "vendor": "tikhub",
+  "review_flags": [],
+  "provenance": {
+    "route": "amber",
+    "vendor": "tikhub",
+    "service": "tt-user-resolver",
+    "fetched_at": "2026-10-06T10:02:31Z"
+  },
+  "retention_class": "vendor_agreed",
+  "extras": {
+    "video_count": 212,
+    "region": "IQ",
+    "bio": "أفضل الأسعار في البصرة | 07701234567",
+    "bio_link": "https://basra-store.iq"
+  }
+}

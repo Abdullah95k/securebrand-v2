@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+    "erasableSyntaxOnly": true,
+    // The example imports the package by name, as a service does; type-check it against the source.
+    "paths": { "text": ["./src/index.ts"] }
+  },
+  "include": ["src", "test", "scripts", "examples", "vitest.config.ts"]
+}

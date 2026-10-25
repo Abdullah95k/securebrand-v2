@@ -1,0 +1,31 @@
+{
+  "schema": "deletions/v1",
+  "message_id": "01M47J0240JEYX10FGT3PGY1GP",
+  "produced_at": "2026-10-06T02:52:00Z",
+  "producer": {
+    "service": "x-compliance-sync",
+    "version": "1.0.0",
+    "job_id": "01J9PB2C4E6G8J0K2M4P6R8T0W"
+  },
+  "deletion_id": "del:platform_sync:author:8ec8b11b12f926f9ee4188abe4f026a67568d65afd46458733f3828b7c576865",
+  "reason": "platform_sync",
+  "scope": "author",
+  "mode": "delete",
+  "author_ref": "f33d7e3cb996d6fc821f1beb9e7067b2fba767a27b3224628d28932a590437b5",
+  "target": {
+    "platform": "x",
+    "user_ids": [
+      "1290000000000000077"
+    ]
+  },
+  "signal_at": "2026-10-06T02:39:05Z",
+  "due_at": "2026-10-07T02:39:05Z",
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "x-compliance-sync",
+    "fetched_at": "2026-10-06T02:39:05Z"
+  },
+  "requested_by": "x-compliance-sync",
+  "run_id": "01J9PB2C4E6G8J0K2M4P6R8T0V"
+}

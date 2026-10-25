@@ -1,0 +1,60 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M48736KR5HWR1AVKA19D26KN",
+    "produced_at": "2026-10-06T09:00:43Z",
+    "producer": {
+      "service": "tt-hashtag-feed-poller",
+      "version": "1.0.0",
+      "job_id": "01M4872SXGZPDRA21SXW1ZYD7N"
+    },
+    "platform": "tiktok",
+    "kind": "video",
+    "provenance": {
+      "route": "amber",
+      "vendor": "ensembledata",
+      "service": "tt-hashtag-feed-poller",
+      "fetched_at": "2026-10-06T09:00:41Z"
+    },
+    "retention_class": "vendor_agreed",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01M4872SXGZPDRA21SXW1ZYD7N",
+    "attempt": 1,
+    "job_kind": "rotation",
+    "api_version": "ensembledata-v1",
+    "raw_ref": "raw/amber/tiktok/2026/10/06/tt-hashtag-feed-poller/000012.jsonl.zst#40",
+    "source_id": "9b1e4d2c-7a3f-4e8b-b2c1-5f6a7d8e9c01",
+    "platform_id": "7420000000000000456",
+    "idempotency_key": "tiktok:video:7420000000000000456",
+    "context": {
+      "hashtag_id": "1650000000000000002",
+      "hashtag_name": "زين_الخير",
+      "page": 1
+    }
+  },
+  "payload": {
+    "aweme_id": "7420000000000000456",
+    "desc": "#زين_الخير حملة التبرعات بالموصل",
+    "create_time": 1759735200,
+    "author": {
+      "uid": "6800000000000000777",
+      "unique_id": "mosul.daily",
+      "follower_count": 120500,
+      "verification_type": 1
+    },
+    "statistics": {
+      "play_count": 40100,
+      "digg_count": 2210,
+      "comment_count": 310,
+      "share_count": 95
+    },
+    "text_extra": [
+      {
+        "hashtag_name": "زين_الخير",
+        "hashtag_id": "1650000000000000002"
+      }
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schema": "registry.decisions/v1",
+  "message_id": "01M4B3R6G0TG30PSK6N3TS1W7T",
+  "produced_at": "2026-10-07T12:00:00Z",
+  "producer": {
+    "service": "ig-webhook-receiver",
+    "version": "1.0.0",
+    "job_id": "01M4B3R6G0GB2CAYW57PR5HTR6"
+  },
+  "decision_id": "01M4B3R6G0J8PZ7QQFNX5N86XQ",
+  "decision": "health_change",
+  "requested_by": "ig-webhook-receiver",
+  "reason": "grant_missing",
+  "source_id": "d4c3b2a1-9f8e-4d7c-8b6a-5f4e3d2c1b0a",
+  "health_change": {
+    "health": "ok"
+  },
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "ig-webhook-receiver",
+    "fetched_at": "2026-10-07T11:59:58Z"
+  },
+  "retention_class": "meta_on_request"
+}

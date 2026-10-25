@@ -1,0 +1,38 @@
+{
+  "schema": "deletions/v1",
+  "message_id": "01M478G3J0TTRX48Q97JDG759B",
+  "produced_at": "2026-10-06T00:06:00Z",
+  "producer": {
+    "service": "retention-purger",
+    "version": "1.0.0",
+    "job_id": "01J9Q8A3V5N7B2D4F6H0K1M9QC"
+  },
+  "deletion_id": "del:retention:item:4b59d3fbf3ab6cf99e90f960a9e37d5ac5f5f29245252905aa346f09e97f772f",
+  "reason": "retention",
+  "scope": "item",
+  "mode": "delete",
+  "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11",
+  "target": {
+    "platform": "facebook",
+    "kind": "post",
+    "item_ids": [
+      "6335b231-098f-56e7-b24a-7fd53bc1275a",
+      "bda54111-94d6-54e2-aab6-33e8b5cb48c6"
+    ],
+    "platform_ids": [
+      "100064583471102_1176002458962861",
+      "100064583471102_1198837625012734"
+    ]
+  },
+  "signal_at": "2026-10-06T00:00:00Z",
+  "due_at": "2026-10-06T06:00:00Z",
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "fb-page-feed-poller",
+    "fetched_at": "2026-10-06T09:15:42Z"
+  },
+  "retention_class": "meta_on_request",
+  "requested_by": "retention-purger",
+  "run_id": "01J9Q8A3V5N7B2D4F6H0K1M9QC"
+}

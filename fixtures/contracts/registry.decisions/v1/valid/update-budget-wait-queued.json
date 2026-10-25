@@ -1,0 +1,20 @@
+{
+  "schema": "registry.decisions/v1",
+  "message_id": "01M47WRFKG8Z6JPQSNW599BRCN",
+  "produced_at": "2026-10-06T06:00:06Z",
+  "producer": {
+    "service": "ig-hashtag-search",
+    "version": "1.0.0",
+    "job_id": "01M47WRFKG2KFTMNXNEC6M9GQ3"
+  },
+  "decision_id": "01M47WRFKGWZ8G8QEM3XM1EFGG",
+  "decision": "update",
+  "requested_by": "ig-hashtag-search",
+  "reason": "budget_wait",
+  "source_id": "e1d2c3b4-a596-4877-8b6a-5c4d3e2f1a09",
+  "update": {
+    "source": {
+      "notes": "budget wait: queued for the next weekly window"
+    }
+  }
+}

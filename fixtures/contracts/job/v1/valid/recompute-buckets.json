@@ -1,0 +1,27 @@
+{
+  "schema": "job/v1",
+  "message_id": "01M489CYZ0CDNYASFWB676VJ5P",
+  "produced_at": "2026-10-06T09:41:00Z",
+  "producer": {
+    "service": "deletion-propagator",
+    "version": "1.0.0",
+    "job_id": "01M489CYZ0BBX3GZFFHWR3XQAW"
+  },
+  "job_id": "01M4960V80ZZGG928KMD5XX36J",
+  "kind": "recompute",
+  "due_at": "2026-10-06T09:41:00Z",
+  "attempt": 1,
+  "run_id": "01M4960V80A8N3K5D2B7T4W9XC",
+  "deletion_id": "del:platform_sync:item:18661edd61005a6cb5b1c5581fc019148483c096309da9b48580aff6ca2a3b0c",
+  "buckets": [
+    {
+      "source_id": "3a7d9c21-5e4b-4f8a-b6c0-2d1e9f7a3b54",
+      "hours": [
+        "2026-10-05T19:00:00Z"
+      ]
+    }
+  ],
+  "keyword_ids": [
+    "9a8b7c6d-5e4f-4321-a0b9-c8d7e6f5a4b3"
+  ]
+}

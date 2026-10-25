@@ -1,0 +1,59 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M4AJRRV8GEA2BWK6Q79QDPJR",
+    "produced_at": "2026-10-07T07:03:13Z",
+    "producer": {
+      "service": "yt-comments-fetcher",
+      "version": "1.0.0",
+      "job_id": "01J9P4D2K8W6Y3N0Q5T7V1X9ZC"
+    },
+    "platform": "youtube",
+    "kind": "comment",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "yt-comments-fetcher",
+      "fetched_at": "2026-10-07T07:03:11Z"
+    },
+    "retention_class": "youtube_30d_text",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01J9P4D2K8W6Y3N0Q5T7V1X9ZC",
+    "attempt": 1,
+    "job_kind": "comments",
+    "api_version": "v3",
+    "raw_ref": "raw/green/youtube/2026/10/07/yt-comments-fetcher/000057.jsonl.zst#1",
+    "source_id": "3a9e5c1d-7f2b-4e8a-b6d0-91c4f2e7a835",
+    "platform_id": "UgzK7pQ2mV9xR4tL1bN6AaABAg",
+    "idempotency_key": "youtube:comment:UgzK7pQ2mV9xR4tL1bN6AaABAg",
+    "parent_id": "b55b9981-9761-5bd6-9315-861dcaa1c311",
+    "root_id": "b55b9981-9761-5bd6-9315-861dcaa1c311",
+    "author_ref": "8a1e32a57530df4634d3c3cee844a67b99c704a7a032e015f162fa78eab92fbd",
+    "redacted_fields": [
+      "snippet.topLevelComment.snippet.authorChannelId",
+      "snippet.topLevelComment.snippet.authorDisplayName",
+      "snippet.topLevelComment.snippet.authorProfileImageUrl",
+      "snippet.topLevelComment.snippet.authorChannelUrl"
+    ],
+    "context": {
+      "series_step": "+24h",
+      "video_channel_id": "UC7xQe2lW9pK3bN5aV1rT8sQ"
+    }
+  },
+  "payload": {
+    "id": "UgzK7pQ2mV9xR4tL1bN6AaABAg",
+    "snippet": {
+      "videoId": "q3Vt8LmZ2xA",
+      "topLevelComment": {
+        "id": "UgzK7pQ2mV9xR4tL1bN6AaABAg",
+        "snippet": {
+          "textOriginal": "حلو الفيديو",
+          "publishedAt": "2026-10-07T06:40:00Z"
+        }
+      },
+      "totalReplyCount": 1
+    }
+  }
+}

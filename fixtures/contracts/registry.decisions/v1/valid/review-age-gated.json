@@ -1,0 +1,28 @@
+{
+  "schema": "registry.decisions/v1",
+  "message_id": "01M48KNMHGHWGGMJ91JEXMS5XF",
+  "produced_at": "2026-10-06T12:40:30Z",
+  "producer": {
+    "service": "qualifier",
+    "version": "1.0.0",
+    "job_id": "01M48KNMHG711TT1119CFCQBX3"
+  },
+  "decision_id": "01M48KNMHGT10JG2JTNA1C6955",
+  "decision": "review",
+  "requested_by": "qualifier",
+  "reason": "age_gated",
+  "candidate_key": "instagram:furat_restaurant",
+  "review": {
+    "rule_hit": 2,
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ]
+  },
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "ig-account-resolver",
+    "fetched_at": "2026-10-06T12:40:11Z"
+  },
+  "retention_class": "meta_on_request"
+}

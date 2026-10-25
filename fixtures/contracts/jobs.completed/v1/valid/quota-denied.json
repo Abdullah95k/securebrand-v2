@@ -1,0 +1,27 @@
+{
+  "schema": "jobs.completed/v1",
+  "message_id": "01M48AFR801V5JDYWF17KCJCHY",
+  "produced_at": "2026-10-06T10:00:00Z",
+  "producer": {
+    "service": "x-user-timeline-poller",
+    "version": "1.0.0",
+    "job_id": "01M48G0V80ZZGG928KMD5XX36J"
+  },
+  "job_id": "01M48G0V80ZZGG928KMD5XX36J",
+  "queue": "jobs.x-user-timeline-poller",
+  "kind": "rotation",
+  "source_id": "a4d2c9e1-5b7f-4e3a-8c60-2f1b9d7e4a35",
+  "paid_user_reads": 0,
+  "free_rereads": 0,
+  "attempt": 1,
+  "status": "quota_denied",
+  "reason": null,
+  "finished_at": "2026-10-06T10:00:00Z",
+  "report": {
+    "new_count": 0,
+    "seen_count": 0,
+    "pages": 0,
+    "cost_units": 0,
+    "reply_candidates": []
+  }
+}

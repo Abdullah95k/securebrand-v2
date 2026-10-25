@@ -1,0 +1,31 @@
+{
+  "schema": "n8n.alert/v1",
+  "message_id": "01M48FMPJ8M0S0YB2SV6HA3940",
+  "produced_at": "2026-10-06T11:30:05Z",
+  "producer": {
+    "service": "registry-writer",
+    "version": "1.0.0",
+    "job_id": "01M48FMPJ8WPH9ZCNW59Z851F5"
+  },
+  "alert_id": "01M48FMPJ8X2C6SJNJRKS0R0Q0",
+  "idempotency_key": "01M48FMPJ8X2C6SJNJRKS0R0Q0:slack",
+  "channel": "slack",
+  "fallthrough_channel": null,
+  "audience": "ops",
+  "client_id": null,
+  "alert": "automatic_fallback",
+  "severity": "warning",
+  "subject": {
+    "platform": "tiktok",
+    "route": "amber",
+    "vendor": "tikhub"
+  },
+  "summary": "tiktok amber: tikhub returns empty pages; ensembledata takes over",
+  "details": {
+    "subject_kind": "route",
+    "platform": "tiktok",
+    "route": "amber",
+    "reason": "empty_200_rate",
+    "vendor": "ensembledata"
+  }
+}

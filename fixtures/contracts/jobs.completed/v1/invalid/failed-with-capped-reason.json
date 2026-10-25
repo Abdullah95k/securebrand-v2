@@ -1,0 +1,26 @@
+{
+  "schema": "jobs.completed/v1",
+  "message_id": "01M48C6P20NSBVP6P2NMF23DJT",
+  "produced_at": "2026-10-06T10:30:00Z",
+  "producer": {
+    "service": "ig-account-media-poller",
+    "version": "1.0.0",
+    "job_id": "01M48H0V80ZZGG928KMD5XX36J"
+  },
+  "job_id": "01M48H0V80ZZGG928KMD5XX36J",
+  "queue": "jobs.ig-account-media-poller",
+  "kind": "rotation",
+  "source_id": "b9e0f1a2-3c4d-4e5f-8a6b-7c8d9e0f1a2b",
+  "attempt": 5,
+  "status": "failed",
+  "reason": null,
+  "finished_at": "2026-10-06T10:30:00Z",
+  "report": {
+    "new_count": 0,
+    "seen_count": 0,
+    "pages": 0,
+    "cost_units": 5,
+    "reply_candidates": []
+  },
+  "capped_reason": "failed"
+}

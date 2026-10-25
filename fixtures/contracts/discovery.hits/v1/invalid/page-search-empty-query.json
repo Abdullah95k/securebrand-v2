@@ -1,0 +1,45 @@
+{
+  "schema": "discovery.hits/v1",
+  "message_id": "01M47YFM884QGAGFJRVFCE1DFA",
+  "produced_at": "2026-10-06T06:30:13Z",
+  "producer": {
+    "service": "fb-page-search",
+    "version": "1.0.0",
+    "job_id": "01M47YF7J0TMKPRYDBNVW3319Z"
+  },
+  "candidate": {
+    "candidate_key": "facebook:104557812990341",
+    "platform": "facebook",
+    "type": "page",
+    "platform_id": "104557812990341",
+    "handle": null,
+    "url": "https://www.facebook.com/profile.php?id=104557812990341"
+  },
+  "evidence_type": "page_search",
+  "item_id": null,
+  "url": "https://www.facebook.com/profile.php?id=104557812990341",
+  "source_id": "5c0e8a24-7b1d-4f39-a6e2-9d3c1b7f0a58",
+  "keyword_ids": [
+    "3d9c1b2a-7e4f-4a6b-8c1d-2e5f6a7b8c9d"
+  ],
+  "client_ids": [
+    "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+  ],
+  "hit_at": "2026-10-06T06:30:12Z",
+  "evidence": {
+    "query": "",
+    "name": "زين العراق - فرع البصرة",
+    "is_verified": false,
+    "location": {
+      "city": "Basra",
+      "country": "Iraq"
+    }
+  },
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "fb-page-search",
+    "fetched_at": "2026-10-06T06:30:12Z"
+  },
+  "retention_class": "meta_on_request"
+}

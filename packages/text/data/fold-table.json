@@ -1,0 +1,57 @@
+{
+  "version": "fold-1",
+  "unicode": "15.1.0",
+  "specification": "docs/plans/F7.md, Fold specification v1; packages/text/README.md",
+  "sorani_labels": ["ckb"],
+  "sorani_only_letters": ["U+0695", "U+06B5", "U+06C6", "U+06CE", "U+06D5"],
+  "row0_sorani": { "sequence": ["U+0647", "U+200C"], "becomes": "U+06D5" },
+  "row1_deleted": [
+    ["U+061C", "U+061C"],
+    ["U+200B", "U+200F"],
+    ["U+202A", "U+202E"],
+    ["U+2060", "U+2064"],
+    ["U+2066", "U+2069"],
+    ["U+FEFF", "U+FEFF"]
+  ],
+  "row2_deleted": [
+    ["U+064B", "U+0652"],
+    ["U+0670", "U+0670"],
+    ["U+06D6", "U+06ED"],
+    ["U+0640", "U+0640"]
+  ],
+  "row3_alef": {
+    "letters": ["U+0622", "U+0623", "U+0625", "U+0671"],
+    "becomes": "U+0627",
+    "marks_deleted_after": [["U+0653", "U+0655"]]
+  },
+  "rows4to6": {
+    "arabic": {
+      "U+0629": "U+0647",
+      "U+06A9": "U+0643",
+      "U+0649": "U+064A",
+      "U+06CC": "U+064A"
+    },
+    "sorani": {
+      "U+0629": "U+06D5",
+      "U+06BE": "U+0647",
+      "U+0643": "U+06A9",
+      "U+064A": "U+06CC",
+      "U+0649": "U+06CC"
+    }
+  },
+  "row8_digits": [
+    { "first": "U+0660", "last": "U+0669", "becomes_first": "U+0030" },
+    { "first": "U+06F0", "last": "U+06F9", "becomes_first": "U+0030" }
+  ],
+  "row10": {
+    "url_prefixes": ["http://", "https://", "www."],
+    "tag_signs": ["U+0023", "U+0040"],
+    "tag_joiner": "U+005F",
+    "space_instead": [
+      ["U+FE00", "U+FE0F"],
+      ["U+20DD", "U+20E4"],
+      ["U+1F3FB", "U+1F3FF"],
+      ["U+E0100", "U+E01EF"]
+    ]
+  }
+}

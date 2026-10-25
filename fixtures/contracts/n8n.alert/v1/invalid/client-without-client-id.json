@@ -1,0 +1,56 @@
+{
+  "schema": "n8n.alert/v1",
+  "message_id": "01M485R4P0TTM8PR1YX2NDK6PW",
+  "produced_at": "2026-10-06T08:37:12Z",
+  "producer": {
+    "service": "alert-evaluator",
+    "version": "1.0.0",
+    "job_id": "01M485R4P0K9A2K8B81THNQA1E"
+  },
+  "alert_id": "01J9W5A2M7Q0R4T8V1X3Y5Z7B9",
+  "idempotency_key": "01J9W5A2M7Q0R4T8V1X3Y5Z7B9:telegram",
+  "channel": "telegram",
+  "fallthrough_channel": "email",
+  "audience": "client",
+  "client_id": null,
+  "alert": "volume_spike",
+  "severity": "high",
+  "subject": {
+    "source_id": "a3c0f1e2-5b6d-4c7e-9f80-112233445566",
+    "platform": "facebook",
+    "keyword_id": "9a8b7c6d-5e4f-4321-a0b9-c8d7e6f5a4b3"
+  },
+  "summary": "زين العراق: 41 إشارة من Example Page منذ الثامنة، سبعة أضعاف المعتاد",
+  "details": {
+    "rule_id": "5d0c2b7e-8a14-4f63-b9e1-2c7a6d4f0e18",
+    "rule_type": "volume_spike",
+    "renotify": false,
+    "keyword": {
+      "keyword_id": "9a8b7c6d-5e4f-4321-a0b9-c8d7e6f5a4b3",
+      "label": "زين العراق",
+      "purpose": "service_quality"
+    },
+    "scope": {
+      "level": "keyword_source",
+      "platform": "facebook",
+      "source": {
+        "source_id": "a3c0f1e2-5b6d-4c7e-9f80-112233445566",
+        "display_name": "Example Page"
+      }
+    },
+    "window": {
+      "hour": "2026-10-06T08:00:00Z",
+      "elapsed_fraction": 0.62,
+      "evaluated_at": "2026-10-06T08:37:12Z"
+    },
+    "fingerprint": "volume_spike:5d0c2b7e:a3c0f1e2",
+    "cooldown_until": "2026-10-06T10:37:12Z",
+    "metrics": {
+      "mentions_so_far": 41,
+      "baseline_median_same_hour": 9.4,
+      "expected_so_far": 5.8,
+      "ratio": 7.1,
+      "baseline_days": 7
+    }
+  }
+}

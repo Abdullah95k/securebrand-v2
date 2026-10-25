@@ -1,0 +1,22 @@
+{
+  "schema": "registry.decisions/v1",
+  "message_id": "01M482FD40RBTW4JHQXSX7NVZ1",
+  "produced_at": "2026-10-06T07:40:00Z",
+  "producer": {
+    "service": "client-portal",
+    "version": "1.0.0",
+    "job_id": "01M482FD40VM6V3Q6CSQ6P9212"
+  },
+  "decision_id": "01M482FD40HAD0A8WEKEKDXPC4",
+  "decision": "add",
+  "requested_by": "person:01J9P2R4T6V8X0Z2B4D6F8H0KM",
+  "reason": null,
+  "keyword_id": "0cd402b6-9015-45f8-86b4-d90cc086d320",
+  "add": {
+    "platform_meta": {
+      "instagram": {
+        "ig_user_id": "17841400112233445"
+      }
+    }
+  }
+}

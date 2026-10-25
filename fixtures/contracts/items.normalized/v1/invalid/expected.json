@@ -1,0 +1,121 @@
+{
+  "article-without-title.json": {
+    "path": [
+      "title"
+    ],
+    "rule": "title is present, null where an item has none"
+  },
+  "comment-without-parent.json": {
+    "path": [
+      "parent_id"
+    ],
+    "rule": "a comment carries parent_id (ADR-0009)"
+  },
+  "display-name-without-source.json": {
+    "path": [
+      "author",
+      "display_name"
+    ],
+    "rule": "display_name only for a registered source (ADR-0010)"
+  },
+  "flat-fetched-at.json": {
+    "path": [
+      "fetched_at"
+    ],
+    "rule": "fetched_at travels in provenance (ADR-0003)"
+  },
+  "followers-without-source.json": {
+    "path": [
+      "author",
+      "author_followers"
+    ],
+    "rule": "author_followers only for a registered source (ADR-0070 d))"
+  },
+  "item-id-not-the-keys.json": {
+    "path": [
+      "item_id"
+    ],
+    "rule": "item_id = uuid_v5(ns_items, key) (ADR-0006)"
+  },
+  "key-not-the-helpers.json": {
+    "path": [
+      "idempotency_key"
+    ],
+    "rule": "the key equals the helper's output (ADR-0006)"
+  },
+  "no-lang-pending.json": {
+    "path": [
+      "lang_pending"
+    ],
+    "rule": "lang_pending is required (ADR-0070 d))"
+  },
+  "no-metadata-message-id.json": {
+    "path": [
+      "message_id"
+    ],
+    "rule": "every message carries message_id (ADR-0002)"
+  },
+  "no-metadata-produced-at.json": {
+    "path": [
+      "produced_at"
+    ],
+    "rule": "every message carries produced_at (ADR-0002)"
+  },
+  "no-metadata-producer.json": {
+    "path": [
+      "producer"
+    ],
+    "rule": "every message carries producer (ADR-0002)"
+  },
+  "no-metadata-schema.json": {
+    "path": [
+      "schema"
+    ],
+    "rule": "every message carries schema (ADR-0002)"
+  },
+  "no-provenance.json": {
+    "path": [
+      "provenance"
+    ],
+    "rule": "a data message carries provenance (ADR-0003)"
+  },
+  "post-with-parent.json": {
+    "path": [
+      "parent_id"
+    ],
+    "rule": "a top-level item has no parent (ADR-0008)"
+  },
+  "poster-id-with-source.json": {
+    "path": [
+      "poster_platform_id"
+    ],
+    "rule": "poster_platform_id never beside author_source_id (ADR-0031)"
+  },
+  "result-with-root.json": {
+    "path": [
+      "root_id"
+    ],
+    "rule": "a web result is a top-level item (ADR-0038)"
+  },
+  "source-type-without-source-id.json": {
+    "path": [
+      "author",
+      "author_source_id"
+    ],
+    "rule": "author_type source names its registered source (ADR-0010)"
+  },
+  "uppercase-reaction.json": {
+    "path": [
+      "metrics_snapshot",
+      "reactions_by_type",
+      "LIKE"
+    ],
+    "rule": "reaction types in lower case (F-34)"
+  },
+  "video-with-parent.json": {
+    "path": [
+      "parent_id"
+    ],
+    "rule": "a video is a top-level item (ADR-0008)"
+  }
+}

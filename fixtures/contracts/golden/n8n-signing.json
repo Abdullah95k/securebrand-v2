@@ -1,0 +1,212 @@
+{
+  "description": "The n8n signing helper (ADR-0067; Q11, F-49): X-SB-Signature is v1= followed by the hex HMAC-SHA256, under the shared secret, of the UTF-8 of '<timestamp>.<idempotency key>.' followed by the body bytes; X-SB-Timestamp is the Unix time in seconds and Idempotency-Key the notice's key, which holds no dot, so the signed string's three fields stay apart (a key holding one is refused). verify() takes the clock as an argument and refuses a timestamp further than the tolerance from it. Written from that specification with Python's hmac; both languages reproduce it. The secret is a published test value, not a secret.",
+  "secret": "listening-contracts n8n signing test secret v1 (published; not a secret)",
+  "sign": [
+    {
+      "body": "{\"schema\":\"n8n.alert/v1\",\"alert_id\":\"01J9W5A2M7Q0R4T8V1X3Y5Z7B9\",\"summary\":\"ارتفاع الإشارات إلى زين العراق\"}",
+      "timestamp": 1791275832,
+      "idempotency_key": "01J9W5A2M7Q0R4T8V1X3Y5Z7B9:telegram",
+      "headers": {
+        "X-SB-Timestamp": "1791275832",
+        "Idempotency-Key": "01J9W5A2M7Q0R4T8V1X3Y5Z7B9:telegram",
+        "X-SB-Signature": "v1=89cefc7114439a400e93c8bd99e2695fd02bf6c91726be2572e3891198bf8607"
+      }
+    },
+    {
+      "body": "{\"schema\":\"n8n.alert/v1\",\"alert_id\":\"01J9W5A2M7Q0R4T8V1X3Y5Z7B9\",\"summary\":\"ارتفاع الإشارات إلى زين العراق\"}",
+      "timestamp": 1791275832,
+      "idempotency_key": "01J9W5A2M7Q0R4T8V1X3Y5Z7B9:email",
+      "headers": {
+        "X-SB-Timestamp": "1791275832",
+        "Idempotency-Key": "01J9W5A2M7Q0R4T8V1X3Y5Z7B9:email",
+        "X-SB-Signature": "v1=292b2445ea0219e08c593aafec84752d80614fe1a032b03023952a26d58ceae9"
+      }
+    },
+    {
+      "body": "{\"schema\":\"n8n.card/v1\",\"card_id\":\"7c71f097-b1a9-5acf-a7de-077f9b01c9a2\"}",
+      "timestamp": 1791275892,
+      "idempotency_key": "7c71f097-b1a9-5acf-a7de-077f9b01c9a2:slack",
+      "headers": {
+        "X-SB-Timestamp": "1791275892",
+        "Idempotency-Key": "7c71f097-b1a9-5acf-a7de-077f9b01c9a2:slack",
+        "X-SB-Signature": "v1=2783ac422869f4ff5b735d470454f7fd0c326a4894bb2a25aa15ed23e09cca3b"
+      }
+    },
+    {
+      "body": "",
+      "timestamp": 1791275832,
+      "idempotency_key": "empty:email",
+      "headers": {
+        "X-SB-Timestamp": "1791275832",
+        "Idempotency-Key": "empty:email",
+        "X-SB-Signature": "v1=5b75b702de53845ac99b7e571a8e81eac3492e1723f2626e6f6847de8a96568c"
+      }
+    }
+  ],
+  "verify": [
+    {
+      "case": "the signed request at its own time",
+      "body": "{\"schema\":\"n8n.alert/v1\",\"alert_id\":\"01J9W5A2M7Q0R4T8V1X3Y5Z7B9\",\"summary\":\"ارتفاع الإشارات إلى زين العراق\"}",
+      "headers": {
+        "X-SB-Timestamp": "1791275832",
+        "Idempotency-Key": "01J9W5A2M7Q0R4T8V1X3Y5Z7B9:telegram",
+        "X-SB-Signature": "v1=89cefc7114439a400e93c8bd99e2695fd02bf6c91726be2572e3891198bf8607"
+      },
+      "now": 1791275832,
+      "tolerance_seconds": 300,
+      "ok": true
+    },
+    {
+      "case": "within the tolerance",
+      "body": "{\"schema\":\"n8n.alert/v1\",\"alert_id\":\"01J9W5A2M7Q0R4T8V1X3Y5Z7B9\",\"summary\":\"ارتفاع الإشارات إلى زين العراق\"}",
+      "headers": {
+        "X-SB-Timestamp": "1791275832",
+        "Idempotency-Key": "01J9W5A2M7Q0R4T8V1X3Y5Z7B9:telegram",
+        "X-SB-Signature": "v1=89cefc7114439a400e93c8bd99e2695fd02bf6c91726be2572e3891198bf8607"
+      },
+      "now": 1791276132,
+      "tolerance_seconds": 300,
+      "ok": true
+    },
+    {
+      "case": "a clock behind the sender within the tolerance",
+      "body": "{\"schema\":\"n8n.alert/v1\",\"alert_id\":\"01J9W5A2M7Q0R4T8V1X3Y5Z7B9\",\"summary\":\"ارتفاع الإشارات إلى زين العراق\"}",
+      "headers": {
+        "X-SB-Timestamp": "1791275832",
+        "Idempotency-Key": "01J9W5A2M7Q0R4T8V1X3Y5Z7B9:telegram",
+        "X-SB-Signature": "v1=89cefc7114439a400e93c8bd99e2695fd02bf6c91726be2572e3891198bf8607"
+      },
+      "now": 1791275532,
+      "tolerance_seconds": 300,
+      "ok": true
+    },
+    {
+      "case": "outside the tolerance",
+      "body": "{\"schema\":\"n8n.alert/v1\",\"alert_id\":\"01J9W5A2M7Q0R4T8V1X3Y5Z7B9\",\"summary\":\"ارتفاع الإشارات إلى زين العراق\"}",
+      "headers": {
+        "X-SB-Timestamp": "1791275832",
+        "Idempotency-Key": "01J9W5A2M7Q0R4T8V1X3Y5Z7B9:telegram",
+        "X-SB-Signature": "v1=89cefc7114439a400e93c8bd99e2695fd02bf6c91726be2572e3891198bf8607"
+      },
+      "now": 1791276133,
+      "tolerance_seconds": 300,
+      "ok": false,
+      "reason": "stale_timestamp"
+    },
+    {
+      "case": "a changed body",
+      "body": "{\"schema\":\"n8n.alert/v1\",\"alert_id\":\"01J9W5A2M7Q0R4T8V1X3Y5Z7B9\",\"summary\":\"ارتفاع الإشارات إلى آسيا العراق\"}",
+      "headers": {
+        "X-SB-Timestamp": "1791275832",
+        "Idempotency-Key": "01J9W5A2M7Q0R4T8V1X3Y5Z7B9:telegram",
+        "X-SB-Signature": "v1=89cefc7114439a400e93c8bd99e2695fd02bf6c91726be2572e3891198bf8607"
+      },
+      "now": 1791275832,
+      "tolerance_seconds": 300,
+      "ok": false,
+      "reason": "bad_signature"
+    },
+    {
+      "case": "a changed idempotency key",
+      "body": "{\"schema\":\"n8n.alert/v1\",\"alert_id\":\"01J9W5A2M7Q0R4T8V1X3Y5Z7B9\",\"summary\":\"ارتفاع الإشارات إلى زين العراق\"}",
+      "headers": {
+        "X-SB-Timestamp": "1791275832",
+        "Idempotency-Key": "01J9W5A2M7Q0R4T8V1X3Y5Z7B9:email",
+        "X-SB-Signature": "v1=89cefc7114439a400e93c8bd99e2695fd02bf6c91726be2572e3891198bf8607"
+      },
+      "now": 1791275832,
+      "tolerance_seconds": 300,
+      "ok": false,
+      "reason": "bad_signature"
+    },
+    {
+      "case": "a wrong key",
+      "body": "{\"schema\":\"n8n.alert/v1\",\"alert_id\":\"01J9W5A2M7Q0R4T8V1X3Y5Z7B9\",\"summary\":\"ارتفاع الإشارات إلى زين العراق\"}",
+      "headers": {
+        "X-SB-Timestamp": "1791275832",
+        "Idempotency-Key": "01J9W5A2M7Q0R4T8V1X3Y5Z7B9:telegram",
+        "X-SB-Signature": "v1=44ab87867089951d3091e143cc498fb54e51a1052aa56b2bb97c2f49b0178167"
+      },
+      "now": 1791275832,
+      "tolerance_seconds": 300,
+      "ok": false,
+      "reason": "bad_signature"
+    },
+    {
+      "case": "header names in lower case",
+      "body": "{\"schema\":\"n8n.alert/v1\",\"alert_id\":\"01J9W5A2M7Q0R4T8V1X3Y5Z7B9\",\"summary\":\"ارتفاع الإشارات إلى زين العراق\"}",
+      "headers": {
+        "x-sb-timestamp": "1791275832",
+        "idempotency-key": "01J9W5A2M7Q0R4T8V1X3Y5Z7B9:telegram",
+        "x-sb-signature": "v1=89cefc7114439a400e93c8bd99e2695fd02bf6c91726be2572e3891198bf8607"
+      },
+      "now": 1791275832,
+      "tolerance_seconds": 300,
+      "ok": true
+    },
+    {
+      "case": "a missing signature",
+      "body": "{\"schema\":\"n8n.alert/v1\",\"alert_id\":\"01J9W5A2M7Q0R4T8V1X3Y5Z7B9\",\"summary\":\"ارتفاع الإشارات إلى زين العراق\"}",
+      "headers": {
+        "X-SB-Timestamp": "1791275832",
+        "Idempotency-Key": "01J9W5A2M7Q0R4T8V1X3Y5Z7B9:telegram"
+      },
+      "now": 1791275832,
+      "tolerance_seconds": 300,
+      "ok": false,
+      "reason": "missing_header"
+    },
+    {
+      "case": "a timestamp that is no integer",
+      "body": "{\"schema\":\"n8n.alert/v1\",\"alert_id\":\"01J9W5A2M7Q0R4T8V1X3Y5Z7B9\",\"summary\":\"ارتفاع الإشارات إلى زين العراق\"}",
+      "headers": {
+        "X-SB-Timestamp": "2026-10-06T08:37:12Z",
+        "Idempotency-Key": "01J9W5A2M7Q0R4T8V1X3Y5Z7B9:telegram",
+        "X-SB-Signature": "v1=89cefc7114439a400e93c8bd99e2695fd02bf6c91726be2572e3891198bf8607"
+      },
+      "now": 1791275832,
+      "tolerance_seconds": 300,
+      "ok": false,
+      "reason": "bad_timestamp"
+    },
+    {
+      "case": "another scheme version",
+      "body": "{\"schema\":\"n8n.alert/v1\",\"alert_id\":\"01J9W5A2M7Q0R4T8V1X3Y5Z7B9\",\"summary\":\"ارتفاع الإشارات إلى زين العراق\"}",
+      "headers": {
+        "X-SB-Timestamp": "1791275832",
+        "Idempotency-Key": "01J9W5A2M7Q0R4T8V1X3Y5Z7B9:telegram",
+        "X-SB-Signature": "v2=89cefc7114439a400e93c8bd99e2695fd02bf6c91726be2572e3891198bf8607"
+      },
+      "now": 1791275832,
+      "tolerance_seconds": 300,
+      "ok": false,
+      "reason": "bad_signature"
+    },
+    {
+      "case": "an idempotency key holding a dot: bytes moved from the body into the key",
+      "body": "c",
+      "headers": {
+        "X-SB-Timestamp": "1791275832",
+        "Idempotency-Key": "a.b",
+        "X-SB-Signature": "v1=d700c9dd00b6ec835a952f158468911526d6d85457d5ddae4feec69f2572ed87"
+      },
+      "now": 1791275832,
+      "tolerance_seconds": 300,
+      "ok": false,
+      "reason": "bad_idempotency_key"
+    },
+    {
+      "case": "an empty idempotency key",
+      "body": "{}",
+      "headers": {
+        "X-SB-Timestamp": "1791275832",
+        "Idempotency-Key": "",
+        "X-SB-Signature": "v1=afd7fcb4d12a1d6b9d85dc8ede67da26d4396d3956044341fcedb6f45e6afd2e"
+      },
+      "now": 1791275832,
+      "tolerance_seconds": 300,
+      "ok": false,
+      "reason": "bad_idempotency_key"
+    }
+  ]
+}

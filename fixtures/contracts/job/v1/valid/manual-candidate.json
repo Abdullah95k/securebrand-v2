@@ -1,0 +1,26 @@
+{
+  "schema": "job/v1",
+  "message_id": "01M48DXKW0HVFHF18D7QVF96YM",
+  "produced_at": "2026-10-06T11:00:00Z",
+  "producer": {
+    "service": "registry-writer",
+    "version": "1.0.0",
+    "job_id": "01M48DXKW019R8JR4EGF3BVKKX"
+  },
+  "job_id": "01M48W0V80ZZGG928KMD5XX36J",
+  "kind": "manual_candidate",
+  "due_at": "2026-10-06T11:00:00Z",
+  "attempt": 1,
+  "candidate_key": "x:example_telecom_iq",
+  "platform": "x",
+  "platform_id": null,
+  "handle": "example_telecom_iq",
+  "url": null,
+  "client_ids": [
+    "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+  ],
+  "seed_list": true,
+  "origin": "manual",
+  "request_id": "01J9R5S3V7W1X4Y8Z0A2B6C9DJ",
+  "requested_by": "person:01J9P2R4T6V8X0Z2B4D6F8H0KM"
+}

@@ -1,0 +1,65 @@
+{
+  "description": "content_hash = 'sha256:' + hex SHA-256 of UTF-8(NFC(title) + U+001F + NFC(text)) when the item has a non-empty title, else of UTF-8(NFC(text)); a null text counts as empty; media URLs never included (ADR-0009).",
+  "hashes": [
+    {
+      "name": "Arabic text, no title",
+      "title": null,
+      "text": "خدمة الإنترنت سيئة اليوم",
+      "content_hash": "sha256:d7c886ac316e0b8da0347e1ad07e76d0758f1bd125b2bfb33a1c7c4ce28ffd26"
+    },
+    {
+      "name": "title and text",
+      "title": "عنوان الخبر",
+      "text": "نص المقتطف من المقال",
+      "content_hash": "sha256:be2806842746699cdb942ebe365d210d219076664e07bc0e8d1d178c5d07bbc8"
+    },
+    {
+      "name": "empty title counts as no title",
+      "title": "",
+      "text": "خدمة الإنترنت سيئة اليوم",
+      "content_hash": "sha256:d7c886ac316e0b8da0347e1ad07e76d0758f1bd125b2bfb33a1c7c4ce28ffd26"
+    },
+    {
+      "name": "title with a null text",
+      "title": "عنوان فقط",
+      "text": null,
+      "content_hash": "sha256:44cfc18d0e425ee2ed908baf7a89d815572df9aece8857e63e309b142ca029e2"
+    },
+    {
+      "name": "null title and null text",
+      "title": null,
+      "text": null,
+      "content_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "decomposed text hashes as composed",
+      "title": null,
+      "text": "أهلاً وسهلاً",
+      "content_hash": "sha256:0bee7647c9311ba0ac608bc24ed1a88562192890d1e14ea5ffe5c96fd2da1661"
+    },
+    {
+      "name": "the same text composed",
+      "title": null,
+      "text": "أهلاً وسهلاً",
+      "content_hash": "sha256:0bee7647c9311ba0ac608bc24ed1a88562192890d1e14ea5ffe5c96fd2da1661"
+    },
+    {
+      "name": "emoji with skin tone and ZWJ",
+      "title": null,
+      "text": "👍🏽 👨‍👩‍👧 تمام",
+      "content_hash": "sha256:8ba45dcc2abbdbb9b68879c184f89e26c833bf2756f9f4b93ec6a4894626f4b7"
+    },
+    {
+      "name": "Sorani letters",
+      "title": null,
+      "text": "ڕۆژنامەی کوردستان",
+      "content_hash": "sha256:3dcea10637e6030fb3d4d597397f3df0513cf24fabf964c789d87ba3382b4caf"
+    },
+    {
+      "name": "Arabic presentation forms are not NFC-folded",
+      "title": null,
+      "text": "ﻻﺍ",
+      "content_hash": "sha256:64b138d4d82e5c80daef069df116dae4b7caea4c73a28b95b2d4e961eff51590"
+    }
+  ]
+}

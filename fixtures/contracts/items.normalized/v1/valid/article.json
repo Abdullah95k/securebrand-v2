@@ -1,0 +1,71 @@
+{
+  "schema": "items.normalized/v1",
+  "message_id": "01M47WAW20H8C2KQEBFTHV6D9N",
+  "produced_at": "2026-10-06T05:52:40Z",
+  "producer": {
+    "service": "normalize-item",
+    "version": "1.4.0",
+    "job_id": "01J9N3A4K8R2T7V5X0M6C1D9HE"
+  },
+  "item_id": "afefdab8-b5dd-55b5-a5bc-5b104437670e",
+  "idempotency_key": "news:article:bfa6375a3060bdfd4e3300b6108b89807201e8e8f68698ce2ae193ececc5efd4",
+  "platform": "news",
+  "kind": "article",
+  "source_id": "3c7f9d52-1e4a-4b86-a0d3-7b2e5c8f1a90",
+  "parent_id": null,
+  "root_id": null,
+  "parent_seen": true,
+  "content_hash": "sha256:42344c431d0dfc6db396e41a3059b083310239dafb4bd16869a762fca85e1cca",
+  "version": 1,
+  "platform_id": "bfa6375a3060bdfd4e3300b6108b89807201e8e8f68698ce2ae193ececc5efd4",
+  "url": "https://www.example-daily.iq/politics/2026/10/06/budget-session",
+  "created_at": "2026-10-06T05:41:00Z",
+  "title": "البرلمان يحدد موعد جلسة الموازنة",
+  "text": "حدد مجلس النواب يوم الأحد المقبل موعدا لعقد جلسة مخصصة لمناقشة مشروع قانون الموازنة الاتحادية",
+  "text_norm": "حدد مجلس النواب يوم الاحد المقبل موعدا لعقد جلسه مخصصه لمناقشه مشروع قانون الموازنه الاتحاديه",
+  "lang": "ar",
+  "lang_conf": 0.98,
+  "dialect": "iraqi",
+  "dialect_conf": 0.84,
+  "script": "arab",
+  "lang_model_version": "lid-iq-2026.09",
+  "lang_pending": false,
+  "author": {
+    "author_ref": null,
+    "author_type": "source",
+    "author_source_id": "3c7f9d52-1e4a-4b86-a0d3-7b2e5c8f1a90",
+    "display_name": "Example Daily"
+  },
+  "media": [],
+  "hashtags": [],
+  "at_mentions": [],
+  "links": [],
+  "metrics_snapshot": {
+    "views": null,
+    "likes": null,
+    "comments": null,
+    "shares": null,
+    "reactions_by_type": null
+  },
+  "expires_at": null,
+  "normalizer_version": "1.4.0",
+  "raw_ref": "raw/green/news/2026/10/06/news-article-extractor/000412.jsonl.zst#20",
+  "job_kind": "rotation",
+  "sensitive_event": false,
+  "client_ids": [
+    "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+  ],
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "news-article-extractor",
+    "fetched_at": "2026-10-06T05:52:30Z"
+  },
+  "retention_class": "news_excerpt",
+  "text_full_ref": "cache/news/2026/10/06/bfa6375a3060bdfd4e3300b6108b89807201e8e8f68698ce2ae193ececc5efd4.json.zst",
+  "usage_signals": {
+    "search": "yes",
+    "ai_input": "unset",
+    "ai_train": "no"
+  }
+}

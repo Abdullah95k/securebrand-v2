@@ -1,0 +1,46 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M488DF50S3RNE3VTJEE7DM2Q",
+    "produced_at": "2026-10-06T09:23:48Z",
+    "producer": {
+      "service": "fb-client-webhook-receiver",
+      "version": "1.0.0",
+      "job_id": "01J9N5C4R7V2X8K3M1T6B0QZYF"
+    },
+    "platform": "facebook",
+    "kind": "comment",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "fb-client-webhook-receiver",
+      "fetched_at": "2026-10-06T09:23:46Z"
+    },
+    "retention_class": "meta_on_request",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01J9N5C4R7V2X8K3M1T6B0QZYF",
+    "attempt": 1,
+    "job_kind": "push",
+    "api_version": "v21.0",
+    "raw_ref": "raw/green/facebook/2026/10/06/fb-client-webhook-receiver/000208.jsonl.zst#3",
+    "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11",
+    "platform_id": "1198837625012734_5520817364092219",
+    "idempotency_key": "facebook:comment:1198837625012734_5520817364092219",
+    "parent_id": "bda54111-94d6-54e2-aab6-33e8b5cb48c6",
+    "root_id": "bda54111-94d6-54e2-aab6-33e8b5cb48c6",
+    "author_ref": "01686604a546fbcf45995bae99315c9de8d119f83525a3569ce0f34fc1be662b",
+    "redacted_fields": [
+      "from"
+    ]
+  },
+  "payload": {
+    "item": "comment",
+    "verb": "add",
+    "post_id": "100064583471102_1198837625012734",
+    "comment_id": "1198837625012734_5520817364092219",
+    "message": "ممكن تفاصيل الباقة؟",
+    "created_time": 1791278623
+  }
+}

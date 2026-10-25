@@ -1,0 +1,30 @@
+{
+  "schema": "dlq.store-writer/v1",
+  "message_id": "01M4886GG0GQA4RCJKMY65W9SH",
+  "produced_at": "2026-10-06T09:20:00Z",
+  "producer": {
+    "service": "store-writer",
+    "version": "1.0.0",
+    "job_id": "01M4886GG0FYZSP7AD3K4ACMWB"
+  },
+  "stage": "consume",
+  "original": {
+    "topic": "items.normalized",
+    "partition": 3,
+    "offset": 1842,
+    "key": "a3c0f1e2-5b6d-4c7e-9f80-112233445566",
+    "schema": "items.normalized/v1",
+    "message_id": "01M487VKVR2MG65SCCTYVE2E69"
+  },
+  "error": {
+    "class": "invalid",
+    "message": "ClickHouse rejected the row: metrics_snapshot.reactions_by_type",
+    "attempts": 5,
+    "first_failed_at": "2026-10-06T09:14:10Z",
+    "last_failed_at": "2026-10-06T09:19:58Z"
+  },
+  "consumer": {
+    "service": "store-writer",
+    "group": "store-writer"
+  }
+}

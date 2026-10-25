@@ -1,0 +1,18 @@
+{
+  "schema": "registry.decisions/v1",
+  "message_id": "01M4S9GEY0Z99S1F33DJF0WGTP",
+  "produced_at": "2026-10-13T00:10:00Z",
+  "producer": {
+    "service": "retention-purger",
+    "version": "1.0.0",
+    "job_id": "01M4S9GEY01KXZF3005R6C30GX"
+  },
+  "decision_id": "01M4S9GEY0P8CPZM773W22VGZ4",
+  "decision": "remove_client",
+  "requested_by": "retention-purger",
+  "reason": "client_removed",
+  "source_id": "7f1c2a9e-5d1b-4c7e-9a3f-2b8e6d4c1a00",
+  "remove_client": {
+    "client_id": "e2a9d0b1-6c7f-4a38-9d5e-0f1a2b3c4d5e"
+  }
+}

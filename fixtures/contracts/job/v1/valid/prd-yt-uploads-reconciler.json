@@ -1,0 +1,21 @@
+{
+  "schema": "job/v1",
+  "message_id": "01M48E5SK0N1RVP5C4K0M73Q2W",
+  "produced_at": "2026-10-06T11:04:28Z",
+  "producer": {
+    "service": "yt-uploads-reconciler",
+    "version": "1.0.0",
+    "job_id": "01J9P4D2R7X5K8M1Q3V6T0B9ZC"
+  },
+  "job_id": "01J9P4D3A1M6W2C8F5H0K7N4QS",
+  "kind": "first_sight",
+  "due_at": "2026-10-06T11:04:28Z",
+  "attempt": 1,
+  "source_id": "a3d9f1c4-5e27-4b8a-9f60-2c1e7d4b8a93",
+  "post_ref": {
+    "item_id": "6ba265e6-aef0-53ba-b7a0-638296dd6a08",
+    "platform": "youtube",
+    "platform_id": "Xk3vQ9pL2aE"
+  },
+  "origin_kind": "reconciliation"
+}

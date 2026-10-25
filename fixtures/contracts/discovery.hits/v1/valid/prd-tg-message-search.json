@@ -1,0 +1,40 @@
+{
+  "schema": "discovery.hits/v1",
+  "message_id": "01M47K62XGNCEWNGKHKKTJKXRB",
+  "produced_at": "2026-10-06T03:12:46Z",
+  "producer": {
+    "service": "tg-message-search",
+    "version": "1.0.0",
+    "job_id": "01M486Z3M0TQ5KX8D2N6C4B0RW"
+  },
+  "candidate": {
+    "candidate_key": "telegram:basra_prices",
+    "platform": "telegram",
+    "type": "channel",
+    "platform_id": "basra_prices",
+    "handle": "basra_prices",
+    "url": "https://t.me/basra_prices"
+  },
+  "evidence_type": "early_signal",
+  "item_id": "eaab9bf5-6eea-5ea9-b3b9-a5fb86d98358",
+  "url": null,
+  "source_id": "2e8f4b61-0c7a-4d93-b5e1-6a2c9f0d8b47",
+  "keyword_ids": [
+    "c6f2f07f-9f2c-48b8-a5bf-b265fdb569d1"
+  ],
+  "client_ids": [
+    "c7f12d45-b7c5-467d-aa82-e7826ed8abf2"
+  ],
+  "hit_at": "2026-10-06T03:12:44Z",
+  "evidence": {
+    "display_name": "أسعار البصرة",
+    "lang": "ar"
+  },
+  "provenance": {
+    "route": "amber",
+    "vendor": "telemetrio",
+    "service": "tg-message-search",
+    "fetched_at": "2026-10-06T03:12:44Z"
+  },
+  "retention_class": "vendor_agreed"
+}

@@ -1,0 +1,24 @@
+{
+  "schema": "job/v1",
+  "message_id": "01M487VNT8GRQEGWT2ZD99JX9Y",
+  "produced_at": "2026-10-06T09:14:05Z",
+  "producer": {
+    "service": "analysis-sentiment",
+    "version": "1.0.0",
+    "job_id": "01M487VNT8ARCPCHB62YWKWTQX"
+  },
+  "job_id": "01M4886GG018V1FH131HTSP75D",
+  "kind": "analyze",
+  "due_at": "2026-10-06T09:14:05Z",
+  "attempt": 1,
+  "source_id": "a3c0f1e2-5b6d-4c7e-9f80-112233445566",
+  "item_id": "729e4ef3-5f84-52f7-872f-06430a625fc6",
+  "item_version": 1,
+  "content_hash": "sha256:96f6861fef1e2acd585acb98b44dbe97d39d2c126fc7a75f661225b47d2cb244",
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "fb-page-feed-poller",
+    "fetched_at": "2026-10-06T09:13:58Z"
+  }
+}

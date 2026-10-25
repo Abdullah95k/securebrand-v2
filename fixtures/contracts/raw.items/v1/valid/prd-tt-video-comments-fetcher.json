@@ -1,0 +1,46 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M48WT00G0M8ZG67HJ61ZW8V1",
+    "produced_at": "2026-10-06T15:20:10Z",
+    "producer": {
+      "service": "tt-video-comments-fetcher",
+      "version": "1.0.0",
+      "job_id": "01J9N4C2M7X0B8E5V1Q3S6TKHD"
+    },
+    "platform": "tiktok",
+    "kind": "comment",
+    "provenance": {
+      "route": "amber",
+      "vendor": "tikhub",
+      "service": "tt-video-comments-fetcher",
+      "fetched_at": "2026-10-06T15:20:08Z"
+    },
+    "retention_class": "vendor_agreed",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01J9N4C2M7X0B8E5V1Q3S6TKHD",
+    "attempt": 1,
+    "job_kind": "comments",
+    "api_version": "tikhub-v1",
+    "raw_ref": "raw/amber/tiktok/2026/10/06/tt-video-comments-fetcher/000212.jsonl.zst#6",
+    "source_id": "3d8a51c2-7e04-4b9f-8c16-2a9e5d70f4b8",
+    "platform_id": "7421601187764085510",
+    "idempotency_key": "tiktok:comment:7421601187764085510",
+    "parent_id": "87c23e1a-aa3a-5491-b10d-abe0a88b5eee",
+    "root_id": "87c23e1a-aa3a-5491-b10d-abe0a88b5eee",
+    "author_ref": "3aee6284602a9d352dd55eb1078c4c057a1c99395fd2d01ba75d215fa931aebe",
+    "redacted_fields": [
+      "user"
+    ],
+    "context": {
+      "series_step": "+6h"
+    }
+  },
+  "payload": {
+    "cid": "7421601187764085510",
+    "text": "وين الفرع؟",
+    "create_time": 1791300000
+  }
+}

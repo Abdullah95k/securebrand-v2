@@ -1,0 +1,37 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M4F727B01HE88SNN7P1MPRYA",
+    "produced_at": "2026-10-09T02:14:52Z",
+    "producer": {
+      "service": "web-commoncrawl-scanner",
+      "version": "1.0.0",
+      "job_id": "01M4F71ZR0Q8N3K5D2B7T4W9XC"
+    },
+    "platform": "web",
+    "kind": "search_response",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "web-commoncrawl-scanner",
+      "fetched_at": "2026-10-09T02:14:50Z"
+    },
+    "retention_class": "news_excerpt",
+    "client_ids": [],
+    "job_id": "01M4F71ZR0Q8N3K5D2B7T4W9XC",
+    "attempt": 1,
+    "job_kind": "rotation",
+    "api_version": "cc-index-1",
+    "raw_ref": "raw/green/web/2026/10/09/web-commoncrawl-scanner/000002.jsonl.zst#6",
+    "context": {
+      "crawl_id": "CC-MAIN-2026-38",
+      "host": "www.example-daily.iq"
+    },
+    "source_id": "7d2b0c4e-1f3a-4b5c-8d6e-9f0a1b2c3d4e"
+  },
+  "payload": {
+    "captures": 1840,
+    "first_capture": "2026-09-14",
+    "last_capture": "2026-09-27"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schema": "registry.decisions/v1",
+  "message_id": "01M4ASEQH0S81TDJQC3HA3XDWC",
+  "produced_at": "2026-10-07T09:00:04Z",
+  "producer": {
+    "service": "tt-client-videos-fetcher",
+    "version": "1.0.0",
+    "job_id": "01M4ASEQH0W894XSGT4V7Z67KM"
+  },
+  "decision_id": "01M4ASEQH01F6T5X4AE85V7NKJ",
+  "decision": "retire",
+  "requested_by": "tt-client-videos-fetcher",
+  "reason": "authorization_revoked",
+  "source_id": "9a47e0b1-5c3d-4f82-b6e9-1d0c8a3f7e25",
+  "retire": {
+    "rule_hit": null
+  },
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "tt-client-videos-fetcher",
+    "fetched_at": "2026-10-07T08:59:00Z"
+  },
+  "retention_class": "meta_on_request"
+}

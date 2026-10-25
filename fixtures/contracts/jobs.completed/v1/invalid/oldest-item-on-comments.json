@@ -1,0 +1,40 @@
+{
+  "schema": "jobs.completed/v1",
+  "message_id": "01M48WGV1GJR39V2TRFAHR0TWK",
+  "produced_at": "2026-10-06T15:15:10Z",
+  "producer": {
+    "service": "fb-post-comments-fetcher",
+    "version": "1.0.0",
+    "job_id": "01M48WEPP0MEV3N43VSQZ4M422"
+  },
+  "job_id": "01M48WEPP0MEV3N43VSQZ4M422",
+  "queue": "jobs.fb-post-comments-fetcher",
+  "kind": "comments",
+  "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11",
+  "post_ref": {
+    "item_id": "bda54111-94d6-54e2-aab6-33e8b5cb48c6",
+    "platform": "facebook",
+    "platform_id": "100064583471102_1198837625012734"
+  },
+  "series_step": "+6h",
+  "complete": true,
+  "stored_before": 40,
+  "comments_total": null,
+  "attempt": 1,
+  "status": "done",
+  "reason": null,
+  "finished_at": "2026-10-06T15:15:10Z",
+  "report": {
+    "new_count": 18,
+    "seen_count": 40,
+    "pages": 3,
+    "cost_units": 3,
+    "reply_candidates": [
+      {
+        "thread_id": "1198837625012734_884512",
+        "reply_count": 7
+      }
+    ]
+  },
+  "oldest_item_at": "2026-10-06T08:00:00Z"
+}
