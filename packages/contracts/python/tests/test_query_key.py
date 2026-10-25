@@ -1,3 +1,4 @@
+import unicodedata
 from typing import Any
 
 import pytest
@@ -23,7 +24,14 @@ def test_derives_the_golden_query_keys_under_each_profile(c: dict[str, Any]) -> 
 
 def test_form_order_and_nfc_variants_give_one_key() -> None:
     assert _find("exact", "a keyword with handle, hashtag and context") == _find(
-        "exact", "the same forms in another order with a decomposed form"
+        "exact", "the same forms in another order"
+    )
+    # The helper itself, on input that is not NFC, gives the composed input's stored key.
+    dec = next(c for c in G["keys"] if c["name"] == "the same forms and context term decomposed")
+    for s in [*dec["forms"], *dec["context_terms"]]:
+        assert unicodedata.normalize("NFC", s) != s
+    assert query_key_with_profile("exact", dec["forms"], dec["context_terms"]) == _find(
+        "exact", "composed forms and context term"
     )
 
 

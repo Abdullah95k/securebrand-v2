@@ -35,7 +35,14 @@ describe("query_key (ADR-0044; Q10)", () => {
 
   it("form order and NFC variants give one key", () => {
     expect(find("exact", "a keyword with handle, hashtag and context")).toBe(
-      find("exact", "the same forms in another order with a decomposed form"),
+      find("exact", "the same forms in another order"),
+    );
+    // The helper itself, on input that is not NFC, gives the composed input's stored key.
+    const dec = g.keys.find((c) => c.name === "the same forms and context term decomposed");
+    if (!dec) throw new Error("no decomposed vector in query-key.json");
+    for (const s of [...dec.forms, ...dec.context_terms]) expect(s.normalize("NFC")).not.toBe(s);
+    expect(queryKeyWithProfile("exact", dec.forms, dec.context_terms)).toBe(
+      find("exact", "composed forms and context term"),
     );
   });
 

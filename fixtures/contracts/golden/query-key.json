@@ -28,7 +28,7 @@
       "query_key": "c4505d3a31a5db0d334d1ae2fa838a2c5cb717ff8740d439f2fc64bcabedf5c3"
     },
     {
-      "name": "the same forms in another order with a decomposed form",
+      "name": "the same forms in another order",
       "profile": "exact",
       "forms": [
         "#زين",
@@ -245,6 +245,32 @@
       "context_terms": [],
       "canonical": "{\"context_terms\":[],\"forms\":[\"i̇stanbul\",\"οδος\"]}",
       "query_key": "b272e17429c02bb39a75a5a449e3222de5e8afb326e428cc5992f98471abe445"
+    },
+    {
+      "name": "composed forms and context term",
+      "profile": "exact",
+      "forms": [
+        "أحمد",
+        "Café"
+      ],
+      "context_terms": [
+        "إنترنت"
+      ],
+      "canonical": "{\"context_terms\":[\"إنترنت\"],\"forms\":[\"café\",\"أحمد\"]}",
+      "query_key": "ff8961cfc49a761e913a47f4410b08d7822f2ca4e9c3a2baf6b748e5a3531493"
+    },
+    {
+      "name": "the same forms and context term decomposed",
+      "profile": "exact",
+      "forms": [
+        "أحمد",
+        "Café"
+      ],
+      "context_terms": [
+        "إنترنت"
+      ],
+      "canonical": "{\"context_terms\":[\"إنترنت\"],\"forms\":[\"café\",\"أحمد\"]}",
+      "query_key": "ff8961cfc49a761e913a47f4410b08d7822f2ca4e9c3a2baf6b748e5a3531493"
     }
   ],
   "rejects": [
