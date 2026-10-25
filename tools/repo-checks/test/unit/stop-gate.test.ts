@@ -179,6 +179,33 @@ describe(".claude/hooks/stop-gate.sh and arm-stop-gate.sh", () => {
     expect(systemMessage(result)).toContain("docs/issues/X-q2-سؤال.md");
   });
 
+  it("checks again when the code changes after a stop that a filed question let through", () => {
+    arm();
+    changeCode();
+    repo.write("docs/issues/X-q1.md", "# Question for the user: x\n");
+    expect(stop().code).toBe(0);
+    // Committing the question changes no code: the exemption holds.
+    repo.git("add", "docs/issues/X-q1.md");
+    repo.git("commit", "-q", "-m", "X: question");
+    expect(stop().code).toBe(0);
+    // The work goes on in the same session (the question was answered there): checked again.
+    repo.write("services/a/other.ts", "export const next = 1;\n");
+    expectBlocked(stop());
+    expect(stubRuns()).toBe(1);
+    // A new question filed after that lets Claude stop again.
+    repo.write("docs/issues/X-q2.md", "# Question for the user: y\n");
+    const result = stop();
+    expect(result.code, result.output).toBe(0);
+    expect(systemMessage(result)).toContain("docs/issues/X-q2.md");
+  });
+
+  it("runs the checks when only a docs lane's README changed, as make check does", () => {
+    // check-changed.sh adds repo-checks for docs/<lane>/README.md (docs-tree.test.ts reads them).
+    arm();
+    repo.write("docs/proposals/README.md", "# Proposals, changed\n");
+    expectBlocked(stop());
+  });
+
   it("lets Claude stop with a proposal filed after arming", () => {
     arm();
     changeCode();
