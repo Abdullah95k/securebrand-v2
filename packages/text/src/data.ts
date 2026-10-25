@@ -71,7 +71,56 @@ function json(i: number): unknown {
   return JSON.parse((bytes[i] ?? Buffer.alloc(0)).toString("utf8")) as unknown;
 }
 
-export const FOLD_TABLE = json(0) as FoldTableFile;
+// The keys of each object in fold-table.json. As the twin's parser does, the fold refuses a key it
+// does not know and a key it needs and does not find, so that a row added to or renamed in the table
+// cannot leave the fold silently folding by the old rules.
+const TOP_KEYS = [
+  "version",
+  "unicode",
+  "specification",
+  "sorani_labels",
+  "sorani_only_letters",
+  "row0_sorani",
+  "row1_deleted",
+  "row2_deleted",
+  "row3_alef",
+  "rows4to6",
+  "row8_digits",
+  "row10",
+];
+const ROW_KEYS: Readonly<Record<string, readonly string[]>> = {
+  row0_sorani: ["sequence", "becomes"],
+  row3_alef: ["letters", "becomes", "marks_deleted_after"],
+  rows4to6: ["arabic", "sorani"],
+  row10: ["url_prefixes", "tag_signs", "tag_joiner", "space_instead"],
+};
+const DIGIT_KEYS = ["first", "last", "becomes_first"];
+
+function object(value: unknown, where: string, keys: readonly string[]): Record<string, unknown> {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    throw new Error(`fold-table.json: ${where} is not an object`);
+  }
+  const found = Object.keys(value).sort();
+  const wanted = [...keys].sort();
+  if (found.join() !== wanted.join()) {
+    throw new Error(
+      `fold-table.json: ${where} has the keys ${found.join(", ")}, not ${wanted.join(", ")}`,
+    );
+  }
+  return value as Record<string, unknown>;
+}
+
+/** The fold table, refused unless each of its objects has exactly the keys the fold reads. */
+export function checkFoldTable(raw: unknown): FoldTableFile {
+  const top = object(raw, "the table", TOP_KEYS);
+  for (const [row, keys] of Object.entries(ROW_KEYS)) object(top[row], row, keys);
+  const digits: unknown = top.row8_digits;
+  if (!Array.isArray(digits)) throw new Error("fold-table.json: row8_digits is not a list");
+  digits.forEach((d: unknown, i) => object(d, `row8_digits[${String(i)}]`, DIGIT_KEYS));
+  return raw as FoldTableFile;
+}
+
+export const FOLD_TABLE = checkFoldTable(json(0));
 export const UNICODE_15_1 = json(1) as UnicodeFile;
 export const UNASSIGNED_15_1 = json(2) as UnassignedFile;
 

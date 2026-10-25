@@ -70,13 +70,10 @@ export function spans(cps: readonly number[]): Span[] {
   return out;
 }
 
-/** The number of code points in s. */
+/** The number of code points in s, a lone surrogate counting as one, as for...of and cpSlice count. */
 export function cpLength(s: string): number {
   let n = 0;
-  for (let i = 0; i < s.length; i += 1) {
-    const unit = s.charCodeAt(i);
-    if (unit < 0xdc00 || unit > 0xdfff) n += 1; // a low surrogate ends a pair already counted
-  }
+  for (let i = 0; i < s.length; n += 1) i += (s.codePointAt(i) ?? 0) > 0xffff ? 2 : 1;
   return n;
 }
 

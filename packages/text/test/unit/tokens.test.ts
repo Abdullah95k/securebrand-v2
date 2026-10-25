@@ -39,6 +39,13 @@ describe("code points, not UTF-16 units", () => {
     expect(cpSlice("\u{20000}x", 1)).toBe("x");
     expect(cpSlice("زين العراق", 4)).toBe("العراق");
   });
+
+  it("cpLength and cpSlice count a lone surrogate as one code point, as for...of does", () => {
+    for (const s of ["a\uDC00b", "a\uD800b", "\uDC00\uD800", "x\uD83D"]) {
+      expect(cpLength(s)).toBe([...s].length);
+      expect(cpSlice(s, 0, cpLength(s))).toBe(s);
+    }
+  });
 });
 
 describe("tokenize", () => {

@@ -196,6 +196,15 @@ URLS: list[Case] = [
         note="no URL: the URL rule reads the text after row 1, where the tatweel, a kept character, "
         "still precedes the prefix; row 2 deletes it afterwards (D3)",
     ),
+    Case(
+        "url-0032",
+        "urls",
+        "ar",
+        f"شوفوا الفيديو{RLM}https://example.com/v/1",
+        (),
+        note="no URL: row 1 deletes the right-to-left mark before the URL rule reads the text, so a "
+        "kept character precedes the prefix (D3)",
+    ),
 ]
 
 HASHTAGS: list[Case] = [

@@ -81,7 +81,7 @@ It prints:
 النت منقطع بالبصره من الصبح شنو السالفه fold-1
 ```
 
-The twin reads the same `data/fold-table.json`, `LANG_LABELS` from `contracts`' `schemas/vocabulary.json`, and takes Unicode 15.1 from Python 3.13's `unicodedata`; it refuses any other Unicode version.
+The twin reads the same `data/fold-table.json`, `LANG_LABELS` from `contracts`' `schemas/vocabulary.json` and `contracts`' unassigned ranges, by their paths in the repository, and takes Unicode 15.1 from Python 3.13's `unicodedata`; it refuses any other Unicode version. A service installs it editable, as it installs `contracts`' Python package: `[tool.uv.sources] text-fold = { path = "../../packages/text", editable = true }`, with `packages/text` and `packages/contracts` at those paths in its image. A wheel would hold none of those files.
 
 ## The fold
 
@@ -118,9 +118,9 @@ The details:
 - In Arabic mode, a Sorani token without a Sorani-only letter takes the Arabic fold: under `und` it stays wrong until `lang_rescore` (`كوردستان وڵاتێکی جوانە`). A legacy ه + ZWNJ inside it stays ه.
 - A Sorani ە written with a plain final ه and no ZWNJ stays ه: the explicit character table does not guess it (Q1).
 - NFKC can compose a Sorani-only letter away: ە followed by U+0654 becomes ۀ.
-- Row 0 reads the text as received, so a presentation-form heh before a ZWNJ (ﻪ + ZWNJ) is not the legacy pair: it folds to ه (`uni-0031`).
+- Row 0 reads the text as received, so only ه directly followed by a ZWNJ is the legacy pair: a presentation-form heh (ﻪ) or a heh carrying a haraka or tatweel before the ZWNJ folds to ه (`uni-0031`).
 - Row 2's range U+06D6–U+06ED also holds three signs that are no marks (U+06DD, ۞ U+06DE, ۩ U+06E9): they are deleted, not made spaces, so they join what stands on either side (`uni-0032`, `uni-0033`).
-- The URL rule reads the text before row 2 deletes tatweel, which is a letter: a URL glued to a tatweel (`بالـhttps://…`) is no URL, and its parts stay as words (`url-0031`).
+- The URL rule reads the text after row 1 deletes the invisible marks and before row 2 deletes tatweel, which is a letter. So a URL glued to a word by a tatweel or by an invisible mark (`بالـhttps://…`, a right-to-left mark before `https://`) is no URL, and its parts stay as words (`url-0031`, `url-0032`).
 
 ## Data, versions and the corpus
 

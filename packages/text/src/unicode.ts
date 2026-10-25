@@ -21,8 +21,7 @@ const LETTER = 1;
 const MARK = 2;
 const NUMBER = 4;
 const WHITE_SPACE = 8;
-const UNASSIGNED = 16;
-const SPACE_INSTEAD = 32; // D4: a mark or symbol the token rules read as a space
+const SPACE_INSTEAD = 16; // D4: a mark or symbol the token rules read as a space
 
 // One byte of class bits per code point: 1.1 MB, and a lookup per code point on texts of megabytes.
 const CLASSES = new Uint8Array(0x110000);
@@ -37,7 +36,6 @@ mark(UNICODE_15_1.letters, LETTER);
 mark(UNICODE_15_1.marks, MARK);
 mark(UNICODE_15_1.numbers, NUMBER);
 mark(UNICODE_15_1.white_space, WHITE_SPACE);
-mark(UNASSIGNED_15_1.ranges, UNASSIGNED);
 mark(ranges(FOLD_TABLE.row10.space_instead), SPACE_INSTEAD);
 
 const at = (cp: number): number => CLASSES[cp] ?? 0;

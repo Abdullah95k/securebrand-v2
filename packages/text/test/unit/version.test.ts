@@ -18,7 +18,7 @@ const RELEASED: readonly VersionEntry[] = [
   {
     version: "fold-1",
     fold_data_sha256: "af7a968e27aeb75e501723896308cd9fe8c091ce32755997510ca7edb84646ca",
-    golden_sha256: "21bc0560d90c0566a9c441816e76cdc54d3a83efcd078bb66616a7d458c70db8",
+    golden_sha256: "8896ff8675e5ef461e24739d7f20a8e81cf9b6e20e2e67fd136d221facbdc86c",
   },
 ];
 
