@@ -316,36 +316,55 @@ describe("the decision rows (ADR-0013, A22)", () => {
   });
 
   it("no two rows that match one decision give it different provenance", () => {
-    const services = [...INDEX_SERVICES, ...D3_WRITERS];
-    for (const row of decisionRows()) {
+    // About 50,000 queries since the rule_hit rows (D-3): the rows are read once, each service's
+    // are found once, and the conflicts are asserted together, so the test stays well inside
+    // Vitest's timeout on a CI runner.
+    const rows = decisionRows();
+    const rowsOf = new Map(
+      [...INDEX_SERVICES, ...D3_WRITERS].map((s) => [
+        s,
+        rows.filter((r) => namesService(r.producers, s)),
+      ]),
+    );
+    const conflicts: string[] = [];
+    for (const row of rows) {
       const reasons = row.reasons ?? [null, ...REGISTRY_REASONS];
       const healths = row.healths ?? [undefined, ...HEALTHS];
       const ruleHits = row.rule_hits ?? [null, ...RULE_HITS];
       for (const decision of row.decisions) {
-        for (const service of services.filter((s) => namesService(row.producers, s))) {
+        for (const [service, own] of rowsOf) {
+          if (!own.includes(row)) continue;
           for (const reason of reasons) {
             for (const health of healths) {
               for (const ruleHit of ruleHits) {
-                const q = { decision, subject: row.subject, reason, health, rule_hit: ruleHit };
-                const matches = decisionRows().filter(
+                const matches = own.filter(
                   (r) =>
                     r.decisions.includes(decision) &&
                     r.subject === row.subject &&
-                    namesService(r.producers, service) &&
                     (r.reasons === undefined || r.reasons.includes(reason)) &&
                     (r.healths === undefined ||
                       (health !== undefined && r.healths.includes(health))) &&
                     (r.rule_hits === undefined ||
                       (ruleHit !== null && r.rule_hits.includes(ruleHit))),
                 );
-                const provenance = new Set(matches.map((r) => r.provenance));
-                expect(provenance.size, JSON.stringify({ ...q, service })).toBe(1);
+                if (new Set(matches.map((r) => r.provenance)).size !== 1)
+                  conflicts.push(
+                    JSON.stringify({
+                      decision,
+                      subject: row.subject,
+                      reason,
+                      health,
+                      ruleHit,
+                      service,
+                    }),
+                  );
               }
             }
           }
         }
       }
     }
+    expect(conflicts).toEqual([]);
   });
 
   it("refuses a decision type from a producer no row lists", () => {
