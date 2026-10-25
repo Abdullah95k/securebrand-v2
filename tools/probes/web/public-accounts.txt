@@ -1,0 +1,4 @@
+# Public accounts whose handles may stay in fixtures: registered sources, organisations, pages,
+# channels, outlets and companies (ADR-0010). One handle or channel id per line, lower case, without @.
+# Every social-media handle not listed here is replaced by a stable fake before anything is committed.
+# Left empty by the probe-writing session; the run session fills it from the client's own list.

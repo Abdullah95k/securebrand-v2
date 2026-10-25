@@ -1,0 +1,2 @@
+# placeholder: replace with the 30 client keywords, one per line (Arabic, Sorani, English). Lines starting with # are ignored.
+PLACEHOLDER-KEYWORD
