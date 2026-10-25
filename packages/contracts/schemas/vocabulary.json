@@ -403,6 +403,7 @@
   ],
   "TIERS": [1, 2, 3],
   "TOPIC_SOURCES": ["supervised", "zero_shot"],
+  "UNLINKED_ENTITY_TYPES": ["brand", "company", "institution", "place", "product"],
   "USAGE_SIGNAL_VALUES": ["yes", "no", "unset"],
   "VISIBILITIES": ["owner", "watchers", "pool"]
 }

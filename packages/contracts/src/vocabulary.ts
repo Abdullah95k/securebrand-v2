@@ -354,6 +354,15 @@ export const ENTITY_TYPES = [
   "product",
   "person_public",
 ] as const;
+// An unlinked form is an organisation's, a place's or a product's, never a person's
+// (analysis-entities §5.3 L67, L71): ENTITY_TYPES less person_public.
+export const UNLINKED_ENTITY_TYPES = [
+  "brand",
+  "company",
+  "institution",
+  "place",
+  "product",
+] as const;
 export const ENTITY_SOURCES = ["model", "gazetteer", "both"] as const;
 
 // item.hits/v1 (ADR-0031).

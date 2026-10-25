@@ -1713,7 +1713,7 @@
       "properties": {
         "type": {
           "type": "string",
-          "enum": ["brand", "company", "institution", "place", "product", "person_public"]
+          "enum": ["brand", "company", "institution", "place", "product"]
         },
         "surface": { "type": "string" },
         "start": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },

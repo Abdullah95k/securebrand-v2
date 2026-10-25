@@ -638,6 +638,16 @@
       ],
       "from": "analysis-entities §6.2 L106-L114"
     },
+    "UNLINKED_ENTITY_TYPES": {
+      "values": [
+        "brand",
+        "company",
+        "institution",
+        "place",
+        "product"
+      ],
+      "from": "analysis-entities §5.3 L67, L71: unlinked forms are organisations, places and products, never persons"
+    },
     "ENTITY_SOURCES": {
       "values": [
         "model",

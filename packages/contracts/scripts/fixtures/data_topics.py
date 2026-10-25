@@ -2213,6 +2213,40 @@ def analysis() -> None:
         ["result", "entities", 0, "type"],
         "only public persons are linked entities; private ones are counted (analysis-entities §5.3)",
     )
+    # The person guard: a person mention is linked or dropped, and an unlinked form is never a
+    # person's (analysis-entities §5.3 L69, L71).
+    invalid(
+        s,
+        "entities-person-without-id",
+        with_(
+            ent,
+            ("result", "entities"),
+            [
+                *ent["result"]["entities"],
+                {
+                    "type": "person_public",
+                    "entity_id": None,
+                    "start": 0,
+                    "end": 9,
+                    "source": "model",
+                    "surface": "د. المثال",
+                },
+            ],
+        ),
+        ["result", "entities", 1, "entity_id"],
+        "a person mention is linked or dropped, never kept unlinked (analysis-entities §5.3 L69)",
+    )
+    invalid(
+        s,
+        "unlinked-person",
+        with_(
+            ent,
+            ("result", "unlinked"),
+            [{"type": "person_public", "surface": "د. المثال", "start": 0, "end": 9}],
+        ),
+        ["result", "unlinked", 0, "type"],
+        "an unlinked form is never a person's (analysis-entities §5.3 L71)",
+    )
     invalid(
         s,
         "media-fetch-short-hash",

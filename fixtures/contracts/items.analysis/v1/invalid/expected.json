@@ -38,6 +38,15 @@
     ],
     "rule": "task names hold no colon (ADR-0023)"
   },
+  "entities-person-without-id.json": {
+    "path": [
+      "result",
+      "entities",
+      1,
+      "entity_id"
+    ],
+    "rule": "a person mention is linked or dropped, never kept unlinked (analysis-entities §5.3 L69)"
+  },
   "entities-private-person.json": {
     "path": [
       "result",
@@ -162,5 +171,14 @@
       "reason"
     ],
     "rule": "the skip reasons are closed (Q8)"
+  },
+  "unlinked-person.json": {
+    "path": [
+      "result",
+      "unlinked",
+      0,
+      "type"
+    ],
+    "rule": "an unlinked form is never a person's (analysis-entities §5.3 L71)"
   }
 }

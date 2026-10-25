@@ -553,6 +553,18 @@ const itemsAnalysis: Rule = (m, out) => {
     if (m.result !== null)
       out.add(["result"], "skip_with_result", "a skipped analysis carries no result");
   }
+  // The person guard: a person mention is linked to a public person or dropped, never kept with
+  // offsets and a surface but no entity (analysis-entities §5.3 L69).
+  const entities = m.task === "entities" ? rec(m.result).entities : undefined;
+  if (Array.isArray(entities))
+    entities.forEach((e: unknown, i) => {
+      if (isRecord(e) && e.type === "person_public" && e.entity_id === null)
+        out.add(
+          ["result", "entities", i, "entity_id"],
+          "person_unlinked",
+          "a person mention is linked or dropped, never kept unlinked (analysis-entities §5.3 L69)",
+        );
+    });
 };
 
 const itemMetrics: Rule = (m, out) => {

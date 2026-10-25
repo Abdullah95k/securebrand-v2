@@ -148,7 +148,7 @@ class Entity(BaseModel):
 
 class UnlinkedEntity(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    type: Literal["brand", "company", "institution", "place", "product", "person_public"]
+    type: Literal["brand", "company", "institution", "place", "product"]
     surface: str
     start: Annotated[int, Field(ge=0, le=9007199254740991)]
     end: Annotated[int, Field(ge=0, le=9007199254740991)]

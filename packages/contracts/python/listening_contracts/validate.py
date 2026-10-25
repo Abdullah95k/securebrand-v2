@@ -613,6 +613,20 @@ def _items_analysis(m: Json, out: _Issues, ctx: _Context) -> None:
             out.add(["reason"], "skip_without_reason", "a skipped analysis names its reason (Q8)")
         if m.get("result") is not None:
             out.add(["result"], "skip_with_result", "a skipped analysis carries no result")
+    # The person guard: a person mention is linked to a public person or dropped, never kept with
+    # offsets and a surface but no entity (analysis-entities §5.3 L69).
+    entities = _rec(m.get("result")).get("entities") if m.get("task") == "entities" else None
+    if isinstance(entities, list):
+        for i, e in enumerate(cast(list[object], entities)):
+            entity = _rec(e)
+            unlinked = "entity_id" in entity and entity["entity_id"] is None
+            if entity.get("type") == "person_public" and unlinked:
+                out.add(
+                    ["result", "entities", i, "entity_id"],
+                    "person_unlinked",
+                    "a person mention is linked or dropped, never kept unlinked"
+                    " (analysis-entities §5.3 L69)",
+                )
 
 
 def _item_metrics(m: Json, out: _Issues, ctx: _Context) -> None:

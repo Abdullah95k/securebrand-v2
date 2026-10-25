@@ -30,6 +30,7 @@ import {
   PLATFORMS,
   SENTIMENT_LABELS,
   TOPIC_SOURCES,
+  UNLINKED_ENTITY_TYPES,
 } from "./vocabulary.ts";
 
 export const ITEMS_ANALYSIS = "items.analysis/v1";
@@ -175,7 +176,8 @@ export function buildItemsAnalysis(b: SchemaBuilder) {
               .array(
                 b.def("UnlinkedEntity", () =>
                   b.obj({
-                    type: z.enum(ENTITY_TYPES),
+                    // Never a person's: a person mention is linked or dropped (§5.3 L69, L71).
+                    type: z.enum(UNLINKED_ENTITY_TYPES),
                     surface: z.string(),
                     start: count(),
                     end: count(),
