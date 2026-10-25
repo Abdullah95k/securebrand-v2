@@ -66,14 +66,17 @@ anonymous pulls when its publisher offers an official image there (SeaweedFS's o
 Supabase's images on ECR Public). Redpanda, which publishes only on Docker Hub, and ClickHouse, whose
 Docker Official Image on ECR Public refuses anonymous pulls from shared addresses (`toomanyrequests:
 Data limit exceeded`), are copied to this repository's GHCR packages by
-`.github/workflows/mirror-images.yml` (on demand, and on every push that changes `versions.env`).
+`.github/workflows/mirror-images.yml` (on demand, and on every push to main that changes
+`versions.env`).
 Docker Hub limits anonymous pulls per address and answers 429 on shared addresses such as the
 cloud sessions'. `IMAGE_REGISTRY=upstream make up` pulls every image from its publisher's registry
 instead. `scripts/compose.sh <command>` runs docker compose with the pins set.
 
 To change a pin, edit `versions.env` (the tag, and for a new image its `_REPO` and `_UPSTREAM`), add
-or update its row in `docs/dependencies.md`, and push: the mirror workflow copies a new Redpanda tag.
-A tag already in the mirror is compared with its upstream by manifest digest on every run. When they
+or update its row in `docs/dependencies.md`, and push. A lane that changes a mirrored pin (Redpanda,
+ClickHouse) runs the mirror workflow on its branch (Actions, Mirror images, Run workflow) before its
+CI, so that `make up` finds the new tag; the push to main runs it again. A tag already in the mirror
+is compared with its upstream by manifest digest on every run. When they
 differ, the run fails and names both digests; only a run on main, where `versions.env` is reviewed,
 replaces the mirrored tag.
 

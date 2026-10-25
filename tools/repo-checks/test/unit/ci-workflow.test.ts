@@ -197,11 +197,11 @@ describe("GitHub workflows", () => {
     }
   });
 
-  it("the mirror workflow runs on demand and on pushes to any branch that change stack/versions.env", () => {
+  it("the mirror workflow runs on demand and on pushes to main that change stack/versions.env", () => {
     expect(mirror.on).toHaveProperty("workflow_dispatch");
     const push = mirror.on?.push as { paths: string[]; branches?: string[] };
     expect(push.paths).toContain("stack/versions.env");
-    expect(push.branches).toBeUndefined();
+    expect(push.branches).toEqual(["main"]);
     expect(mirror.permissions).toMatchObject({ packages: "write" });
     const job = Object.values(mirror.jobs)[0];
     expect(job).toBeDefined();
