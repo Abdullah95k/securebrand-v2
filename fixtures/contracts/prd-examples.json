@@ -702,7 +702,8 @@
         "resolver becomes provenance.service, the resolver that fetched it (ADR-0003)",
         "keywords becomes keyword_ids; location_text goes (ADR-0033)",
         "hits_30d moves to poster_profiles.hits_30d (ADR-0045); unresolvable gives way to status (ADR-0033)",
-        "lang_share takes ADR-0033's keys"
+        "lang_share takes ADR-0033's keys",
+        "account_type business becomes business_or_creator, public_account false: ig-account-resolver writes business_or_creator (Q7; ig-account-resolver.md L60, L92; ADR-0010 L72)"
       ]
     },
     {
@@ -1403,7 +1404,8 @@
         "idempotency_key, platform, platform_hint, handled_by, cost and extracted go: the engines' message for all four producers (ADR-0037)",
         "the string query becomes the query object; the payload becomes the result object (ADR-0037)",
         "canonical_url and canonical_url_hash added with the one normaliser (ADR-0037 L24; Q9)",
-        "keyword_ids, client_ids and raw_ref added"
+        "keyword_ids, client_ids and raw_ref added",
+        "lang ar and country IQ from the Mojeek call's lb=AR&rb=IQ (L83; ADR-0037 L24); keyword_ids the rule's enabled keyword (ADR-0044 L30)"
       ]
     }
   ]

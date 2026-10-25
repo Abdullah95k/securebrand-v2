@@ -9,15 +9,17 @@
   },
   "engine": "mojeek",
   "source_id": "7b3e5f8a-1c2d-4e4f-9a6b-7c8d9e0f1a2b",
-  "keyword_ids": [],
+  "keyword_ids": [
+    "0cd402b6-9015-45f8-86b4-d90cc086d320"
+  ],
   "client_ids": [
     "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
   ],
   "query": {
     "text": "site:youtube.com \"فايبر اكس\"",
     "variant": null,
-    "lang": null,
-    "country": null,
+    "lang": "ar",
+    "country": "IQ",
     "request_id": null
   },
   "result": {

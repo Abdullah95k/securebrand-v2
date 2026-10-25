@@ -1526,9 +1526,9 @@ def profiles() -> None:
         produced_at="2026-10-06T10:14:02Z",
         provenance_service="ig-account-resolver",
         source_type="account",
-        account_type="business",
+        account_type="business_or_creator",
         individual=False,
-        public_account=True,
+        public_account=False,
         platform_id="17841400000000000",
         handle="baghdad_eats",
         url="https://instagram.com/baghdad_eats",
@@ -1561,6 +1561,7 @@ def profiles() -> None:
             "keywords becomes keyword_ids; location_text goes (ADR-0033)",
             "hits_30d moves to poster_profiles.hits_30d (ADR-0045); unresolvable gives way to status (ADR-0033)",
             "lang_share takes ADR-0033's keys",
+            "account_type business becomes business_or_creator, public_account false: ig-account-resolver writes business_or_creator (Q7; ig-account-resolver.md L60, L92; ADR-0010 L72)",
         ],
     )
     ind = {
@@ -3271,8 +3272,8 @@ def search_results() -> None:
         {
             "text": 'site:youtube.com "فايبر اكس"',
             "variant": None,
-            "lang": None,
-            "country": None,
+            "lang": "ar",
+            "country": "IQ",
             "request_id": None,
         },
         {
@@ -3286,7 +3287,6 @@ def search_results() -> None:
         "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
         "raw/green/web/2026/10/06/yt-web-search-bridge/000002.jsonl.zst#1",
         source_id="7b3e5f8a-1c2d-4e4f-9a6b-7c8d9e0f1a2b",
-        keyword_ids=[],
     )
     valid(s, "prd-yt-web-search-bridge", br)
     prd(
@@ -3302,6 +3302,7 @@ def search_results() -> None:
             "the string query becomes the query object; the payload becomes the result object (ADR-0037)",
             "canonical_url and canonical_url_hash added with the one normaliser (ADR-0037 L24; Q9)",
             "keyword_ids, client_ids and raw_ref added",
+            "lang ar and country IQ from the Mojeek call's lb=AR&rb=IQ (L83; ADR-0037 L24); keyword_ids the rule's enabled keyword (ADR-0044 L30)",
         ],
     )
     metadata_invalids(s, pp)

@@ -122,3 +122,23 @@ describe("fixture coverage (A5)", () => {
     }
   });
 });
+
+// The valid fixtures are the examples later sessions copy, so they keep the values the decisions
+// leave open and no other (review finding 9).
+describe("fixture consistency with the decisions", () => {
+  it("ig-account-resolver's profiles are business_or_creator or untyped (Q7; ig-account-resolver.md L92)", () => {
+    for (const f of fixtures("poster.profiles/v1", "valid")) {
+      if (field(f.value, "provenance", "service") !== "ig-account-resolver") continue;
+      expect(["business_or_creator", null], f.name).toContain(field(f.value, "account_type"));
+    }
+  });
+
+  it("a search result for a client names its language and keywords, GDELT's language aside (ADR-0037 L24, ADR-0044 L30)", () => {
+    for (const f of fixtures("search.results/v1", "valid")) {
+      const clients = field(f.value, "client_ids") as unknown[];
+      if (field(f.value, "engine") === "gdelt" || clients.length === 0) continue;
+      expect(field(f.value, "query", "lang"), f.name).not.toBeNull();
+      expect((field(f.value, "keyword_ids") as unknown[]).length, f.name).toBeGreaterThan(0);
+    }
+  });
+});
