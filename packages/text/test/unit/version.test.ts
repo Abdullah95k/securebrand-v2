@@ -15,7 +15,11 @@ interface VersionEntry {
 // The released versions, pinned here as well as in data/fold-versions.json: changing a released
 // entry there fails this test, so a fold change has to be a new version (E7).
 const RELEASED: readonly VersionEntry[] = [
-  { version: "fold-1", fold_data_sha256: "pending", golden_sha256: "pending" },
+  {
+    version: "fold-1",
+    fold_data_sha256: "af7a968e27aeb75e501723896308cd9fe8c091ce32755997510ca7edb84646ca",
+    golden_sha256: "21bc0560d90c0566a9c441816e76cdc54d3a83efcd078bb66616a7d458c70db8",
+  },
 ];
 
 const DATA_FILES = [

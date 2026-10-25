@@ -2,8 +2,9 @@
 // and the rules that keep any private person's text or name out of it (DoD item 7, ADR-0010).
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
+import { sheet, SHEET_FILE } from "../../scripts/review-sheet.ts";
 import { CATEGORIES, GoldenCase, goldenSchemaJson, PLANNED_COUNTS } from "../golden-case.ts";
-import { corpus, corpusLines, FIXTURES_DIR } from "../helpers.ts";
+import { corpus, corpusLines, FIXTURES_DIR, GOLDEN_FILE } from "../helpers.ts";
 
 const cases = corpus();
 
@@ -53,6 +54,10 @@ describe("the brief: 500 or more cases in the named categories", () => {
     expect(readFileSync(`${FIXTURES_DIR}golden.schema.json`, "utf8")).toBe(goldenSchemaJson());
   });
 
+  it("the reader's sheet is the one review-sheet.ts writes from the corpus", () => {
+    expect(readFileSync(SHEET_FILE, "utf8")).toBe(sheet(readFileSync(GOLDEN_FILE, "utf8")));
+  });
+
   it("ids are unique", () => {
     const ids = cases.map((c) => c.id);
     expect(ids.filter((id, i) => ids.indexOf(id) !== i)).toEqual([]);
@@ -77,8 +82,12 @@ describe("DoD 7: no private person's text or name in the fixtures", () => {
     const bad: string[] = [];
     for (const c of cases) {
       const s = plain(c.title, c.text);
-      for (const m of s.matchAll(/(?:https?:\/\/|www\.)([^\s/?#،؛]+)/giu)) {
-        const host = (m[1] ?? "").toLowerCase().replace(/^www\./u, "");
+      // A host runs over letters, digits, dots and hyphens; a dot that ends the sentence is not its own.
+      for (const m of s.matchAll(/(?:https?:\/\/|www\.)([\p{L}\p{N}.-]+)/giu)) {
+        const host = (m[1] ?? "")
+          .toLowerCase()
+          .replace(/^www\./u, "")
+          .replace(/\.+$/u, "");
         if (!RESERVED_HOST.test(host)) bad.push(`${c.id}: URL host ${host}`);
       }
       for (const m of s.matchAll(/(?<=^|[^\p{L}\p{M}\p{N}_])@([\p{L}\p{M}\p{N}_]+)/gu)) {

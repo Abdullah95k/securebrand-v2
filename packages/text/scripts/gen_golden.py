@@ -17,10 +17,50 @@ from collections.abc import Callable
 from pathlib import Path
 
 from corpus.anchors import ANCHORS
-from corpus.model import Case
+from corpus.iraqi_msa import IRAQI, MSA
+from corpus.mixed_english_other import ENGLISH, MIXED, OTHER
+from corpus.model import Case, Row
+from corpus.rows import rows_of
+from corpus.sorani_modes import FOLD_MODE, SORANI, UND
+from corpus.technical import DIGITS, EMOJI, HASHTAGS, UNICODE_EDGE, URLS
 
 GOLDEN = Path(__file__).resolve().parents[3] / "fixtures" / "text" / "golden.jsonl"
-CASES: list[Case] = [*ANCHORS]
+# The plan's order of categories (docs/plans/F7.md, "Count per category"), as in golden-case.ts.
+CATEGORIES = (
+    "iraqi_arabic",
+    "msa",
+    "sorani",
+    "mixed",
+    "english",
+    "emoji",
+    "urls",
+    "hashtags",
+    "digits",
+    "unicode_edge",
+    "fold_mode",
+    "other",
+    "und",
+)
+# One category after another, each in id order, so that its anchors come before the twin's cases.
+CASES: list[Case] = sorted(
+    [
+        *ANCHORS,
+        *IRAQI,
+        *MSA,
+        *SORANI,
+        *MIXED,
+        *ENGLISH,
+        *EMOJI,
+        *URLS,
+        *HASHTAGS,
+        *DIGITS,
+        *UNICODE_EDGE,
+        *FOLD_MODE,
+        *OTHER,
+        *UND,
+    ],
+    key=lambda case: (CATEGORIES.index(case.category), case.id),
+)
 
 TextNorm = Callable[[str | None, str | None, str], str]
 
@@ -50,7 +90,7 @@ def visible(json_line: str) -> str:
     return "".join(_escape(ch) if _hidden(ch) else ch for ch in json_line)
 
 
-def record(case: Case, text_norm: str) -> str:
+def record(case: Case, rows: tuple[Row, ...], text_norm: str) -> str:
     value = {
         "id": case.id,
         "category": case.category,
@@ -58,7 +98,7 @@ def record(case: Case, text_norm: str) -> str:
         "title": case.title,
         "text": case.text,
         "text_norm": text_norm,
-        "rows": list(case.rows),
+        "rows": list(rows),
         "anchor": case.expect is not None,
         "must_pass": True,
         "origin": "invented",
@@ -85,23 +125,31 @@ def generate() -> str:
     fold = twin()
     lines: list[str] = []
     disagreements: list[str] = []
+    false_claims: list[str] = []
     for case in CASES:
         computed = fold(case.title, case.text, case.lang) if fold is not None else None
+        detected = rows_of(case.lang, case.title, case.text)
         if case.expect is not None:
+            # An anchor's rows are its author's claims; each must be one its input exercises.
+            unexercised = [row for row in case.rows if row not in detected]
+            if unexercised:
+                false_claims.append(f"{case.id}: claims {unexercised}, detected {list(detected)}")
             if computed is not None and computed != case.expect:
                 disagreements.append(f"{case.id}: anchor {case.expect!r}, twin {computed!r}")
-            lines.append(record(case, case.expect))
+            lines.append(record(case, case.rows, case.expect))
         elif computed is None:
             sys.exit(f"gen_golden: {case.id} needs the twin (text_fold), which is not installed")
         else:
-            lines.append(record(case, computed))
+            lines.append(record(case, case.rows or detected, computed))
+    if false_claims:
+        sys.exit("gen_golden: anchors claim rows they do not exercise:\n" + "\n".join(false_claims))
     if disagreements:
         sys.exit("gen_golden: the twin disagrees with anchors:\n" + "\n".join(disagreements))
     return "\n".join(lines) + "\n"
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__.split("\n", 1)[0])
+    parser = argparse.ArgumentParser(description=(__doc__ or "").split("\n", 1)[0])
     parser.add_argument("--check", action="store_true", help="compare instead of writing")
     args = parser.parse_args()
     text = generate()

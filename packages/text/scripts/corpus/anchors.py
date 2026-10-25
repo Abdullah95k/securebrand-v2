@@ -26,7 +26,7 @@ from corpus.model import (
 
 # البصرة in presentation forms: alef isolated, lam initial, beh medial, sad medial, reh final, teh
 # marbuta isolated.
-BASRA_PRESENTATION = "ﺍﻟﺒﺼﺮﺓ"
+BASRA_PRESENTATION = "\N{ARABIC LETTER ALEF ISOLATED FORM}\N{ARABIC LETTER LAM INITIAL FORM}\N{ARABIC LETTER BEH MEDIAL FORM}\N{ARABIC LETTER SAD MEDIAL FORM}\N{ARABIC LETTER REH FINAL FORM}\N{ARABIC LETTER TEH MARBUTA ISOLATED FORM}"
 
 ANCHORS: list[Case] = [
     # --- Iraqi Arabic -------------------------------------------------------------------------
@@ -343,7 +343,7 @@ ANCHORS: list[Case] = [
         "ckb-0002",
         "sorani",
         "ckb",
-        "ئەمڕﯙ باران دەبارێت",
+        "ئەمڕ\N{ARABIC LETTER OE ISOLATED FORM} باران دەبارێت",
         (1, 7),
         expect="ئەمڕۆ باران دەبارێت",
         note="U+FBD9, the isolated form of ۆ, becomes ۆ under NFKC (row 1)",
@@ -352,7 +352,7 @@ ANCHORS: list[Case] = [
         "ckb-0003",
         "sorani",
         "ckb",
-        "سلێمانﯽ",
+        "سلێمان\N{ARABIC LETTER FARSI YEH FINAL FORM}",
         (1,),
         expect="سلێمانی",
         note="U+FBFD, the final form of ی, becomes ی under NFKC (row 1)",
@@ -378,7 +378,7 @@ ANCHORS: list[Case] = [
         "ckb-0006",
         "sorani",
         "ckb",
-        "ﮐوردستان",
+        "\N{ARABIC LETTER KEHEH INITIAL FORM}وردستان",
         (1,),
         expect="کوردستان",
         note="U+FB90, the initial form of ک, becomes ک under NFKC (row 1)",
@@ -738,7 +738,7 @@ ANCHORS: list[Case] = [
         "en",
         "İstanbul",
         (9,),
-        expect="i̇stanbul",
+        expect="i\N{COMBINING DOT ABOVE}stanbul",
         note="full case folding: İ folds to i and U+0307 (Q2)",
     ),
     Case(
@@ -761,7 +761,14 @@ ANCHORS: list[Case] = [
     Case("emo-0001", "emoji", "ar", "حلو 😂😂 كلش", (10, "D4"), expect="حلو كلش"),
     Case("emo-0002", "emoji", "ckb", "سڵاو 👋🏻 هاوڕێیان", (10, "D4"), expect="سڵاو هاوڕێیان"),
     Case("emo-0003", "emoji", "ar", "ماكو🔥انترنت", (10, "D4"), expect="ماكو انترنت"),
-    Case("emo-0004", "emoji", "ckb", "❤️❤️ کوردستان", (10, "D4"), expect="کوردستان"),
+    Case(
+        "emo-0004",
+        "emoji",
+        "ckb",
+        "❤\N{VARIATION SELECTOR-16}❤\N{VARIATION SELECTOR-16} کوردستان",
+        (10, "D4"),
+        expect="کوردستان",
+    ),
     Case(
         "emo-0005",
         "emoji",
@@ -833,7 +840,9 @@ ANCHORS: list[Case] = [
         expect="تابعونا @example_news",
     ),
     Case("tag-0003", "hashtags", "ckb", "#هەولێر_جوانە", (10, "D5"), expect="#هەولێر_جوانە"),
-    Case("tag-0004", "hashtags", "ckb", "@example_krd سوپاس", (10, "D5"), expect="@example_krd سوپاس"),
+    Case(
+        "tag-0004", "hashtags", "ckb", "@example_krd سوپاس", (10, "D5"), expect="@example_krd سوپاس"
+    ),
     Case(
         "tag-0005",
         "hashtags",
@@ -925,7 +934,7 @@ ANCHORS: list[Case] = [
         "uni-0003",
         "unicode_edge",
         "ar",
-        "ﻻ يوجد انترنت",
+        "\N{ARABIC LIGATURE LAM WITH ALEF ISOLATED FORM} يوجد انترنت",
         (1,),
         expect="لا يوجد انترنت",
         note="the lam-alef ligature U+FEFB becomes لا under NFKC (row 1)",
@@ -952,7 +961,7 @@ ANCHORS: list[Case] = [
         "uni-0006",
         "unicode_edge",
         "ar",
-        "ان شاء ﷲ",
+        "ان شاء \N{ARABIC LIGATURE ALLAH ISOLATED FORM}",
         (1,),
         expect="ان شاء الله",
         note="the ligature U+FDF2 becomes four letters under NFKC",
@@ -969,7 +978,7 @@ ANCHORS: list[Case] = [
         "uni-0008",
         "unicode_edge",
         "ar",
-        "انتبهواۖ الطريق مغلق",
+        "انتبهوا\N{ARABIC SMALL HIGH LIGATURE SAD WITH LAM WITH ALEF MAKSURA} الطريق مغلق",
         (2,),
         expect="انتبهوا الطريق مغلق",
         note="U+06D6, a Quranic annotation mark, is deleted (row 2)",
@@ -978,7 +987,7 @@ ANCHORS: list[Case] = [
         "uni-0009",
         "unicode_edge",
         "ar",
-        "مسألة الكهرباء",
+        "مسا\N{ARABIC HAMZA ABOVE}لة الكهرباء",
         (1, 3, 4),
         expect="مساله الكهرباء",
         note="decomposed alef and hamza compose under NFKC into أ, which folds to ا",
@@ -987,7 +996,7 @@ ANCHORS: list[Case] = [
         "uni-0010",
         "unicode_edge",
         "ar",
-        "ٱٔ",
+        "ٱ\N{ARABIC HAMZA ABOVE}",
         (3,),
         expect="ا",
         note="E1: ٱ then U+0654; row 3 maps ٱ to ا and deletes the hamza that NFKC would compose",
@@ -996,7 +1005,7 @@ ANCHORS: list[Case] = [
         "uni-0011",
         "unicode_edge",
         "ckb",
-        f"ا{TATWEEL}ٔ",
+        f"ا{TATWEEL}\N{ARABIC HAMZA ABOVE}",
         (2, 3),
         expect="ا",
         note="E1: deleting the tatweel brings ا and U+0654 together; row 2's second NFKC "
@@ -1006,10 +1015,10 @@ ANCHORS: list[Case] = [
         "uni-0012",
         "unicode_edge",
         "en",
-        "ß̇",
+        "ß\N{COMBINING DOT ABOVE}",
         (9,),
-        expect="sṡ",
-        note="E1: ß folds to ss, and row 11's NFKC composes s and U+0307 into ṡ",
+        expect="s\N{LATIN SMALL LETTER S WITH DOT ABOVE}",
+        note="E1: ß folds to ss, and row 11's NFKC composes s and U+0307 into \N{LATIN SMALL LETTER S WITH DOT ABOVE}",
     ),
     Case(
         "uni-0013",
@@ -1024,10 +1033,10 @@ ANCHORS: list[Case] = [
         "uni-0014",
         "unicode_edge",
         "ckb",
-        f"ە{TATWEEL}ٔ",
+        f"ە{TATWEEL}\N{ARABIC HAMZA ABOVE}",
         (2,),
-        expect="ۀ",
-        note="E6: ە then U+0654 composes into ۀ, so this Sorani-only letter does not survive",
+        expect="\N{ARABIC LETTER HEH WITH YEH ABOVE}",
+        note="E6: ە then U+0654 composes into \N{ARABIC LETTER HEH WITH YEH ABOVE}, so this Sorani-only letter does not survive",
     ),
     Case(
         "uni-0015",
@@ -1052,7 +1061,7 @@ ANCHORS: list[Case] = [
         "fold_mode",
         "ckb",
         f"{KAF_FA}وردستان وڵاتێ{KAF_FA}{YEH_FA} جوانە",
-        (5, 6, 7),
+        (7,),
         expect=f"{KAF_FA}وردستان وڵاتێ{KAF_FA}{YEH_FA} جوانە",
         note="lang-dialect-id 13 criterion 2, in Sorani letters",
     ),
@@ -1070,7 +1079,7 @@ ANCHORS: list[Case] = [
         "fold_mode",
         "ar",
         f"{KAF_FA}وردستان وڵاتێ{KAF_FA}{YEH_FA} جوانە",
-        (5, 6, "D7"),
+        (5, 7, "D7"),
         expect=f"{KAF_AR}وردستان وڵاتێ{KAF_FA}{YEH_FA} جوانە",
         note="documented gap: under ar, کوردستان holds no Sorani-only letter and takes the "
         "Arabic fold",
@@ -1097,7 +1106,7 @@ ANCHORS: list[Case] = [
         "fold_mode",
         "ckb",
         f"{KAF_FA}تاب{YEH_FA} جد{YEH_AR}د",
-        (5, 6),
+        (6,),
         expect=f"{KAF_FA}تاب{YEH_FA} جد{YEH_FA}د",
     ),
     # --- other --------------------------------------------------------------------------------

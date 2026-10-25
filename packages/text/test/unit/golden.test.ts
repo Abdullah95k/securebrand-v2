@@ -10,11 +10,31 @@ const cases = corpus();
 const byId = cases.map((c) => [c.id, c] as const);
 
 // The five Sorani-only letters of lang-dialect-id 5.3 A rule 2: ڕ ڵ ۆ ێ ە.
-const SORANI_LETTERS = ["ڕ", "ڵ", "ۆ", "ێ", "ە"];
+const SORANI_LETTERS = ["\u{695}", "\u{6B5}", "\u{6C6}", "\u{6CE}", "\u{6D5}"];
 // What rows 1 and 2 delete before tokens are found, and a URL as D3 reads it (approximately: this
 // test only counts the Sorani letters a URL takes with it).
-const DELETED = /[؜​-‏‪-‮⁠-⁤⁦-⁩﻿ً-ْٰۖ-ۭـ]/gu;
+const DELETED = new Set(
+  [
+    [0x061c, 0x061c],
+    [0x200b, 0x200f],
+    [0x202a, 0x202e],
+    [0x2060, 0x2064],
+    [0x2066, 0x2069],
+    [0xfeff, 0xfeff],
+    [0x064b, 0x0652],
+    [0x0670, 0x0670],
+    [0x06d6, 0x06ed],
+    [0x0640, 0x0640],
+  ].flatMap(([first = 0, last = 0]) =>
+    Array.from({ length: last - first + 1 }, (_, i) => first + i),
+  ),
+);
 const URL_LIKE = /(?<![\p{L}\p{M}\p{N}])(?:https?:\/\/|www\.)\S*/giu;
+
+const withoutDeleted = (s: string): string =>
+  Array.from(s)
+    .filter((ch) => !DELETED.has(ch.codePointAt(0) ?? 0))
+    .join("");
 
 const ROWS_1_TO_10 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const D1_TO_D7 = ["D1", "D2", "D3", "D4", "D5", "D6", "D7"];
@@ -71,9 +91,9 @@ describe("the brief: Sorani-only letters survive", () => {
     const lost: string[] = [];
     for (const c of cases) {
       const input = `${c.title ?? ""} ${c.text}`.normalize("NFKC").replace(URL_LIKE, " ");
-      // Row 2's second NFKC composes what the deletions bring together (ە ـ ٔ → ۀ), so the letters
-      // the fold must keep are those left after it.
-      const kept = input.replace(DELETED, "").normalize("NFKC");
+      // Row 2's second NFKC composes what the deletions bring together (ە ـ U+0654 → ۀ), so the
+      // letters the fold must keep are those left after it.
+      const kept = withoutDeleted(input).normalize("NFKC");
       for (const letter of SORANI_LETTERS) {
         if (countOf(c.text_norm, letter) < countOf(kept, letter))
           lost.push(`${c.id} lost ${letter}`);
@@ -85,7 +105,9 @@ describe("the brief: Sorani-only letters survive", () => {
   it("a unicode_edge case records ە followed by U+0654 becoming ۀ (E6)", () => {
     const recorded = cases.filter(
       (c) =>
-        c.category === "unicode_edge" && /ە[ـً-ْ]*ٔ/u.test(c.text) && c.text_norm.includes("ۀ"),
+        c.category === "unicode_edge" &&
+        withoutDeleted(c.text).includes("\u{6D5}\u{654}") &&
+        c.text_norm.includes("\u{6C0}"),
     );
     expect(recorded.length).toBeGreaterThanOrEqual(1);
   });

@@ -20,7 +20,7 @@ const word = (text: string, start: number, end: number): Token => ({
 
 describe("the Sorani-only letters", () => {
   it("are ڕ ڵ ۆ ێ ە (lang-dialect-id 5.3 A rule 2)", () => {
-    expect(SORANI_ONLY_LETTERS).toEqual(["ڕ", "ڵ", "ۆ", "ێ", "ە"]);
+    expect(SORANI_ONLY_LETTERS).toEqual(["\u{695}", "\u{6B5}", "\u{6C6}", "\u{6CE}", "\u{6D5}"]);
   });
 
   it("hasSoraniLetter finds one in a token", () => {

@@ -48,15 +48,15 @@ describe("Unicode 15.1 pinned (D-2)", () => {
 
   it("a code point unassigned in 15.1 and assigned by 17.0 folds as 15.1 says", () => {
     // U+0897 ARABIC PEPET and U+A7CB LATIN CAPITAL LETTER RAMS HORN are Unicode 16.0 characters.
-    expect(/\p{Mn}/u.test("ࢗ")).toBe(true);
-    expect(/\p{Lu}/u.test("Ɤ")).toBe(true);
+    expect(/\p{Mn}/u.test("\u{897}")).toBe(true);
+    expect(/\p{Lu}/u.test("\u{A7CB}")).toBe(true);
     // Under 15.1 they are unassigned: not kept, so a space.
-    expect(fold("بࢗت", "ar")).toBe("ب ت");
-    expect(fold("aꟋb", "en")).toBe("a b");
+    expect(fold("ب\u{897}ت", "ar")).toBe("ب ت");
+    expect(fold("a\u{A7CB}b", "en")).toBe("a b");
     // And a starter for NFKC, so the marks after it stay after it: ا, then U+0655 alone. Runtime
     // NFKC on the whole text would move U+0655 before U+0897 and compose إ, which folds to ا.
-    expect(fold("إࢗ", "ar")).toBe("ا ٕ");
-    expect(fold("a̖ࢗ", "en")).toBe("a ̖");
+    expect(fold("ا\u{897}\u{655}", "ar")).toBe("ا \u{655}");
+    expect(fold("a\u{897}\u{316}", "en")).toBe("a \u{316}");
   });
 
   it("reads the unassigned ranges from contracts' unicode-15.1-unassigned.json, so every code point it lists becomes a space", () => {

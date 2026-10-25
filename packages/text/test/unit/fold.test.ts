@@ -6,11 +6,11 @@ import { corpus } from "../helpers.ts";
 
 // The letters whose spelling differs between the two folds, written as escapes so that no font can
 // hide which one a test means.
-const KAF_AR = "ك"; // ك
-const KAF_FA = "ک"; // ک
-const YEH_AR = "ي"; // ي
-const YEH_FA = "ی"; // ی
-const ALEF_MAKSURA = "ى"; // ى
+const KAF_AR = "\u{643}"; // ك
+const KAF_FA = "\u{6A9}"; // ک
+const YEH_AR = "\u{64A}"; // ي
+const YEH_FA = "\u{6CC}"; // ی
+const ALEF_MAKSURA = "\u{649}"; // ى
 
 function textError(f: () => unknown): TextError {
   try {
@@ -130,10 +130,10 @@ describe("bad input (D8)", () => {
 
   it("an empty, whitespace-only or emoji-only text folds to the empty string", () => {
     expect(fold("", "ar")).toBe("");
-    expect(fold(" \n\t 　", "ckb")).toBe("");
-    expect(fold("😂😂👍🏻", "und")).toBe("");
-    expect(fold("❤️🇮🇶 1️⃣", "ar")).toBe("1");
-    expect(fold("❤️🇮🇶", "ar")).toBe("");
+    expect(fold(" \n\t\u{A0}\u{3000}", "ckb")).toBe("");
+    expect(fold("😂😂👍\u{1F3FB}", "und")).toBe("");
+    expect(fold("❤\u{FE0F}🇮🇶 1\u{FE0F}\u{20E3}", "ar")).toBe("1");
+    expect(fold("❤\u{FE0F}🇮🇶", "ar")).toBe("");
   });
 
   it("refuses a label outside contracts' LANG_LABELS", () => {
@@ -144,6 +144,15 @@ describe("bad input (D8)", () => {
   it("refuses a text that is not a string", () => {
     // @ts-expect-error: the text must be a string
     expect(textError(() => fold(null, "ar")).code).toBe("not_string");
+  });
+
+  it("textNorm refuses a missing or bad label even when there is nothing to fold", () => {
+    // @ts-expect-error: the label is required
+    expect(textError(() => textNorm(null, null, undefined)).code).toBe("no_lang");
+    // @ts-expect-error: "fa" is not one of contracts' LANG_LABELS
+    expect(textError(() => textNorm("", "", "fa")).code).toBe("bad_lang");
+    // @ts-expect-error: the title must be a string
+    expect(textError(() => textNorm(7, null, "ar")).code).toBe("not_string");
   });
 });
 

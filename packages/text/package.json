@@ -21,6 +21,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "export:schema": "node scripts/export-schema.ts",
     "review-sheet": "node scripts/review-sheet.ts"
   },
   "dependencies": {

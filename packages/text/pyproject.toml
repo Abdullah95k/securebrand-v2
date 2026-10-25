@@ -1,0 +1,50 @@
+[project]
+name = "text-fold"
+version = "1.0.0"
+description = "F7's fold twin: the standard-library Python twin of packages/text's Arabic and Sorani fold, written from the specification alone (docs/plans/F7.md)"
+requires-python = ">=3.13,<3.14"
+dependencies = []
+
+[dependency-groups]
+dev = [
+  "pyright==1.1.414",
+  "pytest==9.1.1",
+  "ruff==0.16.10",
+]
+
+[build-system]
+requires = ["uv_build>=0.12.23,<0.13"]
+build-backend = "uv_build"
+
+[tool.uv]
+# uv reads only the nearest [tool.uv] table, so this repeats the root uv.toml pin.
+required-version = ">=0.12.23,<0.13"
+
+[tool.uv.build-backend]
+module-name = "text_fold"
+module-root = "python"
+
+[tool.ruff]
+extend = "../../ruff.toml"
+
+[tool.ruff.lint.extend-per-file-ignores]
+"python/tests/**" = ["ANN401"]
+# The corpus is data: each case's sentence on one line, long Arabic and Sorani strings included, and
+# characters that look like others on purpose (Arabic letters and digits, fullwidth Latin).
+"scripts/corpus/**" = ["E501", "RUF001", "RUF002", "RUF003"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["text_fold"]
+known-local-folder = ["conftest"]
+
+[tool.pyright]
+typeCheckingMode = "strict"
+pythonVersion = "3.13"
+venvPath = "."
+venv = ".venv"
+include = ["python", "scripts"]
+extraPaths = ["python/tests", "scripts"]
+
+[tool.pytest.ini_options]
+addopts = ["-ra", "--strict-markers"]
+testpaths = ["python/tests"]
