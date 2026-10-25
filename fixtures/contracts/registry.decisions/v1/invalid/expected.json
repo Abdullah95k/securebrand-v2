@@ -342,5 +342,13 @@
       "requested_by"
     ],
     "rule": "a requester that names a service is one the registry lists (Q18; F-09)"
+  },
+  "update-vendor-unlisted.json": {
+    "path": [
+      "update",
+      "source",
+      "vendor"
+    ],
+    "rule": "a vendor named without its route is one the registry lists (ADR-0051; note 11)"
   }
 }

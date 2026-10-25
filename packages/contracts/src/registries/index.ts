@@ -11,6 +11,7 @@ export {
   allowedProducers,
   decisionRow,
   decisionRows,
+  dlqService,
   isAllowedDecisionProducer,
   isAllowedProducer,
   isAllowedTopicWriter,
@@ -38,6 +39,7 @@ export {
   PLATFORM_SERVICES,
   isKnownService,
   isKnownVendor,
+  isListedVendor,
   isPlatformService,
   namesService,
 } from "./services.ts";

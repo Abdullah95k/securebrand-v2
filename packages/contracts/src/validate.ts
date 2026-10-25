@@ -7,7 +7,9 @@
 //    service names, vendors by route, topic writers, the decision rows and their Provenance column
 //    (F-14), the keys each producer declares in `context` and `extras`. A job's producer-table row,
 //    required fields and partition key are checked in both modes when the queue is given: the
-//    consumer's job wrapper dead-letters a job with no row (ADR-0012).
+//    consumer's job wrapper dead-letters a job with no row (ADR-0012). A jobs.completed report's
+//    partition key and X fields are checked in consumer mode only for a service the package knows
+//    (D-9), so a report from a service a newer package adds is not refused.
 // Layer 3 runs only when layer 2 found nothing, so an issue names the first rule broken.
 import type { z } from "zod";
 import { createBuilder, type Mode } from "./builder.ts";
@@ -36,11 +38,13 @@ import {
   declaredContextKeys,
   declaredExtrasKeys,
   decisionRow,
+  dlqService,
   getPath,
   hasValue,
   isAllowedTopicWriter,
   isKnownService,
   isKnownVendor,
+  isListedVendor,
   jobKeyFields,
   queueService,
   requiredJobFields,
@@ -678,6 +682,12 @@ const searchResults: Rule = (m, out) => {
       "canonical_hash_mismatch",
       "canonical_url_hash from the one normaliser (Q9)",
     );
+  if (rec(m.provenance).vendor !== m.engine)
+    out.add(
+      ["provenance", "vendor"],
+      "engine_vendor",
+      "a result names its engine as provenance.vendor (ADR-0051 (c), (e))",
+    );
 };
 
 const crawlPolicies: Rule = (m, out) => {
@@ -728,7 +738,7 @@ function checkJobKey(out: Issues, m: Json, queue: string, kind: string): void {
   }
 }
 
-const jobsCompleted: Rule = (m, out) => {
+const jobsCompleted: Rule = (m, out, ctx) => {
   const queue = str(m.queue) ?? "";
   const kind = str(m.kind) ?? "";
   for (const [name, kinds] of Object.entries(REPORT_KIND_FIELDS)) {
@@ -736,8 +746,12 @@ const jobsCompleted: Rule = (m, out) => {
       out.add([name], "kind_field", `${name} is a ${kinds.join(" and ")} field (ADR-0017)`);
   }
   const service = derive(() => queueService(queue));
+  // The rules that read registry data run as a consumer only for a service this package knows, so a
+  // service a newer package adds inside the version is not refused (D-9).
+  const readsRegistry =
+    ctx.mode === "producer" || (service !== undefined && isKnownService(service));
   for (const name of ["paid_user_reads", "free_rereads"]) {
-    if (m[name] !== undefined && !includes(X_SERVICES, service))
+    if (readsRegistry && m[name] !== undefined && !includes(X_SERVICES, service))
       out.add([name], "x_field", `${name} is an X job's field (ADR-0017)`);
   }
   if (
@@ -757,7 +771,7 @@ const jobsCompleted: Rule = (m, out) => {
       "uncovered_status",
       "an uncovered window goes with status partial (ADR-0064)",
     );
-  checkJobKey(out, m, queue, kind);
+  if (readsRegistry) checkJobKey(out, m, queue, kind);
 };
 
 const job: Rule = (m, out, ctx) => {
@@ -1028,6 +1042,16 @@ function checkVendor(out: Issues, path: IssuePath, route: unknown, vendor: unkno
     );
 }
 
+// A (route, vendor) pair a part of the message names: with its route, the vendor is the registry's
+// for that route; without it, a vendor it names is on one of the registry's lists (note 11).
+function checkPair(out: Issues, path: IssuePath, holder: Json): void {
+  if (holder.vendor === undefined) return;
+  if (holder.route !== undefined) return checkVendor(out, path, holder.route, holder.vendor);
+  const vendor = str(holder.vendor);
+  if (vendor !== undefined && !isListedVendor(vendor))
+    out.add(path, "unknown_vendor", `${vendor} is no vendor of the registry`);
+}
+
 function checkProvenance(out: Issues, prov: unknown, prefix: IssuePath): void {
   if (!isRecord(prov)) return;
   const service = str(prov.service);
@@ -1145,15 +1169,31 @@ function registryChecks(out: Issues, id: string, m: Json): void {
       if (isRecord(fb))
         checkVendor(out, ["health_change", "fallback", "vendor"], fb.route, fb.vendor);
     }
-    const source = rec(block.source);
-    if (source.route !== undefined && source.vendor !== undefined)
-      checkVendor(out, [str(m.decision) ?? "", "source", "vendor"], source.route, source.vendor);
+    checkPair(out, [str(m.decision) ?? "", "source", "vendor"], rec(block.source));
   }
   if (id === "source.events/v1") {
     checkVendor(out, ["vendor"], m.route, m.vendor);
-    const previous = rec(m.previous);
-    if (previous.route !== undefined && previous.vendor !== undefined)
-      checkVendor(out, ["previous", "vendor"], previous.route, previous.vendor);
+    checkPair(out, ["previous", "vendor"], rec(m.previous));
+  }
+  if (id === "n8n.alert/v1") {
+    checkPair(out, ["subject", "vendor"], rec(m.subject));
+    checkPair(out, ["details", "vendor"], rec(m.details));
+  }
+  // A dead letter sits in its consumer's own dlq.<service> topic (CONVENTIONS L41).
+  if (id === "dlq.<service>/v1") {
+    const consumer = str(rec(m.consumer).service);
+    if (consumer !== undefined && !isKnownService(consumer))
+      out.add(
+        ["consumer", "service"],
+        "unknown_service",
+        `${consumer} is no service of the index (Q1)`,
+      );
+    else if (consumer !== undefined && consumer !== dlqService(str(m.schema) ?? ""))
+      out.add(
+        ["consumer", "service"],
+        "consumer_mismatch",
+        `a dead letter of ${consumer} is in dlq.${consumer}/v1 (CONVENTIONS L41)`,
+      );
   }
   if (id === "raw.items/v1") {
     const declared = declaredContextKeys(service, str(head.kind) ?? "");

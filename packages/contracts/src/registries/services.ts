@@ -47,6 +47,11 @@ export function isKnownVendor(route: string, vendor: string | null): boolean {
   return false;
 }
 
+/** A vendor of either route's list: the check for a vendor named without its route (note 11). */
+export function isListedVendor(vendor: string): boolean {
+  return AMBER_VENDORS.includes(vendor) || GREEN_VENDORS.includes(vendor);
+}
+
 const index = new Set<string>(INDEX_SERVICES);
 
 /**

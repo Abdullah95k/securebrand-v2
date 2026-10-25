@@ -18,6 +18,20 @@
     ],
     "rule": "a consumed entry names its consumer group (Q5)"
   },
+  "consumer-mismatch.json": {
+    "path": [
+      "consumer",
+      "service"
+    ],
+    "rule": "a dead letter is in its own service's dlq.<service> (CONVENTIONS L41; note 11)"
+  },
+  "consumer-service-unknown.json": {
+    "path": [
+      "consumer",
+      "service"
+    ],
+    "rule": "the consumer is a service of the index (Q1; note 11)"
+  },
   "error-message-lone-surrogate.json": {
     "path": [
       "error",

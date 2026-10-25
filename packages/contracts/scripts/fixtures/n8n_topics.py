@@ -249,6 +249,20 @@ def alerts() -> None:
         service="registry-writer",
     )
     valid(s, "source-fallback-notice", source_fallback)
+    invalid(
+        s,
+        "subject-vendor-unlisted",
+        with_(route_fallback, ("subject", "vendor"), "acme"),
+        ["subject", "vendor"],
+        "a vendor is the registry's for its route (ADR-0051; note 11)",
+    )
+    invalid(
+        s,
+        "details-vendor-unlisted",
+        with_(source_fallback, ("details", "vendor"), "acme"),
+        ["details", "vendor"],
+        "a vendor named without its route is one the registry lists (ADR-0051; note 11)",
+    )
     budget = alert(
         "budget",
         "2026-10-04T08:12:00Z",

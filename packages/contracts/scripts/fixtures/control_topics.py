@@ -637,6 +637,28 @@ def decisions() -> None:
             "promote-sweep",
         ),
     )
+    # A vendor changed without its route is still one the registry lists (note 11).
+    vendor_only = valid(
+        s,
+        "update-vendor-only",
+        dec(
+            "admin-console",
+            "2026-10-22T08:00:00Z",
+            "update",
+            None,
+            {"source_id": tt_source},
+            {"source": {"vendor": "tikhub"}},
+            "vendor-only",
+            requested_by=PERSON,
+        ),
+    )
+    invalid(
+        s,
+        "update-vendor-unlisted",
+        with_(vendor_only, ("update", "source", "vendor"), "acme"),
+        ["update", "source", "vendor"],
+        "a vendor named without its route is one the registry lists (ADR-0051; note 11)",
+    )
     valid(
         s,
         "retire-decay",
@@ -1596,7 +1618,7 @@ def events() -> None:
         "tier",
     )
     valid(s, "tier-change", tier)
-    valid(
+    budget_event = valid(
         s,
         "updated-budget-wait",
         ev(
@@ -1625,6 +1647,13 @@ def events() -> None:
             "ig-hashtag-search",
             "budget",
         ),
+    )
+    invalid(
+        s,
+        "updated-previous-vendor-unlisted",
+        {**budget_event, "previous": {"vendor": "acme"}},
+        ["previous", "vendor"],
+        "a vendor named without its route is one the registry lists (ADR-0051; note 11)",
     )
     valid(
         s,
@@ -3647,6 +3676,20 @@ def dlq() -> None:
     )
     s = consume["schema"]
     valid(s, "consume-data-message", consume)
+    invalid(
+        s,
+        "consumer-service-unknown",
+        with_(consume, ("consumer", "service"), "no-such-service"),
+        ["consumer", "service"],
+        "the consumer is a service of the index (Q1; note 11)",
+    )
+    invalid(
+        s,
+        "consumer-mismatch",
+        with_(consume, ("consumer", "service"), "keyword-matcher"),
+        ["consumer", "service"],
+        "a dead letter is in its own service's dlq.<service> (CONVENTIONS L41; note 11)",
+    )
     raw_bytes = base64.b64encode(b'{"envelope": {"platform": "facebook", "kind": "post"').decode()
     rawdl = dl(
         "normalize-item",

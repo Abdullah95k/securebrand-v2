@@ -10,6 +10,13 @@
     "rule": "a client or account-manager notice names its client (F-46)",
     "client_type": "commercial"
   },
+  "details-vendor-unlisted.json": {
+    "path": [
+      "details",
+      "vendor"
+    ],
+    "rule": "a vendor named without its route is one the registry lists (ADR-0051; note 11)"
+  },
   "engagement-spike-text-metric.json": {
     "path": [
       "details",
@@ -200,6 +207,13 @@
     ],
     "rule": "metrics are numbers (Q11)",
     "client_type": "commercial"
+  },
+  "subject-vendor-unlisted.json": {
+    "path": [
+      "subject",
+      "vendor"
+    ],
+    "rule": "a vendor is the registry's for its route (ADR-0051; note 11)"
   },
   "topic-spike-text-metric.json": {
     "path": [

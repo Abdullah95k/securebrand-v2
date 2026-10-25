@@ -10,7 +10,9 @@ of src/validate.ts. Three layers, each reported as issues with the path of the f
    service names, vendors by route, topic writers, the decision rows and their Provenance column
    (F-14), the keys each producer declares in `context` and `extras`. A job's producer-table row,
    required fields and partition key are checked in both modes when the queue is given: the
-   consumer's job wrapper dead-letters a job with no row (ADR-0012).
+   consumer's job wrapper dead-letters a job with no row (ADR-0012). A jobs.completed report's
+   partition key and X fields are checked in consumer mode only for a service the package knows
+   (D-9), so a report from a service a newer package adds is not refused.
 
 Layer 3 runs only when layer 2 found nothing, so an issue names the first rule broken. The codes of
 layer 1 are the validator's own (Pydantic's here, Zod's in TypeScript); the paths and the codes of
@@ -50,11 +52,13 @@ from listening_contracts.registries import (
     decision_row,
     declared_context_keys,
     declared_extras_keys,
+    dlq_service,
     get_path,
     has_value,
     is_allowed_topic_writer,
     is_known_service,
     is_known_vendor,
+    is_listed_vendor,
     job_key_fields,
     queue_service,
     required_job_fields,
@@ -896,6 +900,12 @@ def _search_results(m: Json, out: _Issues, ctx: _Context) -> None:
             "canonical_hash_mismatch",
             "canonical_url_hash from the one normaliser (Q9)",
         )
+    if _rec(m.get("provenance")).get("vendor") != m.get("engine"):
+        out.add(
+            ["provenance", "vendor"],
+            "engine_vendor",
+            "a result names its engine as provenance.vendor (ADR-0051 (c), (e))",
+        )
 
 
 def _crawl_policies(m: Json, out: _Issues, ctx: _Context) -> None:
@@ -952,8 +962,11 @@ def _jobs_completed(m: Json, out: _Issues, ctx: _Context) -> None:
         if name in m and kind not in kinds:
             out.add([name], "kind_field", f"{name} is a {' and '.join(kinds)} field (ADR-0017)")
     service = _derive(lambda: queue_service(queue))
+    # The rules that read registry data run as a consumer only for a service this package knows,
+    # so a service a newer package adds inside the version is not refused (D-9).
+    reads_registry = ctx.mode == "producer" or (service is not None and is_known_service(service))
     for name in ("paid_user_reads", "free_rereads"):
-        if name in m and service not in X_SERVICES:
+        if reads_registry and name in m and service not in X_SERVICES:
             out.add([name], "x_field", f"{name} is an X job's field (ADR-0017)")
     if "gap_unfilled" in m and not (queue == "jobs.x-recent-search" and kind == "reconciliation"):
         out.add(["gap_unfilled"], "gap_field", "gap_unfilled belongs to the X gap job (ADR-0064)")
@@ -969,7 +982,8 @@ def _jobs_completed(m: Json, out: _Issues, ctx: _Context) -> None:
             "uncovered_status",
             "an uncovered window goes with status partial (ADR-0064)",
         )
-    _check_job_key(out, m, queue, kind)
+    if reads_registry:
+        _check_job_key(out, m, queue, kind)
 
 
 def _job(m: Json, out: _Issues, ctx: _Context) -> None:
@@ -1236,6 +1250,19 @@ def _check_vendor(out: _Issues, path: IssuePath, route: object, vendor: object) 
         out.add(path, "unknown_vendor", f"{vendor} is no {route} vendor of the registry (ADR-0051)")
 
 
+def _check_pair(out: _Issues, path: IssuePath, holder: Json) -> None:
+    """A (route, vendor) pair a part of the message names: with its route, the vendor is the
+    registry's for that route; without it, a vendor it names is on one of the registry's lists
+    (note 11)."""
+    if "vendor" not in holder:
+        return
+    vendor = holder["vendor"]
+    if "route" in holder:
+        _check_vendor(out, path, holder["route"], vendor)
+    elif isinstance(vendor, str) and not is_listed_vendor(vendor):
+        out.add(path, "unknown_vendor", f"{vendor} is no vendor of the registry")
+
+
 def _check_provenance(out: _Issues, provenance: object, prefix: IssuePath) -> None:
     if not isinstance(provenance, dict):
         return
@@ -1355,17 +1382,27 @@ def _registry_checks(out: _Issues, sid: str, m: Json) -> None:
                 _check_vendor(
                     out, ["health_change", "fallback", "vendor"], fb.get("route"), fb.get("vendor")
                 )
-        source = _rec(block.get("source"))
-        if "route" in source and "vendor" in source:
-            _check_vendor(
-                out, [decision, "source", "vendor"], source.get("route"), source.get("vendor")
-            )
+        _check_pair(out, [decision, "source", "vendor"], _rec(block.get("source")))
     if sid == "source.events/v1":
         _check_vendor(out, ["vendor"], m.get("route"), m.get("vendor"))
-        previous = _rec(m.get("previous"))
-        if "route" in previous and "vendor" in previous:
-            _check_vendor(
-                out, ["previous", "vendor"], previous.get("route"), previous.get("vendor")
+        _check_pair(out, ["previous", "vendor"], _rec(m.get("previous")))
+    if sid == "n8n.alert/v1":
+        _check_pair(out, ["subject", "vendor"], _rec(m.get("subject")))
+        _check_pair(out, ["details", "vendor"], _rec(m.get("details")))
+    # A dead letter sits in its consumer's own dlq.<service> topic (CONVENTIONS L41).
+    if sid == "dlq.<service>/v1":
+        consumer = _str(_rec(m.get("consumer")).get("service"))
+        if consumer is not None and not is_known_service(consumer):
+            out.add(
+                ["consumer", "service"],
+                "unknown_service",
+                f"{consumer} is no service of the index (Q1)",
+            )
+        elif consumer is not None and consumer != dlq_service(_str(m.get("schema")) or ""):
+            out.add(
+                ["consumer", "service"],
+                "consumer_mismatch",
+                f"a dead letter of {consumer} is in dlq.{consumer}/v1 (CONVENTIONS L41)",
             )
     if raw:
         kind = _str(head.get("kind")) or ""

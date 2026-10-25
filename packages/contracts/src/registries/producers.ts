@@ -147,7 +147,7 @@ export function rawItemsKinds(service: string): string[] | null {
 }
 
 /** The service whose dead-letter topic a `dlq.<service>/v1` schema id names, or null. */
-const dlqService = (schemaId: string): string | null =>
+export const dlqService = (schemaId: string): string | null =>
   PATTERNS.dlqSchema.test(schemaId) ? schemaId.slice("dlq.".length, -"/v1".length) : null;
 
 /** The schema id under which the registries file a concrete id (`dlq.<service>/v1` is one entry). */

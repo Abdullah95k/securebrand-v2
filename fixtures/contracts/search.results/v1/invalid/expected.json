@@ -24,6 +24,13 @@
     ],
     "rule": "keyword_rule_id becomes source_id (ADR-0037)"
   },
+  "mojeek-vendor-perplexity.json": {
+    "path": [
+      "provenance",
+      "vendor"
+    ],
+    "rule": "a result names its engine as provenance.vendor (ADR-0051 (c), (e); note 11)"
+  },
   "no-metadata-message-id.json": {
     "path": [
       "message_id"
@@ -54,6 +61,13 @@
       "service"
     ],
     "rule": "the four engines write search.results (ADR-0037)"
+  },
+  "perplexity-vendor-null.json": {
+    "path": [
+      "provenance",
+      "vendor"
+    ],
+    "rule": "a result names its engine as provenance.vendor (ADR-0051 (c), (e); note 11)"
   },
   "string-query.json": {
     "path": [

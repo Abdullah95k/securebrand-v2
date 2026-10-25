@@ -114,5 +114,12 @@
       "actor"
     ],
     "rule": "an actor that names a service is one the registry lists (Q18; F-09)"
+  },
+  "updated-previous-vendor-unlisted.json": {
+    "path": [
+      "previous",
+      "vendor"
+    ],
+    "rule": "a vendor named without its route is one the registry lists (ADR-0051; note 11)"
   }
 }

@@ -3380,6 +3380,17 @@ def search_results() -> None:
         ["result", "date"],
         "result dates are calendar dates",
     )
+    for name, base, vendor in (
+        ("perplexity-vendor-null", pp, None),
+        ("mojeek-vendor-perplexity", mj, "perplexity"),
+    ):
+        invalid(
+            s,
+            name,
+            with_(base, ("provenance", "vendor"), vendor),
+            ["provenance", "vendor"],
+            "a result names its engine as provenance.vendor (ADR-0051 (c), (e); note 11)",
+        )
     tolerant(
         s,
         "unknown-field",

@@ -54,6 +54,12 @@ def is_platform_service(service: str) -> bool:
     return service in _PLATFORM
 
 
+def is_listed_vendor(vendor: str) -> bool:
+    """A vendor of either route's list: the check for a vendor named without its route
+    (note 11)."""
+    return vendor in AMBER_VENDORS or vendor in GREEN_VENDORS
+
+
 def is_known_vendor(route: str, vendor: str | None) -> bool:
     """An amber record names an amber vendor; a green one a licensed engine or none
     (ADR-0051 (c))."""
@@ -241,7 +247,7 @@ _writers = cast(_WritersFile, registry("topic-writers.json"))
 _decisions = cast(_DecisionFile, registry("decision-producers.json"))
 
 
-def _dlq_service(schema_id: str) -> str | None:
+def dlq_service(schema_id: str) -> str | None:
     """The service whose dead-letter topic a `dlq.<service>/v1` schema id names, or None."""
     if not matches("dlqSchema", schema_id):
         return None
@@ -263,7 +269,7 @@ def raw_items_kinds(service: str) -> list[str] | None:
 def registry_schema_id(schema_id: str) -> str:
     """The schema id under which the registries file a concrete id (`dlq.<service>/v1` is one
     entry)."""
-    return schema_id if _dlq_service(schema_id) is None else "dlq.<service>/v1"
+    return schema_id if dlq_service(schema_id) is None else "dlq.<service>/v1"
 
 
 def decision_rows() -> list[DecisionRow]:
@@ -299,7 +305,7 @@ def is_allowed_topic_writer(
     jobs.completed report only the service that ran the job (`queue`)."""
     if not is_known_service(service):
         return False
-    dlq = _dlq_service(schema_id)
+    dlq = dlq_service(schema_id)
     if dlq is not None:
         return dlq == service
     if schema_id == "registry.decisions/v1":
