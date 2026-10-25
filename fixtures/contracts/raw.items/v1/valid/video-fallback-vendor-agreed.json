@@ -1,0 +1,36 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M48HBHEGWNZWDR3VT1TE1F1A",
+    "produced_at": "2026-10-06T12:00:02Z",
+    "producer": {
+      "service": "tt-profile-videos-poller",
+      "version": "1.0.0",
+      "job_id": "01J9N3A8Q2W6C5Y1T4R7K0DA0E"
+    },
+    "platform": "tiktok",
+    "kind": "video",
+    "provenance": {
+      "route": "amber",
+      "vendor": "tikhub",
+      "service": "tt-profile-videos-poller",
+      "fetched_at": "2026-10-06T12:00:00Z"
+    },
+    "retention_class": "vendor_agreed",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01J9N3A8Q2W6C5Y1T4R7K0DA0E",
+    "attempt": 1,
+    "job_kind": "rotation",
+    "api_version": "tikhub-v1",
+    "raw_ref": "raw/amber/tiktok/2026/10/06/tt-profile-videos-poller/000046.jsonl.zst#1",
+    "source_id": "9a47e0b1-5c3d-4f82-b6e9-1d0c8a3f7e25",
+    "platform_id": "7421538806219533999",
+    "idempotency_key": "tiktok:video:7421538806219533999"
+  },
+  "payload": {
+    "aweme_id": "7421538806219533999",
+    "desc": "عرض الجمعة"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "schema": "job/v1",
+  "message_id": "01M48B92SG5FTGWAT8SFC3SDM8",
+  "produced_at": "2026-10-06T10:13:50Z",
+  "producer": {
+    "service": "poster-resolver",
+    "version": "1.0.0",
+    "job_id": "01M48B92SGGYE9N68NYBKHAY4D"
+  },
+  "job_id": "01M48B9AKGZPWZF64KVNV761WT",
+  "kind": "resolve",
+  "due_at": "2026-10-06T10:13:50Z",
+  "attempt": 1,
+  "platform": "instagram",
+  "platform_id": "17841400000000000",
+  "handle": "baghdad_eats",
+  "url": null,
+  "client_ids": [
+    "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+  ],
+  "seed_list": false,
+  "origin": "discovery"
+}

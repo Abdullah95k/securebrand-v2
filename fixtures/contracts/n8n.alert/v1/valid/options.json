@@ -1,0 +1,38 @@
+{
+  "account-manager.json": {
+    "client_type": "commercial"
+  },
+  "client-webhook.json": {
+    "client_type": "commercial"
+  },
+  "engagement-spike.json": {
+    "client_type": "commercial"
+  },
+  "entity-or-logo.json": {
+    "client_type": "commercial"
+  },
+  "government-keyword-level.json": {
+    "client_type": "government"
+  },
+  "keyword-first-seen.json": {
+    "client_type": "commercial"
+  },
+  "negative-share.json": {
+    "client_type": "commercial"
+  },
+  "new-high-reach-poster.json": {
+    "client_type": "commercial"
+  },
+  "post-deleted-high-reach.json": {
+    "client_type": "commercial"
+  },
+  "prd-alert-evaluator.json": {
+    "client_type": "commercial"
+  },
+  "story.json": {
+    "client_type": "commercial"
+  },
+  "topic-spike.json": {
+    "client_type": "commercial"
+  }
+}

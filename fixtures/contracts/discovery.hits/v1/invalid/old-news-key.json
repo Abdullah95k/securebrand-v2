@@ -1,0 +1,49 @@
+{
+  "schema": "discovery.hits/v1",
+  "message_id": "01M4F72A8R7E14G3XP9BA9Z52G",
+  "produced_at": "2026-10-09T02:14:55Z",
+  "producer": {
+    "service": "web-commoncrawl-scanner",
+    "version": "1.0.0",
+    "job_id": "01M4F71ZR0Q8N3K5D2B7T4W9XC"
+  },
+  "candidate": {
+    "candidate_key": "news:example-daily.iq",
+    "platform": "news",
+    "type": "site",
+    "platform_id": null,
+    "handle": null,
+    "url": "https://www.example-daily.iq/"
+  },
+  "evidence_type": "commoncrawl",
+  "item_id": null,
+  "url": "https://www.example-daily.iq/",
+  "source_id": null,
+  "keyword_ids": [],
+  "client_ids": [],
+  "hit_at": "2026-10-09T02:14:50Z",
+  "evidence": {
+    "crawl_id": "CC-MAIN-2026-38",
+    "captures": 1840,
+    "first_capture": "2026-09-14",
+    "last_capture": "2026-09-27",
+    "sample_urls": [
+      "https://www.example-daily.iq/economy/2026/09/26/fiberx-wasit"
+    ],
+    "path_signals": [
+      "date_path",
+      "news_path"
+    ],
+    "language_share": {
+      "ara": 0.93
+    },
+    "news_score": 0.82
+  },
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "web-commoncrawl-scanner",
+    "fetched_at": "2026-10-09T02:14:50Z"
+  },
+  "retention_class": "news_excerpt"
+}

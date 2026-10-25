@@ -1,0 +1,56 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M47K66TG4KYF0NF6E9XXVR1Q",
+    "produced_at": "2026-10-06T03:12:50Z",
+    "producer": {
+      "service": "fb-keyword-search",
+      "version": "1.0.0",
+      "job_id": "01J9N7E3H2M6T9X1V4K8B0QRWD"
+    },
+    "platform": "facebook",
+    "kind": "post",
+    "provenance": {
+      "route": "amber",
+      "vendor": "sociavault",
+      "service": "fb-keyword-search",
+      "fetched_at": "2026-10-06T03:12:48Z"
+    },
+    "retention_class": "vendor_agreed",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01J9N7E3H2M6T9X1V4K8B0QRWD",
+    "attempt": 1,
+    "job_kind": "rotation",
+    "api_version": "sociavault-v1",
+    "raw_ref": "raw/amber/facebook/2026/10/06/fb-keyword-search/000019.jsonl.zst#2",
+    "source_id": "c7e41b95-0a3d-4f82-b6c9-18d5e2a07f43",
+    "platform_id": "4118203958217764",
+    "idempotency_key": "facebook:post:4118203958217764",
+    "context": {
+      "query": {
+        "variant": "شركة المثال",
+        "rank": 1
+      }
+    }
+  },
+  "payload": {
+    "id": "4118203958217764",
+    "text": "الإنترنت من شركة المثال بطيء جداً هالأيام، منو عنده نفس المشكلة؟",
+    "created_time": "2026-10-06T06:30:12+0000",
+    "url": "https://www.facebook.com/groups/271936048205533/posts/4118203958217764",
+    "author": {
+      "id": "1000000000000000003",
+      "name": "Example Member"
+    },
+    "context": {
+      "type": "group",
+      "id": "271936048205533",
+      "name": "مجموعة أهالي المنطقة"
+    },
+    "reactions": 12,
+    "comments": 9,
+    "shares": 0
+  }
+}

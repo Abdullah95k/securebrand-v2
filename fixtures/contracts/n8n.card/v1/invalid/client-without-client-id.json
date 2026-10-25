@@ -1,0 +1,30 @@
+{
+  "schema": "n8n.card/v1",
+  "message_id": "01M48HBMC8JV7VZGPK82J4JDJQ",
+  "produced_at": "2026-10-06T12:00:05Z",
+  "producer": {
+    "service": "fb-page-feed-poller",
+    "version": "1.0.0",
+    "job_id": "01M48HBMC8VBTFJQXN72K4VDHQ"
+  },
+  "card_id": "c51f453c-bc65-58b4-95f6-c62455d32637",
+  "idempotency_key": "c51f453c-bc65-58b4-95f6-c62455d32637:email",
+  "channel": "email",
+  "card_type": "grant_missing",
+  "audience": "client",
+  "client_id": null,
+  "subject": {
+    "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11",
+    "request_id": "01J9N3B5C7D9E1F3G5H7J9K1M3"
+  },
+  "title": "Facebook page access is missing",
+  "summary": "the page stopped granting pages_read_engagement",
+  "facts": [
+    {
+      "label": "page",
+      "value": "FiberX"
+    }
+  ],
+  "opened_at": "2026-10-06T12:00:05Z",
+  "regrant_url": "https://portal.example.iq/sources/6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11/regrant"
+}

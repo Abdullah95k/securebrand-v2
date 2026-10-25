@@ -1,0 +1,37 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M484S1J89MJAG3QQ2MC4KNBW",
+    "produced_at": "2026-10-06T08:20:13Z",
+    "producer": {
+      "service": "li-client-posts-poller",
+      "version": "1.0.0",
+      "job_id": "01J9N3C5K8W2R7T4Y1B6D0F9GH"
+    },
+    "platform": "linkedin",
+    "kind": "post",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "li-client-posts-poller",
+      "fetched_at": "2026-10-06T08:20:11Z"
+    },
+    "retention_class": "linkedin_org",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01J9N3C5K8W2R7T4Y1B6D0F9GH",
+    "attempt": 1,
+    "job_kind": "rotation",
+    "api_version": "202610",
+    "raw_ref": "raw/green/linkedin/2026/10/06/li-client-posts-poller/000041.jsonl.zst#3",
+    "source_id": "3d2f8a14-6b7c-4e19-8a05-c1f7e2b94d36",
+    "platform_id": "urn:li:share:7247000000000000001",
+    "idempotency_key": "linkedin:post:urn:li:share:7247000000000000001"
+  },
+  "payload": {
+    "id": "urn:li:share:7247000000000000001",
+    "commentary": "نرحب بعملائنا في فرعنا الجديد",
+    "createdAt": 1791264011000
+  }
+}

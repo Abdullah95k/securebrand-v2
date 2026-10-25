@@ -1,0 +1,25 @@
+{
+  "schema": "jobs.completed/v1",
+  "message_id": "01M487XQ80GSKC1TMGY8FK7KXR",
+  "produced_at": "2026-10-06T09:15:12Z",
+  "producer": {
+    "service": "analysis-sentiment",
+    "version": "1.0.0",
+    "job_id": "01M4886GG018V1FH131HTSP75D"
+  },
+  "job_id": "01M4886GG018V1FH131HTSP75D",
+  "queue": "jobs.analysis-sentiment.priority",
+  "kind": "analyze",
+  "source_id": "a3c0f1e2-5b6d-4c7e-9f80-112233445566",
+  "attempt": 1,
+  "status": "done",
+  "reason": null,
+  "finished_at": "2026-10-06T09:15:12Z",
+  "report": {
+    "new_count": 1,
+    "seen_count": 0,
+    "pages": 0,
+    "cost_units": 1,
+    "reply_candidates": []
+  }
+}

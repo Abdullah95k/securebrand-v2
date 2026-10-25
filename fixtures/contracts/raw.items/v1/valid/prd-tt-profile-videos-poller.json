@@ -1,0 +1,37 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M487YPG0XP5EF9QF68YB5K88",
+    "produced_at": "2026-10-06T09:15:44Z",
+    "producer": {
+      "service": "tt-profile-videos-poller",
+      "version": "1.0.0",
+      "job_id": "01J9N3A8Q2W6C5Y1T4R7K0D9ZE"
+    },
+    "platform": "tiktok",
+    "kind": "video",
+    "provenance": {
+      "route": "amber",
+      "vendor": "tikhub",
+      "service": "tt-profile-videos-poller",
+      "fetched_at": "2026-10-06T09:15:42Z"
+    },
+    "retention_class": "vendor_agreed",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01J9N3A8Q2W6C5Y1T4R7K0D9ZE",
+    "attempt": 1,
+    "job_kind": "rotation",
+    "api_version": "tikhub-v1",
+    "raw_ref": "raw/amber/tiktok/2026/10/06/tt-profile-videos-poller/000045.jsonl.zst#2",
+    "source_id": "3d8a51c2-7e04-4b9f-8c16-2a9e5d70f4b8",
+    "platform_id": "7421538806219533573",
+    "idempotency_key": "tiktok:video:7421538806219533573"
+  },
+  "payload": {
+    "aweme_id": "7421538806219533573",
+    "desc": "عرض الأسبوع",
+    "create_time": 1791278100
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema": "deletions/v1",
+  "produced_at": "2026-10-06T02:51:09Z",
+  "producer": {
+    "service": "x-compliance-sync",
+    "version": "1.0.0",
+    "job_id": "01J9PB2C4E6G8J0K2M4P6R8T0V"
+  },
+  "deletion_id": "del:platform_sync:item:18661edd61005a6cb5b1c5581fc019148483c096309da9b48580aff6ca2a3b0c",
+  "reason": "platform_sync",
+  "scope": "item",
+  "mode": "delete",
+  "source_id": "3a7d9c21-5e4b-4f8a-b6c0-2d1e9f7a3b54",
+  "target": {
+    "platform": "x",
+    "kind": "post",
+    "item_ids": [
+      "3559f657-2765-5434-85a5-6e3dd9b5d44c"
+    ],
+    "platform_ids": [
+      "1842957310264891392"
+    ]
+  },
+  "signal_at": "2026-10-06T02:47:31Z",
+  "due_at": "2026-10-07T02:47:31Z",
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "x-user-timeline-poller",
+    "fetched_at": "2026-10-05T19:40:00Z"
+  },
+  "retention_class": "x_24h_sync",
+  "requested_by": "x-compliance-sync",
+  "run_id": "01J9PB2C4E6G8J0K2M4P6R8T0V",
+  "event_at": "2026-10-05T19:42:07Z"
+}

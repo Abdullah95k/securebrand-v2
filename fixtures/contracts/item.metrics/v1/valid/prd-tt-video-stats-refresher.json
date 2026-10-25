@@ -1,0 +1,36 @@
+{
+  "schema": "item.metrics/v1",
+  "message_id": "01M4AV7WM89CV77W1H3Z8YC6ZR",
+  "produced_at": "2026-10-07T09:31:17Z",
+  "producer": {
+    "service": "tt-video-stats-refresher",
+    "version": "1.0.0",
+    "job_id": "01J9N5D6T3K8R2W7Y0A4F1HXQB"
+  },
+  "item_id": "87c23e1a-aa3a-5491-b10d-abe0a88b5eee",
+  "idempotency_key": "tiktok:video:7421538806219533573",
+  "platform": "tiktok",
+  "platform_id": "7421538806219533573",
+  "source_id": "3d8a51c2-7e04-4b9f-8c16-2a9e5d70f4b8",
+  "created_at": "2026-10-06T09:10:00Z",
+  "observation": {
+    "label": "refresh",
+    "step": "+24h",
+    "observed_at": "2026-10-07T09:31:15Z"
+  },
+  "metrics": {
+    "views": 61250,
+    "likes": 4410,
+    "comments": 498,
+    "shares": 312,
+    "reactions_by_type": null
+  },
+  "regressed": false,
+  "provenance": {
+    "route": "amber",
+    "vendor": "tikhub",
+    "service": "tt-video-stats-refresher",
+    "fetched_at": "2026-10-07T09:31:15Z"
+  },
+  "retention_class": "vendor_agreed"
+}

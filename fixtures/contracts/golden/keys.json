@@ -1,0 +1,779 @@
+{
+  "description": "Item keys (ADR-0006, ADR-0007, ADR-0009, ADR-0036, ADR-0038). Keys split on the first two colons only; the key is the UTF-8 of its NFC form; item_id = uuid_v5(ns_items, key). Test ids before a colon keep fewer than eight trailing digits, since scripts/check-fixtures.sh reads 8 to 10 digits, a colon and 35 key characters as a Telegram bot token. The unicode_15_1 cases hold text whose NFC or lower case differs between Unicode 15.1 and later versions, and the plan's own set (an Arabic presentation form, Sorani letters, a skin-tone ZWJ sequence): both languages normalise and lower-case as Unicode 15.1.0 does, and a code point unassigned in 15.1 (registries/unicode-15.1-unassigned.json) passes through unchanged (D-2). Each case names a helper, its arguments and its result.",
+  "ns_items": "b0eeaa44-bf4b-4c44-b977-bb8c9485f06e",
+  "keys": [
+    {
+      "name": "facebook post",
+      "input": {
+        "platform": "facebook",
+        "kind": "post",
+        "platform_id": "104012345678901_123456789012345"
+      },
+      "key": "facebook:post:104012345678901_123456789012345",
+      "item_id": "4f7d8c47-c0d2-57f7-98ba-83458e1873e8"
+    },
+    {
+      "name": "facebook comment with a platform id",
+      "input": {
+        "platform": "facebook",
+        "kind": "comment",
+        "platform_id": "123456789012345_987654321098765"
+      },
+      "key": "facebook:comment:123456789012345_987654321098765",
+      "item_id": "468e9fab-540e-56c5-8f9b-771aa7ac6fe1"
+    },
+    {
+      "name": "instagram post by Graph media id",
+      "input": {
+        "platform": "instagram",
+        "kind": "post",
+        "platform_id": "17895695668004550"
+      },
+      "key": "instagram:post:17895695668004550",
+      "item_id": "5a617155-acfd-5966-80d1-bb849c687008"
+    },
+    {
+      "name": "instagram post only a vendor has seen",
+      "input": {
+        "platform": "instagram",
+        "kind": "post",
+        "platform_id": "sc:CxYz123AbCd"
+      },
+      "key": "instagram:post:sc:CxYz123AbCd",
+      "item_id": "e1636f79-e569-56ad-9039-14eceb8f9059"
+    },
+    {
+      "name": "instagram comment",
+      "input": {
+        "platform": "instagram",
+        "kind": "comment",
+        "platform_id": "17858893269000001"
+      },
+      "key": "instagram:comment:17858893269000001",
+      "item_id": "990f52fa-bfc8-58b4-8bec-5bde1a326237"
+    },
+    {
+      "name": "tiktok video, id beyond 2^53",
+      "input": {
+        "platform": "tiktok",
+        "kind": "video",
+        "platform_id": "7429384756102938475"
+      },
+      "key": "tiktok:video:7429384756102938475",
+      "item_id": "5611af92-e388-5d9e-90ed-11537e1ebca0"
+    },
+    {
+      "name": "tiktok comment",
+      "input": {
+        "platform": "tiktok",
+        "kind": "comment",
+        "platform_id": "7429384799000123456"
+      },
+      "key": "tiktok:comment:7429384799000123456",
+      "item_id": "212794c7-0a62-5828-8bc8-c777eae9203d"
+    },
+    {
+      "name": "x post",
+      "input": {
+        "platform": "x",
+        "kind": "post",
+        "platform_id": "1849123456789012345"
+      },
+      "key": "x:post:1849123456789012345",
+      "item_id": "24cb4109-f77b-59d9-9898-54929b2de2fb"
+    },
+    {
+      "name": "x reply: item kind comment, key segment post",
+      "input": {
+        "platform": "x",
+        "kind": "comment",
+        "platform_id": "1849123456789099999"
+      },
+      "key": "x:post:1849123456789099999",
+      "item_id": "8206d70a-23cc-5ed9-a5f6-657fd6ce0261"
+    },
+    {
+      "name": "linkedin post, activity URN",
+      "input": {
+        "platform": "linkedin",
+        "kind": "post",
+        "platform_id": "urn:li:activity:7234567890123456789"
+      },
+      "key": "linkedin:post:urn:li:activity:7234567890123456789",
+      "item_id": "fd5ac664-feb2-5e12-8f72-bdfcc08525fe"
+    },
+    {
+      "name": "linkedin post, share URN",
+      "input": {
+        "platform": "linkedin",
+        "kind": "post",
+        "platform_id": "urn:li:share:7234567890000000001"
+      },
+      "key": "linkedin:post:urn:li:share:7234567890000000001",
+      "item_id": "2b1ad569-4cec-521c-be93-d5fb28b74222"
+    },
+    {
+      "name": "linkedin comment, activity URN",
+      "input": {
+        "platform": "linkedin",
+        "kind": "comment",
+        "platform_id": "urn:li:comment:(urn:li:activity:7234567890123456789,7234567890999999999)"
+      },
+      "key": "linkedin:comment:urn:li:comment:(urn:li:activity:7234567890123456789,7234567890999999999)",
+      "item_id": "bbf34345-f305-5786-9d03-2467f783552f"
+    },
+    {
+      "name": "linkedin comment, share URN",
+      "input": {
+        "platform": "linkedin",
+        "kind": "comment",
+        "platform_id": "urn:li:comment:(urn:li:share:7234567890000000001,7234567890888888888)"
+      },
+      "key": "linkedin:comment:urn:li:comment:(urn:li:share:7234567890000000001,7234567890888888888)",
+      "item_id": "95c47c9f-11c3-59ab-b729-0ab6930bbc6a"
+    },
+    {
+      "name": "telegram channel post by username",
+      "input": {
+        "platform": "telegram",
+        "kind": "post",
+        "platform_id": "iraqnewschannel/4821"
+      },
+      "key": "telegram:post:iraqnewschannel/4821",
+      "item_id": "f6eaf338-f14e-5ed4-a989-344464b2be47"
+    },
+    {
+      "name": "telegram channel post by chat id",
+      "input": {
+        "platform": "telegram",
+        "kind": "post",
+        "platform_id": "-1001234567890/77"
+      },
+      "key": "telegram:post:-1001234567890/77",
+      "item_id": "82e94472-bdb6-5e1a-8f59-3a39316902fc"
+    },
+    {
+      "name": "telegram discussion comment",
+      "input": {
+        "platform": "telegram",
+        "kind": "comment",
+        "platform_id": "-1009876543210/15"
+      },
+      "key": "telegram:comment:-1009876543210/15",
+      "item_id": "b1d8c175-ce6c-5bd9-ab77-9e34f7e27c79"
+    },
+    {
+      "name": "youtube video, id keeps its case",
+      "input": {
+        "platform": "youtube",
+        "kind": "video",
+        "platform_id": "dQw4w9WgXcQ"
+      },
+      "key": "youtube:video:dQw4w9WgXcQ",
+      "item_id": "d7341a9c-faec-55ce-8f6b-68b297f70dfe"
+    },
+    {
+      "name": "youtube comment",
+      "input": {
+        "platform": "youtube",
+        "kind": "comment",
+        "platform_id": "UgzX1abcDEF-ghiJKL4AaABAg"
+      },
+      "key": "youtube:comment:UgzX1abcDEF-ghiJKL4AaABAg",
+      "item_id": "bdbcfeba-6af0-53b3-80db-258bdb519048"
+    },
+    {
+      "name": "news article",
+      "input": {
+        "platform": "news",
+        "kind": "article",
+        "platform_id": "fab8520795a70dfe8cdae271a98f16d663794dab09ebcccb3a560660fd321664"
+      },
+      "key": "news:article:fab8520795a70dfe8cdae271a98f16d663794dab09ebcccb3a560660fd321664",
+      "item_id": "ce634ce8-7ed0-5a86-b216-b42482f478fe"
+    },
+    {
+      "name": "news comment (Disqus post id)",
+      "input": {
+        "platform": "news",
+        "kind": "comment",
+        "platform_id": "6203918455"
+      },
+      "key": "news:comment:6203918455",
+      "item_id": "a39a6cc6-696a-57b5-a09d-430c297d6e1c"
+    },
+    {
+      "name": "web result",
+      "input": {
+        "platform": "web",
+        "kind": "result",
+        "platform_id": "9b90b7f52a7ca570dfe55954f0eef5b82acf7d90a7e472183ed4f44d970ecd6a"
+      },
+      "key": "web:result:9b90b7f52a7ca570dfe55954f0eef5b82acf7d90a7e472183ed4f44d970ecd6a",
+      "item_id": "5d9b3521-4354-5100-b231-3768f4c79df9"
+    },
+    {
+      "name": "NFD id yields the NFC key",
+      "input": {
+        "platform": "news",
+        "kind": "comment",
+        "platform_id": "disqus-café"
+      },
+      "key": "news:comment:disqus-café",
+      "item_id": "0f74a92c-99c8-56d6-9ecc-055592ba431a"
+    },
+    {
+      "name": "decomposed Arabic id yields the NFC key",
+      "input": {
+        "platform": "news",
+        "kind": "comment",
+        "platform_id": "أخبار-7"
+      },
+      "key": "news:comment:أخبار-7",
+      "item_id": "5b7b14f4-1765-52c5-95f2-07206f4c4e37"
+    }
+  ],
+  "builders": [
+    {
+      "name": "telegram post id lower-cases the username",
+      "helper": "telegram_post_id",
+      "input": {
+        "channel": "IraqNewsChannel",
+        "message_id": "4821"
+      },
+      "platform_id": "iraqnewschannel/4821"
+    },
+    {
+      "name": "telegram post id keeps a chat id",
+      "helper": "telegram_post_id",
+      "input": {
+        "channel": "-1001234567890",
+        "message_id": "77"
+      },
+      "platform_id": "-1001234567890/77"
+    },
+    {
+      "name": "telegram comment id",
+      "helper": "telegram_comment_id",
+      "input": {
+        "group_chat_id": "-1009876543210",
+        "message_id": "15"
+      },
+      "platform_id": "-1009876543210/15"
+    },
+    {
+      "name": "linkedin post id, activity",
+      "helper": "linkedin_post_id",
+      "input": {
+        "post_id": "7234567890123456789",
+        "urn": "activity"
+      },
+      "platform_id": "urn:li:activity:7234567890123456789"
+    },
+    {
+      "name": "linkedin post id, share",
+      "helper": "linkedin_post_id",
+      "input": {
+        "post_id": "7234567890000000001",
+        "urn": "share"
+      },
+      "platform_id": "urn:li:share:7234567890000000001"
+    },
+    {
+      "name": "linkedin comment id, activity",
+      "helper": "linkedin_comment_id",
+      "input": {
+        "post_id": "7234567890123456789",
+        "comment_id": "7234567890999999999",
+        "urn": "activity"
+      },
+      "platform_id": "urn:li:comment:(urn:li:activity:7234567890123456789,7234567890999999999)"
+    },
+    {
+      "name": "linkedin comment id, share",
+      "helper": "linkedin_comment_id",
+      "input": {
+        "post_id": "7234567890000000001",
+        "comment_id": "7234567890888888888",
+        "urn": "share"
+      },
+      "platform_id": "urn:li:comment:(urn:li:share:7234567890000000001,7234567890888888888)"
+    },
+    {
+      "name": "instagram shortcode id",
+      "helper": "instagram_shortcode_id",
+      "input": {
+        "shortcode": "CxYz123AbCd"
+      },
+      "platform_id": "sc:CxYz123AbCd"
+    }
+  ],
+  "parse": [
+    {
+      "key": "facebook:post:104012345678901_123456789012345",
+      "platform": "facebook",
+      "kind": "post",
+      "platform_id": "104012345678901_123456789012345"
+    },
+    {
+      "key": "x:post:1849123456789099999",
+      "platform": "x",
+      "kind": "post",
+      "platform_id": "1849123456789099999"
+    },
+    {
+      "key": "telegram:post:iraqnewschannel/4821",
+      "platform": "telegram",
+      "kind": "post",
+      "platform_id": "iraqnewschannel/4821"
+    },
+    {
+      "key": "instagram:post:sc:CxYz123AbCd",
+      "platform": "instagram",
+      "kind": "post",
+      "platform_id": "sc:CxYz123AbCd"
+    },
+    {
+      "key": "linkedin:comment:urn:li:comment:(urn:li:activity:7234567890123456789,7234567890999999999)",
+      "platform": "linkedin",
+      "kind": "comment",
+      "platform_id": "urn:li:comment:(urn:li:activity:7234567890123456789,7234567890999999999)"
+    },
+    {
+      "key": "news:article:fab8520795a70dfe8cdae271a98f16d663794dab09ebcccb3a560660fd321664",
+      "platform": "news",
+      "kind": "article",
+      "platform_id": "fab8520795a70dfe8cdae271a98f16d663794dab09ebcccb3a560660fd321664"
+    }
+  ],
+  "idless_comments": [
+    {
+      "name": "facebook PPCA comment",
+      "input": {
+        "platform": "facebook",
+        "post_id": "104012345678901_1234567",
+        "created_time": "2026-10-06T09:15:42+0000",
+        "text": "خدمة زين ممتازة 👍"
+      },
+      "rendered_time": "2026-10-06T09:15:42Z",
+      "key": "facebook:comment:104012345678901_1234567:1711b8a9fedb210a6de0446691241f4b2e960578e3791b352c3b007976de548c",
+      "item_id": "ce962b84-3a1e-5cc3-8843-9bbdf0a54c65"
+    },
+    {
+      "name": "the same comment read with another offset gives the same key",
+      "input": {
+        "platform": "facebook",
+        "post_id": "104012345678901_1234567",
+        "created_time": "2026-10-06T12:15:42+03:00",
+        "text": "خدمة زين ممتازة 👍"
+      },
+      "rendered_time": "2026-10-06T09:15:42Z",
+      "key": "facebook:comment:104012345678901_1234567:1711b8a9fedb210a6de0446691241f4b2e960578e3791b352c3b007976de548c",
+      "item_id": "ce962b84-3a1e-5cc3-8843-9bbdf0a54c65"
+    },
+    {
+      "name": "fractional seconds are truncated",
+      "input": {
+        "platform": "facebook",
+        "post_id": "104012345678901_1234567",
+        "created_time": "2026-10-06T09:15:42.987Z",
+        "text": "خدمة زين ممتازة 👍"
+      },
+      "rendered_time": "2026-10-06T09:15:42Z",
+      "key": "facebook:comment:104012345678901_1234567:1711b8a9fedb210a6de0446691241f4b2e960578e3791b352c3b007976de548c",
+      "item_id": "ce962b84-3a1e-5cc3-8843-9bbdf0a54c65"
+    },
+    {
+      "name": "decomposed Arabic text gives the NFC key",
+      "input": {
+        "platform": "facebook",
+        "post_id": "104012345678901_1234567",
+        "created_time": "2026-10-06T09:16:00Z",
+        "text": "أكيد الخدمة ممتازة"
+      },
+      "rendered_time": "2026-10-06T09:16:00Z",
+      "key": "facebook:comment:104012345678901_1234567:5304d92de1bb11deea7932ccf1ff695838844d023bd3be0104cbf81253d3fbfa",
+      "item_id": "146a5d88-f11e-5692-b380-8953972849bb"
+    },
+    {
+      "name": "the same text composed",
+      "input": {
+        "platform": "facebook",
+        "post_id": "104012345678901_1234567",
+        "created_time": "2026-10-06T09:16:00Z",
+        "text": "أكيد الخدمة ممتازة"
+      },
+      "rendered_time": "2026-10-06T09:16:00Z",
+      "key": "facebook:comment:104012345678901_1234567:5304d92de1bb11deea7932ccf1ff695838844d023bd3be0104cbf81253d3fbfa",
+      "item_id": "146a5d88-f11e-5692-b380-8953972849bb"
+    },
+    {
+      "name": "emoji with skin tone and a ZWJ family",
+      "input": {
+        "platform": "facebook",
+        "post_id": "104012345678901_1234567",
+        "created_time": "2026-10-06T09:17:00Z",
+        "text": "👍🏽 👨‍👩‍👧 تمام"
+      },
+      "rendered_time": "2026-10-06T09:17:00Z",
+      "key": "facebook:comment:104012345678901_1234567:2729e60957a38e4278a4fe69ac84afa083d757b83a342196f9d68cc04f0e9034",
+      "item_id": "13ecda78-2ba0-5999-95fe-63ddc7b10033"
+    },
+    {
+      "name": "Sorani text",
+      "input": {
+        "platform": "facebook",
+        "post_id": "104012345678901_1234567",
+        "created_time": "2026-10-06T09:18:00Z",
+        "text": "سڵاو، خزمەتگوزاری باشە"
+      },
+      "rendered_time": "2026-10-06T09:18:00Z",
+      "key": "facebook:comment:104012345678901_1234567:978d2d0f5efb950c644a30ccd3ab5d8ec95599f31c0a574a4b620f33d930b827",
+      "item_id": "1abe2ade-e455-5cf4-8640-9bc37ca8506b"
+    },
+    {
+      "name": "empty text",
+      "input": {
+        "platform": "facebook",
+        "post_id": "104012345678901_1234567",
+        "created_time": "2026-10-06T09:19:00Z",
+        "text": ""
+      },
+      "rendered_time": "2026-10-06T09:19:00Z",
+      "key": "facebook:comment:104012345678901_1234567:3dab9a520a91e3e66196445da888a597d380d24c6475309168a7e95f70117bce",
+      "item_id": "e7f229bd-a29f-542d-9252-1755fce05fde"
+    },
+    {
+      "name": "instagram vendor comment on a shortcode-only post",
+      "input": {
+        "platform": "instagram",
+        "post_id": "sc:CxYz123AbCd",
+        "created_time": "2026-10-06T10:00:01Z",
+        "text": "حلو 😍"
+      },
+      "rendered_time": "2026-10-06T10:00:01Z",
+      "key": "instagram:comment:sc:CxYz123AbCd:434021efe7d8e128630426ec899c00a714f00646b9998292c859aa45225de9bc",
+      "item_id": "9266248c-67c7-5b95-aac5-b3832f496d19"
+    }
+  ],
+  "instagram_id_map": [
+    {
+      "name": "a Graph read of an unmapped shortcode keys on the media id",
+      "map": [],
+      "read": {
+        "route": "graph",
+        "media_id": "17895695668004550",
+        "shortcode": "CxYz123AbCd"
+      },
+      "key": "instagram:post:17895695668004550",
+      "map_row": {
+        "shortcode": "CxYz123AbCd",
+        "graph_media_id": "17895695668004550",
+        "key": "instagram:post:17895695668004550"
+      }
+    },
+    {
+      "name": "a vendor read of an unmapped shortcode keys on the shortcode",
+      "map": [],
+      "read": {
+        "route": "vendor",
+        "media_id": null,
+        "shortcode": "CxYz123AbCd"
+      },
+      "key": "instagram:post:sc:CxYz123AbCd",
+      "map_row": {
+        "shortcode": "CxYz123AbCd",
+        "graph_media_id": null,
+        "key": "instagram:post:sc:CxYz123AbCd"
+      }
+    },
+    {
+      "name": "a Graph read of a shortcode a vendor mapped reuses the shortcode key and fills the media id",
+      "map": [
+        {
+          "shortcode": "CxYz123AbCd",
+          "graph_media_id": null,
+          "key": "instagram:post:sc:CxYz123AbCd"
+        }
+      ],
+      "read": {
+        "route": "graph",
+        "media_id": "17895695668004550",
+        "shortcode": "CxYz123AbCd"
+      },
+      "key": "instagram:post:sc:CxYz123AbCd",
+      "map_row": {
+        "shortcode": "CxYz123AbCd",
+        "graph_media_id": "17895695668004550",
+        "key": "instagram:post:sc:CxYz123AbCd"
+      }
+    },
+    {
+      "name": "a vendor read of a shortcode Graph mapped reuses the media id key",
+      "map": [
+        {
+          "shortcode": "CxYz123AbCd",
+          "graph_media_id": "17895695668004550",
+          "key": "instagram:post:17895695668004550"
+        }
+      ],
+      "read": {
+        "route": "vendor",
+        "media_id": null,
+        "shortcode": "CxYz123AbCd"
+      },
+      "key": "instagram:post:17895695668004550",
+      "map_row": {
+        "shortcode": "CxYz123AbCd",
+        "graph_media_id": "17895695668004550",
+        "key": "instagram:post:17895695668004550"
+      }
+    },
+    {
+      "name": "a second Graph read changes nothing",
+      "map": [
+        {
+          "shortcode": "CxYz123AbCd",
+          "graph_media_id": "17895695668004550",
+          "key": "instagram:post:17895695668004550"
+        }
+      ],
+      "read": {
+        "route": "graph",
+        "media_id": "17895695668004550",
+        "shortcode": "CxYz123AbCd"
+      },
+      "key": "instagram:post:17895695668004550",
+      "map_row": {
+        "shortcode": "CxYz123AbCd",
+        "graph_media_id": "17895695668004550",
+        "key": "instagram:post:17895695668004550"
+      }
+    }
+  ],
+  "rejects": [
+    {
+      "name": "unknown platform",
+      "input": {
+        "platform": "myspace",
+        "kind": "post",
+        "platform_id": "1"
+      }
+    },
+    {
+      "name": "kind the platform does not key",
+      "input": {
+        "platform": "facebook",
+        "kind": "video",
+        "platform_id": "1"
+      }
+    },
+    {
+      "name": "archive-only kind",
+      "input": {
+        "platform": "facebook",
+        "kind": "profile",
+        "platform_id": "1"
+      }
+    },
+    {
+      "name": "empty platform id",
+      "input": {
+        "platform": "x",
+        "kind": "post",
+        "platform_id": ""
+      }
+    },
+    {
+      "name": "platform id with a space",
+      "input": {
+        "platform": "x",
+        "kind": "post",
+        "platform_id": "18 49"
+      }
+    },
+    {
+      "name": "numeric platform id",
+      "input": {
+        "platform": "x",
+        "kind": "post",
+        "platform_id": 1849123456789012345
+      }
+    },
+    {
+      "name": "news article id that is not 64 lower-case hex",
+      "input": {
+        "platform": "news",
+        "kind": "article",
+        "platform_id": "ABC"
+      }
+    },
+    {
+      "name": "upper-case platform",
+      "input": {
+        "platform": "Facebook",
+        "kind": "post",
+        "platform_id": "1"
+      }
+    }
+  ],
+  "parse_rejects": [
+    {
+      "name": "two segments",
+      "key": "facebook:post"
+    },
+    {
+      "name": "upper-case platform",
+      "key": "Facebook:post:1"
+    },
+    {
+      "name": "unknown kind segment",
+      "key": "facebook:story:1"
+    },
+    {
+      "name": "empty id",
+      "key": "x:post:"
+    }
+  ],
+  "idless_rejects": [
+    {
+      "name": "created_time without seconds",
+      "input": {
+        "platform": "facebook",
+        "post_id": "1_2",
+        "created_time": "2026-10-06T09:15Z",
+        "text": "a"
+      }
+    },
+    {
+      "name": "created_time without an offset",
+      "input": {
+        "platform": "facebook",
+        "post_id": "1_2",
+        "created_time": "2026-10-06T09:15:42",
+        "text": "a"
+      }
+    }
+  ],
+  "unicode_15_1": [
+    {
+      "name": "beh, ARABIC PEPET (Unicode 16.0), kasra and reh keep their order: content_hash",
+      "helper": "content_hash",
+      "args": [
+        null,
+        "بِࢗر"
+      ],
+      "result": "sha256:e656da10b1f33c570aeb11e6d96d7ae2add8b1c24763de2356138ac6eb7809cb"
+    },
+    {
+      "name": "the same text: query_key",
+      "helper": "query_key",
+      "args": [
+        "x",
+        [
+          "بِࢗر"
+        ],
+        []
+      ],
+      "result": "15c52309fafcb671a2779f87772c91b59ba25b29dbf399ddf9a13072b6629e3f"
+    },
+    {
+      "name": "the same text: the id-less comment key",
+      "helper": "idless_comment_key",
+      "args": [
+        "facebook",
+        "1_2",
+        "2026-10-06T09:15:42Z",
+        "بِࢗر"
+      ],
+      "result": "facebook:comment:1_2:af6222b3f4211df1e70b738fe601b57a009c5f9887763e98cf9c2ae30e700207"
+    },
+    {
+      "name": "TODHRI LETTER I (Unicode 16.0) and a combining dot above stay two code points: the item key",
+      "helper": "idempotency_key",
+      "args": [
+        "x",
+        "post",
+        "id𐗉"
+      ],
+      "result": "x:post:id𐗉"
+    },
+    {
+      "name": "the same key: item_id",
+      "helper": "item_id",
+      "args": [
+        "x:post:id𐗉"
+      ],
+      "result": "14b93824-206b-5bd1-a243-2d55f87ef401"
+    },
+    {
+      "name": "LATIN CAPITAL LETTER RAMS HORN (Unicode 16.0) keeps its case in a host: the normalised URL",
+      "helper": "normalise_url",
+      "args": [
+        "https://ꟋExample.IQ/"
+      ],
+      "result": "https://xn--example-by3z.iq/"
+    },
+    {
+      "name": "the same URL: url_key",
+      "helper": "url_key",
+      "args": [
+        "https://ꟋExample.IQ/"
+      ],
+      "result": "news:url:aad99bfb0308bc87d9582ffd9c445fdf90d643704113094661cff5449af379f6"
+    },
+    {
+      "name": "a capital sigma before RAMS HORN is final, and RAMS HORN keeps its case: query_key",
+      "helper": "query_key",
+      "args": [
+        "x",
+        [
+          "AΣꟋ"
+        ],
+        []
+      ],
+      "result": "b1efff352e67d9105ddaaa5d3f43b35d38ac0a68b1bf588d5027321d8b0122ef"
+    },
+    {
+      "name": "RAMS HORN keeps its case in a handle: the candidate key",
+      "helper": "candidate_key_from_handle",
+      "args": [
+        "x",
+        "@ꟋHandle"
+      ],
+      "result": "x:Ɤhandle"
+    },
+    {
+      "name": "FACE WITH BAGS UNDER EYES (Unicode 16.0) is hashed, never refused: content_hash",
+      "helper": "content_hash",
+      "args": [
+        null,
+        "تعبان 🫩"
+      ],
+      "result": "sha256:acedc153a0029718fab73cc02339571de1fa939e2256c26f414cf09b0b4644f6"
+    },
+    {
+      "name": "an Arabic presentation form, Sorani letters and a skin-tone ZWJ sequence: content_hash",
+      "helper": "content_hash",
+      "args": [
+        null,
+        "ﻻ ڕێگەی کوردستان 👩🏽‍💻"
+      ],
+      "result": "sha256:b4d0c298321162e69574ffc82116f5ab313f8deef7c2a4cc0550ebb9c8733ebd"
+    },
+    {
+      "name": "the same words: query_key",
+      "helper": "query_key",
+      "args": [
+        "x",
+        [
+          "ﻻ ڕێگە"
+        ],
+        [
+          "👩🏽‍💻"
+        ]
+      ],
+      "result": "e6c10ba7f104488a8750dc4c20d8dcfcc8c33c8f7d87970f800e8178f9864c20"
+    }
+  ]
+}

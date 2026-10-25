@@ -1,0 +1,108 @@
+{
+  "description": "RFC 8785 canonical JSON. 'numbers' holds JSON number texts and the canonical text of each; both languages parse the text with their JSON parser first.",
+  "values": [
+    {
+      "name": "key order by UTF-16 code units",
+      "value": {
+        "b": 1,
+        "a": 2,
+        "A": 3,
+        "é": 4,
+        "😀": 5,
+        "ﬁ": 6
+      },
+      "canonical": "{\"A\":3,\"a\":2,\"b\":1,\"é\":4,\"😀\":5,\"ﬁ\":6}"
+    },
+    {
+      "name": "escapes: only quote, backslash and control characters",
+      "value": {
+        "s": "\u0000\u001f\"\\/\b\f\n\r\t é"
+      },
+      "canonical": "{\"s\":\"\\u0000\\u001f\\\"\\\\/\\b\\f\\n\\r\\t é\"}"
+    },
+    {
+      "name": "integers",
+      "value": [
+        0,
+        -1,
+        9007199254740991,
+        -9007199254740991,
+        42
+      ],
+      "canonical": "[0,-1,9007199254740991,-9007199254740991,42]"
+    },
+    {
+      "name": "literals and nesting",
+      "value": {
+        "z": [
+          true,
+          false,
+          null,
+          {},
+          []
+        ],
+        "a": {
+          "y": "1",
+          "x": [
+            1,
+            "2"
+          ]
+        }
+      },
+      "canonical": "{\"a\":{\"x\":[1,\"2\"],\"y\":\"1\"},\"z\":[true,false,null,{},[]]}"
+    },
+    {
+      "name": "raw Arabic and emoji stay unescaped",
+      "value": {
+        "زين": "العراق 👍🏽"
+      },
+      "canonical": "{\"زين\":\"العراق 👍🏽\"}"
+    }
+  ],
+  "numbers": [
+    {
+      "json": "1.5",
+      "canonical": "1.5"
+    },
+    {
+      "json": "0.1",
+      "canonical": "0.1"
+    },
+    {
+      "json": "1e-7",
+      "canonical": "1e-7"
+    },
+    {
+      "json": "1e21",
+      "canonical": "1e+21"
+    },
+    {
+      "json": "1e20",
+      "canonical": "100000000000000000000"
+    },
+    {
+      "json": "100.0",
+      "canonical": "100"
+    },
+    {
+      "json": "-0.0",
+      "canonical": "0"
+    },
+    {
+      "json": "5e-324",
+      "canonical": "5e-324"
+    },
+    {
+      "json": "1.7976931348623157e308",
+      "canonical": "1.7976931348623157e+308"
+    },
+    {
+      "json": "0.000001",
+      "canonical": "0.000001"
+    },
+    {
+      "json": "123456789.125",
+      "canonical": "123456789.125"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "schema": "discovery.hits/v1",
+  "message_id": "01M487WRZ8B83F34NVFCJRWENX",
+  "produced_at": "2026-10-06T09:14:41Z",
+  "producer": {
+    "service": "keyword-matcher",
+    "version": "1.0.0",
+    "job_id": "01M4871WM0NJ5SWYGET3ZGFGSP"
+  },
+  "candidate": {
+    "candidate_key": "facebook:group:271936048205533",
+    "platform": "facebook",
+    "type": "group",
+    "platform_id": "271936048205533",
+    "handle": null,
+    "url": null
+  },
+  "evidence_type": "container",
+  "item_id": "99e0da8e-c347-5fb0-8477-00ffc1219e6f",
+  "url": null,
+  "source_id": "c7e41b95-0a3d-4f82-b6c9-18d5e2a07f43",
+  "keyword_ids": [
+    "9a8b7c6d-5e4f-4321-a0b9-c8d7e6f5a4b3"
+  ],
+  "client_ids": [
+    "e2a9d0b1-6c7f-4a38-9d5e-0f1a2b3c4d5e"
+  ],
+  "hit_at": "2026-10-06T08:51:40Z",
+  "evidence": {
+    "name": "مجموعة أهالي المنطقة"
+  },
+  "provenance": {
+    "route": "amber",
+    "vendor": "sociavault",
+    "service": "fb-keyword-search",
+    "fetched_at": "2026-10-06T03:12:48Z"
+  },
+  "retention_class": "vendor_agreed"
+}

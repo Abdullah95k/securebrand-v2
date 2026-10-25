@@ -1,0 +1,40 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M487W8C0VHR3N2KHTM6X84EP",
+    "produced_at": "2026-10-06T09:14:24Z",
+    "producer": {
+      "service": "x-full-archive-search",
+      "version": "1.0.0",
+      "job_id": "01J9P7Q3M5X8C2V6B9N4K1H0TZ"
+    },
+    "platform": "x",
+    "kind": "post",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "x-full-archive-search",
+      "fetched_at": "2026-10-06T09:14:22Z"
+    },
+    "retention_class": "x_24h_sync",
+    "client_ids": [
+      "3e8f1a2b-7c4d-4b9e-a1f0-6d2c5e8b7a14"
+    ],
+    "job_id": "01J9P7Q3M5X8C2V6B9N4K1H0TZ",
+    "attempt": 1,
+    "job_kind": "backfill",
+    "api_version": "2",
+    "raw_ref": "raw/green/x/2026/10/06/x-full-archive-search/000012.jsonl.zst#30",
+    "source_id": "c71e5a90-3d2b-4f86-9a14-8e0b6d2f5c37",
+    "platform_id": "2087514290017763328",
+    "idempotency_key": "x:post:2087514290017763328",
+    "context": {
+      "paid": true
+    }
+  },
+  "payload": {
+    "id": "2087514290017763328",
+    "text": "افتتاح فرعنا الجديد",
+    "created_at": "2026-08-12T10:00:00.000Z"
+  }
+}

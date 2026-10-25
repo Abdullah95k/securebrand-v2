@@ -1,0 +1,36 @@
+{
+  "schema": "deletions/v1",
+  "message_id": "01M478EMP0T8PN3T8PATZY1YAT",
+  "produced_at": "2026-10-06T00:05:12Z",
+  "producer": {
+    "service": "retention-purger",
+    "version": "1.0.0",
+    "job_id": "01J9P8A3V5N7B2D4F6H0K1M9QS"
+  },
+  "deletion_id": "del:retention:item:94c2749ce1c3176975baa1d4d8df3b795f0367fdb29ee88035f50ca8417557b9",
+  "reason": "retention",
+  "scope": "item",
+  "mode": "purge_text",
+  "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11",
+  "target": {
+    "platform": "tiktok",
+    "kind": "video",
+    "item_ids": [
+      "87c23e1a-aa3a-5491-b10d-abe0a88b5eee"
+    ],
+    "platform_ids": [
+      "7421538806219533573"
+    ]
+  },
+  "signal_at": "2026-10-06T00:00:00Z",
+  "due_at": "2026-10-06T06:00:00Z",
+  "provenance": {
+    "route": "amber",
+    "vendor": "tikhub",
+    "service": "tt-profile-videos-poller",
+    "fetched_at": "2026-07-07T23:40:00Z"
+  },
+  "retention_class": "vendor_agreed",
+  "requested_by": "retention-purger",
+  "run_id": "01J9P8A3V5N7B2D4F6H0K1M9QS"
+}

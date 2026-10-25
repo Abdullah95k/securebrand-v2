@@ -1,0 +1,38 @@
+{
+  "schema": "deletions/v1",
+  "message_id": "01M47J1WQ0FW6HTYV9MCYZPQM5",
+  "produced_at": "2026-10-06T02:53:00Z",
+  "producer": {
+    "service": "x-compliance-sync",
+    "version": "1.0.0",
+    "job_id": "01J9PB2C4E6G8J0K2M4P6R8T0X"
+  },
+  "deletion_id": "del:legal:item:933bd1b32076bd330217d15fb1979dd92feca4d4e44f7d9eea0565cd501ed83e",
+  "reason": "legal",
+  "scope": "item",
+  "mode": "withhold",
+  "source_id": "3a7d9c21-5e4b-4f8a-b6c0-2d1e9f7a3b54",
+  "target": {
+    "platform": "x",
+    "kind": "post",
+    "item_ids": [
+      "98dcd9ae-8c50-5b9c-821c-a332892303d0"
+    ],
+    "platform_ids": [
+      "1842957310264891999"
+    ],
+    "countries": [
+      "IQ"
+    ]
+  },
+  "signal_at": "2026-10-06T02:47:31Z",
+  "due_at": "2026-10-07T02:47:31Z",
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "x-user-timeline-poller",
+    "fetched_at": "2026-10-05T19:41:00Z"
+  },
+  "retention_class": "x_24h_sync",
+  "requested_by": "x-compliance-sync"
+}

@@ -1,0 +1,37 @@
+{
+  "schema": "jobs.completed/v1",
+  "message_id": "01M4AJRC50ET86SEY1V86YJYPW",
+  "produced_at": "2026-10-07T07:03:00Z",
+  "producer": {
+    "service": "yt-replies-fetcher",
+    "version": "1.0.0",
+    "job_id": "01M48F0V80ZZGG928KMD5XX36J"
+  },
+  "job_id": "01M48F0V80ZZGG928KMD5XX36J",
+  "queue": "jobs.yt-replies-fetcher",
+  "kind": "replies",
+  "source_id": "3a9e5c1d-7f2b-4e8a-b6d0-91c4f2e7a835",
+  "post_ref": {
+    "item_id": "d7341a9c-faec-55ce-8f6b-68b297f70dfe",
+    "platform": "youtube",
+    "platform_id": "dQw4w9WgXcQ",
+    "thread_ids": [
+      "UgzK7pQ2mV9xR4tL1bN6AaABAg"
+    ]
+  },
+  "series_step": "+24h",
+  "complete": true,
+  "stored_before": 3,
+  "comments_total": null,
+  "attempt": 1,
+  "status": "done",
+  "reason": null,
+  "finished_at": "2026-10-07T07:03:00Z",
+  "report": {
+    "new_count": 0,
+    "seen_count": 0,
+    "pages": 0,
+    "cost_units": 0,
+    "reply_candidates": []
+  }
+}

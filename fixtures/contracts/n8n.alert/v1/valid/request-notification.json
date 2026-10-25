@@ -1,0 +1,30 @@
+{
+  "schema": "n8n.alert/v1",
+  "message_id": "01M4AWWM48Y4YWRB28S46NFYAH",
+  "produced_at": "2026-10-07T10:00:05Z",
+  "producer": {
+    "service": "x-compliance-sync",
+    "version": "1.0.0",
+    "job_id": "01M4AWWM48V74VRZA9V0RP7SD9"
+  },
+  "alert_id": "01M4AWWM483J5516AN0DBR92W2",
+  "idempotency_key": "01M4AWWM483J5516AN0DBR92W2:email",
+  "channel": "email",
+  "fallthrough_channel": null,
+  "audience": "ops",
+  "client_id": null,
+  "alert": "export_ready",
+  "severity": "info",
+  "subject": {
+    "request_id": "01J9R5S3V7W1X4Y8Z0A2B6C9DH"
+  },
+  "summary": "the X compliance export for September is ready",
+  "details": {
+    "facts": [
+      {
+        "label": "rows",
+        "value": "1090"
+      }
+    ]
+  }
+}

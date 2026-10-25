@@ -1,0 +1,615 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "anyOf": [
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "poster.profiles/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^(([0-9]{3}[1-9]|[0-9]{2}[1-9]0|[0-9][1-9]00|[1-9]000)-((0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-8])|(0[13-9]|1[0-2])-(29|30)|(0[13578]|1[02])-31)|([0-9]{2}(0[48]|[2468][048]|[13579][26])|(0[48]|[2468][048]|[13579][26])00)-02-29)T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "platform": {
+          "type": "string",
+          "enum": [
+            "facebook",
+            "instagram",
+            "tiktok",
+            "x",
+            "linkedin",
+            "telegram",
+            "youtube",
+            "news",
+            "web"
+          ]
+        },
+        "status": { "type": "string", "enum": ["resolved", "review", "unresolvable"] },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "age_gated",
+                "not_indexed",
+                "unclassified",
+                "ambiguous",
+                "schema_unknown",
+                "grant_missing",
+                "not_found",
+                "private",
+                "suspended",
+                "protected"
+              ]
+            },
+            { "type": "null" }
+          ]
+        },
+        "followers": {
+          "anyOf": [
+            { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+            { "type": "null" }
+          ]
+        },
+        "verified": { "type": ["boolean", "null"] },
+        "client_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          }
+        },
+        "resolved_at": {
+          "type": "string",
+          "pattern": "^(([0-9]{3}[1-9]|[0-9]{2}[1-9]0|[0-9][1-9]00|[1-9]000)-((0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-8])|(0[13-9]|1[0-2])-(29|30)|(0[13578]|1[02])-31)|([0-9]{2}(0[48]|[2468][048]|[13579][26])|(0[48]|[2468][048]|[13579][26])00)-02-29)T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "cached": { "type": "boolean" },
+        "cached_until": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^(([0-9]{3}[1-9]|[0-9]{2}[1-9]0|[0-9][1-9]00|[1-9]000)-((0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-8])|(0[13-9]|1[0-2])-(29|30)|(0[13578]|1[02])-31)|([0-9]{2}(0[48]|[2468][048]|[13579][26])|(0[48]|[2468][048]|[13579][26])00)-02-29)T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+            },
+            { "type": "null" }
+          ]
+        },
+        "provenance": { "$ref": "#/$defs/Provenance" },
+        "retention_class": {
+          "type": "string",
+          "enum": [
+            "meta_on_request",
+            "vendor_agreed",
+            "x_24h_sync",
+            "news_excerpt",
+            "telegram_bot",
+            "tiktok_display",
+            "linkedin_48h",
+            "linkedin_org",
+            "youtube_30d_text"
+          ]
+        },
+        "author_ref": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "account_type": { "type": "string", "const": "individual" },
+        "individual": { "type": "boolean", "const": true },
+        "public_account": { "type": "boolean", "const": false }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "platform",
+        "status",
+        "reason",
+        "followers",
+        "verified",
+        "client_ids",
+        "resolved_at",
+        "cached",
+        "cached_until",
+        "provenance",
+        "retention_class",
+        "author_ref",
+        "account_type",
+        "individual",
+        "public_account"
+      ],
+      "additionalProperties": false,
+      "title": "IndividualProfile"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "poster.profiles/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^(([0-9]{3}[1-9]|[0-9]{2}[1-9]0|[0-9][1-9]00|[1-9]000)-((0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-8])|(0[13-9]|1[0-2])-(29|30)|(0[13578]|1[02])-31)|([0-9]{2}(0[48]|[2468][048]|[13579][26])|(0[48]|[2468][048]|[13579][26])00)-02-29)T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "platform": {
+          "type": "string",
+          "enum": [
+            "facebook",
+            "instagram",
+            "tiktok",
+            "x",
+            "linkedin",
+            "telegram",
+            "youtube",
+            "news",
+            "web"
+          ]
+        },
+        "status": { "type": "string", "enum": ["resolved", "review", "unresolvable"] },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "age_gated",
+                "not_indexed",
+                "unclassified",
+                "ambiguous",
+                "schema_unknown",
+                "grant_missing",
+                "not_found",
+                "private",
+                "suspended",
+                "protected"
+              ]
+            },
+            { "type": "null" }
+          ]
+        },
+        "followers": {
+          "anyOf": [
+            { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+            { "type": "null" }
+          ]
+        },
+        "verified": { "type": ["boolean", "null"] },
+        "client_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          }
+        },
+        "resolved_at": {
+          "type": "string",
+          "pattern": "^(([0-9]{3}[1-9]|[0-9]{2}[1-9]0|[0-9][1-9]00|[1-9]000)-((0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-8])|(0[13-9]|1[0-2])-(29|30)|(0[13578]|1[02])-31)|([0-9]{2}(0[48]|[2468][048]|[13579][26])|(0[48]|[2468][048]|[13579][26])00)-02-29)T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "cached": { "type": "boolean" },
+        "cached_until": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^(([0-9]{3}[1-9]|[0-9]{2}[1-9]0|[0-9][1-9]00|[1-9]000)-((0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-8])|(0[13-9]|1[0-2])-(29|30)|(0[13578]|1[02])-31)|([0-9]{2}(0[48]|[2468][048]|[13579][26])|(0[48]|[2468][048]|[13579][26])00)-02-29)T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+            },
+            { "type": "null" }
+          ]
+        },
+        "provenance": { "$ref": "#/$defs/Provenance" },
+        "retention_class": {
+          "type": "string",
+          "enum": [
+            "meta_on_request",
+            "vendor_agreed",
+            "x_24h_sync",
+            "news_excerpt",
+            "telegram_bot",
+            "tiktok_display",
+            "linkedin_48h",
+            "linkedin_org",
+            "youtube_30d_text"
+          ]
+        },
+        "candidate_key": {
+          "type": "string",
+          "pattern": "^(facebook:group:[0-9]+|news:site:[a-z0-9-]+(\\.[a-z0-9-]+)+|(facebook|instagram|tiktok|x|telegram|youtube):[^\\x00-\\x20:]+|linkedin:[^\\x00-\\x20]+)$"
+        },
+        "source_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            { "type": "null" }
+          ]
+        },
+        "source_type": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "page",
+                "group",
+                "account",
+                "creator",
+                "channel",
+                "company_page",
+                "site",
+                "hashtag",
+                "keyword_rule"
+              ]
+            },
+            { "type": "null" }
+          ]
+        },
+        "account_type": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "page",
+                "group",
+                "business",
+                "organization",
+                "channel",
+                "company_page",
+                "site",
+                "creator",
+                "public_figure",
+                "individual",
+                "business_or_creator",
+                "organization_or_public_figure"
+              ]
+            },
+            { "type": "null" }
+          ]
+        },
+        "individual": { "type": ["boolean", "null"] },
+        "public_account": { "type": ["boolean", "null"] },
+        "platform_id": {
+          "anyOf": [{ "type": "string", "pattern": "^[^\\x00-\\x20]+$" }, { "type": "null" }]
+        },
+        "handle": { "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }] },
+        "url": {
+          "anyOf": [
+            { "type": "string", "pattern": "^https?:\\/\\/[^\\x00-\\x20]+$" },
+            { "type": "null" }
+          ]
+        },
+        "display_name": { "type": ["string", "null"] },
+        "posts_30d": {
+          "anyOf": [
+            { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+            { "type": "null" }
+          ]
+        },
+        "last_post_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^(([0-9]{3}[1-9]|[0-9]{2}[1-9]0|[0-9][1-9]00|[1-9]000)-((0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-8])|(0[13-9]|1[0-2])-(29|30)|(0[13578]|1[02])-31)|([0-9]{2}(0[48]|[2468][048]|[13579][26])|(0[48]|[2468][048]|[13579][26])00)-02-29)T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+            },
+            { "type": "null" }
+          ]
+        },
+        "posts_per_day": { "anyOf": [{ "type": "number", "minimum": 0 }, { "type": "null" }] },
+        "duplicate_text_share": {
+          "anyOf": [{ "type": "number", "minimum": 0, "maximum": 1 }, { "type": "null" }]
+        },
+        "default_avatar": { "type": ["boolean", "null"] },
+        "account_created_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^(([0-9]{3}[1-9]|[0-9]{2}[1-9]0|[0-9][1-9]00|[1-9]000)-((0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-8])|(0[13-9]|1[0-2])-(29|30)|(0[13578]|1[02])-31)|([0-9]{2}(0[48]|[2468][048]|[13579][26])|(0[48]|[2468][048]|[13579][26])00)-02-29)T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+            },
+            { "type": "null" }
+          ]
+        },
+        "owned_by_client": { "type": ["boolean", "null"] },
+        "country_signals": { "anyOf": [{ "$ref": "#/$defs/CountrySignals" }, { "type": "null" }] },
+        "lang_share": { "anyOf": [{ "$ref": "#/$defs/LangShare" }, { "type": "null" }] },
+        "keyword_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          }
+        },
+        "route": {
+          "anyOf": [{ "type": "string", "enum": ["green", "amber"] }, { "type": "null" }]
+        },
+        "vendor": {
+          "anyOf": [{ "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" }, { "type": "null" }]
+        },
+        "review_flags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["watchlist_only", "hidden_subscriber_count", "made_for_kids"]
+          }
+        },
+        "extras": { "$ref": "#/$defs/Extras" },
+        "post_count": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "origin": { "type": "string", "enum": ["discovery", "manual"] },
+        "proposed_source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "platform",
+        "status",
+        "reason",
+        "followers",
+        "verified",
+        "client_ids",
+        "resolved_at",
+        "cached",
+        "cached_until",
+        "provenance",
+        "retention_class",
+        "candidate_key",
+        "source_id",
+        "source_type",
+        "account_type",
+        "individual",
+        "public_account",
+        "platform_id",
+        "handle",
+        "url",
+        "display_name",
+        "posts_30d",
+        "last_post_at",
+        "posts_per_day",
+        "duplicate_text_share",
+        "default_avatar",
+        "account_created_at",
+        "owned_by_client",
+        "country_signals",
+        "lang_share",
+        "keyword_ids",
+        "route",
+        "vendor",
+        "review_flags"
+      ],
+      "additionalProperties": false,
+      "title": "Profile"
+    }
+  ],
+  "title": "PosterProfilesV1",
+  "$defs": {
+    "Producer": {
+      "type": "object",
+      "properties": {
+        "service": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+        "version": { "type": "string", "maxLength": 64, "pattern": "^[^\\x00-\\x20]+$" },
+        "job_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" }
+      },
+      "required": ["service", "version", "job_id"],
+      "additionalProperties": false,
+      "title": "Producer"
+    },
+    "Provenance": {
+      "type": "object",
+      "properties": {
+        "route": { "type": "string", "enum": ["green", "amber"] },
+        "vendor": {
+          "anyOf": [{ "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" }, { "type": "null" }]
+        },
+        "service": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+        "fetched_at": {
+          "type": "string",
+          "pattern": "^(([0-9]{3}[1-9]|[0-9]{2}[1-9]0|[0-9][1-9]00|[1-9]000)-((0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-8])|(0[13-9]|1[0-2])-(29|30)|(0[13578]|1[02])-31)|([0-9]{2}(0[48]|[2468][048]|[13579][26])|(0[48]|[2468][048]|[13579][26])00)-02-29)T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        }
+      },
+      "required": ["route", "vendor", "service", "fetched_at"],
+      "additionalProperties": false,
+      "title": "Provenance"
+    },
+    "CountrySignals": {
+      "type": "object",
+      "properties": {
+        "iraqi_place": { "type": "boolean" },
+        "platform_country_iq": { "type": "boolean" },
+        "phone_964": { "type": "boolean" },
+        "iq_domain": { "type": "boolean" },
+        "outlet_link": { "type": "boolean" },
+        "seed_list": { "type": "boolean" },
+        "signal_evidence": { "type": "array", "items": { "$ref": "#/$defs/SignalEvidence" } }
+      },
+      "required": [
+        "iraqi_place",
+        "platform_country_iq",
+        "phone_964",
+        "iq_domain",
+        "outlet_link",
+        "seed_list",
+        "signal_evidence"
+      ],
+      "additionalProperties": false,
+      "title": "CountrySignals"
+    },
+    "SignalEvidence": {
+      "type": "object",
+      "properties": {
+        "signal": {
+          "type": "string",
+          "enum": [
+            "iraqi_place",
+            "platform_country_iq",
+            "phone_964",
+            "iq_domain",
+            "outlet_link",
+            "seed_list"
+          ]
+        },
+        "matched": { "type": "string", "minLength": 1 },
+        "where": { "type": "string", "minLength": 1 }
+      },
+      "required": ["signal", "matched", "where"],
+      "additionalProperties": false,
+      "title": "SignalEvidence"
+    },
+    "LangShare": {
+      "type": "object",
+      "properties": {
+        "ar": { "type": "number", "minimum": 0, "maximum": 1 },
+        "ckb": { "type": "number", "minimum": 0, "maximum": 1 },
+        "en": { "type": "number", "minimum": 0, "maximum": 1 },
+        "mixed": { "type": "number", "minimum": 0, "maximum": 1 },
+        "other": { "type": "number", "minimum": 0, "maximum": 1 },
+        "und": { "type": "number", "minimum": 0, "maximum": 1 },
+        "ar_iraqi": { "type": "number", "minimum": 0, "maximum": 1 },
+        "sample": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 }
+      },
+      "required": ["ar", "ckb", "en", "mixed", "other", "und", "ar_iraqi", "sample"],
+      "additionalProperties": false,
+      "title": "LangShare"
+    },
+    "Extras": {
+      "type": "object",
+      "properties": {
+        "category": { "type": "string", "minLength": 1 },
+        "location": { "$ref": "#/$defs/PageLocation" },
+        "website_domains": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*\\.?$"
+          }
+        },
+        "about": { "type": "string" },
+        "media_count": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "biography": { "type": "string" },
+        "website": { "type": "string", "pattern": "^https?:\\/\\/[^\\x00-\\x20]+$" },
+        "video_count": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "region": { "type": "string", "minLength": 1 },
+        "bio": { "type": "string" },
+        "bio_link": { "type": "string", "minLength": 1 },
+        "following": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "location_text": { "type": "string" },
+        "description": { "type": "string" },
+        "url_domain": {
+          "type": "string",
+          "pattern": "^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*\\.?$"
+        },
+        "account_age_days": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "posts_sampled": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "growth": { "$ref": "#/$defs/Growth" },
+        "country": { "type": "string", "pattern": "^[A-Z]{2}$" },
+        "country_source": { "type": "string", "enum": ["snippet", "brandingSettings"] },
+        "default_language": { "type": "string", "minLength": 1 },
+        "view_count": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "published_at": {
+          "type": "string",
+          "pattern": "^(([0-9]{3}[1-9]|[0-9]{2}[1-9]0|[0-9][1-9]00|[1-9]000)-((0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-8])|(0[13-9]|1[0-2])-(29|30)|(0[13578]|1[02])-31)|([0-9]{2}(0[48]|[2468][048]|[13579][26])|(0[48]|[2468][048]|[13579][26])00)-02-29)T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "uploads_playlist_id": { "type": "string", "pattern": "^[^\\x00-\\x20]+$" },
+        "made_for_kids": { "type": ["boolean", "null"] },
+        "description_lang": { "type": "string", "enum": ["ckb", "ar", "other", "none"] },
+        "host": {
+          "type": "string",
+          "pattern": "^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*\\.?$"
+        },
+        "site_profile": { "$ref": "#/$defs/SiteProfile" },
+        "proposed_tier": { "type": "number", "enum": [1, 2, 3] },
+        "discovered_by": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+        "crawl_allowed": { "type": "boolean" }
+      },
+      "additionalProperties": false,
+      "title": "Extras"
+    },
+    "PageLocation": {
+      "type": "object",
+      "properties": {
+        "city": { "type": ["string", "null"] },
+        "country": { "type": ["string", "null"] }
+      },
+      "required": ["city", "country"],
+      "additionalProperties": false,
+      "title": "PageLocation"
+    },
+    "Growth": {
+      "type": "object",
+      "properties": {
+        "subscribers_30d": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": ["subscribers_30d"],
+      "additionalProperties": false,
+      "title": "Growth"
+    },
+    "SiteProfile": {
+      "type": "object",
+      "properties": {
+        "feeds": { "type": "array", "items": { "$ref": "#/$defs/Feed" } },
+        "news_sitemap": {
+          "anyOf": [
+            { "type": "string", "pattern": "^https?:\\/\\/[^\\x00-\\x20]+$" },
+            { "type": "null" }
+          ]
+        },
+        "sitemaps": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^https?:\\/\\/[^\\x00-\\x20]+$" }
+        },
+        "homepage_diff": { "type": "boolean" },
+        "article_url_patterns": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "comments_provider": {
+          "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }]
+        },
+        "disqus_shortname": { "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }] },
+        "access_mode": { "type": "string", "enum": ["direct", "headless", "proxy", "blocked"] },
+        "articles_per_day_estimate": { "type": "number", "minimum": 0 },
+        "last_article_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^(([0-9]{3}[1-9]|[0-9]{2}[1-9]0|[0-9][1-9]00|[1-9]000)-((0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-8])|(0[13-9]|1[0-2])-(29|30)|(0[13578]|1[02])-31)|([0-9]{2}(0[48]|[2468][048]|[13579][26])|(0[48]|[2468][048]|[13579][26])00)-02-29)T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+            },
+            { "type": "null" }
+          ]
+        }
+      },
+      "required": [
+        "feeds",
+        "news_sitemap",
+        "sitemaps",
+        "homepage_diff",
+        "article_url_patterns",
+        "comments_provider",
+        "disqus_shortname",
+        "access_mode",
+        "articles_per_day_estimate",
+        "last_article_at"
+      ],
+      "additionalProperties": false,
+      "title": "SiteProfile"
+    },
+    "Feed": {
+      "type": "object",
+      "properties": {
+        "url": { "type": "string", "pattern": "^https?:\\/\\/[^\\x00-\\x20]+$" },
+        "format": { "type": "string", "minLength": 1 },
+        "items": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "newest_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^(([0-9]{3}[1-9]|[0-9]{2}[1-9]0|[0-9][1-9]00|[1-9]000)-((0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-8])|(0[13-9]|1[0-2])-(29|30)|(0[13578]|1[02])-31)|([0-9]{2}(0[48]|[2468][048]|[13579][26])|(0[48]|[2468][048]|[13579][26])00)-02-29)T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+            },
+            { "type": "null" }
+          ]
+        },
+        "has_body": { "type": "boolean" }
+      },
+      "required": ["url", "format", "items", "newest_at", "has_body"],
+      "additionalProperties": false,
+      "title": "Feed"
+    }
+  }
+}

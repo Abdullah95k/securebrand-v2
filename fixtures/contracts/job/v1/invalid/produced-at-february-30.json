@@ -1,0 +1,16 @@
+{
+  "schema": "job/v1",
+  "message_id": "01M487XBH0MTYTTCDSW77CPSTB",
+  "produced_at": "2026-02-30T03:00:00Z",
+  "producer": {
+    "service": "fb-page-feed-poller",
+    "version": "1.0.0",
+    "job_id": "01M487XBH0AYC0WHGH5X7W634B"
+  },
+  "job_id": "01M48DXKW0Q8N3K5D2B7T4W9XC",
+  "kind": "rotation",
+  "due_at": "2026-10-06T09:15:00Z",
+  "attempt": 1,
+  "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11",
+  "tier": 1
+}

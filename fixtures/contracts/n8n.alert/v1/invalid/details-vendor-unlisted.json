@@ -1,0 +1,29 @@
+{
+  "schema": "n8n.alert/v1",
+  "message_id": "01M4ASERG8DWJYXAGHJC2E9KKX",
+  "produced_at": "2026-10-07T09:00:05Z",
+  "producer": {
+    "service": "registry-writer",
+    "version": "1.0.0",
+    "job_id": "01M4ASERG8Q39RTKB0KQEFYFK3"
+  },
+  "alert_id": "01M4ASERG81CQEJ7FPHQ2EXW14",
+  "idempotency_key": "01M4ASERG81CQEJ7FPHQ2EXW14:email",
+  "channel": "email",
+  "fallthrough_channel": null,
+  "audience": "ops",
+  "client_id": null,
+  "alert": "automatic_fallback",
+  "severity": "warning",
+  "subject": {
+    "source_id": "9a47e0b1-5c3d-4f82-b6e9-1d0c8a3f7e25",
+    "platform": "tiktok"
+  },
+  "summary": "a client's TikTok account revoked its grant; the vendor route reads it",
+  "details": {
+    "subject_kind": "source",
+    "source_id": "9a47e0b1-5c3d-4f82-b6e9-1d0c8a3f7e25",
+    "reason": "credential_revoked",
+    "vendor": "acme"
+  }
+}

@@ -1,0 +1,320 @@
+{
+  "client-alert-without-client-type.json": {
+    "path": [],
+    "rule": "a client's alert is checked against its client type, which the producer passes (fails closed; CONVENTIONS v1.1 L84)"
+  },
+  "client-without-client-id.json": {
+    "path": [
+      "client_id"
+    ],
+    "rule": "a client or account-manager notice names its client (F-46)",
+    "client_type": "commercial"
+  },
+  "details-vendor-unlisted.json": {
+    "path": [
+      "details",
+      "vendor"
+    ],
+    "rule": "a vendor named without its route is one the registry lists (ADR-0051; note 11)"
+  },
+  "engagement-spike-text-metric.json": {
+    "path": [
+      "details",
+      "metrics",
+      "engagement"
+    ],
+    "rule": "metrics are numbers (Q11)",
+    "client_type": "commercial"
+  },
+  "entity-or-logo-text-metric.json": {
+    "path": [
+      "details",
+      "metrics",
+      "mentions"
+    ],
+    "rule": "metrics are numbers (Q11)",
+    "client_type": "commercial"
+  },
+  "facts-number-value.json": {
+    "path": [
+      "details",
+      "facts",
+      0,
+      "value"
+    ],
+    "rule": "facts are strings (Q11)"
+  },
+  "fallback-to-client.json": {
+    "path": [
+      "audience"
+    ],
+    "rule": "an automatic-fallback notice goes to ops (ADR-0021 L58; note 12)",
+    "client_type": "commercial"
+  },
+  "fallback-unknown-reason.json": {
+    "path": [
+      "details",
+      "reason"
+    ],
+    "rule": "a fallback notice's reason is from the registry reason list (ADR-0021; Q11)"
+  },
+  "fallthrough-to-webhook.json": {
+    "path": [
+      "fallthrough_channel"
+    ],
+    "rule": "the fall-through is an n8n channel (ADR-0067 L27)"
+  },
+  "government-poster-rule.json": {
+    "path": [
+      "details",
+      "rule_type"
+    ],
+    "rule": "a government client receives the keyword-level rule types only (alert-evaluator §5.3 C L65; ADR-0048)",
+    "client_type": "government"
+  },
+  "government-scope-level.json": {
+    "path": [
+      "details",
+      "scope",
+      "level"
+    ],
+    "rule": "a government client's alert names its keyword at the keyword level only (alert-evaluator §6.2 L102; F-50; note 12)",
+    "client_type": "government"
+  },
+  "government-scope-platform.json": {
+    "path": [
+      "details",
+      "scope",
+      "platform"
+    ],
+    "rule": "a government client's alert names no platform (alert-evaluator §6.2 L102)",
+    "client_type": "government"
+  },
+  "government-scope-source.json": {
+    "path": [
+      "details",
+      "scope",
+      "source"
+    ],
+    "rule": "a government client's alert names no source (alert-evaluator §6.2 L102)",
+    "client_type": "government"
+  },
+  "government-subject-candidate-key.json": {
+    "path": [
+      "subject",
+      "candidate_key"
+    ],
+    "rule": "a government client's alert names its keyword at the keyword level only (alert-evaluator §6.2 L102; F-50; note 12)",
+    "client_type": "government"
+  },
+  "government-subject-platform.json": {
+    "path": [
+      "subject",
+      "platform"
+    ],
+    "rule": "a government client's alert names no platform (F-50)",
+    "client_type": "government"
+  },
+  "government-subject-route.json": {
+    "path": [
+      "subject",
+      "route"
+    ],
+    "rule": "a government client's alert names its keyword at the keyword level only (alert-evaluator §6.2 L102; F-50; note 12)",
+    "client_type": "government"
+  },
+  "government-subject-source.json": {
+    "path": [
+      "subject",
+      "source_id"
+    ],
+    "rule": "a government client's alert names no source (alert-evaluator §6.2 L102; F-50)",
+    "client_type": "government"
+  },
+  "idempotency-key-not-the-channels.json": {
+    "path": [
+      "idempotency_key"
+    ],
+    "rule": "idempotency_key = <alert_id>:<channel> (alert-evaluator §5.3 L69)",
+    "client_type": "commercial"
+  },
+  "keyword-first-seen-text-metric.json": {
+    "path": [
+      "details",
+      "metrics",
+      "mentions"
+    ],
+    "rule": "metrics are numbers (Q11)",
+    "client_type": "commercial"
+  },
+  "metrics-proto-key.json": {
+    "path": [
+      "details",
+      "metrics",
+      "__proto__"
+    ],
+    "rule": "a message holds no __proto__ key (D-5)",
+    "client_type": "commercial"
+  },
+  "negative-share-text-metric.json": {
+    "path": [
+      "details",
+      "metrics",
+      "negative"
+    ],
+    "rule": "metrics are numbers (Q11)",
+    "client_type": "commercial"
+  },
+  "new-high-reach-poster-text-metric.json": {
+    "path": [
+      "details",
+      "metrics",
+      "followers"
+    ],
+    "rule": "metrics are numbers (Q11)",
+    "client_type": "commercial"
+  },
+  "no-metadata-message-id.json": {
+    "path": [
+      "message_id"
+    ],
+    "rule": "every message carries message_id (ADR-0002)"
+  },
+  "no-metadata-produced-at.json": {
+    "path": [
+      "produced_at"
+    ],
+    "rule": "every message carries produced_at (ADR-0002)"
+  },
+  "no-metadata-producer.json": {
+    "path": [
+      "producer"
+    ],
+    "rule": "every message carries producer (ADR-0002)"
+  },
+  "no-metadata-schema.json": {
+    "path": [
+      "schema"
+    ],
+    "rule": "every message carries schema (ADR-0002)"
+  },
+  "old-schema-id.json": {
+    "path": [
+      "schema"
+    ],
+    "rule": "alert/v1 becomes n8n.alert/v1 (ADR-0067 L25)"
+  },
+  "open-details.json": {
+    "path": [
+      "details",
+      "note"
+    ],
+    "rule": "details is one of three typed branches, never an open object (Q11)"
+  },
+  "ops-with-client-id.json": {
+    "path": [
+      "client_id"
+    ],
+    "rule": "an ops notice names no client (F-46)"
+  },
+  "post-deleted-high-reach-text-metric.json": {
+    "path": [
+      "details",
+      "metrics",
+      "reach"
+    ],
+    "rule": "metrics are numbers (Q11)",
+    "client_type": "commercial"
+  },
+  "route-fallback-without-platform.json": {
+    "path": [
+      "details",
+      "platform"
+    ],
+    "rule": "a route's fallback notice names the platform and route (ADR-0021)"
+  },
+  "source-fallback-without-source-id.json": {
+    "path": [
+      "details",
+      "source_id"
+    ],
+    "rule": "a source's fallback notice names the source (ADR-0021)"
+  },
+  "story-text-metric.json": {
+    "path": [
+      "details",
+      "metrics",
+      "articles"
+    ],
+    "rule": "metrics are numbers (Q11)",
+    "client_type": "commercial"
+  },
+  "subject-vendor-unlisted.json": {
+    "path": [
+      "subject",
+      "vendor"
+    ],
+    "rule": "a vendor is the registry's for its route (ADR-0051; note 11)"
+  },
+  "topic-spike-text-metric.json": {
+    "path": [
+      "details",
+      "metrics",
+      "mentions"
+    ],
+    "rule": "metrics are numbers (Q11)",
+    "client_type": "commercial"
+  },
+  "unknown-channel.json": {
+    "path": [
+      "channel"
+    ],
+    "rule": "channel is email, telegram, slack or webhook (F-23; O-11)"
+  },
+  "unknown-severity.json": {
+    "path": [
+      "severity"
+    ],
+    "rule": "severity is info, warning or high (F-48)"
+  },
+  "uppercase-alert-name.json": {
+    "path": [
+      "alert"
+    ],
+    "rule": "alert is a snake_case name (Q11)"
+  },
+  "volume-spike-without-ratio.json": {
+    "path": [
+      "details",
+      "metrics",
+      "ratio"
+    ],
+    "rule": "a volume spike reports its ratio (alert-evaluator §6.2 L86-L99)",
+    "client_type": "commercial"
+  },
+  "with-author-ref.json": {
+    "path": [
+      "author_ref"
+    ],
+    "rule": "an alert carries no author_ref (alert-evaluator.md L65; F-51)"
+  },
+  "with-handle.json": {
+    "path": [
+      "subject",
+      "handle"
+    ],
+    "rule": "an alert carries no handle (alert-evaluator.md L128; F-51)"
+  },
+  "with-item-text.json": {
+    "path": [
+      "text"
+    ],
+    "rule": "an alert carries no item text (alert-evaluator.md L128; F-51)"
+  },
+  "with-provenance.json": {
+    "path": [
+      "provenance"
+    ],
+    "rule": "an n8n notice carries producer only (F-51)"
+  }
+}

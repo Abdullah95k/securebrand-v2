@@ -1,0 +1,22 @@
+{
+  "schema": "registry.decisions/v1",
+  "message_id": "01M5EV0NM08XW3GZ77A2AW5TD8",
+  "produced_at": "2026-10-21T09:00:00Z",
+  "producer": {
+    "service": "tt-profile-videos-poller",
+    "version": "1.0.0",
+    "job_id": "01M5EV0NM04WRCZBZ23WNY1EY5"
+  },
+  "decision_id": "01M5EV0NM0G0ZBM18NEMTXH030",
+  "decision": "promote",
+  "requested_by": "tt-profile-videos-poller",
+  "reason": null,
+  "source_id": "3d8a51c2-7e04-4b9f-8c16-2a9e5d70f4b8",
+  "provenance": {
+    "route": "amber",
+    "vendor": "tikhub",
+    "service": "tt-profile-videos-poller",
+    "fetched_at": "2026-10-21T08:59:41Z"
+  },
+  "retention_class": "vendor_agreed"
+}

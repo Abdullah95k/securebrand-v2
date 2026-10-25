@@ -1,0 +1,102 @@
+{
+  "allowed-with-reason.json": {
+    "path": [
+      "reason"
+    ],
+    "rule": "reason null when allowed (news-robots-checker §5.3)"
+  },
+  "disallowed-without-reason.json": {
+    "path": [
+      "reason"
+    ],
+    "rule": "a refusal names its reason"
+  },
+  "hyphenated-signal.json": {
+    "path": [
+      "usage_signals",
+      "ai-input"
+    ],
+    "rule": "Content-Signal hyphens become underscores (ADR-0070 b))"
+  },
+  "nested-robots.json": {
+    "path": [
+      "robots"
+    ],
+    "rule": "robots_status is flat (ADR-0070 b))"
+  },
+  "no-metadata-message-id.json": {
+    "path": [
+      "message_id"
+    ],
+    "rule": "every message carries message_id (ADR-0002)"
+  },
+  "no-metadata-produced-at.json": {
+    "path": [
+      "produced_at"
+    ],
+    "rule": "every message carries produced_at (ADR-0002)"
+  },
+  "no-metadata-producer.json": {
+    "path": [
+      "producer"
+    ],
+    "rule": "every message carries producer (ADR-0002)"
+  },
+  "no-metadata-schema.json": {
+    "path": [
+      "schema"
+    ],
+    "rule": "every message carries schema (ADR-0002)"
+  },
+  "not-the-checker.json": {
+    "path": [
+      "producer",
+      "service"
+    ],
+    "rule": "news-robots-checker alone writes crawl.policies (ADR-0040)"
+  },
+  "old-sha256.json": {
+    "path": [
+      "robots_rules",
+      "sha256"
+    ],
+    "rule": "sha256 becomes hash (ADR-0040)"
+  },
+  "ops-force-unknown-requester.json": {
+    "path": [
+      "requested_by"
+    ],
+    "rule": "a requester that names a service is one the registry lists (Q18; F-09)"
+  },
+  "recheck-person-requester.json": {
+    "path": [
+      "requested_by"
+    ],
+    "rule": "a recheck names the service that asked, never a person (F-43)"
+  },
+  "recheck-unknown-requester.json": {
+    "path": [
+      "requested_by"
+    ],
+    "rule": "a recheck's requester is a service the registry lists (F-09)"
+  },
+  "recheck-without-requester.json": {
+    "path": [
+      "requested_by"
+    ],
+    "rule": "a recheck names the service that asked (F-43)"
+  },
+  "refresh-with-requester.json": {
+    "path": [
+      "requested_by"
+    ],
+    "rule": "a refresh has no requester (F-43)"
+  },
+  "rsl-found-one.json": {
+    "path": [
+      "rsl",
+      "found"
+    ],
+    "rule": "a constant keeps its JSON type: 0 is not false and true is not 1 (finding 6)"
+  }
+}

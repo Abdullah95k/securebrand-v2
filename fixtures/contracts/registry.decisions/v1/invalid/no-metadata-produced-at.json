@@ -1,0 +1,72 @@
+{
+  "schema": "registry.decisions/v1",
+  "message_id": "01M48BA9VGH96Q50HZX9S88TJC",
+  "producer": {
+    "service": "qualifier",
+    "version": "1.0.0",
+    "job_id": "01M48B9AKGRHAJW420WYJS5QK2"
+  },
+  "decision_id": "01M48B9AKGRHAJW420WYJS5QK3",
+  "decision": "add",
+  "requested_by": "qualifier",
+  "reason": null,
+  "candidate_key": "instagram:17841400000000000",
+  "add": {
+    "source": {
+      "platform": "instagram",
+      "source_type": "account",
+      "platform_id": "17841400000000000",
+      "handle": "baghdad_eats",
+      "url": "https://instagram.com/baghdad_eats",
+      "display_name": "Baghdad Eats",
+      "route": "green",
+      "vendor": null,
+      "tier": 2,
+      "lifecycle": "active",
+      "push_covered": false,
+      "retention_class": "meta_on_request",
+      "client_ids": [
+        "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+      ],
+      "owned_by_client": false,
+      "added_by": "qualifier",
+      "followers": 48200,
+      "country_signals": {
+        "iraqi_place": true,
+        "platform_country_iq": false,
+        "phone_964": false,
+        "iq_domain": false,
+        "outlet_link": false,
+        "seed_list": false,
+        "signal_evidence": [
+          {
+            "signal": "iraqi_place",
+            "matched": "Baghdad",
+            "where": "location"
+          }
+        ]
+      },
+      "lang_share": {
+        "ar": 0.9,
+        "ckb": 0,
+        "en": 0.1,
+        "mixed": 0,
+        "other": 0,
+        "und": 0,
+        "ar_iraqi": 0.7,
+        "sample": 22
+      },
+      "platform_meta": {}
+    },
+    "proposed_source_id": null,
+    "origin": "discovery",
+    "rule_hit": 6
+  },
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "ig-account-resolver",
+    "fetched_at": "2026-10-06T10:13:58Z"
+  },
+  "retention_class": "meta_on_request"
+}

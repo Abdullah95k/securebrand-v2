@@ -1,0 +1,14 @@
+{
+  "description": "Vendor names, one lower-case spelling naming who collects (ADR-0051 (c)). Registry data, not a schema enum: producer mode checks `provenance.vendor` against the list of its route, and a new vendor adds a name here inside the version (Q1, F-09). An amber record names its vendor; a green record names the licensed engine where one fetched it (web search), else null.",
+  "amber": [
+    "sociavault",
+    "scrapecreators",
+    "tikhub",
+    "ensembledata",
+    "harvestapi",
+    "telemetrio",
+    "tugelbay",
+    "sovereigntaylor"
+  ],
+  "green": ["perplexity", "mojeek", "gdelt"]
+}

@@ -1,0 +1,21 @@
+{
+  "schema": "job/v1",
+  "message_id": "01M487S6Q0DWJ510ZCMGZ1MFDD",
+  "produced_at": "2026-10-06T09:12:44Z",
+  "producer": {
+    "service": "yt-pubsub-receiver",
+    "version": "1.0.0",
+    "job_id": "01M487S6Q0AP82MFKE9YNFCNGS"
+  },
+  "job_id": "01J9N7QV8D2K6M4P0R3S5T7W9X",
+  "kind": "push",
+  "due_at": "2026-10-06T09:12:44Z",
+  "attempt": 1,
+  "source_id": "3c9a7e52-1f4b-4d8e-b6a0-8e2f5c1d7a94",
+  "body": "<feed xmlns:yt=\"http://www.youtube.com/xml/schemas/2015\" xmlns=\"http://www.w3.org/2005/Atom\"><entry><id>yt:video:k7Qm2Xv9TbE</id><yt:videoId>k7Qm2Xv9TbE</yt:videoId><yt:channelId>UCx3Kp9vQ2mLwR7tYb4nJ8sA</yt:channelId></entry></feed>",
+  "received_at": "2026-10-06T09:12:44Z",
+  "headers": {
+    "content-type": "application/atom+xml",
+    "x-hub-signature": "sha1=0f3c9d2a7b1e4f6a8c0d2e4f6a8b0c2d4e6f8a0b"
+  }
+}

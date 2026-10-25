@@ -1,0 +1,25 @@
+{
+  "schema": "jobs.completed/v1",
+  "message_id": "01M4AGWD6RF2F35W09XSER0WYM",
+  "produced_at": "2026-10-07T06:30:15Z",
+  "producer": {
+    "service": "news-robots-checker",
+    "version": "1.0.0",
+    "job_id": "01J9N3Q8D5W2K7X1R4T9V0MZBD"
+  },
+  "job_id": "01J9N3Q8D5W2K7X1R4T9V0MZBD",
+  "queue": "jobs.news-robots-checker",
+  "kind": "refresh",
+  "host": "www.example-daily.iq",
+  "attempt": 1,
+  "status": "done",
+  "reason": null,
+  "finished_at": "2026-10-07T06:30:15Z",
+  "report": {
+    "new_count": 0,
+    "seen_count": 0,
+    "pages": 1,
+    "cost_units": 1,
+    "reply_candidates": []
+  }
+}

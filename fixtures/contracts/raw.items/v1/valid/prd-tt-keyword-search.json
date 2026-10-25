@@ -1,0 +1,55 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M48RGSCG3233EYEK06KMWM3Z",
+    "produced_at": "2026-10-06T14:05:14Z",
+    "producer": {
+      "service": "tt-keyword-search",
+      "version": "1.0.0",
+      "job_id": "01M48RGBQ08KKPCN8S96112V4X"
+    },
+    "platform": "tiktok",
+    "kind": "video",
+    "provenance": {
+      "route": "amber",
+      "vendor": "tikhub",
+      "service": "tt-keyword-search",
+      "fetched_at": "2026-10-06T14:05:12Z"
+    },
+    "retention_class": "vendor_agreed",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01M48RGBQ08KKPCN8S96112V4X",
+    "attempt": 1,
+    "job_kind": "rotation",
+    "api_version": "tikhub-v1",
+    "raw_ref": "raw/amber/tiktok/2026/10/06/tt-keyword-search/000077.jsonl.zst#3",
+    "source_id": "3f9c2a1e-6b4d-4f7a-9c1e-2d5b8a7e4c10",
+    "platform_id": "7421000000000000123",
+    "idempotency_key": "tiktok:video:7421000000000000123",
+    "context": {
+      "variant": "زين عراق",
+      "country": "IQ",
+      "page": 2
+    }
+  },
+  "payload": {
+    "aweme_id": "7421000000000000123",
+    "desc": "تجربتي مع انترنت زين بالبصرة...",
+    "create_time": 1759750800,
+    "author": {
+      "uid": "6800000000000000001",
+      "unique_id": "basra.reviews",
+      "follower_count": 48200,
+      "verification_type": 0
+    },
+    "statistics": {
+      "play_count": 15300,
+      "digg_count": 912,
+      "comment_count": 87,
+      "share_count": 41
+    },
+    "region": "IQ"
+  }
+}
