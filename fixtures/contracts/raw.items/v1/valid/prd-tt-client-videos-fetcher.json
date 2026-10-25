@@ -1,0 +1,38 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M487YPG08389NHA1G858PWW4",
+    "produced_at": "2026-10-06T09:15:44Z",
+    "producer": {
+      "service": "tt-client-videos-fetcher",
+      "version": "1.0.0",
+      "job_id": "01J9N7H4S2P9D6K1X8V3B5WEMC"
+    },
+    "platform": "tiktok",
+    "kind": "video",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "tt-client-videos-fetcher",
+      "fetched_at": "2026-10-06T09:15:42Z"
+    },
+    "retention_class": "tiktok_display",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01J9N7H4S2P9D6K1X8V3B5WEMC",
+    "attempt": 1,
+    "job_kind": "rotation",
+    "api_version": "v2",
+    "raw_ref": "raw/green/tiktok/2026/10/06/tt-client-videos-fetcher/000031.jsonl.zst#8",
+    "source_id": "9a47e0b1-5c3d-4f82-b6e9-1d0c8a3f7e25",
+    "platform_id": "7421538806219533573",
+    "idempotency_key": "tiktok:video:7421538806219533573"
+  },
+  "payload": {
+    "id": "7421538806219533573",
+    "title": "عرض الأسبوع",
+    "create_time": 1791278100,
+    "view_count": 1200
+  }
+}

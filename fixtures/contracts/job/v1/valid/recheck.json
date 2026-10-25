@@ -1,0 +1,16 @@
+{
+  "schema": "job/v1",
+  "message_id": "01M47YFHAGQC6GWSK3TJWRME0K",
+  "produced_at": "2026-10-06T06:30:10Z",
+  "producer": {
+    "service": "news-article-extractor",
+    "version": "1.0.0",
+    "job_id": "01M47YFHAG5Z1BH673B98EKTJC"
+  },
+  "job_id": "01J9N3Q8D5W2K7X1R4T9V0MZBC",
+  "kind": "recheck",
+  "due_at": "2026-10-06T06:30:10Z",
+  "attempt": 1,
+  "host": "www.example-daily.iq",
+  "requested_by": "news-article-extractor"
+}

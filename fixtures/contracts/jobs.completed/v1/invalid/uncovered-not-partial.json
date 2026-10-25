@@ -1,0 +1,31 @@
+{
+  "schema": "jobs.completed/v1",
+  "message_id": "01M487Z640MVAGDTJN5377CG14",
+  "produced_at": "2026-10-06T09:16:00Z",
+  "producer": {
+    "service": "x-recent-search",
+    "version": "1.0.0",
+    "job_id": "01M487XBH0A2B4C6D8E0F2G4H6"
+  },
+  "job_id": "01M487XBH0A2B4C6D8E0F2G4H6",
+  "queue": "jobs.x-recent-search",
+  "kind": "rotation",
+  "source_id": "7c1d9a2e-55b4-4f1e-8a0c-3e9f6b2d4a71",
+  "paid_user_reads": 41,
+  "free_rereads": 3,
+  "uncovered": {
+    "window_start": "2026-10-06T08:00:00Z",
+    "window_end": "2026-10-06T08:20:00Z"
+  },
+  "attempt": 1,
+  "status": "done",
+  "reason": null,
+  "finished_at": "2026-10-06T09:16:00Z",
+  "report": {
+    "new_count": 41,
+    "seen_count": 3,
+    "pages": 4,
+    "cost_units": 44,
+    "reply_candidates": []
+  }
+}

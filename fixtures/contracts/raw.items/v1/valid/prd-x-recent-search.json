@@ -1,0 +1,61 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M487XHCGY1HY5P4HT8GJ4S5T",
+    "produced_at": "2026-10-06T09:15:06Z",
+    "producer": {
+      "service": "x-recent-search",
+      "version": "1.0.0",
+      "job_id": "01M487XBH07GQE33JRM29CMCMZ"
+    },
+    "platform": "x",
+    "kind": "post",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "x-recent-search",
+      "fetched_at": "2026-10-06T09:15:04Z"
+    },
+    "retention_class": "x_24h_sync",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01M487XBH07GQE33JRM29CMCMZ",
+    "attempt": 1,
+    "job_kind": "rotation",
+    "api_version": "2",
+    "raw_ref": "raw/green/x/2026/10/06/x-recent-search/000042.jsonl.zst#310",
+    "source_id": "7c1d9a2e-55b4-4f1e-8a0c-3e9f6b2d4a71",
+    "platform_id": "1843201122334455667",
+    "idempotency_key": "x:post:1843201122334455667",
+    "context": {
+      "query_arm": "ar",
+      "matched_terms": [
+        "دجلة تيليكوم"
+      ],
+      "paid": true
+    }
+  },
+  "payload": {
+    "id": "1843201122334455667",
+    "text": "شبكة دجلة تيليكوم بالبصرة صارت أحسن من قبل بس السعر غالي",
+    "author_id": "1000000000000000001",
+    "conversation_id": "1843201122334455667",
+    "created_at": "2026-10-06T09:02:31.000Z",
+    "lang": "ar",
+    "public_metrics": {
+      "retweet_count": 2,
+      "reply_count": 5,
+      "like_count": 38,
+      "quote_count": 1
+    },
+    "includes": {
+      "users": [
+        {
+          "id": "1000000000000000001",
+          "username": "example_poster_x"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "schema": "source.events/v1",
+  "message_id": "01M47WRGJRFW6TWGTMPE0MZMRK",
+  "produced_at": "2026-10-06T06:00:07Z",
+  "producer": {
+    "service": "registry-writer",
+    "version": "1.0.0",
+    "job_id": "01M47WRGJRCB7FXGDHH9W7M5EV"
+  },
+  "event": "updated",
+  "reason": "budget_wait",
+  "source_id": "e1d2c3b4-a596-4877-8b6a-5c4d3e2f1a09",
+  "platform": "instagram",
+  "source_type": "hashtag",
+  "platform_id": "17843853986012965",
+  "handle": "زين_العراق",
+  "url": null,
+  "display_name": null,
+  "route": "amber",
+  "vendor": "sociavault",
+  "tier": 2,
+  "lifecycle": "active",
+  "push_covered": false,
+  "retention_class": "vendor_agreed",
+  "client_ids": [
+    "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+  ],
+  "owned_by_client": false,
+  "added_by": "client",
+  "followers": null,
+  "country_signals": null,
+  "lang_share": null,
+  "platform_meta": {
+    "ig_user_id": "17841400112233445"
+  },
+  "added_at": "2026-10-06T10:14:40Z",
+  "health": "ok",
+  "health_reason": null,
+  "health_set_by": null,
+  "health_changed_at": null,
+  "notes": null,
+  "previous": {
+    "vendor": "acme"
+  },
+  "decision_id": "01M47WREM8YDTYQW5WYXM4J35W",
+  "actor": "ig-hashtag-search",
+  "at": "2026-10-06T06:00:07Z"
+}

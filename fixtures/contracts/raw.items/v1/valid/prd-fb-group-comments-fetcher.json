@@ -1,0 +1,48 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M48APMYGTRJ0D08QKT1791XQ",
+    "produced_at": "2026-10-06T10:03:46Z",
+    "producer": {
+      "service": "fb-group-comments-fetcher",
+      "version": "1.0.0",
+      "job_id": "01J9N4Z6T3K8Q1W5B7D2M9RXHA"
+    },
+    "platform": "facebook",
+    "kind": "comment",
+    "provenance": {
+      "route": "amber",
+      "vendor": "scrapecreators",
+      "service": "fb-group-comments-fetcher",
+      "fetched_at": "2026-10-06T10:03:44Z"
+    },
+    "retention_class": "vendor_agreed",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01J9N4Z6T3K8Q1W5B7D2M9RXHA",
+    "attempt": 1,
+    "job_kind": "comments",
+    "api_version": "scrapecreators-v1",
+    "raw_ref": "raw/amber/facebook/2026/10/06/fb-group-comments-fetcher/000031.jsonl.zst#12",
+    "source_id": "a3d8f0c2-5b17-4e69-8c0d-72e1b94a6f35",
+    "platform_id": "5520817364092218",
+    "idempotency_key": "facebook:comment:5520817364092218",
+    "parent_id": "99e0da8e-c347-5fb0-8477-00ffc1219e6f",
+    "root_id": "99e0da8e-c347-5fb0-8477-00ffc1219e6f",
+    "author_ref": "a845c814b1ff0d2ea153251472c63ff4af9233e561224f06d15f20a8a0ea19a9",
+    "redacted_fields": [
+      "author"
+    ],
+    "context": {
+      "series_step": "+1h"
+    }
+  },
+  "payload": {
+    "id": "5520817364092218",
+    "text": "…",
+    "created_time": "2026-10-06T08:15:02+0000",
+    "reply_count": 0,
+    "reactions": 3
+  }
+}

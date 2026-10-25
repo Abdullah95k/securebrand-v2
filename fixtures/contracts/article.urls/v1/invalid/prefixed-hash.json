@@ -1,0 +1,36 @@
+{
+  "schema": "article.urls/v1",
+  "message_id": "01M47KA7QG9505SQNM7XMF6QR9",
+  "produced_at": "2026-10-06T03:15:02Z",
+  "producer": {
+    "service": "search-hit-router",
+    "version": "1.0.0",
+    "job_id": "01M47K8B60RM3M56CMJWGZ9C6G"
+  },
+  "source_id": "a41f7d02-93be-4c58-8e16-2b5d70c9f3e4",
+  "url": "https://www.example-daily.iq/economy/2026/10/05/fiberx-wasit?utm_source=fb",
+  "url_key": "news:url:fab8520795a70dfe8cdae271a98f16d663794dab09ebcccb3a560660fd321664",
+  "found_via": "web_search",
+  "found_at": "2026-10-05T03:14:09Z",
+  "title": "…",
+  "canonical_url": "https://www.example-daily.iq/economy/2026/10/05/fiberx-wasit",
+  "canonical_url_hash": "sha256:fab8520795a70dfe8cdae271a98f16d663794dab09ebcccb3a560660fd321664",
+  "snippet": "…",
+  "engines": [
+    "perplexity",
+    "gdelt"
+  ],
+  "keyword_ids": [
+    "0cd402b6-9015-45f8-86b4-d90cc086d320"
+  ],
+  "client_ids": [
+    "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+  ],
+  "provenance": {
+    "route": "green",
+    "vendor": "perplexity",
+    "service": "web-search-perplexity",
+    "fetched_at": "2026-10-06T03:14:08Z"
+  },
+  "retention_class": "news_excerpt"
+}

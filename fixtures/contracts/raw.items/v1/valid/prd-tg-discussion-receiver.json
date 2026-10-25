@@ -1,0 +1,54 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M4886X6838S74PFGRJ8PFC80",
+    "produced_at": "2026-10-06T09:20:13Z",
+    "producer": {
+      "service": "tg-discussion-receiver",
+      "version": "1.0.0",
+      "job_id": "01M4886V7RNKF111FA2SGP78XR"
+    },
+    "platform": "telegram",
+    "kind": "comment",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "tg-discussion-receiver",
+      "fetched_at": "2026-10-06T09:20:11Z"
+    },
+    "retention_class": "telegram_bot",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01M4886V7RNKF111FA2SGP78XR",
+    "attempt": 1,
+    "job_kind": "push",
+    "api_version": "bot-api-9",
+    "raw_ref": "raw/green/telegram/2026/10/06/tg-discussion-receiver/000087.jsonl.zst#2",
+    "source_id": "8c41f2d7-5a3e-4b96-a0d1-7e2c9b3f4a58",
+    "platform_id": "-1001849302999/9312",
+    "idempotency_key": "telegram:comment:-1001849302999/9312",
+    "parent_id": "2c86469b-4479-58fa-9d70-d4a46147e8f1",
+    "root_id": "2c86469b-4479-58fa-9d70-d4a46147e8f1",
+    "author_ref": "bb55920017948a43f4b7ec9d0de002818575aceced7deb99aa6018eabfd4ae35",
+    "redacted_fields": [
+      "from"
+    ],
+    "context": {
+      "update_id": 704118977,
+      "discussion_source_id": "d2e96b1a-47c0-4f8d-b35a-0c71e8a49f26"
+    }
+  },
+  "payload": {
+    "message_id": 9312,
+    "chat": {
+      "id": -1001849302999,
+      "type": "supergroup"
+    },
+    "date": 1791278411,
+    "text": "متى يبدأ العرض؟",
+    "reply_to_message": {
+      "message_id": 9301
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "schema": "deletions/v1",
+  "message_id": "01M48HBGF8EJN9768XMNCSQ13J",
+  "produced_at": "2026-10-06T12:00:01Z",
+  "producer": {
+    "service": "admin-api",
+    "version": "1.0.0",
+    "job_id": "01J9R5S3V7W1X4Y8Z0A2B6C9DF"
+  },
+  "deletion_id": "del:platform_sync:client:ed8a08c1c6e1e820604810bf1958222742748a73ee52e2519f556029dca134ba",
+  "reason": "platform_sync",
+  "scope": "client",
+  "mode": "purge_derived",
+  "client_id": "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60",
+  "target": {
+    "platform": "facebook",
+    "item_ids": [
+      "729e4ef3-5f84-52f7-872f-06430a625fc6"
+    ]
+  },
+  "signal_at": "2026-10-06T12:00:00Z",
+  "due_at": "2026-10-07T12:00:00Z",
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "admin-api",
+    "fetched_at": "2026-10-06T12:00:00Z"
+  },
+  "requested_by": "person:01J9P2R4T6V8X0Z2B4D6F8H0KM"
+}

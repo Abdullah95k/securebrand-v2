@@ -1,0 +1,100 @@
+{
+  "age-seconds.json": {
+    "path": [
+      "age_seconds"
+    ],
+    "rule": "readers derive age_seconds (ADR-0034)"
+  },
+  "item-id-not-the-keys.json": {
+    "path": [
+      "item_id"
+    ],
+    "rule": "item_id = uuid_v5(ns_items, key) (ADR-0006)"
+  },
+  "item-idempotency-key.json": {
+    "path": [
+      "item_idempotency_key"
+    ],
+    "rule": "one name, idempotency_key (ADR-0034)"
+  },
+  "missing-metric.json": {
+    "path": [
+      "metrics",
+      "shares"
+    ],
+    "rule": "each metric present, null where the platform has none (ADR-0034)"
+  },
+  "no-metadata-message-id.json": {
+    "path": [
+      "message_id"
+    ],
+    "rule": "every message carries message_id (ADR-0002)"
+  },
+  "no-metadata-produced-at.json": {
+    "path": [
+      "produced_at"
+    ],
+    "rule": "every message carries produced_at (ADR-0002)"
+  },
+  "no-metadata-producer.json": {
+    "path": [
+      "producer"
+    ],
+    "rule": "every message carries producer (ADR-0002)"
+  },
+  "no-metadata-schema.json": {
+    "path": [
+      "schema"
+    ],
+    "rule": "every message carries schema (ADR-0002)"
+  },
+  "not-a-metrics-writer.json": {
+    "path": [
+      "producer",
+      "service"
+    ],
+    "rule": "normalize-item and the count-only readers write item.metrics (ADR-0034)"
+  },
+  "old-label.json": {
+    "path": [
+      "observation",
+      "label"
+    ],
+    "rule": "refresh_24h gives way to refresh with step +24h (ADR-0034)"
+  },
+  "platform-not-the-keys.json": {
+    "path": [
+      "platform_id"
+    ],
+    "rule": "the platform id is the key's"
+  },
+  "poll-with-step.json": {
+    "path": [
+      "observation",
+      "step"
+    ],
+    "rule": "only refresh carries a step"
+  },
+  "reactions-total.json": {
+    "path": [
+      "metrics",
+      "reactions_total"
+    ],
+    "rule": "Facebook's total is likes (F-34)"
+  },
+  "refresh-without-step.json": {
+    "path": [
+      "observation",
+      "step"
+    ],
+    "rule": "a refresh observation names its step (ADR-0034)"
+  },
+  "uppercase-reaction.json": {
+    "path": [
+      "metrics",
+      "reactions_by_type",
+      "LIKE"
+    ],
+    "rule": "reaction types in lower case (F-34)"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "schema": "n8n.alert/v1",
+  "message_id": "01M485Z3B0NQYT24KH8ZFRYK22",
+  "produced_at": "2026-10-06T08:41:00Z",
+  "producer": {
+    "service": "alert-evaluator",
+    "version": "1.0.0",
+    "job_id": "01M485Z3B0WFKEQCXZX11X4MGE"
+  },
+  "alert_id": "01M485X8R0AKVRYPNV9E6G8QN6",
+  "idempotency_key": "01M485X8R0AKVRYPNV9E6G8QN6:email",
+  "channel": "email",
+  "fallthrough_channel": null,
+  "audience": "client",
+  "client_id": "e2a9d0b1-6c7f-4a38-9d5e-0f1a2b3c4d5e",
+  "alert": "new_high_reach_poster",
+  "severity": "warning",
+  "subject": {
+    "source_id": "a3c0f1e2-5b6d-4c7e-9f80-112233445566",
+    "platform": "facebook",
+    "keyword_id": "9a8b7c6d-5e4f-4321-a0b9-c8d7e6f5a4b3"
+  },
+  "summary": "زين العراق: new_high_reach_poster",
+  "details": {
+    "rule_id": "5d0c2b7e-8a14-4f63-b9e1-2c7a6d4f0e18",
+    "rule_type": "new_high_reach_poster",
+    "renotify": false,
+    "keyword": {
+      "keyword_id": "9a8b7c6d-5e4f-4321-a0b9-c8d7e6f5a4b3",
+      "label": "زين العراق",
+      "purpose": "service_quality"
+    },
+    "scope": {
+      "level": "keyword_source",
+      "platform": "facebook",
+      "source": {
+        "source_id": "a3c0f1e2-5b6d-4c7e-9f80-112233445566",
+        "display_name": "Example Page"
+      }
+    },
+    "window": {
+      "hour": "2026-10-06T08:00:00Z",
+      "elapsed_fraction": 0.62,
+      "evaluated_at": "2026-10-06T08:37:12Z"
+    },
+    "fingerprint": "new_high_reach_poster:5d0c2b7e:a3c0f1e2",
+    "cooldown_until": "2026-10-06T10:37:12Z",
+    "metrics": {
+      "followers": 412000,
+      "mentions": 3
+    }
+  }
+}

@@ -1,0 +1,205 @@
+{
+  "description": "Deterministic ids (ADR-0006, ADR-0023; Q11): uuid v5 under frozen namespaces, and the deterministic ULID: time part the event's own time in milliseconds, random part the first 10 bytes of SHA-256 over the UTF-8 of the fields joined by '|'.",
+  "ns_hits": "889d9f7d-7cd6-4556-8f5e-3cebf0938434",
+  "ns_cards": "68861d52-0265-403a-a35d-493238d31f4b",
+  "hit_ids": [
+    {
+      "input": {
+        "item_id": "3f2b8c1d-6e4a-5b7c-9d8e-1a2b3c4d5e6f",
+        "client_id": "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60",
+        "keyword_id": "9a8b7c6d-5e4f-4321-a0b9-c8d7e6f5a4b3"
+      },
+      "hit_id": "209036c3-4385-5ffe-8a91-1465d4f6259a"
+    },
+    {
+      "input": {
+        "item_id": "3f2b8c1d-6e4a-5b7c-9d8e-1a2b3c4d5e6f",
+        "client_id": "e2a9d0b1-6c7f-4a38-9d5e-0f1a2b3c4d5e",
+        "keyword_id": "9a8b7c6d-5e4f-4321-a0b9-c8d7e6f5a4b3"
+      },
+      "hit_id": "70e8a473-4ce7-5850-8820-6307d5d323d5"
+    },
+    {
+      "input": {
+        "item_id": "9c8b7a6f-5e4d-5c3b-a291-0f1e2d3c4b5a",
+        "client_id": "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60",
+        "keyword_id": "4c1f0e2d-8b3a-4f6e-9c7d-a1b2c3d4e5fa"
+      },
+      "hit_id": "ebe85a81-a338-5c6c-b9b1-f70c9bad9eea"
+    }
+  ],
+  "card_ids": [
+    {
+      "input": {
+        "card_type": "qualifier_review",
+        "subject_key": "instagram:example_store_iq",
+        "ref": "01J9N2Q7Z4T8X1V6M3K0H5R2WB"
+      },
+      "card_id": "7c71f097-b1a9-5acf-a7de-077f9b01c9a2"
+    },
+    {
+      "input": {
+        "card_type": "grant_missing",
+        "subject_key": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11",
+        "ref": "01J9N3B5C7D9E1F3G5H7J9K1M3"
+      },
+      "card_id": "c51f453c-bc65-58b4-95f6-c62455d32637"
+    },
+    {
+      "input": {
+        "card_type": "manual_url",
+        "subject_key": "linkedin:example-company-iq",
+        "ref": "01J9N3B5C7D9E1F3G5H7J9K1M3"
+      },
+      "card_id": "ae29bce5-482f-5d1d-96fc-2f5861003cae"
+    }
+  ],
+  "ulids": [
+    {
+      "name": "generic, whole seconds",
+      "input": {
+        "time": "2026-10-06T08:51:40Z",
+        "fields": [
+          "a",
+          "b",
+          "c"
+        ]
+      },
+      "ulid": "01M486JMB0MMPXG6ZXBS76DPBB"
+    },
+    {
+      "name": "generic, milliseconds",
+      "input": {
+        "time": "2026-10-06T08:51:40.123Z",
+        "fields": [
+          "a",
+          "b",
+          "c"
+        ]
+      },
+      "ulid": "01M486JMEVMMPXG6ZXBS76DPBB"
+    },
+    {
+      "name": "generic, one field",
+      "input": {
+        "time": "1970-01-01T00:00:00Z",
+        "fields": [
+          "x"
+        ]
+      },
+      "ulid": "00000000005NRHCGNQ4TR480B2"
+    },
+    {
+      "name": "generic, Arabic field",
+      "input": {
+        "time": "2026-10-25T00:00:00.5Z",
+        "fields": [
+          "زين",
+          "1"
+        ]
+      },
+      "ulid": "01M5R5PSFMGNNKT01PFKTA5K08"
+    }
+  ],
+  "hit_message_ids": [
+    {
+      "input": {
+        "hit_at": "2026-10-06T08:51:40Z",
+        "hit_id": "209036c3-4385-5ffe-8a91-1465d4f6259a",
+        "item_version": 1,
+        "keyword_set_version": "cs:568d52e3ecbc3a94f635e5491c0d02176c773e9bd7cd9fb6398cfa8bc519ada4"
+      },
+      "message_id": "01M486JMB0JKS4NBHVB044QGCZ"
+    },
+    {
+      "input": {
+        "hit_at": "2026-10-06T08:51:40Z",
+        "hit_id": "209036c3-4385-5ffe-8a91-1465d4f6259a",
+        "item_version": 2,
+        "keyword_set_version": "cs:568d52e3ecbc3a94f635e5491c0d02176c773e9bd7cd9fb6398cfa8bc519ada4"
+      },
+      "message_id": "01M486JMB0778M7R6TZJFHPJ38"
+    }
+  ],
+  "comment_decay_job_ids": [
+    {
+      "input": {
+        "due_at": "2026-10-06T10:15:42Z",
+        "item_id": "3f2b8c1d-6e4a-5b7c-9d8e-1a2b3c4d5e6f",
+        "lane": "comments",
+        "series_step": "+1h"
+      },
+      "job_id": "01M48BCG5G2G2AX1XWRP7VNVAR"
+    },
+    {
+      "input": {
+        "due_at": "2026-10-07T09:15:42Z",
+        "item_id": "3f2b8c1d-6e4a-5b7c-9d8e-1a2b3c4d5e6f",
+        "lane": "comments",
+        "series_step": "+24h"
+      },
+      "job_id": "01M4ATBBHGAK4XMRCZK948VC0B"
+    },
+    {
+      "input": {
+        "due_at": "2026-10-07T09:15:42Z",
+        "item_id": "3f2b8c1d-6e4a-5b7c-9d8e-1a2b3c4d5e6f",
+        "lane": "metrics",
+        "series_step": "+24h"
+      },
+      "job_id": "01M4ATBBHGJEH8Z2PX9N4XGYW5"
+    }
+  ],
+  "analysis_keys": [
+    {
+      "input": {
+        "item_id": "3f2b8c1d-6e4a-5b7c-9d8e-1a2b3c4d5e6f",
+        "task": "sentiment",
+        "model_version": "sent-iq-2026.10.1"
+      },
+      "analysis_key": "3f2b8c1d-6e4a-5b7c-9d8e-1a2b3c4d5e6f:sentiment:sent-iq-2026.10.1"
+    },
+    {
+      "input": {
+        "item_id": "3f2b8c1d-6e4a-5b7c-9d8e-1a2b3c4d5e6f",
+        "task": "topics.telecom_v2",
+        "model_version": "top-2026.10"
+      },
+      "analysis_key": "3f2b8c1d-6e4a-5b7c-9d8e-1a2b3c4d5e6f:topics.telecom_v2:top-2026.10"
+    },
+    {
+      "input": {
+        "item_id": "9c8b7a6f-5e4d-5c3b-a291-0f1e2d3c4b5a",
+        "task": "media_ocr",
+        "model_version": "ocr-ar-3"
+      },
+      "analysis_key": "9c8b7a6f-5e4d-5c3b-a291-0f1e2d3c4b5a:media_ocr:ocr-ar-3"
+    }
+  ],
+  "analysis_rejects": [
+    {
+      "name": "task holding a colon",
+      "input": {
+        "item_id": "3f2b8c1d-6e4a-5b7c-9d8e-1a2b3c4d5e6f",
+        "task": "topics:telecom",
+        "model_version": "v1"
+      }
+    },
+    {
+      "name": "model version holding a colon",
+      "input": {
+        "item_id": "3f2b8c1d-6e4a-5b7c-9d8e-1a2b3c4d5e6f",
+        "task": "sentiment",
+        "model_version": "v1:2"
+      }
+    },
+    {
+      "name": "unknown task",
+      "input": {
+        "item_id": "3f2b8c1d-6e4a-5b7c-9d8e-1a2b3c4d5e6f",
+        "task": "toxicity",
+        "model_version": "v1"
+      }
+    }
+  ]
+}

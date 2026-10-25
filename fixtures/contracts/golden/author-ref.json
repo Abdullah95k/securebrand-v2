@@ -1,0 +1,57 @@
+{
+  "description": "author_ref = HMAC-SHA256(key, UTF-8(NFC('<platform>:<author platform id>'))), 64 lower-case hex (ADR-0010). The keys below are PUBLISHED TEST VALUES, never real keys: the real key lives in Vault and reaches the helper as an argument.",
+  "test_key_utf8": "listening-contracts author_ref test key v1 (published; not a secret)",
+  "second_test_key_utf8": "listening-contracts author_ref test key v2 (published; not a secret)",
+  "author_refs": [
+    {
+      "platform": "x",
+      "author_platform_id": "1234567890",
+      "author_ref": "e4672a83d0f01f4c692e2f40a26de0dfd506b1a15f7bc470b1fd4962b3c077d0"
+    },
+    {
+      "platform": "facebook",
+      "author_platform_id": "100012345678901",
+      "author_ref": "2b7b2e41893c6250fad6ddff2dea966abc2ac16f620dffad82c4727fecad1c6f"
+    },
+    {
+      "platform": "instagram",
+      "author_platform_id": "17841400000000000",
+      "author_ref": "1d5862100b6427ac56d98ede0452787862c1db5172eae066ba17ef980a8071dd"
+    },
+    {
+      "platform": "tiktok",
+      "author_platform_id": "6789012345678901234",
+      "author_ref": "15e82ab072ae319f08d22312c4378b59220152bb4aab92ddffd35d874e153883"
+    },
+    {
+      "platform": "youtube",
+      "author_platform_id": "UCabcDEF123",
+      "author_ref": "5e1977966900f4e0629f27d69b0acaac6f8980dcd3af91b2175e4d6be6f61c2c"
+    },
+    {
+      "platform": "telegram",
+      "author_platform_id": "123456789",
+      "author_ref": "b4ff1946a8771a8405aa2076c21074efb8e2599e915666b88dfecfa775a003d9"
+    },
+    {
+      "platform": "linkedin",
+      "author_platform_id": "urn:li:person:AbC123",
+      "author_ref": "228a0c5a4d4dc0b04751cb178ea94aa316360905b67e2a1c42d3de7a04395c76"
+    },
+    {
+      "platform": "news",
+      "author_platform_id": "disqus-user-café",
+      "author_ref": "7369233751f006b7e95f2ddb3d169c1ea40a482a625f988c67fac3dcae53dda8"
+    },
+    {
+      "platform": "news",
+      "author_platform_id": "disqus-user-café",
+      "author_ref": "7369233751f006b7e95f2ddb3d169c1ea40a482a625f988c67fac3dcae53dda8"
+    }
+  ],
+  "under_second_key": {
+    "platform": "x",
+    "author_platform_id": "1234567890",
+    "author_ref": "df0af43d83f64d712edf579ae410100013e192d85d62e6c52018c130c3e351f1"
+  }
+}

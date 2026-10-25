@@ -1,0 +1,16 @@
+{
+  "schema": "job/v1",
+  "message_id": "01M6NNV5W0FJE2BB41A3YV2S92",
+  "produced_at": "2026-11-05T11:00:00Z",
+  "producer": {
+    "service": "x-user-resolver",
+    "version": "1.0.0",
+    "job_id": "01M6NNV5W026VT7HRQYD7ZTJ57"
+  },
+  "job_id": "01M48N0V80ZZGG928KMD5XX36J",
+  "kind": "refresh",
+  "due_at": "2026-11-05T11:00:00Z",
+  "attempt": 1,
+  "candidate_key": "x:1456789012345678901",
+  "source_id": "a4d2c9e1-5b7f-4e3a-8c60-2f1b9d7e4a35"
+}

@@ -1,0 +1,74 @@
+{
+  "schema": "items.normalized/v1",
+  "message_id": "01M487VKVR2MG65SCCTYVE2E69",
+  "produced_at": "2026-10-06T09:14:03Z",
+  "producer": {
+    "service": "normalize-item",
+    "version": "1.4.0",
+    "job_id": "01J9N2Q7Z4T8X1V6M3K0H5R2WB"
+  },
+  "item_id": "729e4ef3-5f84-52f7-872f-06430a625fc6",
+  "idempotency_key": "facebook:post:1234567890_9876543210",
+  "platform": "facebook",
+  "kind": "post",
+  "source_id": "a3c0f1e2-5b6d-4c7e-9f80-112233445566",
+  "parent_id": null,
+  "root_id": null,
+  "parent_seen": true,
+  "content_hash": "sha256:96f6861fef1e2acd585acb98b44dbe97d39d2c126fc7a75f661225b47d2cb244",
+  "version": 1,
+  "platform_id": "1234567890_9876543210",
+  "url": "https://www.facebook.com/1234567890/posts/9876543210",
+  "created_at": "2026-10-06T08:51:40Z",
+  "title": null,
+  "text": "النت منقطع بالبصرة من الصبح، شنو السالفة؟",
+  "text_norm": "النت منقطع بالبصره من الصبح شنو السالفه",
+  "lang": "ar",
+  "lang_conf": 0.98,
+  "dialect": "iraqi",
+  "dialect_conf": 0.84,
+  "script": "arab",
+  "lang_model_version": "lid-iq-2026.09",
+  "lang_pending": false,
+  "author": {
+    "author_ref": null,
+    "author_type": "individual",
+    "author_source_id": null,
+    "author_followers": 1200
+  },
+  "media": [
+    {
+      "type": "image",
+      "url": "https://scontent.example/abc.jpg"
+    }
+  ],
+  "hashtags": [],
+  "at_mentions": [],
+  "links": [],
+  "metrics_snapshot": {
+    "views": null,
+    "likes": 120,
+    "comments": 14,
+    "shares": 3,
+    "reactions_by_type": {
+      "like": 100,
+      "love": 20
+    }
+  },
+  "expires_at": null,
+  "normalizer_version": "1.4.0",
+  "raw_ref": "raw/green/facebook/2026/10/06/fb-page-feed-poller/000007.jsonl.zst#1532",
+  "job_kind": "rotation",
+  "sensitive_event": false,
+  "client_ids": [
+    "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+  ],
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "fb-page-feed-poller",
+    "fetched_at": "2026-10-06T09:13:58Z"
+  },
+  "retention_class": "meta_on_request",
+  "poster_platform_id": "100079876543210"
+}

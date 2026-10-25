@@ -1,0 +1,75 @@
+{
+  "schema": "source.events/v1",
+  "message_id": "01M48FMMKR1GRQXQD2633C9XG0",
+  "produced_at": "2026-10-06T11:30:03Z",
+  "producer": {
+    "service": "registry-writer",
+    "version": "1.0.0",
+    "job_id": "01M48FMMKRESQXM1QABR48AT67"
+  },
+  "event": "fallback_off",
+  "reason": "flag_on",
+  "source_id": "5c0e8a24-7b1d-4f39-a6e2-9d3c1b7f0a58",
+  "platform": "facebook",
+  "source_type": "page",
+  "platform_id": "104557812990341",
+  "handle": null,
+  "url": "https://www.facebook.com/profile.php?id=104557812990341",
+  "display_name": "زين العراق - فرع البصرة",
+  "route": "amber",
+  "vendor": "sociavault",
+  "tier": 2,
+  "lifecycle": "active",
+  "push_covered": false,
+  "retention_class": "vendor_agreed",
+  "client_ids": [
+    "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+  ],
+  "owned_by_client": false,
+  "added_by": "qualifier",
+  "followers": 9100,
+  "country_signals": {
+    "iraqi_place": true,
+    "platform_country_iq": false,
+    "phone_964": false,
+    "iq_domain": false,
+    "outlet_link": false,
+    "seed_list": false,
+    "signal_evidence": [
+      {
+        "signal": "iraqi_place",
+        "matched": "Baghdad",
+        "where": "location"
+      }
+    ]
+  },
+  "lang_share": {
+    "ar": 0.9,
+    "ckb": 0,
+    "en": 0.1,
+    "mixed": 0,
+    "other": 0,
+    "und": 0,
+    "ar_iraqi": 0.7,
+    "sample": 22
+  },
+  "platform_meta": {},
+  "added_at": "2026-10-06T10:14:40Z",
+  "health": "degraded",
+  "health_reason": "auth",
+  "health_set_by": "source-health-canary",
+  "health_changed_at": "2026-10-06T11:30:00Z",
+  "notes": null,
+  "previous": {
+    "health": "ok",
+    "route": "green",
+    "vendor": null,
+    "retention_class": "meta_on_request",
+    "health_reason": null,
+    "health_set_by": null,
+    "health_changed_at": null
+  },
+  "decision_id": "01M48FMHP0J0CZC6XZMM9BZJZF",
+  "actor": "source-health-canary",
+  "at": "2026-10-06T11:30:03Z"
+}

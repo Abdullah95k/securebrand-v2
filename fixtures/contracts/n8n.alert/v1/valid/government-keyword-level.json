@@ -1,0 +1,49 @@
+{
+  "schema": "n8n.alert/v1",
+  "message_id": "01M485SKJ085E5HQ3EW03TSR6H",
+  "produced_at": "2026-10-06T08:38:00Z",
+  "producer": {
+    "service": "alert-evaluator",
+    "version": "1.0.0",
+    "job_id": "01M485SKJ05KYVFYGB5FDZEBTC"
+  },
+  "alert_id": "01M485SKJ0WD3CX9WWJWK1Y97B",
+  "idempotency_key": "01M485SKJ0WD3CX9WWJWK1Y97B:email",
+  "channel": "email",
+  "fallthrough_channel": null,
+  "audience": "client",
+  "client_id": "c7f12d45-b7c5-467d-aa82-e7826ed8abf2",
+  "alert": "volume_spike",
+  "severity": "high",
+  "subject": {
+    "keyword_id": "9a8b7c6d-5e4f-4321-a0b9-c8d7e6f5a4b3"
+  },
+  "summary": "ارتفاع الإشارات إلى الكلمة المتابعة",
+  "details": {
+    "rule_id": "5d0c2b7e-8a14-4f63-b9e1-2c7a6d4f0e18",
+    "rule_type": "volume_spike",
+    "renotify": false,
+    "keyword": {
+      "keyword_id": "9a8b7c6d-5e4f-4321-a0b9-c8d7e6f5a4b3",
+      "label": "زين العراق",
+      "purpose": "service_quality"
+    },
+    "scope": {
+      "level": "keyword"
+    },
+    "window": {
+      "hour": "2026-10-06T08:00:00Z",
+      "elapsed_fraction": 0.62,
+      "evaluated_at": "2026-10-06T08:37:12Z"
+    },
+    "fingerprint": "volume_spike:5d0c2b7e:9a8b7c6d",
+    "cooldown_until": "2026-10-06T10:37:12Z",
+    "metrics": {
+      "mentions_so_far": 120,
+      "baseline_median_same_hour": 30.5,
+      "expected_so_far": 18.9,
+      "ratio": 6.3,
+      "baseline_days": 7
+    }
+  }
+}

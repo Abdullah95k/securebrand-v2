@@ -1,0 +1,28 @@
+{
+  "schema": "jobs.completed/v1",
+  "message_id": "01M6NP0240NY2SMJKF2EFVS0GH",
+  "produced_at": "2026-11-05T11:02:40Z",
+  "producer": {
+    "service": "x-user-resolver",
+    "version": "1.0.0",
+    "job_id": "01M48N0V80ZZGG928KMD5XX36J"
+  },
+  "job_id": "01M48N0V80ZZGG928KMD5XX36J",
+  "queue": "jobs.x-user-resolver",
+  "kind": "refresh",
+  "candidate_key": "x:1456789012345678901",
+  "source_id": "a4d2c9e1-5b7f-4e3a-8c60-2f1b9d7e4a35",
+  "paid_user_reads": 1,
+  "free_rereads": 0,
+  "attempt": 1,
+  "status": "done",
+  "reason": null,
+  "finished_at": "2026-11-05T11:02:40Z",
+  "report": {
+    "new_count": 0,
+    "seen_count": 0,
+    "pages": 1,
+    "cost_units": 1,
+    "reply_candidates": []
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schema": "registry.decisions/v1",
+  "message_id": "01M47YFQ60H0TJTGPRBK3DBT5X",
+  "produced_at": "2026-10-06T06:30:16Z",
+  "producer": {
+    "service": "news-robots-checker",
+    "version": "1.0.0",
+    "job_id": "01M47YFQ600SDEWQZ3KMHKHR59"
+  },
+  "decision_id": "01M47YFQ60GVYDX9S53Z13YFY9",
+  "decision": "health_change",
+  "requested_by": "news-robots-checker",
+  "reason": "crawl_disallowed",
+  "source_id": "5e3b8f02-6d1c-4a97-b2e8-0c9f4d7a1e63",
+  "health_change": {
+    "health": "blocked"
+  },
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "news-robots-checker",
+    "fetched_at": "2026-10-06T06:30:11Z"
+  },
+  "retention_class": "news_excerpt"
+}

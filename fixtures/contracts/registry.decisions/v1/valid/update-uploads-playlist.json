@@ -1,0 +1,29 @@
+{
+  "schema": "registry.decisions/v1",
+  "message_id": "01M48E5VHGK4GQF1M5XYGH76P3",
+  "produced_at": "2026-10-06T11:04:30Z",
+  "producer": {
+    "service": "yt-uploads-reconciler",
+    "version": "1.0.0",
+    "job_id": "01M48E5VHGRZSZPEH63M6D2AH2"
+  },
+  "decision_id": "01M48E5VHGEQR9F8D7E833VFJ5",
+  "decision": "update",
+  "requested_by": "yt-uploads-reconciler",
+  "reason": null,
+  "source_id": "3c9a7e52-1f4b-4d8e-b6a0-8e2f5c1d7a94",
+  "update": {
+    "source": {
+      "platform_meta": {
+        "uploads_playlist_id": "UUx3Kp9vQ2mLwR7tYb4nJ8sA"
+      }
+    }
+  },
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "yt-uploads-reconciler",
+    "fetched_at": "2026-10-06T11:04:27Z"
+  },
+  "retention_class": "youtube_30d_text"
+}

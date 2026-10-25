@@ -1,0 +1,26 @@
+{
+  "schema": "jobs.completed/v1",
+  "message_id": "01M48MSB40ZKQVXN8RB38S282N",
+  "produced_at": "2026-10-06T13:00:00Z",
+  "producer": {
+    "service": "keyword-matcher",
+    "version": "1.0.0",
+    "job_id": "01M4G00000A8N3K5D2B7T4W9XC"
+  },
+  "job_id": "01M4G00000A8N3K5D2B7T4W9XC",
+  "queue": "jobs.keyword-matcher",
+  "kind": "rematch",
+  "client_id": "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60",
+  "request_id": "01J9R5S3V7W1X4Y8Z0A2B6C9DG",
+  "attempt": 1,
+  "status": "done",
+  "reason": null,
+  "finished_at": "2026-10-06T13:00:00Z",
+  "report": {
+    "new_count": 210,
+    "seen_count": 0,
+    "pages": 0,
+    "cost_units": 0,
+    "reply_candidates": []
+  }
+}

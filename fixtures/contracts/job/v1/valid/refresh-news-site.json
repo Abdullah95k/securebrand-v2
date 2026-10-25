@@ -1,0 +1,17 @@
+{
+  "schema": "job/v1",
+  "message_id": "01M47W2AM0MEWG38BX004255E9",
+  "produced_at": "2026-10-06T05:48:00Z",
+  "producer": {
+    "service": "news-feed-poller",
+    "version": "1.0.0",
+    "job_id": "01M47W2AM0J3KE7PNXV54SQ569"
+  },
+  "job_id": "01M48T1V80ZZGG928KMD5XX36J",
+  "kind": "refresh",
+  "due_at": "2026-10-06T05:48:00Z",
+  "attempt": 1,
+  "candidate_key": "news:site:example-daily.iq",
+  "source_id": "3c7f9d52-1e4a-4b86-a0d3-7b2e5c8f1a90",
+  "reason": "feed_gone"
+}

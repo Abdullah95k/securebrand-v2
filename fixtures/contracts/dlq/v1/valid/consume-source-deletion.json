@@ -1,0 +1,62 @@
+{
+  "schema": "dlq.deletion-propagator/v1",
+  "message_id": "01M4AV7C10PN0Y2JN93SDBM0BB",
+  "produced_at": "2026-10-07T09:31:00Z",
+  "producer": {
+    "service": "deletion-propagator",
+    "version": "1.0.0",
+    "job_id": "01M4AV7C10VTJ4V9XS7ZWNVYMJ"
+  },
+  "stage": "consume",
+  "original": {
+    "topic": "deletions",
+    "partition": 4,
+    "offset": 30211,
+    "key": "9a47e0b1-5c3d-4f82-b6e9-1d0c8a3f7e25",
+    "schema": "deletions/v1",
+    "message_id": "01M4ASERG8YYW3W832ZNMR15NW"
+  },
+  "message": {
+    "schema": "deletions/v1",
+    "message_id": "01M4ASERG8YYW3W832ZNMR15NW",
+    "produced_at": "2026-10-07T09:00:05Z",
+    "producer": {
+      "service": "tt-client-videos-fetcher",
+      "version": "1.0.0",
+      "job_id": "01J9N7H4S2P9D6K1X8V3B5WEMD"
+    },
+    "deletion_id": "del:authorization_revoked:source:1fae9afe4b28982ce70c6c58540af78855ca51c3908fa222a0a490f842a7a77c",
+    "reason": "authorization_revoked",
+    "scope": "source",
+    "mode": "delete",
+    "source_id": "9a47e0b1-5c3d-4f82-b6e9-1d0c8a3f7e25",
+    "target": {
+      "platform": "tiktok"
+    },
+    "signal_at": "2026-10-07T08:59:00Z",
+    "due_at": "2026-10-08T08:59:00Z",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "tt-client-videos-fetcher",
+      "fetched_at": "2026-10-07T08:59:00Z"
+    }
+  },
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "tt-client-videos-fetcher",
+    "fetched_at": "2026-10-07T08:59:00Z"
+  },
+  "error": {
+    "class": "attempts_exhausted",
+    "message": "ClickHouse refused the mutation five times: TOO_MANY_PARTS",
+    "attempts": 5,
+    "first_failed_at": "2026-10-07T09:01:00Z",
+    "last_failed_at": "2026-10-07T09:29:58Z"
+  },
+  "consumer": {
+    "service": "deletion-propagator",
+    "group": "deletion-propagator"
+  }
+}

@@ -1,0 +1,461 @@
+{
+  "description": "Partition keys (ADR-0004): the Kafka key partitionKey() returns for each message, by schema id and, for a job, its queue. Messages carry only the fields the key reads. `refusals` have no key.",
+  "cases": [
+    {
+      "name": "a raw.items record keys on its source",
+      "schema": "raw.items/v1",
+      "message": {
+        "envelope": {
+          "kind": "post",
+          "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+        }
+      },
+      "key": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+    },
+    {
+      "name": "a raw.items record about a candidate keys on its candidate key (li-org-resolver's sampled post)",
+      "schema": "raw.items/v1",
+      "message": {
+        "envelope": {
+          "kind": "post",
+          "candidate_key": "linkedin:urn:li:organization:1234567"
+        }
+      },
+      "key": "linkedin:urn:li:organization:1234567"
+    },
+    {
+      "name": "a normalized item keys on its source",
+      "schema": "items.normalized/v1",
+      "message": {
+        "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+      },
+      "key": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+    },
+    {
+      "name": "a hit keys on the source that produced the item",
+      "schema": "item.hits/v1",
+      "message": {
+        "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+      },
+      "key": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+    },
+    {
+      "name": "a discovery hit keys on its candidate key",
+      "schema": "discovery.hits/v1",
+      "message": {
+        "candidate": {
+          "candidate_key": "facebook:group:104557812990341"
+        },
+        "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+      },
+      "key": "facebook:group:104557812990341"
+    },
+    {
+      "name": "a profile keys on the candidate key as issued",
+      "schema": "poster.profiles/v1",
+      "message": {
+        "candidate_key": "instagram:furat_restaurant",
+        "source_id": null
+      },
+      "key": "instagram:furat_restaurant"
+    },
+    {
+      "name": "a registered source's refreshed profile keys on its id form",
+      "schema": "poster.profiles/v1",
+      "message": {
+        "candidate_key": "x:1456789012345678901",
+        "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+      },
+      "key": "x:1456789012345678901"
+    },
+    {
+      "name": "an ordinary individual's answer keys on its author_ref",
+      "schema": "poster.profiles/v1",
+      "message": {
+        "author_ref": "2a630e32b9c6e3f32669ce9f67ce3f9c2d549aabb6f9dfbb0342631fafa9e12b",
+        "account_type": "individual"
+      },
+      "key": "2a630e32b9c6e3f32669ce9f67ce3f9c2d549aabb6f9dfbb0342631fafa9e12b"
+    },
+    {
+      "name": "a decision about a candidate keys on the candidate key",
+      "schema": "registry.decisions/v1",
+      "message": {
+        "decision": "add",
+        "candidate_key": "youtube:UC4fE2vQm8bN1kT7yR3pL9sA"
+      },
+      "key": "youtube:UC4fE2vQm8bN1kT7yR3pL9sA"
+    },
+    {
+      "name": "a decision about a source keys on the source",
+      "schema": "registry.decisions/v1",
+      "message": {
+        "decision": "tier_change",
+        "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+      },
+      "key": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+    },
+    {
+      "name": "a route-level health change keys on the platform",
+      "schema": "registry.decisions/v1",
+      "message": {
+        "decision": "health_change",
+        "platform": "tiktok",
+        "route": "amber",
+        "vendor": "tikhub"
+      },
+      "key": "tiktok"
+    },
+    {
+      "name": "a keyword save keys on the keyword",
+      "schema": "registry.decisions/v1",
+      "message": {
+        "decision": "add",
+        "keyword_id": "3d9c1b2a-7e4f-4a6b-8c1d-2e5f6a7b8c9d"
+      },
+      "key": "3d9c1b2a-7e4f-4a6b-8c1d-2e5f6a7b8c9d"
+    },
+    {
+      "name": "an ordinary individual's mention_only keys on its author_ref",
+      "schema": "registry.decisions/v1",
+      "message": {
+        "decision": "mention_only",
+        "author_ref": "2a630e32b9c6e3f32669ce9f67ce3f9c2d549aabb6f9dfbb0342631fafa9e12b"
+      },
+      "key": "2a630e32b9c6e3f32669ce9f67ce3f9c2d549aabb6f9dfbb0342631fafa9e12b"
+    },
+    {
+      "name": "a source event keys on the source",
+      "schema": "source.events/v1",
+      "message": {
+        "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+      },
+      "key": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+    },
+    {
+      "name": "an analysis keys on the item's source",
+      "schema": "items.analysis/v1",
+      "message": {
+        "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+      },
+      "key": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+    },
+    {
+      "name": "an observation keys on the item's source",
+      "schema": "item.metrics/v1",
+      "message": {
+        "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+      },
+      "key": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+    },
+    {
+      "name": "an item-scope deletion keys on the item's source",
+      "schema": "deletions/v1",
+      "message": {
+        "scope": "item",
+        "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+      },
+      "key": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+    },
+    {
+      "name": "a source-scope deletion keys on the source",
+      "schema": "deletions/v1",
+      "message": {
+        "scope": "source",
+        "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+      },
+      "key": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+    },
+    {
+      "name": "an author-scope deletion keys on the author_ref",
+      "schema": "deletions/v1",
+      "message": {
+        "scope": "author",
+        "author_ref": "2a630e32b9c6e3f32669ce9f67ce3f9c2d549aabb6f9dfbb0342631fafa9e12b"
+      },
+      "key": "2a630e32b9c6e3f32669ce9f67ce3f9c2d549aabb6f9dfbb0342631fafa9e12b"
+    },
+    {
+      "name": "a client-scope deletion keys on the client",
+      "schema": "deletions/v1",
+      "message": {
+        "scope": "client",
+        "client_id": "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+      },
+      "key": "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    },
+    {
+      "name": "an article URL keys on the site",
+      "schema": "article.urls/v1",
+      "message": {
+        "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+      },
+      "key": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+    },
+    {
+      "name": "a search result keys on its canonical URL hash",
+      "schema": "search.results/v1",
+      "message": {
+        "canonical_url_hash": "9f2c6c1e4d0a7b3e5f8a1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f",
+        "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+      },
+      "key": "9f2c6c1e4d0a7b3e5f8a1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f"
+    },
+    {
+      "name": "a crawl policy keys on its host",
+      "schema": "crawl.policies/v1",
+      "message": {
+        "host": "www.example-daily.iq"
+      },
+      "key": "www.example-daily.iq"
+    },
+    {
+      "name": "a dedup verdict keys on its story",
+      "schema": "news.dedup/v1",
+      "message": {
+        "story_id": "01J9Q2M7T4X8B1R6V0Z3N5K9WD",
+        "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+      },
+      "key": "01J9Q2M7T4X8B1R6V0Z3N5K9WD"
+    },
+    {
+      "name": "a dead letter keeps the original message's key",
+      "schema": "dlq.normalize-item/v1",
+      "message": {
+        "original": {
+          "key": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+        }
+      },
+      "key": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+    },
+    {
+      "name": "a rotation job keys on its source",
+      "schema": "job/v1",
+      "queue": "jobs.fb-page-feed-poller",
+      "message": {
+        "kind": "rotation",
+        "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+      },
+      "key": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+    },
+    {
+      "name": "a priority-lane analyze job keys on the item's source",
+      "schema": "job/v1",
+      "queue": "jobs.analysis-topics.priority",
+      "message": {
+        "kind": "analyze",
+        "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+      },
+      "key": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+    },
+    {
+      "name": "a resolve job keys on the candidate key",
+      "schema": "job/v1",
+      "queue": "jobs.x-user-resolver",
+      "message": {
+        "kind": "resolve",
+        "candidate_key": "x:example_poster_x"
+      },
+      "key": "x:example_poster_x"
+    },
+    {
+      "name": "a resolver's refresh keys on the source's id form, not its source_id",
+      "schema": "job/v1",
+      "queue": "jobs.yt-channel-resolver",
+      "message": {
+        "kind": "refresh",
+        "candidate_key": "youtube:UC4fE2vQm8bN1kT7yR3pL9sA",
+        "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+      },
+      "key": "youtube:UC4fE2vQm8bN1kT7yR3pL9sA"
+    },
+    {
+      "name": "a manual candidate keys on its candidate key",
+      "schema": "job/v1",
+      "queue": "jobs.poster-resolver",
+      "message": {
+        "kind": "manual_candidate",
+        "candidate_key": "linkedin:example-bank"
+      },
+      "key": "linkedin:example-bank"
+    },
+    {
+      "name": "a review answer keys on the candidate key",
+      "schema": "job/v1",
+      "queue": "jobs.qualifier",
+      "message": {
+        "kind": "review_answer",
+        "candidate_key": "instagram:furat_restaurant"
+      },
+      "key": "instagram:furat_restaurant"
+    },
+    {
+      "name": "a robots recheck keys on the host",
+      "schema": "job/v1",
+      "queue": "jobs.news-robots-checker",
+      "message": {
+        "kind": "recheck",
+        "host": "www.example-daily.iq",
+        "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+      },
+      "key": "www.example-daily.iq"
+    },
+    {
+      "name": "a Common Crawl rotation keys on the crawl",
+      "schema": "job/v1",
+      "queue": "jobs.web-commoncrawl-scanner",
+      "message": {
+        "kind": "rotation",
+        "crawl_id": "CC-MAIN-2026-38"
+      },
+      "key": "CC-MAIN-2026-38"
+    },
+    {
+      "name": "a Common Crawl backfill keys on its source",
+      "schema": "job/v1",
+      "queue": "jobs.web-commoncrawl-scanner",
+      "message": {
+        "kind": "backfill",
+        "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+      },
+      "key": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+    },
+    {
+      "name": "an ops_force about no source keys on its request",
+      "schema": "job/v1",
+      "queue": "jobs.x-compliance-sync",
+      "message": {
+        "kind": "ops_force",
+        "request_id": "01M47F0V80FZGG928KMD5XX36J"
+      },
+      "key": "01M47F0V80FZGG928KMD5XX36J"
+    },
+    {
+      "name": "a rematch keys on the client",
+      "schema": "job/v1",
+      "queue": "jobs.keyword-matcher",
+      "message": {
+        "kind": "rematch",
+        "client_id": "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60",
+        "request_id": "01M47F0V80FZGG928KMD5XX36J"
+      },
+      "key": "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    },
+    {
+      "name": "an export keys on its request",
+      "schema": "job/v1",
+      "queue": "jobs.x-compliance-sync",
+      "message": {
+        "kind": "export",
+        "client_id": null,
+        "request_id": "01M47F0V80FZGG928KMD5XX36J"
+      },
+      "key": "01M47F0V80FZGG928KMD5XX36J"
+    },
+    {
+      "name": "a replay keys on its run",
+      "schema": "job/v1",
+      "queue": "jobs.normalize-item",
+      "message": {
+        "kind": "replay",
+        "run_id": "01J9P8A3V5N7B2D4F6H0K1M9QS",
+        "request_id": "01M47F0V80FZGG928KMD5XX36J"
+      },
+      "key": "01J9P8A3V5N7B2D4F6H0K1M9QS"
+    },
+    {
+      "name": "an admin recompute without a run keys on its request",
+      "schema": "job/v1",
+      "queue": "jobs.aggregator",
+      "message": {
+        "kind": "recompute",
+        "request_id": "01M47F0V80FZGG928KMD5XX36J"
+      },
+      "key": "01M47F0V80FZGG928KMD5XX36J"
+    },
+    {
+      "name": "a retention sweep keys on its run",
+      "schema": "job/v1",
+      "queue": "jobs.yt-text-purger",
+      "message": {
+        "kind": "retention_sweep",
+        "run_id": "01J9P8A3V5N7B2D4F6H0K1M9QS"
+      },
+      "key": "01J9P8A3V5N7B2D4F6H0K1M9QS"
+    },
+    {
+      "name": "a completion report takes the key of the job it reports",
+      "schema": "jobs.completed/v1",
+      "message": {
+        "queue": "jobs.x-user-resolver",
+        "kind": "resolve",
+        "candidate_key": "x:example_poster_x"
+      },
+      "key": "x:example_poster_x"
+    },
+    {
+      "name": "a completion report of a sweep keys on its run",
+      "schema": "jobs.completed/v1",
+      "message": {
+        "queue": "jobs.yt-text-purger",
+        "kind": "retention_sweep",
+        "run_id": "01J9P8A3V5N7B2D4F6H0K1M9QS"
+      },
+      "key": "01J9P8A3V5N7B2D4F6H0K1M9QS"
+    },
+    {
+      "name": "a completion report of a rotation keys on its source",
+      "schema": "jobs.completed/v1",
+      "message": {
+        "queue": "jobs.x-recent-search",
+        "kind": "rotation",
+        "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+      },
+      "key": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+    }
+  ],
+  "refusals": [
+    {
+      "name": "a raw.items record with neither a source nor a candidate",
+      "schema": "raw.items/v1",
+      "message": {
+        "envelope": {
+          "kind": "post"
+        }
+      }
+    },
+    {
+      "name": "a resolve job without its candidate key",
+      "schema": "job/v1",
+      "queue": "jobs.x-user-resolver",
+      "message": {
+        "kind": "resolve",
+        "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+      }
+    },
+    {
+      "name": "a job without its queue",
+      "schema": "job/v1",
+      "message": {
+        "kind": "rotation",
+        "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+      }
+    },
+    {
+      "name": "a rotation job with a null source",
+      "schema": "job/v1",
+      "queue": "jobs.fb-page-feed-poller",
+      "message": {
+        "kind": "rotation",
+        "source_id": null
+      }
+    },
+    {
+      "name": "a schema the record does not know",
+      "schema": "raw.replay/v1",
+      "message": {
+        "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+      }
+    }
+  ]
+}

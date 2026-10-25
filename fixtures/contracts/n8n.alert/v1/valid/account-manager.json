@@ -1,0 +1,35 @@
+{
+  "schema": "n8n.alert/v1",
+  "message_id": "01M48HBFG0NTB7CEVSX4XMV471",
+  "produced_at": "2026-10-06T12:00:00Z",
+  "producer": {
+    "service": "tt-client-videos-fetcher",
+    "version": "1.0.0",
+    "job_id": "01M48HBFG0384K9510PTCKRHR7"
+  },
+  "alert_id": "01M48HBFG0218AA6NTFQPMC48F",
+  "idempotency_key": "01M48HBFG0218AA6NTFQPMC48F:email",
+  "channel": "email",
+  "fallthrough_channel": null,
+  "audience": "account_manager",
+  "client_id": "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60",
+  "alert": "authorization_revoked",
+  "severity": "high",
+  "subject": {
+    "source_id": "9a47e0b1-5c3d-4f82-b6e9-1d0c8a3f7e25",
+    "platform": "tiktok"
+  },
+  "summary": "a client revoked the TikTok grant of its own account",
+  "details": {
+    "facts": [
+      {
+        "label": "account",
+        "value": "متجر البصرة"
+      },
+      {
+        "label": "revoked at",
+        "value": "2026-10-07T08:59:00Z"
+      }
+    ]
+  }
+}

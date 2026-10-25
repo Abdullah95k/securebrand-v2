@@ -1,0 +1,53 @@
+{
+  "schema": "dlq.x-full-archive-search/v1",
+  "message_id": "01M48HDA30A8V4H992M5VM29JP",
+  "produced_at": "2026-10-06T12:01:00Z",
+  "producer": {
+    "service": "x-full-archive-search",
+    "version": "1.0.0",
+    "job_id": "01M48HDA30FYBK6J376JKK9SDF"
+  },
+  "stage": "consume",
+  "original": {
+    "topic": "jobs.x-full-archive-search",
+    "partition": 0,
+    "offset": 77,
+    "key": "7c1d9a2e-55b4-4f1e-8a0c-3e9f6b2d4a71",
+    "schema": "job/v1",
+    "message_id": "01M48H7TA0A1H21QPKD54BQQA5"
+  },
+  "message": {
+    "schema": "job/v1",
+    "message_id": "01M48H7TA0A1H21QPKD54BQQA5",
+    "produced_at": "2026-10-06T11:58:00Z",
+    "producer": {
+      "service": "backfill-orchestrator",
+      "version": "1.0.0",
+      "job_id": "01M48H7TA0CW3MGVP3T6S4CGXG"
+    },
+    "job_id": "01M48E1KW0Q8N3K5D2B7T4W9XC",
+    "kind": "keyword_history",
+    "due_at": "2026-10-06T11:58:00Z",
+    "attempt": 1,
+    "source_id": "7c1d9a2e-55b4-4f1e-8a0c-3e9f6b2d4a71",
+    "run_id": "01M48H5ZQ0393F1FHGVXCSE6AJ",
+    "reason": "add",
+    "window_start": "2026-09-06T11:58:00Z",
+    "window_end": "2026-10-06T11:58:00Z",
+    "cap": {
+      "max_age_days": 30,
+      "max_items": 2000
+    }
+  },
+  "error": {
+    "class": "query_rejected",
+    "message": "X rejected the query: too many operators",
+    "attempts": 1,
+    "first_failed_at": "2026-10-06T12:00:59Z",
+    "last_failed_at": "2026-10-06T12:00:59Z"
+  },
+  "consumer": {
+    "service": "x-full-archive-search",
+    "group": "x-full-archive-search"
+  }
+}

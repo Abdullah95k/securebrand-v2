@@ -1,0 +1,81 @@
+{
+  "schema": "poster.profiles/v1",
+  "message_id": "01M48CV3C8DQQFNPTTS4380R6Y",
+  "produced_at": "2026-10-06T10:41:09Z",
+  "producer": {
+    "service": "fb-page-resolver",
+    "version": "1.0.0",
+    "job_id": "01J9N6D1W5Q8Z2T7K4V0M3RXBH"
+  },
+  "platform": "facebook",
+  "status": "resolved",
+  "reason": null,
+  "followers": 412000,
+  "verified": true,
+  "client_ids": [
+    "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+  ],
+  "resolved_at": "2026-10-06T10:41:09Z",
+  "cached": false,
+  "cached_until": "2026-11-05T10:41:09Z",
+  "candidate_key": "facebook:100064583471102",
+  "source_id": null,
+  "source_type": "page",
+  "account_type": "page",
+  "individual": false,
+  "public_account": true,
+  "platform_id": "100064583471102",
+  "handle": "exampletelecom.iq",
+  "url": "https://www.facebook.com/exampletelecom.iq",
+  "display_name": "شركة المثال للاتصالات",
+  "posts_30d": null,
+  "last_post_at": null,
+  "posts_per_day": null,
+  "duplicate_text_share": null,
+  "default_avatar": null,
+  "account_created_at": null,
+  "owned_by_client": false,
+  "country_signals": {
+    "iraqi_place": true,
+    "platform_country_iq": false,
+    "phone_964": false,
+    "iq_domain": true,
+    "outlet_link": false,
+    "seed_list": false,
+    "signal_evidence": [
+      {
+        "signal": "iraqi_place",
+        "matched": "Baghdad",
+        "where": "location.city"
+      },
+      {
+        "signal": "iq_domain",
+        "matched": "example-telecom.iq",
+        "where": "website"
+      }
+    ]
+  },
+  "lang_share": null,
+  "keyword_ids": [],
+  "route": "green",
+  "vendor": null,
+  "review_flags": [],
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "fb-page-resolver",
+    "fetched_at": "2026-10-06T10:41:09Z"
+  },
+  "retention_class": "meta_on_request",
+  "extras": {
+    "category": "Telecommunication Company",
+    "location": {
+      "city": "Baghdad",
+      "country": "Iraq"
+    },
+    "website_domains": [
+      "example-telecom.iq"
+    ],
+    "about": "خدمة الإنترنت والاتصالات في بغداد والمحافظات"
+  }
+}

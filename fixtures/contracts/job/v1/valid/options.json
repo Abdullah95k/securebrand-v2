@@ -1,0 +1,137 @@
+{
+  "analyze-priority.json": {
+    "queue": "jobs.analysis-sentiment.priority"
+  },
+  "analyze.json": {
+    "queue": "jobs.analysis-media"
+  },
+  "backfill-hashtag-edge.json": {
+    "queue": "jobs.ig-hashtag-search"
+  },
+  "candidate-retry.json": {
+    "queue": "jobs.keyword-matcher"
+  },
+  "export.json": {
+    "queue": "jobs.x-compliance-sync"
+  },
+  "first-check.json": {
+    "queue": "jobs.news-robots-checker"
+  },
+  "keyword-history.json": {
+    "queue": "jobs.x-full-archive-search"
+  },
+  "manual-candidate.json": {
+    "queue": "jobs.poster-resolver"
+  },
+  "metrics-client-refresh.json": {
+    "queue": "jobs.fb-reactions-fetcher"
+  },
+  "metrics.json": {
+    "queue": "jobs.fb-reactions-fetcher"
+  },
+  "ops-force-commoncrawl.json": {
+    "queue": "jobs.web-commoncrawl-scanner"
+  },
+  "ops-force-no-source.json": {
+    "queue": "jobs.x-compliance-sync"
+  },
+  "ops-force-resolver.json": {
+    "queue": "jobs.fb-page-resolver"
+  },
+  "ops-force-targeted.json": {
+    "queue": "jobs.ig-mentions-fetcher"
+  },
+  "ops-force.json": {
+    "queue": "jobs.fb-page-feed-poller"
+  },
+  "prd-backfill-orchestrator.json": {
+    "queue": "jobs.fb-backfill"
+  },
+  "prd-comment-decay-scheduler.json": {
+    "queue": "jobs.fb-post-comments-fetcher"
+  },
+  "prd-yt-pubsub-receiver.json": {
+    "queue": "jobs.yt-video-details-fetcher"
+  },
+  "prd-yt-uploads-reconciler.json": {
+    "queue": "jobs.yt-video-details-fetcher"
+  },
+  "push-atom.json": {
+    "queue": "jobs.yt-pubsub-receiver"
+  },
+  "push-json.json": {
+    "queue": "jobs.fb-client-webhook-receiver"
+  },
+  "recheck.json": {
+    "queue": "jobs.news-robots-checker"
+  },
+  "recompute-buckets.json": {
+    "queue": "jobs.aggregator"
+  },
+  "recompute-range.json": {
+    "queue": "jobs.aggregator"
+  },
+  "reconciliation-daily.json": {
+    "queue": "jobs.tg-bot-channel-receiver"
+  },
+  "reconciliation-lease-lapsed.json": {
+    "queue": "jobs.yt-uploads-reconciler"
+  },
+  "reconciliation-thread.json": {
+    "queue": "jobs.li-own-comments-fetcher"
+  },
+  "reconciliation-webhook.json": {
+    "queue": "jobs.ig-own-comments-fetcher"
+  },
+  "reconciliation-x-gap.json": {
+    "queue": "jobs.x-recent-search"
+  },
+  "refresh-before-purge.json": {
+    "queue": "jobs.yt-comments-fetcher"
+  },
+  "refresh-news-site.json": {
+    "queue": "jobs.news-site-resolver"
+  },
+  "refresh-own-source.json": {
+    "queue": "jobs.fb-page-feed-poller"
+  },
+  "refresh-resolver.json": {
+    "queue": "jobs.x-user-resolver"
+  },
+  "refresh-robots.json": {
+    "queue": "jobs.news-robots-checker"
+  },
+  "rematch.json": {
+    "queue": "jobs.keyword-matcher"
+  },
+  "replay.json": {
+    "queue": "jobs.normalize-item"
+  },
+  "replies-thread-ids.json": {
+    "queue": "jobs.yt-replies-fetcher"
+  },
+  "replies-x-window.json": {
+    "queue": "jobs.x-full-archive-search"
+  },
+  "rerun.json": {
+    "queue": "jobs.analysis-topics"
+  },
+  "resolve.json": {
+    "queue": "jobs.ig-account-resolver"
+  },
+  "retention-sweep.json": {
+    "queue": "jobs.yt-text-purger"
+  },
+  "review-answer.json": {
+    "queue": "jobs.qualifier"
+  },
+  "rotation-commoncrawl.json": {
+    "queue": "jobs.web-commoncrawl-scanner"
+  },
+  "rotation-hashtag-edge.json": {
+    "queue": "jobs.ig-hashtag-search"
+  },
+  "rotation.json": {
+    "queue": "jobs.fb-page-feed-poller"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "schema": "deletions/v1",
+  "message_id": "01M47FEKNRJJYKFKVXHVAHK2C4",
+  "produced_at": "2026-10-06T02:07:31Z",
+  "producer": {
+    "service": "yt-text-purger",
+    "version": "1.0.0",
+    "job_id": "01M47F0V80FZGG928KMD5XX36J"
+  },
+  "deletion_id": "del:retention:item:37da11c5236d51f24df9314c4b094da75329ee7b28bdd4a3c866ea9f77060b43",
+  "reason": "retention",
+  "scope": "text_only",
+  "mode": "purge_text",
+  "source_id": "2d7e9b41-5c3a-4f8e-b1d6-7a0c9e3f5b28",
+  "target": {
+    "platform": "youtube",
+    "kind": "comment",
+    "item_ids": [
+      "84e1698b-e085-5270-8d93-6d70736a1a53",
+      "a350ffd8-9b1c-5a11-8f73-1e810123af74"
+    ],
+    "platform_ids": [
+      "UgzK7pQ2mV9xR4tL1bN6AaABAg",
+      "UgzK7pQ2mV9xR4tL1bN6AaABAg.9TqNw5Hc3Kp"
+    ],
+    "fetched_before": "2026-10-06T02:00:00Z"
+  },
+  "signal_at": "2026-10-06T02:00:00Z",
+  "due_at": "2026-10-06T19:42:10Z",
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "yt-comments-fetcher",
+    "fetched_at": "2026-09-05T23:58:12Z"
+  },
+  "retention_class": "youtube_30d_text",
+  "requested_by": "yt-text-purger",
+  "run_id": "01M47F0V80FZGG928KMD5XX36J"
+}

@@ -1,0 +1,53 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M4AJXCA0JR8GGZXSJVRQ1ECJ",
+    "produced_at": "2026-10-07T07:05:44Z",
+    "producer": {
+      "service": "yt-replies-fetcher",
+      "version": "1.0.0",
+      "job_id": "01J9P4F7M2R8T5W0Y3B6D9H1KN"
+    },
+    "platform": "youtube",
+    "kind": "comment",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "yt-replies-fetcher",
+      "fetched_at": "2026-10-07T07:05:42Z"
+    },
+    "retention_class": "youtube_30d_text",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01J9P4F7M2R8T5W0Y3B6D9H1KN",
+    "attempt": 1,
+    "job_kind": "replies",
+    "api_version": "v3",
+    "raw_ref": "raw/green/youtube/2026/10/07/yt-replies-fetcher/000031.jsonl.zst#2",
+    "source_id": "3a9e5c1d-7f2b-4e8a-b6d0-91c4f2e7a835",
+    "platform_id": "UgzK7pQ2mV9xR4tL1bN6AaABAg.9TqNw5Hc3Kp",
+    "idempotency_key": "youtube:comment:UgzK7pQ2mV9xR4tL1bN6AaABAg.9TqNw5Hc3Kp",
+    "parent_id": "84e1698b-e085-5270-8d93-6d70736a1a53",
+    "root_id": "b55b9981-9761-5bd6-9315-861dcaa1c311",
+    "author_ref": "06eed4bac0bdba1c7985307db3b30fc17d55a5c49235f73baa9c2d298882f00a",
+    "redacted_fields": [
+      "snippet.authorChannelId",
+      "snippet.authorDisplayName",
+      "snippet.authorProfileImageUrl",
+      "snippet.authorChannelUrl"
+    ],
+    "context": {
+      "series_step": "+24h",
+      "video_channel_id": "UC7xQe2lW9pK3bN5aV1rT8sQ"
+    }
+  },
+  "payload": {
+    "id": "UgzK7pQ2mV9xR4tL1bN6AaABAg.9TqNw5Hc3Kp",
+    "snippet": {
+      "textOriginal": "صحيح",
+      "parentId": "UgzK7pQ2mV9xR4tL1bN6AaABAg",
+      "publishedAt": "2026-10-07T06:55:00Z"
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "name": "contracts",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The listening platform's message contracts: Zod schemas, JSON Schema, key helpers and registries (F2)",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./schemas": {
+      "types": "./dist/schemas.d.ts",
+      "default": "./dist/schemas.js"
+    },
+    "./keys": {
+      "types": "./dist/keys/index.d.ts",
+      "default": "./dist/keys/index.js"
+    },
+    "./registries": {
+      "types": "./dist/registries/index.d.ts",
+      "default": "./dist/registries/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "registries",
+    "schemas"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run test/unit test/conformance",
+    "export:schemas": "node scripts/export-json-schema.ts",
+    "gen:python": "uv run python scripts/gen_python.py",
+    "gen:fixtures": "uv run python scripts/fixtures/gen.py",
+    "gen:issue-paths": "node scripts/issue-paths.ts"
+  },
+  "dependencies": {
+    "canonicalize": "5.1.0",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

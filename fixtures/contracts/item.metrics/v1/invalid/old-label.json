@@ -1,0 +1,43 @@
+{
+  "schema": "item.metrics/v1",
+  "message_id": "01M4AKE4E8N4D8PT2J72MVQEAJ",
+  "produced_at": "2026-10-07T07:14:53Z",
+  "producer": {
+    "service": "fb-reactions-fetcher",
+    "version": "1.0.0",
+    "job_id": "01J9Q1M4V8N2B6X0C3Z7A5S9DF"
+  },
+  "item_id": "bda54111-94d6-54e2-aab6-33e8b5cb48c6",
+  "idempotency_key": "facebook:post:100064583471102_1198837625012734",
+  "platform": "facebook",
+  "platform_id": "100064583471102_1198837625012734",
+  "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11",
+  "created_at": "2026-10-06T07:12:09Z",
+  "observation": {
+    "label": "refresh_24h",
+    "step": "+24h",
+    "observed_at": "2026-10-07T07:14:51Z"
+  },
+  "metrics": {
+    "views": null,
+    "likes": 2421,
+    "comments": 403,
+    "shares": 58,
+    "reactions_by_type": {
+      "like": 2210,
+      "love": 131,
+      "haha": 19,
+      "wow": 4,
+      "sad": 1,
+      "angry": 44,
+      "care": 12
+    }
+  },
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "fb-reactions-fetcher",
+    "fetched_at": "2026-10-07T07:14:51Z"
+  },
+  "retention_class": "meta_on_request"
+}

@@ -1,0 +1,38 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M487YPG069X4JYRV689RX3NP",
+    "produced_at": "2026-10-06T09:15:44Z",
+    "producer": {
+      "service": "fb-page-feed-poller",
+      "version": "1.0.0",
+      "job_id": "01J9N2Q7Z4T8X1V6M3K0H5R2WB"
+    },
+    "platform": "facebook",
+    "kind": "post",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "fb-page-feed-poller",
+      "fetched_at": "2026-10-06T09:15:42Z"
+    },
+    "retention_class": "meta_on_request",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01J9N2Q7Z4T8X1V6M3K0H5R2WB",
+    "attempt": 1,
+    "job_kind": "rotation",
+    "api_version": "v21.0",
+    "raw_ref": "raw/green/facebook/2026/10/06/fb-page-feed-poller/000123.jsonl.zst#17",
+    "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11",
+    "platform_id": "100064583471102_1198837625012734",
+    "idempotency_key": "facebook:post:100064583471102_1198837625012734",
+    "route": "green"
+  },
+  "payload": {
+    "id": "100064583471102_1198837625012734",
+    "message": "عرض جديد على باقات الإنترنت المنزلي",
+    "created_time": "2026-10-06T08:51:40+0000"
+  }
+}
