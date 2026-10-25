@@ -37,6 +37,10 @@ services read only them.
 | Supabase API gateway        | 54321                            | `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`                                                                |
 | Supabase Postgres           | 54322                            | `SUPABASE_DB_URL`                                                                                                               |
 
+Supabase's ports (54320 to 54329, `supabase/config.toml`) lie in Linux's ephemeral range, so CI
+reserves them first (`net.ipv4.ip_local_reserved_ports`), and `make up` retries a start that meets
+a port in use once (`scripts/supabase-start.sh`).
+
 The ClickHouse and S3 credentials are fixed development values in `stack/local.env` (matching
 the `clickhouse-users` and `seaweedfs-s3` configs in `compose.yaml`); they work on localhost only
 and guard nothing. Supabase's URL and keys are read live from `supabase status` and never written

@@ -62,16 +62,7 @@ case "$code" in
   *) sb_die "could not create the S3 bucket ${S3_BUCKET} (HTTP $code)" ;;
 esac
 
-if "$CLI" status >/dev/null 2>&1; then
-  echo "make up: Supabase is already running"
-else
-  EXCLUDE="realtime,storage-api,imgproxy,mailpit,postgres-meta,studio,edge-runtime,logflare,vector,supavisor"
-  if [ "${SUPABASE_FULL:-0}" = 1 ]; then
-    "$CLI" start
-  else
-    "$CLI" start --exclude "$EXCLUDE"
-  fi
-fi
+"$SB_SCRIPTS_DIR/supabase-start.sh"
 
 "$SB_SCRIPTS_DIR/wait-for-stack.sh"
 echo "make up: the local stack is up. Connection variables: eval \"\$(scripts/stack-env.sh)\"; a quick round trip: make smoke"

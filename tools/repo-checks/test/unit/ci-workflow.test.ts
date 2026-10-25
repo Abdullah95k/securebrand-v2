@@ -121,6 +121,26 @@ describe("GitHub workflows", () => {
     }
   });
 
+  it("reserves every Supabase host port in the check job before any other step opens a connection", () => {
+    // An outbound connection takes its local port from the ephemeral range (32768-60999), so it
+    // can hold a Supabase port just when make up binds it ("address already in use").
+    const steps = ci.jobs.check?.steps ?? [];
+    const reserve = steps.findIndex((s) =>
+      /sudo sysctl -w net\.ipv4\.ip_local_reserved_ports=54320-54329/.test(s.run ?? ""),
+    );
+    expect(reserve).toBe(0);
+    expect(reserve).toBeLessThan(steps.findIndex((s) => (s.run ?? "").trim() === "make up"));
+    const config = readFileSync(join(ROOT, "supabase", "config.toml"), "utf8");
+    const ports = [...config.matchAll(/^\s*(?:port|shadow_port)\s*=\s*(\d+)/gm)].map((m) =>
+      Number(m[1]),
+    );
+    expect(ports).toContain(54322);
+    for (const port of ports.filter((p) => p >= 32768)) {
+      expect(port).toBeGreaterThanOrEqual(54320);
+      expect(port).toBeLessThanOrEqual(54329);
+    }
+  });
+
   it("on a push to main, make check compares with the commit before the push", () => {
     const step = (ci.jobs.check?.steps ?? []).find((s) => (s.run ?? "").includes("make check"));
     expect(step).toBeDefined();
