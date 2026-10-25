@@ -54,4 +54,10 @@ describe("the catalogue (ADR-0002, ADR-0030, A1)", () => {
     expect(pythonModule("raw.items/v1")).toBe("raw_items_v1");
     expect(pythonModule("dlq.<service>/v1")).toBe("dlq_v1");
   });
+
+  it("schema ids are unique and every id has one version", () => {
+    const ids = CATALOGUE.map((e) => e.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    for (const id of ids) expect(id).toMatch(/\/v\d+$/);
+  });
 });
