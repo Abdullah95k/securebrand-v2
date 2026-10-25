@@ -15,13 +15,17 @@ function utcMillis(
   s: number,
   t: string,
 ): number {
-  if (mo < 1 || mo > 12 || h > 23 || mi > 59 || s > 59) throw new ContractError("bad_time", t);
-  const ms = Date.UTC(y, mo - 1, d, h, mi, s);
-  const back = new Date(ms);
-  if (back.getUTCFullYear() !== y || back.getUTCMonth() !== mo - 1 || back.getUTCDate() !== d) {
+  if (y < 1 || mo < 1 || mo > 12 || h > 23 || mi > 59 || s > 59)
+    throw new ContractError("bad_time", `${t} names no calendar time`);
+  // Date.UTC reads the years 0 to 99 as 1900 to 1999, so the year is set on its own; the years 0001
+  // to 9999 are the ones Python's datetime holds, and both languages take the same ones.
+  const date = new Date(0);
+  date.setUTCFullYear(y, mo - 1, d);
+  date.setUTCHours(h, mi, s, 0);
+  if (date.getUTCFullYear() !== y || date.getUTCMonth() !== mo - 1 || date.getUTCDate() !== d) {
     throw new ContractError("bad_time", `${t} names no calendar day`);
   }
-  return ms;
+  return date.getTime();
 }
 
 /** A platform time with seconds and an offset, rendered YYYY-MM-DDTHH:MM:SSZ (fractions truncated). */
@@ -44,7 +48,10 @@ export function renderKeyTime(t: string): string {
     if (oh > 23 || om > 59) throw new ContractError("bad_time", t);
     ms -= (off.startsWith("+") ? 1 : -1) * (oh * 3600 + om * 60) * 1000;
   }
-  return new Date(ms).toISOString().slice(0, 19) + "Z";
+  const utc = new Date(ms);
+  if (utc.getUTCFullYear() < 1 || utc.getUTCFullYear() > 9999)
+    throw new ContractError("bad_time", `${t} falls outside the years 0001 to 9999 in UTC`);
+  return utc.toISOString().slice(0, 19) + "Z";
 }
 
 /** Milliseconds of a message timestamp: RFC 3339 in UTC with Z and at most three fractional digits. */

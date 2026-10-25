@@ -4,12 +4,15 @@ tolerance are F2's (Q11, F-49)."""
 
 import hashlib
 import hmac
+import math
 import re
 from typing import Literal, NotRequired, TypedDict
 
 from listening_contracts.errors import ContractError
 
-Reason = Literal["missing_header", "bad_timestamp", "stale_timestamp", "bad_signature"]
+Reason = Literal[
+    "missing_header", "bad_idempotency_key", "bad_timestamp", "stale_timestamp", "bad_signature"
+]
 
 
 class Verification(TypedDict):
@@ -17,8 +20,10 @@ class Verification(TypedDict):
     reason: NotRequired[Reason]
 
 
-# A header value holds no control character or space.
-_HEADER_VALUE = re.compile(r"[^\x00-\x20\x7f]+")
+# An idempotency key is a header value, so it holds no control character or space, and it holds no
+# dot, which separates the fields of the signed string: "a.b" over "c" and "a" over "b.c" would
+# otherwise sign alike.
+_IDEMPOTENCY_KEY = re.compile(r"[^\x00-\x20\x7f.]+")
 _TIMESTAMP = re.compile(r"[0-9]{1,15}")
 
 
@@ -33,9 +38,21 @@ def _seconds(value: object) -> int:
     return value
 
 
-def _header_value(value: object) -> str:
-    if not isinstance(value, str) or _HEADER_VALUE.fullmatch(value) is None:
-        raise ContractError("bad_idempotency_key", "a non-empty header value")
+def _idempotency_key(value: object) -> str:
+    if not isinstance(value, str) or _IDEMPOTENCY_KEY.fullmatch(value) is None:
+        raise ContractError("bad_idempotency_key", "a non-empty header value without a dot")
+    return value
+
+
+def _finite_seconds(value: object, code: str, what: str) -> float:
+    """A finite non-negative number of seconds (a bool is no number here)."""
+    if (
+        isinstance(value, bool)
+        or not isinstance(value, int | float)
+        or not math.isfinite(value)
+        or value < 0
+    ):
+        raise ContractError(code, f"{what}, a finite non-negative number of seconds")
     return value
 
 
@@ -51,7 +68,7 @@ def sign_n8n(
     Unix seconds, given by the caller, and the notice's idempotency key. The SDK signs again at
     each send."""
     ts = str(_seconds(timestamp))
-    idempotency_key = _header_value(idempotency_key)
+    idempotency_key = _idempotency_key(idempotency_key)
     key = _bytes(secret)
     if not key:
         raise ContractError("empty_secret", "the signing secret is empty")
@@ -66,17 +83,23 @@ def verify_n8n(
     body: bytes | str,
     headers: dict[str, str],
     secret: bytes | str,
-    now: int,
-    tolerance_seconds: int = 300,
+    now: float,
+    tolerance_seconds: float = 300,
 ) -> Verification:
     """Verifies a signed notice: the headers by name in any case, the timestamp no further than
-    `tolerance_seconds` from `now` (Unix seconds, given by the caller: no helper reads a clock)."""
+    `tolerance_seconds` from `now` (Unix seconds, given by the caller: no helper reads a clock). A
+    clock or a tolerance that is not a finite non-negative number is the caller's error and raises,
+    so a NaN can never switch the staleness check off."""
+    now = _finite_seconds(now, "bad_now", "now is Unix seconds")
+    tolerance_seconds = _finite_seconds(tolerance_seconds, "bad_tolerance", "the tolerance")
     by_name = {k.lower(): v for k, v in headers.items()}
     ts = by_name.get("x-sb-timestamp")
     key = by_name.get("idempotency-key")
     signature = by_name.get("x-sb-signature")
     if ts is None or key is None or signature is None:
         return {"ok": False, "reason": "missing_header"}
+    if _IDEMPOTENCY_KEY.fullmatch(key) is None:
+        return {"ok": False, "reason": "bad_idempotency_key"}
     if _TIMESTAMP.fullmatch(ts) is None:
         return {"ok": False, "reason": "bad_timestamp"}
     if abs(now - int(ts)) > tolerance_seconds:

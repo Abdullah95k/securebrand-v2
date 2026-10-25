@@ -3,6 +3,7 @@
 // all read from registries/*.json, which the Python package reads too.
 import { z } from "zod";
 import { ContractError } from "../errors.ts";
+import { PATTERNS } from "../primitives.ts";
 import { loadRegistry } from "./load.ts";
 import { isKnownService, namesService } from "./services.ts";
 
@@ -80,9 +81,8 @@ export interface ProducerRow {
 
 /** `jobs.<service>` and `jobs.<service>.priority` belong to `<service>`. */
 export function queueService(queue: string): string {
-  const m = /^jobs\.([a-z0-9]+(?:-[a-z0-9]+)*)(?:\.priority)?$/.exec(queue);
-  if (!m?.[1]) throw new ContractError("bad_queue", queue);
-  return m[1];
+  if (!PATTERNS.queue.test(queue)) throw new ContractError("bad_queue", queue);
+  return queue.slice("jobs.".length).replace(/\.priority$/, "");
 }
 
 const resolveQueue = (producers: readonly string[], queue: string): string[] =>
@@ -143,11 +143,13 @@ export function rawItemsKinds(service: string): string[] | null {
   return kinds ? [...kinds] : null;
 }
 
-const DLQ_SCHEMA = /^dlq\.([a-z0-9]+(?:-[a-z0-9]+)*)\/v1$/;
+/** The service whose dead-letter topic a `dlq.<service>/v1` schema id names, or null. */
+const dlqService = (schemaId: string): string | null =>
+  PATTERNS.dlqSchema.test(schemaId) ? schemaId.slice("dlq.".length, -"/v1".length) : null;
 
 /** The schema id under which the registries file a concrete id (`dlq.<service>/v1` is one entry). */
 export function registrySchemaId(schemaId: string): string {
-  return DLQ_SCHEMA.test(schemaId) ? "dlq.<service>/v1" : schemaId;
+  return dlqService(schemaId) === null ? schemaId : "dlq.<service>/v1";
 }
 
 export function decisionRows(): DecisionRow[] {
@@ -180,8 +182,8 @@ export function isAllowedTopicWriter(
   detail: { kind?: string; queue?: string } = {},
 ): boolean {
   if (!isKnownService(service)) return false;
-  const dlq = DLQ_SCHEMA.exec(schemaId);
-  if (dlq) return dlq[1] === service;
+  const dlq = dlqService(schemaId);
+  if (dlq !== null) return dlq === service;
   if (schemaId === "registry.decisions/v1")
     return decisionFile.rows.some((r) => namesService(r.producers, service));
   if (schemaId === "jobs.completed/v1")

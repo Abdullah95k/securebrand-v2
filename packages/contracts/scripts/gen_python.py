@@ -142,9 +142,14 @@ def main() -> int:
         for name in stale:
             print(f"stale: models/{name}", file=sys.stderr)
         return 1 if stale else 0
-    if MODELS_DIR.exists():
-        shutil.rmtree(MODELS_DIR)
-    generate(MODELS_DIR)
+    # Generate beside the committed tree and swap it in only once generation succeeds, so a failing
+    # run leaves the committed models in place.
+    with tempfile.TemporaryDirectory(dir=MODELS_DIR.parent) as tmp:
+        fresh = Path(tmp) / "models"
+        generate(fresh)
+        if MODELS_DIR.exists():
+            shutil.rmtree(MODELS_DIR)
+        fresh.rename(MODELS_DIR)
     print(f"gen:python wrote {len(tree(MODELS_DIR))} files to {MODELS_DIR}")
     return 0
 

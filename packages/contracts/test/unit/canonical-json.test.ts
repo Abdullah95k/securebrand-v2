@@ -27,4 +27,11 @@ describe("canonical JSON (RFC 8785)", () => {
     expect(() => canonicalJson(Number.POSITIVE_INFINITY)).toThrow();
     expect(() => canonicalJson({ a: undefined })).toThrow();
   });
+
+  it("refuses a string holding a lone surrogate, as a value or as a key", () => {
+    expect(() => canonicalJson({ a: "\ud800" })).toThrow(/not_unicode/);
+    expect(() => canonicalJson(["ok", "\ud83d"])).toThrow(/not_unicode/);
+    expect(() => canonicalJson({ "\udc00": 1 })).toThrow(/not_unicode/);
+    expect(canonicalJson({ a: "\ud83d\ude00" })).toBe('{"a":"\u{1F600}"}');
+  });
 });

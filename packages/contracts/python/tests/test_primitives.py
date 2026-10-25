@@ -2,6 +2,8 @@ import re
 
 import pytest
 
+from listening_contracts._time import message_time_millis
+from listening_contracts.errors import ContractError
 from listening_contracts.keys import (
     candidate_key_from_handle,
     candidate_key_from_id,
@@ -30,6 +32,18 @@ def test_rejects_a_non_utc_timestamp() -> None:
         "2026-10-06T09:15:42Z\n",
     ):
         assert not _matches("timestamp", bad)
+
+
+def test_reads_the_years_0001_to_0099_as_written_and_refuses_a_time_outside_0001_to_9999() -> None:
+    assert message_time_millis("0050-01-01T00:00:00Z") == -60_589_296_000_000
+    assert message_time_millis("0001-01-01T00:00:00.123Z") == -62_135_596_799_877
+    assert render_key_time("0050-06-01T10:00:00+03:00") == "0050-06-01T07:00:00Z"
+    assert render_key_time("0100-01-01T00:30:00+01:00") == "0099-12-31T23:30:00Z"
+    with pytest.raises(ContractError, match="bad_time"):
+        message_time_millis("0000-01-01T00:00:00Z")
+    for t in ("0000-01-01T00:00:00Z", "0001-01-01T00:00:00+01:00", "9999-12-31T23:30:00-01:00"):
+        with pytest.raises(ContractError, match="bad_time"):
+            render_key_time(t)
 
 
 def test_the_id_less_comment_hash_renders_created_time_as_yyyy_mm_ddthh_mm_ssz() -> None:

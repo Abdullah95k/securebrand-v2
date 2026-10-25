@@ -1,5 +1,5 @@
 {
-  "description": "The n8n signing helper (ADR-0067; Q11, F-49): X-SB-Signature is v1= followed by the hex HMAC-SHA256, under the shared secret, of the UTF-8 of '<timestamp>.<idempotency key>.' followed by the body bytes; X-SB-Timestamp is the Unix time in seconds and Idempotency-Key the notice's key. verify() takes the clock as an argument and refuses a timestamp further than the tolerance from it. Written from that specification with Python's hmac; both languages reproduce it. The secret is a published test value, not a secret.",
+  "description": "The n8n signing helper (ADR-0067; Q11, F-49): X-SB-Signature is v1= followed by the hex HMAC-SHA256, under the shared secret, of the UTF-8 of '<timestamp>.<idempotency key>.' followed by the body bytes; X-SB-Timestamp is the Unix time in seconds and Idempotency-Key the notice's key, which holds no dot, so the signed string's three fields stay apart (a key holding one is refused). verify() takes the clock as an argument and refuses a timestamp further than the tolerance from it. Written from that specification with Python's hmac; both languages reproduce it. The secret is a published test value, not a secret.",
   "secret": "listening-contracts n8n signing test secret v1 (published; not a secret)",
   "sign": [
     {
@@ -181,6 +181,32 @@
       "tolerance_seconds": 300,
       "ok": false,
       "reason": "bad_signature"
+    },
+    {
+      "case": "an idempotency key holding a dot: bytes moved from the body into the key",
+      "body": "c",
+      "headers": {
+        "X-SB-Timestamp": "1791275832",
+        "Idempotency-Key": "a.b",
+        "X-SB-Signature": "v1=d700c9dd00b6ec835a952f158468911526d6d85457d5ddae4feec69f2572ed87"
+      },
+      "now": 1791275832,
+      "tolerance_seconds": 300,
+      "ok": false,
+      "reason": "bad_idempotency_key"
+    },
+    {
+      "case": "an empty idempotency key",
+      "body": "{}",
+      "headers": {
+        "X-SB-Timestamp": "1791275832",
+        "Idempotency-Key": "",
+        "X-SB-Signature": "v1=afd7fcb4d12a1d6b9d85dc8ede67da26d4396d3956044341fcedb6f45e6afd2e"
+      },
+      "now": 1791275832,
+      "tolerance_seconds": 300,
+      "ok": false,
+      "reason": "bad_idempotency_key"
     }
   ]
 }

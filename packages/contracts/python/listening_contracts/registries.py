@@ -5,11 +5,11 @@ allowed per registry.decisions type (ADR-0013), the partition keys (ADR-0004), e
 visibility (ADR-0053) and the keys each producer declares in `context` and `extras` (ADR-0005,
 ADR-0033)."""
 
-import re
 from typing import Literal, NotRequired, TypedDict, cast
 
 from listening_contracts._artefacts import registry
 from listening_contracts.errors import ContractError
+from listening_contracts.patterns import matches
 
 # The service index and the D3 writer names (CONVENTIONS v1.1 L372 to L384; Q4), and the vendors.
 
@@ -119,15 +119,13 @@ class _ProducersFile(TypedDict):
 
 
 _producers = cast(_ProducersFile, registry("producers.json"))
-_QUEUE = re.compile(r"jobs\.([a-z0-9]+(?:-[a-z0-9]+)*)(?:\.priority)?")
 
 
 def queue_service(queue: str) -> str:
     """`jobs.<service>` and `jobs.<service>.priority` belong to `<service>`."""
-    m = _QUEUE.fullmatch(queue)
-    if m is None:
+    if not matches("queue", queue):
         raise ContractError("bad_queue", queue)
-    return m.group(1)
+    return queue.removeprefix("jobs.").removesuffix(".priority")
 
 
 def _resolve_queue(producers: list[str], queue: str) -> list[str]:
@@ -239,7 +237,13 @@ class _DecisionFile(TypedDict):
 
 _writers = cast(_WritersFile, registry("topic-writers.json"))
 _decisions = cast(_DecisionFile, registry("decision-producers.json"))
-_DLQ_SCHEMA = re.compile(r"dlq\.([a-z0-9]+(?:-[a-z0-9]+)*)/v1")
+
+
+def _dlq_service(schema_id: str) -> str | None:
+    """The service whose dead-letter topic a `dlq.<service>/v1` schema id names, or None."""
+    if not matches("dlqSchema", schema_id):
+        return None
+    return schema_id.removeprefix("dlq.").removesuffix("/v1")
 
 
 def topic_writers() -> dict[str, list[str]]:
@@ -257,7 +261,7 @@ def raw_items_kinds(service: str) -> list[str] | None:
 def registry_schema_id(schema_id: str) -> str:
     """The schema id under which the registries file a concrete id (`dlq.<service>/v1` is one
     entry)."""
-    return "dlq.<service>/v1" if _DLQ_SCHEMA.fullmatch(schema_id) else schema_id
+    return schema_id if _dlq_service(schema_id) is None else "dlq.<service>/v1"
 
 
 def decision_rows() -> list[DecisionRow]:
@@ -291,9 +295,9 @@ def is_allowed_topic_writer(
     jobs.completed report only the service that ran the job (`queue`)."""
     if not is_known_service(service):
         return False
-    dlq = _DLQ_SCHEMA.fullmatch(schema_id)
+    dlq = _dlq_service(schema_id)
     if dlq is not None:
-        return dlq.group(1) == service
+        return dlq == service
     if schema_id == "registry.decisions/v1":
         return any(names_service(r["producers"], service) for r in _decisions["rows"])
     if schema_id == "jobs.completed/v1":

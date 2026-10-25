@@ -121,7 +121,13 @@ metrics = {
     "source_id": "3d8a51c2-7e04-4b9f-8c16-2a9e5d70f4b8",
     "created_at": "2026-10-06T09:10:00Z",
     "observation": {"label": "refresh", "step": "+24h", "observed_at": "2026-10-07T09:31:15Z"},
-    "metrics": {"views": 61250, "likes": 4410, "comments": 498, "shares": 312, "reactions_by_type": None},
+    "metrics": {
+        "views": 61250,
+        "likes": 4410,
+        "comments": 498,
+        "shares": 312,
+        "reactions_by_type": None,
+    },
     "provenance": {
         "route": "amber",
         "vendor": "tikhub",

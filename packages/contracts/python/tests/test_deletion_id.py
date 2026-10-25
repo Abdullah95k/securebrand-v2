@@ -2,6 +2,7 @@ from typing import Any
 
 import pytest
 
+from listening_contracts.errors import ContractError
 from listening_contracts.keys import deletion_id
 
 from conftest import golden
@@ -65,3 +66,11 @@ def test_refuses_a_signal_at_that_is_not_a_utc_timestamp() -> None:
     i = G["deletion_ids"][0]["input"]
     with pytest.raises(ValueError):  # noqa: PT011 - every refusal is a ContractError, a ValueError
         deletion_id(i["reason"], i["scope"], i["key"], i["mode"], "2026-10-06", i["target"])
+
+
+def test_refuses_a_target_holding_a_lone_surrogate_as_typescript_does() -> None:
+    i = G["deletion_ids"][0]["input"]
+    for extra in ({"kind": "\ud800"}, {"x": ["\udc00"]}):
+        target = {**i["target"], **extra}
+        with pytest.raises(ContractError, match="not_unicode"):
+            deletion_id(i["reason"], i["scope"], i["key"], i["mode"], i["signal_at"], target)

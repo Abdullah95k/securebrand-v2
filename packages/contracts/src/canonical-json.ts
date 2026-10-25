@@ -1,10 +1,15 @@
-// RFC 8785 canonical JSON, through the `canonicalize` library; values JSON cannot carry are refused
-// first, where the library would drop or rewrite them.
+// RFC 8785 canonical JSON, through the `canonicalize` library; values JSON cannot carry, and strings
+// holding a lone surrogate, are refused first with the package's own errors, as in Python.
 import canonicalize from "canonicalize";
 import { ContractError } from "./errors.ts";
+import { assertWellFormed } from "./keys/text.ts";
 
 function check(value: unknown, path: string): void {
-  if (value === null || typeof value === "string" || typeof value === "boolean") return;
+  if (value === null || typeof value === "boolean") return;
+  if (typeof value === "string") {
+    assertWellFormed(value, path);
+    return;
+  }
   if (typeof value === "number") {
     if (!Number.isFinite(value))
       throw new ContractError("not_json", `${path} is not a finite number`);
@@ -15,7 +20,10 @@ function check(value: unknown, path: string): void {
     return;
   }
   if (typeof value === "object" && Object.getPrototypeOf(value) === Object.prototype) {
-    for (const [k, v] of Object.entries(value)) check(v, `${path}.${k}`);
+    for (const [k, v] of Object.entries(value)) {
+      assertWellFormed(k, `a key of ${path}`);
+      check(v, `${path}.${k}`);
+    }
     return;
   }
   throw new ContractError("not_json", `${path} is not a JSON value`);

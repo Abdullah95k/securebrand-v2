@@ -57,4 +57,18 @@ describe("n8n signing (ADR-0067, A30)", () => {
     expect(() => signN8n("{}", g.secret, 1, "")).toThrow(/bad_idempotency_key/);
     expect(() => signN8n("{}", "", 1, "k:email")).toThrow(/empty_secret/);
   });
+
+  it("refuses to sign an idempotency key holding a dot, the signed string's separator", () => {
+    expect(() => signN8n("c", g.secret, 1_791_275_832, "a.b")).toThrow(/bad_idempotency_key/);
+  });
+
+  it("refuses a clock or a tolerance that is not a finite non-negative number", () => {
+    const headers = signN8n("{}", g.secret, 1_791_275_832, "k:email");
+    for (const now of [Number.NaN, Number.POSITIVE_INFINITY, -1])
+      expect(() => verifyN8n("{}", headers, g.secret, now), String(now)).toThrow(/bad_now/);
+    for (const tolerance of [Number.NaN, Number.POSITIVE_INFINITY, -1])
+      expect(() => verifyN8n("{}", headers, g.secret, 1_791_275_832, tolerance)).toThrow(
+        /bad_tolerance/,
+      );
+  });
 });

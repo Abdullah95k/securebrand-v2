@@ -2,11 +2,11 @@
 version the package knows that it does not read, and parks a version the package does not know. The
 catalogue is the one the TypeScript exporter writes (schemas/catalogue.json)."""
 
-import re
 from collections.abc import Sequence
 from typing import Literal, TypedDict, cast
 
 from listening_contracts._artefacts import artefact
+from listening_contracts.patterns import matches
 
 CatalogueEntry = TypedDict(
     "CatalogueEntry",
@@ -35,14 +35,12 @@ REPORT_KIND_FIELDS: dict[str, tuple[str, ...]] = {
 }
 """The kind fields of a jobs.completed report and the kinds that may carry them (ADR-0017)."""
 
-_DLQ = re.compile(r"dlq\.[a-z0-9]+(-[a-z0-9]+)*/v1")
-
 VersionVerdict = Literal["read", "skip", "park"]
 
 
 def catalogue_id(schema_id: str) -> str:
     """The catalogue id of a concrete schema id: every dlq.<service>/v1 is one."""
-    return "dlq.<service>/v1" if _DLQ.fullmatch(schema_id) else schema_id
+    return "dlq.<service>/v1" if matches("dlqSchema", schema_id) else schema_id
 
 
 def catalogue_entry(schema_id: str) -> CatalogueEntry | None:

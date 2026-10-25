@@ -9,6 +9,7 @@ import {
   rawRef,
   renderKeyTime,
 } from "../../src/keys/index.ts";
+import { messageTimeMillis } from "../../src/keys/time.ts";
 import { PATTERNS } from "../../src/primitives.ts";
 
 describe("primitives", () => {
@@ -20,6 +21,20 @@ describe("primitives", () => {
     expect(PATTERNS.timestamp.test("2026-10-06T09:15:42.1234Z")).toBe(false);
     expect(PATTERNS.timestamp.test("2026-10-06 09:15:42Z")).toBe(false);
     expect(PATTERNS.timestamp.test("2026-10-06T09:15:42Z\n")).toBe(false);
+  });
+
+  it("reads the years 0001 to 0099 as written and refuses a time outside 0001 to 9999", () => {
+    expect(messageTimeMillis("0050-01-01T00:00:00Z")).toBe(-60_589_296_000_000);
+    expect(messageTimeMillis("0001-01-01T00:00:00.123Z")).toBe(-62_135_596_799_877);
+    expect(renderKeyTime("0050-06-01T10:00:00+03:00")).toBe("0050-06-01T07:00:00Z");
+    expect(renderKeyTime("0100-01-01T00:30:00+01:00")).toBe("0099-12-31T23:30:00Z");
+    expect(() => messageTimeMillis("0000-01-01T00:00:00Z")).toThrow(/bad_time/);
+    for (const t of [
+      "0000-01-01T00:00:00Z",
+      "0001-01-01T00:00:00+01:00",
+      "9999-12-31T23:30:00-01:00",
+    ])
+      expect(() => renderKeyTime(t), t).toThrow(/bad_time/);
   });
 
   it("the id-less comment hash renders created_time as YYYY-MM-DDTHH:MM:SSZ", () => {

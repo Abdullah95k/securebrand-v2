@@ -1,6 +1,8 @@
 """A30: the n8n signing helper, one HMAC scheme over the body with a timestamp and an idempotency
 key (ADR-0067; Q11, F-49). The clock is an argument: no helper reads one."""
 
+import math
+
 import pytest
 
 from listening_contracts.errors import ContractError
@@ -49,3 +51,18 @@ def test_refuses_to_sign_with_a_bad_timestamp_or_an_empty_idempotency_key() -> N
         sign_n8n("{}", G["secret"], 1, "")
     with pytest.raises(ContractError, match="empty_secret"):
         sign_n8n("{}", "", 1, "k:email")
+
+
+def test_refuses_to_sign_an_idempotency_key_holding_a_dot_the_signed_strings_separator() -> None:
+    with pytest.raises(ContractError, match="bad_idempotency_key"):
+        sign_n8n("c", G["secret"], 1_791_275_832, "a.b")
+
+
+def test_refuses_a_clock_or_a_tolerance_that_is_not_a_finite_non_negative_number() -> None:
+    headers = sign_n8n("{}", G["secret"], 1_791_275_832, "k:email")
+    for now in [math.nan, math.inf, -1, True]:
+        with pytest.raises(ContractError, match="bad_now"):
+            verify_n8n("{}", headers, G["secret"], now)
+    for tolerance in [math.nan, math.inf, -1, True]:
+        with pytest.raises(ContractError, match="bad_tolerance"):
+            verify_n8n("{}", headers, G["secret"], 1_791_275_832, tolerance)

@@ -93,7 +93,7 @@ const includes = (list: readonly string[], v: unknown): boolean =>
 const sameJson = (a: unknown, b: unknown): boolean => canonicalJson(a) === canonicalJson(b);
 
 /** The value a key helper derives, or undefined when the helper refuses its input. */
-function derive(f: () => string): string | undefined {
+function derive<T>(f: () => T): T | undefined {
   try {
     return f();
   } catch {
@@ -237,10 +237,9 @@ const rawItems: Rule = (m, out) => {
       env.platform_id,
       env.idempotency_key,
     );
-  const ref = derive(() => JSON.stringify(parseRawRef(str(env.raw_ref) ?? "")));
+  const ref = derive(() => parseRawRef(str(env.raw_ref) ?? ""));
   if (ref !== undefined) {
-    const parsed = JSON.parse(ref) as { route: string; platform: string };
-    if (parsed.route !== rec(env.provenance).route || parsed.platform !== env.platform)
+    if (ref.route !== rec(env.provenance).route || ref.platform !== env.platform)
       out.add(
         ["envelope", "raw_ref"],
         "raw_ref_mismatch",
@@ -538,9 +537,8 @@ const itemMetrics: Rule = (m, out) => {
       "item_id_mismatch",
       "item_id = uuid_v5(ns_items, idempotency_key) (ADR-0006)",
     );
-  const parsed = derive(() => JSON.stringify(parseKey(key)));
-  if (parsed === undefined) return;
-  const k = JSON.parse(parsed) as { platform: string; platform_id: string };
+  const k = derive(() => parseKey(key));
+  if (k === undefined) return;
   if (k.platform !== m.platform) out.add(["platform"], "key_platform", "the platform is the key's");
   if (k.platform_id !== m.platform_id)
     out.add(["platform_id"], "key_platform_id", "the platform id is the key's");

@@ -17,6 +17,7 @@ import { buildJobsCompleted } from "./jobs-completed.ts";
 import { buildN8nAlert, buildN8nCard } from "./n8n.ts";
 import { buildNewsDedup } from "./news-dedup.ts";
 import { buildPosterProfiles } from "./poster-profiles.ts";
+import { PATTERNS } from "./primitives.ts";
 import { buildRawItems } from "./raw-items.ts";
 import { buildRegistryDecisions } from "./registry-decisions.ts";
 import { buildSearchResults } from "./search-results.ts";
@@ -67,11 +68,9 @@ export function schemaFor(id: string, mode: Mode): z.ZodType | undefined {
   return schemas.get(catalogueId(id));
 }
 
-const DLQ_ID = /^dlq\.[a-z0-9]+(-[a-z0-9]+)*\/v1$/;
-
 /** The catalogue id of a concrete schema id. */
 export function catalogueId(id: string): string {
-  return DLQ_ID.test(id) ? "dlq.<service>/v1" : id;
+  return PATTERNS.dlqSchema.test(id) ? "dlq.<service>/v1" : id;
 }
 
 export function catalogueEntry(id: string): CatalogueEntry | undefined {

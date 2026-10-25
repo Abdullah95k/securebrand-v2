@@ -33,8 +33,14 @@ def render_key_time(t: str) -> str:
         if oh > 23 or om > 59:
             raise ContractError("bad_time", t)
         sign = 1 if off[0] == "+" else -1
-        when -= sign * timedelta(hours=oh, minutes=om)
-    return when.strftime("%Y-%m-%dT%H:%M:%SZ")
+        try:
+            when -= sign * timedelta(hours=oh, minutes=om)
+        except OverflowError:
+            raise ContractError(
+                "bad_time", f"{t} falls outside the years 0001 to 9999 in UTC"
+            ) from None
+    # isoformat pads the year to four digits; strftime's %Y does not below the year 1000.
+    return when.isoformat(timespec="seconds")[:19] + "Z"
 
 
 def message_time_millis(t: str) -> int:

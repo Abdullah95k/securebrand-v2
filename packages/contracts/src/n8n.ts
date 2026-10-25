@@ -215,7 +215,12 @@ export type Verification =
   | { readonly ok: true }
   | {
       readonly ok: false;
-      readonly reason: "missing_header" | "bad_timestamp" | "stale_timestamp" | "bad_signature";
+      readonly reason:
+        | "missing_header"
+        | "bad_idempotency_key"
+        | "bad_timestamp"
+        | "stale_timestamp"
+        | "bad_signature";
     };
 
 const bytes = (v: Uint8Array | string): Uint8Array =>
@@ -229,8 +234,11 @@ function mac(body: Uint8Array, secret: Uint8Array, timestamp: string, key: strin
     .digest("hex");
 }
 
-// eslint-disable-next-line no-control-regex -- a header value holds no control character or space
-const HEADER_VALUE = /^[^\x00-\x20\x7f]+$/;
+// An idempotency key is a header value, so it holds no control character or space, and it holds no
+// dot, which separates the fields of the signed string: "a.b" over "c" and "a" over "b.c" would
+// otherwise sign alike.
+// eslint-disable-next-line no-control-regex -- the control characters are what the class refuses
+const IDEMPOTENCY_KEY = /^[^\x00-\x20\x7f.]+$/;
 
 /**
  * Signs a notice's body for n8n or a client's alert webhook (ADR-0067, Q15): `timestamp` in Unix
@@ -244,8 +252,8 @@ export function signN8n(
 ): N8nHeaders {
   if (!Number.isSafeInteger(timestamp) || timestamp < 0)
     throw new ContractError("bad_timestamp", "Unix seconds, a whole non-negative number");
-  if (typeof idempotencyKey !== "string" || !HEADER_VALUE.test(idempotencyKey))
-    throw new ContractError("bad_idempotency_key", "a non-empty header value");
+  if (typeof idempotencyKey !== "string" || !IDEMPOTENCY_KEY.test(idempotencyKey))
+    throw new ContractError("bad_idempotency_key", "a non-empty header value without a dot");
   const key = bytes(secret);
   if (key.length === 0) throw new ContractError("empty_secret", "the signing secret is empty");
   const ts = String(timestamp);
@@ -258,7 +266,9 @@ export function signN8n(
 
 /**
  * Verifies a signed notice: the headers by name in any case, the timestamp no further than
- * `toleranceSeconds` from `now` (Unix seconds, given by the caller: no helper reads a clock).
+ * `toleranceSeconds` from `now` (Unix seconds, given by the caller: no helper reads a clock). A clock
+ * or a tolerance that is not a finite non-negative number is the caller's error and throws, so a
+ * NaN can never switch the staleness check off.
  */
 export function verifyN8n(
   body: Uint8Array | string,
@@ -267,12 +277,17 @@ export function verifyN8n(
   now: number,
   toleranceSeconds = 300,
 ): Verification {
+  if (!Number.isFinite(now) || now < 0)
+    throw new ContractError("bad_now", "now is Unix seconds, a finite non-negative number");
+  if (!Number.isFinite(toleranceSeconds) || toleranceSeconds < 0)
+    throw new ContractError("bad_tolerance", "a finite non-negative number of seconds");
   const byName = new Map(Object.entries(headers).map(([k, v]) => [k.toLowerCase(), v]));
   const ts = byName.get("x-sb-timestamp");
   const key = byName.get("idempotency-key");
   const signature = byName.get("x-sb-signature");
   if (ts === undefined || key === undefined || signature === undefined)
     return { ok: false, reason: "missing_header" };
+  if (!IDEMPOTENCY_KEY.test(key)) return { ok: false, reason: "bad_idempotency_key" };
   if (!/^[0-9]{1,15}$/.test(ts)) return { ok: false, reason: "bad_timestamp" };
   if (Math.abs(now - Number(ts)) > toleranceSeconds)
     return { ok: false, reason: "stale_timestamp" };

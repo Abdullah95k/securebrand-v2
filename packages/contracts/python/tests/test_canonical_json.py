@@ -4,6 +4,7 @@ from typing import Any
 import pytest
 
 from listening_contracts.canonical_json import canonical_json
+from listening_contracts.errors import ContractError
 
 from conftest import golden
 
@@ -26,3 +27,10 @@ def test_refuses_values_json_cannot_carry() -> None:
     for bad in (float("nan"), float("inf"), {"a": object()}, {1: "x"}):
         with pytest.raises(ValueError):  # noqa: PT011 - every refusal is a ContractError, a ValueError
             canonical_json(bad)
+
+
+def test_refuses_a_string_holding_a_lone_surrogate_as_a_value_or_as_a_key() -> None:
+    for bad in ({"a": "\ud800"}, ["ok", "\ud83d"], {"\udc00": 1}):
+        with pytest.raises(ContractError, match="not_unicode"):
+            canonical_json(bad)
+    assert canonical_json({"a": "\U0001f600"}) == '{"a":"\U0001f600"}'

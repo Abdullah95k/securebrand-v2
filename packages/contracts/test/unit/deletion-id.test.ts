@@ -61,4 +61,17 @@ describe("deletion_id (ADR-0035; Q2)", () => {
     expect(c).toBeDefined();
     if (c) expect(() => deletionId({ ...c.input, signal_at: "2026-10-06" })).toThrow();
   });
+
+  it("refuses a target holding a lone surrogate, as Python does", () => {
+    const c = g.deletion_ids[0];
+    expect(c).toBeDefined();
+    if (c) {
+      expect(() =>
+        deletionId({ ...c.input, target: { ...c.input.target, kind: "\ud800" } }),
+      ).toThrow(/not_unicode/);
+      expect(() =>
+        deletionId({ ...c.input, target: { ...c.input.target, x: ["\udc00"] } }),
+      ).toThrow(/not_unicode/);
+    }
+  });
 });
