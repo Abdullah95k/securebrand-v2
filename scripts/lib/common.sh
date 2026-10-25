@@ -7,6 +7,10 @@ SB_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SB_SCRIPTS_DIR="$(dirname "$SB_LIB_DIR")"
 SB_KIT_ROOT="$(dirname "$SB_SCRIPTS_DIR")"
 export TURBO_TELEMETRY_DISABLED=1
+# No version checks from the tools the scripts run (A27, no network in tests): pyright-python asks
+# pypi.org for pyright's latest version on every run; the Supabase CLI asks for its latest release.
+export PYRIGHT_PYTHON_IGNORE_WARNINGS=1
+export SUPABASE_NO_UPDATE_NOTIFIER=1
 
 sb_repo_root() {
   git rev-parse --show-toplevel
