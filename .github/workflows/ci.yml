@@ -59,6 +59,8 @@ jobs:
         run: |
           pnpm install --frozen-lockfile
           (cd services/_template-py && uv sync --locked)
+      - name: Prettier (pnpm fmt:check)
+        run: pnpm fmt:check
       - name: Log in to GHCR (the stack's image mirror)
         uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
         with:

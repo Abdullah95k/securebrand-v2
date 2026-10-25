@@ -141,6 +141,15 @@ describe("GitHub workflows", () => {
     }
   });
 
+  it("the check job runs pnpm fmt:check before it starts the stack", () => {
+    // Only make check's format acceptance test checked formatting, and only when root tooling
+    // changed; a docs-only or service-only pull request was never format-checked.
+    const steps = ci.jobs.check?.steps ?? [];
+    const fmt = steps.findIndex((s) => (s.run ?? "").trim() === "pnpm fmt:check");
+    expect(fmt).toBeGreaterThan(-1);
+    expect(fmt).toBeLessThan(steps.findIndex((s) => (s.run ?? "").trim() === "make up"));
+  });
+
   it("on a push to main, make check compares with the commit before the push", () => {
     const step = (ci.jobs.check?.steps ?? []).find((s) => (s.run ?? "").includes("make check"));
     expect(step).toBeDefined();
