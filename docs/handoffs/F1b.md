@@ -5,6 +5,7 @@
 ## Progress
 
 - GHCR package securebrand-v2/clickhouse created by run 40150405619; the user must make it public.
+  - Checked afterwards (25 Oct 2026, 01:30Z): the package already answers anonymous pulls. `docker pull ghcr.io/abdullah95k/securebrand-v2/clickhouse:26.3.38.2` with no Docker credentials in this container succeeded at the mirrored digest, and ghcr.io issues an anonymous pull token for it (it denies one for a package that does not exist). It seems to have taken the public repository's visibility, so the user may only need to confirm it in the package settings.
 - Done and pushed: the plan's approval (c200b75), W1 (f66cd56), W2 (fedabd4), W3 (b598adc), W4 (521a8fc), W5 (95bda8e), W6 (dc910dd), W7 (262ab37), W8 (3f44e5f), W9 (a110634). Each test was shown failing for the stated reason before its change and passing after it.
 - W9: ECR Public's digest for `public.ecr.aws/docker/library/clickhouse:26.3.38.2`, read here before the push, is `sha256:ea3ff4a4aa2a097ddaa91facb6c808f5045c661b2a9fe261f25de579f6e7c6da`; the Mirror images run 40150405619 (job 121040593322, success) copied `docker.io/library/clickhouse:26.3.38.2` at the same digest.
 - Next: W10 (CI runs `pnpm fmt:check`), W11 (the mirror workflow on main only), W12 (Dependabot), W13 (F1's records, the label check), then this handoff in full, `/code-review`, the checks and the CI read.
