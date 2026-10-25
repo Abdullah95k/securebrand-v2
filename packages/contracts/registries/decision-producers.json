@@ -1,5 +1,5 @@
 {
-  "description": "The producers allowed per registry.decisions type, as rows of ADR-0012's producer table (ADR-0013), with the subject each row decides about and its Provenance column (F-14): `required`, `refused` (the decision carries `requested_by` and no provenance, or reports state with no fetch behind it) or `optional`. A row may narrow the `reason` values (null for none) and the `health` values it allows. `@platform` names the 66 platform services of the service index; `*` any service of the index, here through the SDK credential client (the D3 writers have their own rows). Producer mode refuses a decision no row allows; registry-writer, the topic's one consumer, applies the same rows.",
+  "description": "The producers allowed per registry.decisions type, as rows of ADR-0012's producer table (ADR-0013), with the subject each row decides about and its Provenance column (F-14): `required`, `refused` (the decision carries `requested_by` and no provenance, or reports state with no fetch behind it) or `optional`. A row may narrow the `reason` values (null for none), the `health` values and the `rule_hit` values (`rule_hits`, the qualifier's rules; D-3) it allows. `@platform` names the 66 platform services of the service index; `*` any service of the index, here through the SDK credential client (the D3 writers have their own rows). Producer mode refuses a decision no row allows; registry-writer, the topic's one consumer, applies the same rows.",
   "rows": [
     {
       "decisions": ["add"],
@@ -71,12 +71,31 @@
       "from": "ADR-0013; retention-purger §5.3 L76 (F2: no fetch)"
     },
     {
+      "decisions": ["tier_change"],
+      "subject": "source_id",
+      "producers": ["qualifier"],
+      "reasons": [null],
+      "rule_hits": [6, 10],
+      "provenance": "required",
+      "from": "ADR-0013; ADR-0003 L26: rules 6 and 10 apply a resolver profile, qualifier.md L57, L61, L108 (D-3)"
+    },
+    {
       "decisions": ["tier_change", "dormant"],
       "subject": "source_id",
       "producers": ["qualifier"],
       "reasons": [null],
+      "rule_hits": [9],
+      "provenance": "refused",
+      "from": "ADR-0013; F2: rule 9, the sweep over stored statistics, qualifier.md L46, L60 (D-3)"
+    },
+    {
+      "decisions": ["dormant"],
+      "subject": "source_id",
+      "producers": ["qualifier"],
+      "reasons": [null],
+      "rule_hits": [3],
       "provenance": "optional",
-      "from": "ADR-0013; required when the decision applies a resolver profile (ADR-0003 L26), refused for the sweep over stored statistics (F2): the message does not say which, so both are accepted"
+      "from": "ADR-0013; rule 3 runs in the sweep and on a profile, qualifier.md L46, L54: the message does not say which (D-3)"
     },
     {
       "decisions": ["promote"],

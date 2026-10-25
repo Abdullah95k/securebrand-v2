@@ -39,6 +39,12 @@
     ],
     "rule": "credential_revoked is never degraded (ADR-0016 L27; F-11)"
   },
+  "dormant-decay-with-provenance.json": {
+    "path": [
+      "provenance"
+    ],
+    "rule": "a rule-9 dormant comes from the sweep over stored statistics: no provenance (D-3)"
+  },
   "fallback-without-target.json": {
     "path": [
       "health_change",
@@ -286,6 +292,25 @@
       "fallback"
     ],
     "rule": "fallback is non-null exactly when health is fallback (R-2)"
+  },
+  "tier-change-profile-without-provenance.json": {
+    "path": [
+      "provenance"
+    ],
+    "rule": "a tier_change under rule 6 or 10 applies a resolver profile and carries its provenance (ADR-0003 L26; D-3)"
+  },
+  "tier-change-rule-not-allowed.json": {
+    "path": [
+      "producer",
+      "service"
+    ],
+    "rule": "the qualifier's tier_change comes from rules 6, 9 and 10 only (D-3)"
+  },
+  "tier-change-sweep-with-provenance.json": {
+    "path": [
+      "provenance"
+    ],
+    "rule": "a rule-9 tier_change comes from the sweep over stored statistics: no provenance (D-3)"
   },
   "tier-down.json": {
     "path": [

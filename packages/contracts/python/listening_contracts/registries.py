@@ -213,6 +213,7 @@ DecisionRow = TypedDict(
         "producers": list[str],
         "reasons": NotRequired[list[str | None]],
         "healths": NotRequired[list[str]],
+        "rule_hits": NotRequired[list[int]],
         "provenance": Literal["required", "refused", "optional"],
         "from": str,
     },
@@ -224,6 +225,7 @@ class DecisionQuery(TypedDict):
     subject: str
     reason: str | None
     health: NotRequired[str | None]
+    rule_hit: NotRequired[int | None]  # the qualifier's rule, for the rows bound to one (D-3)
 
 
 class WriterCondition(TypedDict):
@@ -270,12 +272,14 @@ def decision_rows() -> list[DecisionRow]:
 
 def _row_matches(row: DecisionRow, q: DecisionQuery, service: str) -> bool:
     health = q.get("health")
+    rule_hit = q.get("rule_hit")
     return (
         q["decision"] in row["decisions"]
         and row["subject"] == q["subject"]
         and names_service(row["producers"], service)
         and ("reasons" not in row or q["reason"] in row["reasons"])
         and ("healths" not in row or (health is not None and health in row["healths"]))
+        and ("rule_hits" not in row or (type(rule_hit) is int and rule_hit in row["rule_hits"]))
     )
 
 

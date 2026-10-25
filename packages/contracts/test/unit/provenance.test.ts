@@ -147,6 +147,7 @@ describe("provenance (ADR-0003, A18)", () => {
         subject,
         reason: m.reason as string | null,
         health: block?.health as string | undefined,
+        rule_hit: block?.rule_hit as number | null | undefined,
       };
       const row = decisionRow(q, (m.producer as Json).service as string);
       expect(row, f.name).not.toBeNull();

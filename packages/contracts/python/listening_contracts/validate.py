@@ -1123,9 +1123,12 @@ def _check_decision_row(out: _Issues, m: Json, service: str) -> None:
         return
     decision = _str(m.get("decision")) or ""
     query: DecisionQuery = {"decision": decision, "subject": subject, "reason": m.get("reason")}
-    health = _str(_rec(m.get(decision)).get("health"))
+    block = _rec(m.get(decision))
+    health = _str(block.get("health"))
     if health is not None:
         query["health"] = health
+    rule_hit = block.get("rule_hit")
+    query["rule_hit"] = rule_hit if type(rule_hit) is int else None
     row = decision_row(query, service)
     if row is None:
         out.add(

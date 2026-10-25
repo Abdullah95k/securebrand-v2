@@ -133,6 +133,9 @@ def test_every_decision_row_names_a_type_a_subject_known_producers_and_listed_va
             assert r is None or r in VOCABULARY["REGISTRY_REASONS"]
         for h in row.get("healths", []):
             assert h in VOCABULARY["HEALTHS"]
+        for n in row.get("rule_hits", []):
+            assert type(n) is int, n
+            assert 1 <= n <= 10, n
         assert row["provenance"] in {"required", "refused", "optional"}
 
 

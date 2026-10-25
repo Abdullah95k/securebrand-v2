@@ -1043,9 +1043,15 @@ function checkDecisionRow(out: Issues, m: Json, service: string): void {
   const subject = SUBJECTS.find((s) => m[s] !== undefined);
   if (subject === undefined) return;
   const decision = str(m.decision) ?? "";
-  const health = rec(m[decision]).health;
+  const { health, rule_hit: ruleHit } = rec(m[decision]);
   const row = decisionRow(
-    { decision, subject, reason: (m.reason ?? null) as string | null, health: str(health) },
+    {
+      decision,
+      subject,
+      reason: (m.reason ?? null) as string | null,
+      health: str(health),
+      rule_hit: typeof ruleHit === "number" ? ruleHit : null,
+    },
     service,
   );
   if (row === null) {

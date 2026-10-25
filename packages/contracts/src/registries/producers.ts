@@ -47,6 +47,7 @@ const DecisionFile = z.object({
       producers: z.array(z.string()),
       reasons: z.array(z.string().nullable()).optional(),
       healths: z.array(z.string()).optional(),
+      rule_hits: z.array(z.number().int().min(1).max(10)).optional(),
       provenance: z.enum(["required", "refused", "optional"]),
       from: z.string(),
     }),
@@ -65,6 +66,8 @@ export interface DecisionQuery {
   subject: DecisionSubject;
   reason: string | null;
   health?: string | undefined;
+  /** The qualifier's rule, for the rows bound to one (D-3). */
+  rule_hit?: number | null | undefined;
 }
 export interface WriterCondition {
   field: string;
@@ -161,7 +164,9 @@ const rowMatches = (row: DecisionRow, q: DecisionQuery, service: string): boolea
   row.subject === q.subject &&
   namesService(row.producers, service) &&
   (row.reasons === undefined || row.reasons.includes(q.reason)) &&
-  (row.healths === undefined || (q.health !== undefined && row.healths.includes(q.health)));
+  (row.healths === undefined || (q.health !== undefined && row.healths.includes(q.health))) &&
+  (row.rule_hits === undefined ||
+    (typeof q.rule_hit === "number" && row.rule_hits.includes(q.rule_hit)));
 
 /** The decision row that allows `service` to send this decision, or null when none does. */
 export function decisionRow(q: DecisionQuery, service: string): DecisionRow | null {

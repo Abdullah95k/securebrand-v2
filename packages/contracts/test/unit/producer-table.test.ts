@@ -15,6 +15,9 @@ import {
 } from "../../src/registries/index.ts";
 import { HEALTHS, REGISTRY_REASONS } from "../../src/vocabulary.ts";
 
+// The qualifier's ten rules (qualifier §5.2), the values a decision's rule_hit takes.
+const RULE_HITS = Array.from({ length: 10 }, (_, i) => i + 1);
+
 describe("the producer table (ADR-0012, A22)", () => {
   it("refuses a (queue, kind, producer.service) the table does not list", () => {
     expect(isAllowedProducer("jobs.fb-page-feed-poller", "rotation", "fb-page-feed-poller")).toBe(
@@ -227,7 +230,31 @@ describe("the decision rows (ADR-0013, A22)", () => {
         "retention-purger",
         "refused",
       ],
-      [{ decision: "tier_change", subject: "source_id", reason: null }, "qualifier", "optional"],
+      [
+        { decision: "tier_change", subject: "source_id", reason: null, rule_hit: 6 },
+        "qualifier",
+        "required",
+      ],
+      [
+        { decision: "tier_change", subject: "source_id", reason: null, rule_hit: 10 },
+        "qualifier",
+        "required",
+      ],
+      [
+        { decision: "tier_change", subject: "source_id", reason: null, rule_hit: 9 },
+        "qualifier",
+        "refused",
+      ],
+      [
+        { decision: "dormant", subject: "source_id", reason: null, rule_hit: 9 },
+        "qualifier",
+        "refused",
+      ],
+      [
+        { decision: "dormant", subject: "source_id", reason: null, rule_hit: 3 },
+        "qualifier",
+        "optional",
+      ],
       [
         { decision: "promote", subject: "source_id", reason: null },
         "yt-uploads-reconciler",
@@ -293,21 +320,27 @@ describe("the decision rows (ADR-0013, A22)", () => {
     for (const row of decisionRows()) {
       const reasons = row.reasons ?? [null, ...REGISTRY_REASONS];
       const healths = row.healths ?? [undefined, ...HEALTHS];
+      const ruleHits = row.rule_hits ?? [null, ...RULE_HITS];
       for (const decision of row.decisions) {
         for (const service of services.filter((s) => namesService(row.producers, s))) {
           for (const reason of reasons) {
             for (const health of healths) {
-              const q = { decision, subject: row.subject, reason, health };
-              const matches = decisionRows().filter(
-                (r) =>
-                  r.decisions.includes(decision) &&
-                  r.subject === row.subject &&
-                  namesService(r.producers, service) &&
-                  (r.reasons === undefined || r.reasons.includes(reason)) &&
-                  (r.healths === undefined || (health !== undefined && r.healths.includes(health))),
-              );
-              const provenance = new Set(matches.map((r) => r.provenance));
-              expect(provenance.size, JSON.stringify({ ...q, service })).toBe(1);
+              for (const ruleHit of ruleHits) {
+                const q = { decision, subject: row.subject, reason, health, rule_hit: ruleHit };
+                const matches = decisionRows().filter(
+                  (r) =>
+                    r.decisions.includes(decision) &&
+                    r.subject === row.subject &&
+                    namesService(r.producers, service) &&
+                    (r.reasons === undefined || r.reasons.includes(reason)) &&
+                    (r.healths === undefined ||
+                      (health !== undefined && r.healths.includes(health))) &&
+                    (r.rule_hits === undefined ||
+                      (ruleHit !== null && r.rule_hits.includes(ruleHit))),
+                );
+                const provenance = new Set(matches.map((r) => r.provenance));
+                expect(provenance.size, JSON.stringify({ ...q, service })).toBe(1);
+              }
             }
           }
         }
@@ -328,6 +361,20 @@ describe("the decision rows (ADR-0013, A22)", () => {
         "qualifier",
       ),
     ).toBe(false);
+    // The qualifier's tier_change and dormant are bound to their rule (D-3).
+    for (const [decision, ruleHit] of [
+      ["tier_change", 4],
+      ["dormant", 6],
+      ["tier_change", null],
+    ] as const) {
+      expect(
+        isAllowedDecisionProducer(
+          { decision, subject: "source_id", reason: null, rule_hit: ruleHit },
+          "qualifier",
+        ),
+        `${decision} ${ruleHit}`,
+      ).toBe(false);
+    }
     expect(
       isAllowedDecisionProducer(
         { decision: "add", subject: "candidate_key", reason: null },

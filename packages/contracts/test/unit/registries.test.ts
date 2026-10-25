@@ -181,6 +181,8 @@ describe("the registries name only known services, kinds and values", () => {
       for (const r of row.reasons ?? [])
         if (r !== null) expect(REGISTRY_REASONS as readonly string[]).toContain(r);
       for (const h of row.healths ?? []) expect(HEALTHS as readonly string[]).toContain(h);
+      for (const n of row.rule_hits ?? [])
+        expect(Number.isInteger(n) && n >= 1 && n <= 10).toBe(true);
       expect(["required", "refused", "optional"]).toContain(row.provenance);
     }
   });

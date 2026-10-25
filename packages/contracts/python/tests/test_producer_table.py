@@ -19,6 +19,9 @@ from listening_contracts.registries import (
 )
 from listening_contracts.vocabulary import VOCABULARY
 
+# The qualifier's ten rules (qualifier §5.2), the values a decision's rule_hit takes.
+RULE_HITS = list(range(1, 11))
+
 
 def test_refuses_a_queue_kind_producer_service_the_table_does_not_list() -> None:
     assert is_allowed_producer("jobs.fb-page-feed-poller", "rotation", "fb-page-feed-poller")
@@ -194,7 +197,27 @@ def test_lets_any_service_report_credential_revoked_never_as_degraded() -> None:
             "refused",
         ),
         (
-            {"decision": "tier_change", "subject": "source_id", "reason": None},
+            {"decision": "tier_change", "subject": "source_id", "reason": None, "rule_hit": 6},
+            "qualifier",
+            "required",
+        ),
+        (
+            {"decision": "tier_change", "subject": "source_id", "reason": None, "rule_hit": 10},
+            "qualifier",
+            "required",
+        ),
+        (
+            {"decision": "tier_change", "subject": "source_id", "reason": None, "rule_hit": 9},
+            "qualifier",
+            "refused",
+        ),
+        (
+            {"decision": "dormant", "subject": "source_id", "reason": None, "rule_hit": 9},
+            "qualifier",
+            "refused",
+        ),
+        (
+            {"decision": "dormant", "subject": "source_id", "reason": None, "rule_hit": 3},
             "qualifier",
             "optional",
         ),
@@ -272,9 +295,10 @@ def test_no_two_rows_that_match_one_decision_give_it_different_provenance() -> N
             row.get("reasons", [None, *VOCABULARY["REGISTRY_REASONS"]])
         )
         healths: list[str | None] = list(row.get("healths", [None, *VOCABULARY["HEALTHS"]]))
+        rule_hits: list[int | None] = list(row.get("rule_hits", [None, *RULE_HITS]))
         candidates = [s for s in services if names_service(row["producers"], s)]
-        for decision, service, reason, health in itertools.product(
-            row["decisions"], candidates, reasons, healths
+        for decision, service, reason, health, rule_hit in itertools.product(
+            row["decisions"], candidates, reasons, healths, rule_hits
         ):
             matches = [
                 r
@@ -284,8 +308,15 @@ def test_no_two_rows_that_match_one_decision_give_it_different_provenance() -> N
                 and names_service(r["producers"], service)
                 and ("reasons" not in r or reason in r["reasons"])
                 and ("healths" not in r or (health is not None and health in r["healths"]))
+                and ("rule_hits" not in r or (rule_hit is not None and rule_hit in r["rule_hits"]))
             ]
-            assert len({r["provenance"] for r in matches}) == 1, (decision, service, reason, health)
+            assert len({r["provenance"] for r in matches}) == 1, (
+                decision,
+                service,
+                reason,
+                health,
+                rule_hit,
+            )
 
 
 def test_refuses_a_decision_type_from_a_producer_no_row_lists() -> None:
@@ -299,6 +330,15 @@ def test_refuses_a_decision_type_from_a_producer_no_row_lists() -> None:
     assert not is_allowed_decision_producer(retire, "qualifier")
     add: DecisionQuery = {"decision": "add", "subject": "candidate_key", "reason": None}
     assert not is_allowed_decision_producer(add, "poster-resolver")
+    # The qualifier's tier_change and dormant are bound to their rule (D-3).
+    for decision, rule_hit in (("tier_change", 4), ("dormant", 6), ("tier_change", None)):
+        query: DecisionQuery = {
+            "decision": decision,
+            "subject": "source_id",
+            "reason": None,
+            "rule_hit": rule_hit,
+        }
+        assert not is_allowed_decision_producer(query, "qualifier"), (decision, rule_hit)
 
 
 def test_allows_each_topics_writers_and_refuses_the_rest() -> None:

@@ -135,6 +135,8 @@ def test_each_registry_decisions_row_requires_or_refuses_provenance_as_the_rows_
         }
         if "health" in block:
             query["health"] = block["health"]
+        if "rule_hit" in block:
+            query["rule_hit"] = block["rule_hit"]
         row = decision_row(query, m["producer"]["service"])
         assert row is not None, f.name
         exercised.add(next(i for i, r in enumerate(rows) if json.dumps(r) == json.dumps(row)))

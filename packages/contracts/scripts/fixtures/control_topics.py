@@ -535,7 +535,7 @@ def decisions() -> None:
             requested_by=PERSON,
         ),
     )
-    valid(
+    tier_profile = valid(
         s,
         "tier-change-profile",
         dec(
@@ -550,7 +550,7 @@ def decisions() -> None:
             retention_class="meta_on_request",
         ),
     )
-    valid(
+    tier_sweep = valid(
         s,
         "tier-change-sweep",
         dec(
@@ -574,6 +574,38 @@ def decisions() -> None:
             {"source_id": IG_SOURCE},
             {"rule_hit": 3},
             "dormant",
+        ),
+    )
+    # The sweep's decay takes a tier-3 source to dormant (qualifier §5.2 L60): no fetch behind it.
+    dormant_decay = valid(
+        s,
+        "dormant-decay",
+        dec(
+            "qualifier",
+            "2026-10-20T02:00:02Z",
+            "dormant",
+            None,
+            {"source_id": IG_SOURCE},
+            {"rule_hit": 9},
+            "dormant-decay",
+        ),
+    )
+    # A reviewer's tier for a profile under review (rule 10): the profile's provenance, and the
+    # reviewer as requester (D-3).
+    valid(
+        s,
+        "tier-change-review",
+        dec(
+            "qualifier",
+            "2026-11-06T09:30:00Z",
+            "tier_change",
+            None,
+            {"source_id": IG_SOURCE},
+            {"tier": 2, "rule_hit": 10},
+            "tier-review",
+            requested_by=PERSON,
+            provenance=prov("green", None, "ig-account-resolver", "2026-11-05T10:13:58Z"),
+            retention_class="meta_on_request",
         ),
     )
     tt_source = "3d8a51c2-7e04-4b9f-8c16-2a9e5d70f4b8"
@@ -1210,6 +1242,43 @@ def decisions() -> None:
         without(add, "retention_class"),
         ["retention_class"],
         "provenance and retention_class travel together (ADR-0003)",
+    )
+    invalid(
+        s,
+        "tier-change-profile-without-provenance",
+        without(without(tier_profile, "provenance"), "retention_class"),
+        ["provenance"],
+        "a tier_change under rule 6 or 10 applies a resolver profile and carries its provenance"
+        " (ADR-0003 L26; D-3)",
+    )
+    invalid(
+        s,
+        "tier-change-sweep-with-provenance",
+        {
+            **tier_sweep,
+            "provenance": prov("green", None, "ig-account-resolver", "2026-11-05T10:13:58Z"),
+            "retention_class": "meta_on_request",
+        },
+        ["provenance"],
+        "a rule-9 tier_change comes from the sweep over stored statistics: no provenance (D-3)",
+    )
+    invalid(
+        s,
+        "dormant-decay-with-provenance",
+        {
+            **dormant_decay,
+            "provenance": prov("green", None, "ig-account-resolver", "2026-11-05T10:13:58Z"),
+            "retention_class": "meta_on_request",
+        },
+        ["provenance"],
+        "a rule-9 dormant comes from the sweep over stored statistics: no provenance (D-3)",
+    )
+    invalid(
+        s,
+        "tier-change-rule-not-allowed",
+        with_(tier_profile, ("tier_change", "rule_hit"), 4),
+        ["producer", "service"],
+        "the qualifier's tier_change comes from rules 6, 9 and 10 only (D-3)",
     )
     invalid(
         s,
