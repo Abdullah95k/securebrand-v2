@@ -523,7 +523,8 @@ const registryDecisions: Rule = (m, out) => {
       );
     return;
   }
-  const fallback = block.fallback;
+  // Absent and null are alike, as in validate.py (D-4).
+  const fallback = block.fallback ?? null;
   if ((health === "fallback") !== (fallback !== null))
     out.add(
       ["health_change", "fallback"],
@@ -534,7 +535,7 @@ const registryDecisions: Rule = (m, out) => {
     health === "fallback" && m.route === "green" && rec(fallback).route === "amber"
       ? "non_government"
       : null;
-  if (block.scope !== scope)
+  if ((block.scope ?? null) !== scope)
     out.add(
       ["health_change", "scope"],
       "fallback_scope",

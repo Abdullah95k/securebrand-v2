@@ -36,7 +36,8 @@
     "test": "vitest run test/unit test/conformance",
     "export:schemas": "node scripts/export-json-schema.ts",
     "gen:python": "uv run python scripts/gen_python.py",
-    "gen:fixtures": "uv run python scripts/fixtures/gen.py"
+    "gen:fixtures": "uv run python scripts/fixtures/gen.py",
+    "gen:issue-paths": "node scripts/issue-paths.ts"
   },
   "dependencies": {
     "canonicalize": "5.1.0",

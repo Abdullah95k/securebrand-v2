@@ -21,10 +21,13 @@ import importlib
 import math
 from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any, Literal, TypedDict, cast
+from functools import cache
+from typing import Any, Literal, NamedTuple, TypedDict, cast
 
 from pydantic import BaseModel, ValidationError
+from pydantic_core import ErrorDetails
 
+from listening_contracts._artefacts import artefact
 from listening_contracts.errors import ContractError
 from listening_contracts.keys import (
     analysis_key,
@@ -215,10 +218,92 @@ def _constant_types(parsed: object, sent: object, out: _Issues) -> None:
 # --- Pydantic issues ----------------------------------------------------------------------------
 
 
-def _path(value: object, loc: tuple[int | str, ...]) -> IssuePath:
-    """A Pydantic location as a path into the message: walk the value along it, dropping the
-    union branch labels Pydantic inserts (a branch's class name, a tag), which name no key of the
-    value."""
+class _Union(NamedTuple):
+    """A discriminated union: its discriminator and the tag values each branch takes, by the
+    branch's class name."""
+
+    discriminator: str
+    tags: dict[str, list[object]]
+
+
+def _resolve(defs: dict[str, Any], node: object) -> dict[str, Any]:
+    while isinstance(node, dict) and "$ref" in node:
+        node = defs[cast(str, node["$ref"]).rsplit("/", 1)[-1]]
+    return cast(dict[str, Any], node) if isinstance(node, dict) else {}
+
+
+def _tag_values(prop: object) -> list[object] | None:
+    if isinstance(prop, dict):
+        p = cast(dict[str, Any], prop)
+        if "const" in p:
+            return [p["const"]]
+        if "enum" in p:
+            return list(cast(list[object], p["enum"]))
+    return None
+
+
+@cache
+def _unions(schema_id: str) -> dict[str, _Union]:
+    """The discriminated unions of a schema by branch class name, read from its exported JSON
+    Schema: a `oneOf` is a Zod discriminated union, each branch's `title` is the class name the
+    model generator gives it, and the discriminator is the one property that every branch fixes
+    with a `const` or an `enum`, to values no two branches share (D-4)."""
+    entry = catalogue_entry(schema_id)
+    if entry is None:
+        return {}
+    schema = cast(dict[str, Any], artefact(entry["file"]))
+    defs = cast(dict[str, Any], schema.get("$defs", {}))
+    out: dict[str, _Union] = {}
+    pending: list[object] = [schema]
+    while pending:
+        node = pending.pop()
+        if isinstance(node, list):
+            pending.extend(cast(list[object], node))
+            continue
+        if not isinstance(node, dict):
+            continue
+        n = cast(dict[str, Any], node)
+        pending.extend(n.values())
+        if "oneOf" not in n:
+            continue
+        branches = [_resolve(defs, b) for b in cast(list[object], n["oneOf"])]
+        props = [cast(dict[str, object], b.get("properties", {})) for b in branches]
+        found: list[tuple[str, list[list[object]]]] = []
+        common = set(props[0])
+        for p in props[1:]:
+            common &= set(p)
+        for name in sorted(common):
+            values = [_tag_values(p[name]) for p in props]
+            tags = [v for v in values if v is not None]
+            flat = [repr((type(t), t)) for v in tags for t in v]
+            if len(tags) == len(values) and len(flat) == len(set(flat)):
+                found.append((name, tags))
+        if len(found) == 1:
+            name, tags = found[0]
+            union = _Union(
+                name, {str(b.get("title")): t for b, t in zip(branches, tags, strict=True)}
+            )
+            out.update((title, union) for title in union.tags)
+    return out
+
+
+def _same_json(a: object, b: object) -> bool:
+    return a == b and isinstance(a, bool) == isinstance(b, bool)
+
+
+_ABSENT = object()
+# The errors of a nullable's or an optional's other alternative, which Zod never reports.
+_ALTERNATIVES = frozenset({"none_required", "missing_sentinel_error"})
+
+
+def _locate(
+    value: object, loc: tuple[int | str, ...], kind: str, unions: dict[str, _Union]
+) -> tuple[IssuePath, str | None] | None:
+    """Walks a Pydantic location along the message and returns the path Zod gives the error.
+    A discriminated union keeps only the branch its tag selects: another branch's error gives
+    None, and a tag that selects none gives the discriminator's path with the code Pydantic
+    uses for it. Every other step that names no key of the value is a label (a plain union's
+    branch, a type) and is dropped, except a missing or an unknown field's name (D-4)."""
     out: IssuePath = []
     current: object = value
     last = len(loc) - 1
@@ -228,14 +313,61 @@ def _path(value: object, loc: tuple[int | str, ...]) -> IssuePath:
             if isinstance(step, str) and step in node:
                 out.append(step)
                 current = node[step]
-            elif i == last and isinstance(step, str):
-                out.append(step)  # a missing or an unknown field
-            continue  # a branch label
+                continue
+            union = unions.get(step) if isinstance(step, str) else None
+            if union is not None:
+                tag = node.get(union.discriminator, _ABSENT)
+                chosen = next(
+                    (
+                        b
+                        for b, values in union.tags.items()
+                        if any(_same_json(tag, v) for v in values)
+                    ),
+                    None,
+                )
+                if chosen is None:
+                    code = "union_tag_not_found" if tag is _ABSENT else "union_tag_invalid"
+                    return [*out, union.discriminator], code
+                if chosen != step:
+                    return None
+            elif i == last and isinstance(step, str) and kind in ("missing", "extra_forbidden"):
+                out.append(step)
+            continue
         if isinstance(current, list) and isinstance(step, int):
             items = cast(list[object], current)
             out.append(step)
             current = items[step] if 0 <= step < len(items) else None
-    return out
+    return out, None
+
+
+def _schema_issues(
+    schema_id: str, message: object, errors: list[ErrorDetails]
+) -> list[ValidationIssue]:
+    """Pydantic's errors as issues at Zod's paths (D-4), each (path, code) once."""
+    unions = _unions(catalogue_id(schema_id))
+    found: list[ValidationIssue] = []
+    for e in errors:
+        located = _locate(message, e["loc"], e["type"], unions)
+        if located is None:
+            continue
+        path, tag_code = located
+        if tag_code is None:
+            found.append({"path": path, "code": e["type"], "message": e["msg"]})
+        else:
+            found.append({"path": path, "code": tag_code, "message": "no branch takes this tag"})
+    issues: list[ValidationIssue] = []
+    seen: set[str] = set()
+    for issue in found:
+        path = issue["path"]
+        if issue["code"] in _ALTERNATIVES and any(
+            o["code"] not in _ALTERNATIVES and o["path"][: len(path)] == path for o in found
+        ):
+            continue
+        key = repr((path, issue["code"]))
+        if key not in seen:
+            seen.add(key)
+            issues.append(issue)
+    return issues
 
 
 # --- shared rules -------------------------------------------------------------------------------
@@ -1302,11 +1434,7 @@ def validate(
     try:
         parsed = model.model_validate(message, strict=True)
     except ValidationError as error:
-        issues: list[ValidationIssue] = [
-            {"path": _path(message, e["loc"]), "code": e["type"], "message": e["msg"]}
-            for e in error.errors()
-        ]
-        return ValidationResult(False, issues=issues)
+        return ValidationResult(False, issues=_schema_issues(schema_id, message, error.errors()))
     dumped: object = parsed.model_dump(mode="json", by_alias=True)
     _constant_types(dumped, message, out)
     if out.list:
