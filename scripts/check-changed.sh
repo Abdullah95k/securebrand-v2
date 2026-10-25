@@ -10,9 +10,12 @@
 #                 the local stack up
 #   CHECK_BASE    compare with this commit instead of the merge base with origin/main or main
 #                 (CI passes the commit before a push to main)
+#   SB_NO_FETCH   1: a shallow clone never fetches main (it then checks everything)
 #
-# With no merge base (a shallow clone, an unrelated history) or a CHECK_BASE that is not a commit
-# here, it checks everything and says so: make check never passes silently. A change to the
+# A shallow clone first fetches main's history (git fetch --unshallow origin main) to find the
+# merge base. With no merge base (an unrelated history, a shallow clone that could not fetch) or a
+# CHECK_BASE that is not a commit here, it checks everything and says so: make check never passes
+# silently. A change to the
 # shared Python configuration (ruff.toml, .python-version, uv.toml) checks every Python project,
 # and a change under fixtures/ (other than a README) every workspace and Python project.
 # Every step runs even after a failure; the exit status is non-zero when any step failed.

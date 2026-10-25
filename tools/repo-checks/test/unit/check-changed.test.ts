@@ -1,5 +1,16 @@
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { cleanEnv, script, TempRepo } from "../helpers/repo.js";
+import { cleanEnv, run, script, TempRepo } from "../helpers/repo.js";
+
+function gitIn(dir: string, ...args: string[]): string {
+  const result = run("git", args, { cwd: dir });
+  if (result.code !== 0) {
+    throw new Error(`git ${args.join(" ")} failed in ${dir}:\n${result.output}`);
+  }
+  return result.stdout.trim();
+}
 
 // A small workspace shaped like this repository: TypeScript packages with a dependency edge
 // (b depends on a), tools and end-to-end workspaces, and independent Python projects, one of
@@ -293,6 +304,94 @@ describe("scripts/check-changed.sh", () => {
       "tools/probes/news",
     ]);
   });
+
+  // A shallow clone of sb/T1 from a local bare origin (file://, no network): --depth implies
+  // --single-branch, so origin/main is missing, and the merge base lies beyond the shallow history.
+  function shallowClone(extra: string[] = []): { dir: string; cleanup: () => void } {
+    const tmp = mkdtempSync(join(tmpdir(), "shallow-"));
+    const origin = join(tmp, "origin.git");
+    gitIn(tmp, "clone", "-q", "--bare", repo.dir, origin);
+    const dir = join(tmp, "shallow");
+    gitIn(
+      tmp,
+      ...["-c", "protocol.file.allow=always", "clone", "-q", "--depth", "1", ...extra],
+      ...["--branch", "sb/T1", `file://${origin}`, dir],
+    );
+    return { dir, cleanup: () => rmSync(tmp, { recursive: true, force: true }) };
+  }
+
+  it("fetches main's history in a shallow clone and compares with the real merge base", () => {
+    repo.write("packages/a/index.js", "export const a = 7;\n").commit("a");
+    const main = repo.git("rev-parse", "main");
+    const clone = shallowClone();
+    try {
+      const result = script("check-changed.sh", ["--plan"], { cwd: clone.dir });
+      expect(result.code, result.output).toBe(0);
+      const planned = parsePlan(result.stdout);
+      expect(planned.base, result.output).toBe(main);
+      expect(planned.ts).toEqual(["a", "b"]);
+      expect(result.stderr).toMatch(/shallow clone/);
+      expect(gitIn(clone.dir, "rev-parse", "--is-shallow-repository")).toBe("false");
+    } finally {
+      clone.cleanup();
+    }
+  });
+
+  it("names the shallow clone and git fetch --unshallow when main cannot be fetched", () => {
+    repo.write("packages/a/index.js", "export const a = 8;\n").commit("a");
+    const clone = shallowClone();
+    try {
+      gitIn(clone.dir, "remote", "set-url", "origin", "file:///nonexistent");
+      const result = script("check-changed.sh", ["--plan"], { cwd: clone.dir });
+      expect(result.code, result.output).toBe(0);
+      expect(parsePlan(result.stdout).base).toBe("none");
+      expect(result.stderr).toMatch(/git fetch --unshallow origin main/);
+    } finally {
+      clone.cleanup();
+    }
+  });
+
+  it("SB_NO_FETCH=1 leaves the clone shallow and names the fetch to run", () => {
+    repo.write("packages/a/index.js", "export const a = 9;\n").commit("a");
+    const clone = shallowClone();
+    try {
+      const result = script("check-changed.sh", ["--plan"], {
+        cwd: clone.dir,
+        env: cleanEnv({ SB_NO_FETCH: "1" }),
+      });
+      expect(result.code, result.output).toBe(0);
+      expect(parsePlan(result.stdout).base).toBe("none");
+      expect(result.stderr).toMatch(/run git fetch --unshallow origin main/);
+      expect(gitIn(clone.dir, "rev-parse", "--is-shallow-repository")).toBe("true");
+    } finally {
+      clone.cleanup();
+    }
+  });
+
+  it.each([
+    ["with --base origin/main", ["--base", "origin/main"]],
+    ["without --base", []],
+  ])(
+    "the policy checks in a shallow clone compare with the merge base, not main's tip (%s)",
+    (_, args) => {
+      // main moved on after sb/T1 left it, with a change under a contract path that sb/T1 lacks:
+      // compared with main's tip, sb/T1 would seem to change that path.
+      repo.write("services/c/index.js", "export const c = 9;\n").commit("c");
+      const mainBefore = repo.git("rev-parse", "main");
+      repo.checkout("main");
+      repo.write("packages/contracts/x.ts", "export {};\n").commit("main moves on");
+      repo.checkout("sb/T1");
+      const clone = shallowClone(["--no-single-branch"]);
+      repo.git("branch", "-f", "main", mainBefore);
+      try {
+        const result = script("policy/check-contract-paths.sh", args, { cwd: clone.dir });
+        expect(result.code, result.output).toBe(0);
+        expect(result.stdout).toContain("no contract path changed");
+      } finally {
+        clone.cleanup();
+      }
+    },
+  );
 
   it("warns and checks everything when CHECK_BASE is not a commit of this repository", () => {
     repo.write("packages/a/index.js", "export const a = 5;\n");

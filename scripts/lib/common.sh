@@ -50,12 +50,29 @@ sb_select_node() {
 }
 sb_select_node
 
+# A shallow clone (--depth implies --single-branch) may lack origin/main or the commit where the
+# branch left it. Fetch main's full history once; SB_NO_FETCH=1 skips the fetch. Returns 0 when it
+# fetched, so the caller looks for the merge base again. Prints to stderr only: callers capture
+# stdout as the base.
+sb_unshallow_for_base() {
+  [ "$(git rev-parse --is-shallow-repository 2>/dev/null)" = true ] || return 1
+  if [ "${SB_NO_FETCH:-0}" = 1 ]; then
+    echo "warning: shallow clone without the merge base with main: run git fetch --unshallow origin main" >&2
+    return 1
+  fi
+  echo "note: shallow clone without the merge base with main: git fetch --unshallow origin main" >&2
+  git fetch --quiet --unshallow origin "+refs/heads/main:refs/remotes/origin/main" >&2 && return 0
+  echo "warning: git fetch --unshallow origin main failed (offline?): run it, then make check again" >&2
+  return 1
+}
+
 # The ref the current branch is compared with: CHECK_BASE when set, else the merge base with
-# origin/main, else with main. Prints nothing when there is no merge base, and when CHECK_BASE is
-# not a commit here (CI passes the commit before a push, which a force push can make unreachable
-# and which is all zeros for a new branch); the callers then check everything.
+# origin/main, else with main (a shallow clone fetches main's history first). Prints nothing when
+# there is no merge base, and when CHECK_BASE is not a commit here (CI passes the commit before a
+# push, which a force push can make unreachable and which is all zeros for a new branch); the
+# callers then check everything.
 sb_merge_base() {
-  local ref base
+  local ref base attempt
   if [ -n "${CHECK_BASE:-}" ]; then
     if base="$(git rev-parse --verify -q "${CHECK_BASE}^{commit}")"; then
       echo "$base"
@@ -64,25 +81,31 @@ sb_merge_base() {
     fi
     return 0
   fi
-  for ref in origin/main main; do
-    git rev-parse --verify -q "${ref}^{commit}" >/dev/null || continue
-    base="$(git merge-base HEAD "$ref" 2>/dev/null || true)"
-    if [ -n "$base" ]; then
-      echo "$base"
-      return 0
-    fi
+  for attempt in 1 2; do
+    for ref in origin/main main; do
+      git rev-parse --verify -q "${ref}^{commit}" >/dev/null || continue
+      base="$(git merge-base HEAD "$ref" 2>/dev/null || true)"
+      if [ -n "$base" ]; then
+        echo "$base"
+        return 0
+      fi
+    done
+    [ "$attempt" = 1 ] && sb_unshallow_for_base || return 0
   done
 }
 
-# The base commit of a pull request check (scripts/policy/): the merge base of HEAD and <ref>, or
-# <ref> itself when they share no history; with no <ref>, sb_merge_base. Exits when there is none.
+# The base commit of a pull request check (scripts/policy/): the merge base of HEAD and <ref> (a
+# shallow clone fetches main's history first), or <ref> itself when they share no history; with no
+# <ref>, sb_merge_base. Exits when there is none.
 sb_policy_base() {
   local ref="${1:-}" base
   if [ -z "$ref" ]; then
     base="$(sb_merge_base)"
     [ -n "$base" ] || sb_die "no merge base with main; pass --base <ref>"
   else
-    base="$(git merge-base HEAD "$ref" 2>/dev/null || git rev-parse --verify -q "$ref^{commit}")" ||
+    base="$(git merge-base HEAD "$ref" 2>/dev/null)" ||
+      { sb_unshallow_for_base && base="$(git merge-base HEAD "$ref" 2>/dev/null)"; } ||
+      base="$(git rev-parse --verify -q "$ref^{commit}")" ||
       sb_die "$ref is not a commit of this repository; fetch it or pass another --base"
   fi
   echo "$base"

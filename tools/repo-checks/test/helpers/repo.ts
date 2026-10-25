@@ -57,6 +57,7 @@ export function cleanEnv(extra: NodeJS.ProcessEnv = {}): NodeJS.ProcessEnv {
       key.startsWith("GITHUB_") ||
       key.startsWith("POLICY_") ||
       key === "CHECK_BASE" ||
+      key === "SB_NO_FETCH" ||
       key === "PR_LABELS" ||
       key === "CI" ||
       key === "E2E_DIR" ||
