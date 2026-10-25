@@ -83,6 +83,8 @@ before the push) and `template-smoke` (`pnpm new:service demo && make check`, an
 `policy.yml` checks that contract paths change only under the `contract-change` label, that a lane
 changing code has its handoff and a closed review, that every new runtime dependency has its row in
 `docs/dependencies.md`, and that fixtures are scrubbed; it runs the base branch's copy of the
-scripts, so a pull request cannot loosen its own checks. `mirror-images.yml` copies to GHCR the
-stack images that have no anonymous upstream. Every action is pinned to a commit; Dependabot
+scripts, so a pull request cannot loosen its own checks. `mirror-images.yml` copies to GHCR every
+stack image whose `_REPO` in `stack/versions.env` points to this repository's GHCR (Redpanda, which
+has no anonymous upstream, and ClickHouse, whose ECR copy refuses CI's pulls). Every action is
+pinned to a commit; Dependabot
 proposes minor and patch updates weekly.

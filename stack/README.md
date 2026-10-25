@@ -62,9 +62,10 @@ The SDK (F4, F6) applies the topic prefix in test mode.
 ## Images
 
 `versions.env` pins every image by exact tag. Each image is pulled from an upstream that serves
-anonymous pulls when its publisher offers an official image there (ClickHouse's Docker Official
-Image on ECR Public, SeaweedFS's own GHCR image, Supabase's images on ECR Public); Redpanda, which
-publishes only on Docker Hub, is copied to this repository's GHCR packages by
+anonymous pulls when its publisher offers an official image there (SeaweedFS's own GHCR image,
+Supabase's images on ECR Public). Redpanda, which publishes only on Docker Hub, and ClickHouse, whose
+Docker Official Image on ECR Public refuses anonymous pulls from shared addresses (`toomanyrequests:
+Data limit exceeded`), are copied to this repository's GHCR packages by
 `.github/workflows/mirror-images.yml` (on demand, and on every push that changes `versions.env`).
 Docker Hub limits anonymous pulls per address and answers 429 on shared addresses such as the
 cloud sessions'. `IMAGE_REGISTRY=upstream make up` pulls every image from its publisher's registry
