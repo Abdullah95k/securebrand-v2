@@ -14,7 +14,7 @@ The stop gate is armed for this session: you can finish only when the checks for
 
 - `docs/plans/$0.md` exists. If not, stop and tell me to run `/plan-session $0` in plan mode.
 - Every session in the brief's "Needs first" has its handoff in `docs/handoffs/`.
-- In a fresh worktree, install first: `pnpm install`, and `uv sync` in each Python project you touch.
+- In a fresh worktree or a fresh cloud container, run `make bootstrap` first. It installs the pinned Node, pnpm, uv and Python, runs `pnpm install --frozen-lockfile` and `uv sync --locked` in every Python project, and ends with `make doctor`. In a cloud session, put `nvm use 24.21.0 >/dev/null &&` in front of any `pnpm` command you type yourself.
 
 ## 1. Load the context
 

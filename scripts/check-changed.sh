@@ -78,10 +78,12 @@ if [ -f package.json ] && [ -f turbo.json ]; then
       TURBO_FILTERS+=("--filter=repo-checks")
     fi
   fi
-  TS_PACKAGES="$("${TURBO[@]}" ls ${TURBO_FILTERS[@]+"${TURBO_FILTERS[@]}"} --output json 2>/dev/null |
-    node -e 'const j = JSON.parse(require("fs").readFileSync(0, "utf8"));
-             console.log(j.packages.items.map((p) => p.name).sort().join(" "));')" ||
-    sb_die "turbo could not list the workspaces (run pnpm install)"
+  # set -e: capture turbo's answer with a fallback, so that only one line reaches the session.
+  TURBO_JSON="$("${TURBO[@]}" ls ${TURBO_FILTERS[@]+"${TURBO_FILTERS[@]}"} --output json 2>/dev/null || true)"
+  [ -n "$TURBO_JSON" ] || sb_die "turbo could not list the workspaces (run make bootstrap)"
+  TS_PACKAGES="$(node -e 'const j = JSON.parse(require("fs").readFileSync(0, "utf8"));
+           console.log(j.packages.items.map((p) => p.name).sort().join(" "));' <<<"$TURBO_JSON" 2>/dev/null)" ||
+    sb_die "turbo's workspace list could not be read (run make bootstrap)"
 fi
 
 # --- Python: the nearest pyproject.toml above each changed file, plus path dependants. ----------

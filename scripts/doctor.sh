@@ -76,9 +76,9 @@ fi
 
 if [ -x node_modules/.bin/supabase ]; then
   found="$(node_modules/.bin/supabase --version 2>/dev/null | tail -1 || echo unknown)"
-  if [ "$found" = "$SUPABASE_PIN" ]; then ok "supabase CLI $found"; else bad "supabase CLI: expected $SUPABASE_PIN, found $found (pnpm install)"; fi
+  if [ "$found" = "$SUPABASE_PIN" ]; then ok "supabase CLI $found"; else bad "supabase CLI: expected $SUPABASE_PIN, found $found (make bootstrap)"; fi
 else
-  bad "supabase CLI: missing (pnpm install puts $SUPABASE_PIN in node_modules/.bin)"
+  bad "supabase CLI: missing (make bootstrap puts $SUPABASE_PIN in node_modules/.bin)"
 fi
 
 if ! command -v docker >/dev/null 2>&1; then
