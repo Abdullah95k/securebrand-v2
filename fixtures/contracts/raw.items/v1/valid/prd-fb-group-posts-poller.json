@@ -1,0 +1,42 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M48764BRAF2A7XD88D9R6ZG0",
+    "produced_at": "2026-10-06T09:02:19Z",
+    "producer": {
+      "service": "fb-group-posts-poller",
+      "version": "1.0.0",
+      "job_id": "01J9N4B2M8R5V7Y3D1F6H0KQXE"
+    },
+    "platform": "facebook",
+    "kind": "post",
+    "provenance": {
+      "route": "amber",
+      "vendor": "scrapecreators",
+      "service": "fb-group-posts-poller",
+      "fetched_at": "2026-10-06T09:02:17Z"
+    },
+    "retention_class": "vendor_agreed",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01J9N4B2M8R5V7Y3D1F6H0KQXE",
+    "attempt": 1,
+    "job_kind": "rotation",
+    "api_version": "scrapecreators-v1",
+    "raw_ref": "raw/amber/facebook/2026/10/06/fb-group-posts-poller/000052.jsonl.zst#8",
+    "source_id": "a3d8f0c2-5b17-4e69-8c0d-72e1b94a6f35",
+    "platform_id": "4118203958217764",
+    "idempotency_key": "facebook:post:4118203958217764",
+    "author_ref": "e4c91a07b5d3f2886a0c1d9e47b3a5f6c2d80e19a7b4c3f5d6e2a1b09c8d7f34",
+    "redacted_fields": [
+      "from.id",
+      "from.name"
+    ]
+  },
+  "payload": {
+    "id": "4118203958217764",
+    "message": "منو عنده تجربة مع انترنت المنصور؟",
+    "created_time": "2026-10-06T08:40:11+0000"
+  }
+}

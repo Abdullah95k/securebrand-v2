@@ -1,0 +1,16 @@
+{
+  "schema": "job/v1",
+  "message_id": "01M47WR9R0MNVPAYVPN0SM0SKT",
+  "produced_at": "2026-10-06T06:00:00Z",
+  "producer": {
+    "service": "ig-hashtag-search",
+    "version": "1.0.0",
+    "job_id": "01M47WR9R01Y93Z2N0H3TNJPXM"
+  },
+  "job_id": "01M48DXKW0R8N3K5D2B7T4W9XC",
+  "kind": "rotation",
+  "due_at": "2026-10-06T06:00:00Z",
+  "attempt": 1,
+  "source_id": "e1d2c3b4-a596-4877-8b6a-5c4d3e2f1a09",
+  "edge": "recent_media"
+}

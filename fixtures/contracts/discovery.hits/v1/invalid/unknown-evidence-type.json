@@ -1,0 +1,42 @@
+{
+  "schema": "discovery.hits/v1",
+  "message_id": "01M487WRZ8B83F34NVFCJRWENX",
+  "produced_at": "2026-10-06T09:14:41Z",
+  "producer": {
+    "service": "keyword-matcher",
+    "version": "1.0.0",
+    "job_id": "01M4871WM0NJ5SWYGET3ZGFGSP"
+  },
+  "candidate": {
+    "candidate_key": "x:1290000000000000045",
+    "platform": "x",
+    "type": null,
+    "platform_id": "1290000000000000045",
+    "handle": "abuali_basra",
+    "url": null
+  },
+  "evidence_type": "hashtag",
+  "item_id": "f1397628-acdf-59e2-9cab-8bd2207f871d",
+  "url": null,
+  "source_id": "c41b7a90-3d2e-4f5a-8b6c-7d8e9f0a1b2c",
+  "keyword_ids": [
+    "9a8b7c6d-5e4f-4321-a0b9-c8d7e6f5a4b3"
+  ],
+  "client_ids": [
+    "e2a9d0b1-6c7f-4a38-9d5e-0f1a2b3c4d5e"
+  ],
+  "hit_at": "2026-10-06T08:51:40Z",
+  "evidence": {
+    "hit_id": "35729c6f-6811-5eeb-894f-283150384c28",
+    "matched_term": "زين العراق",
+    "form_id": "f2",
+    "keyword_set_version": "cs:3f9a1c0d7e2b4a6c8e0f1a3b5c7d9e1f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d"
+  },
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "x-recent-search",
+    "fetched_at": "2026-10-06T09:15:04Z"
+  },
+  "retention_class": "x_24h_sync"
+}

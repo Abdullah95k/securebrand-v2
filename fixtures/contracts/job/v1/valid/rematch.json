@@ -1,0 +1,21 @@
+{
+  "schema": "job/v1",
+  "message_id": "01M48MNNY08QFBFFDZ5BN6W91D",
+  "produced_at": "2026-10-06T12:58:00Z",
+  "producer": {
+    "service": "admin-api",
+    "version": "1.0.0",
+    "job_id": "01M48MNNY0ZJKKVWGHVQ4JV2PA"
+  },
+  "job_id": "01M4G00000A8N3K5D2B7T4W9XC",
+  "kind": "rematch",
+  "due_at": "2026-10-06T12:58:00Z",
+  "attempt": 1,
+  "client_id": "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60",
+  "keyword_ids": [
+    "0cd402b6-9015-45f8-86b4-d90cc086d320"
+  ],
+  "window_days": 30,
+  "request_id": "01J9R5S3V7W1X4Y8Z0A2B6C9DG",
+  "requested_by": "person:01J9P2R4T6V8X0Z2B4D6F8H0KM"
+}

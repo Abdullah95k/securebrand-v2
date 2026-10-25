@@ -1,0 +1,118 @@
+{
+  "candidate-platform-mismatch.json": {
+    "path": [
+      "candidate",
+      "platform"
+    ],
+    "rule": "the candidate's platform is its key's"
+  },
+  "container-with-hit-evidence.json": {
+    "path": [
+      "evidence",
+      "matched_term"
+    ],
+    "rule": "each evidence block holds its type's keys only (Q8)"
+  },
+  "early-signal-with-hit-id.json": {
+    "path": [
+      "evidence",
+      "hit_id"
+    ],
+    "rule": "each evidence block holds its type's keys only (Q8)"
+  },
+  "evidence-of-another-type.json": {
+    "path": [
+      "evidence",
+      "sightings"
+    ],
+    "rule": "each evidence block holds its type's keys only (Q8)"
+  },
+  "item-id-and-url.json": {
+    "path": [
+      "url"
+    ],
+    "rule": "exactly one of item_id and url (ADR-0031)"
+  },
+  "neither-item-nor-url.json": {
+    "path": [
+      "item_id"
+    ],
+    "rule": "exactly one of item_id and url (ADR-0031)"
+  },
+  "no-metadata-message-id.json": {
+    "path": [
+      "message_id"
+    ],
+    "rule": "every message carries message_id (ADR-0002)"
+  },
+  "no-metadata-produced-at.json": {
+    "path": [
+      "produced_at"
+    ],
+    "rule": "every message carries produced_at (ADR-0002)"
+  },
+  "no-metadata-producer.json": {
+    "path": [
+      "producer"
+    ],
+    "rule": "every message carries producer (ADR-0002)"
+  },
+  "no-metadata-schema.json": {
+    "path": [
+      "schema"
+    ],
+    "rule": "every message carries schema (ADR-0002)"
+  },
+  "no-source-outside-commoncrawl.json": {
+    "path": [
+      "source_id"
+    ],
+    "rule": "only web-commoncrawl-scanner's hit has no producing source (F-31)"
+  },
+  "old-news-key.json": {
+    "path": [
+      "candidate",
+      "candidate_key"
+    ],
+    "rule": "a site is news:site:<registrable domain> (ADR-0032)"
+  },
+  "page-search-empty-query.json": {
+    "path": [
+      "evidence",
+      "query"
+    ],
+    "rule": "a page search names its query"
+  },
+  "post-key-as-candidate.json": {
+    "path": [
+      "candidate",
+      "candidate_key"
+    ],
+    "rule": "a candidate key takes one of the four forms (ADR-0032)"
+  },
+  "poster-field.json": {
+    "path": [
+      "poster"
+    ],
+    "rule": "poster goes (ADR-0031)"
+  },
+  "singular-keyword-id.json": {
+    "path": [
+      "keyword_id"
+    ],
+    "rule": "keyword_ids, never keyword_id (ADR-0031)"
+  },
+  "unknown-evidence-type.json": {
+    "path": [
+      "evidence_type"
+    ],
+    "rule": "evidence_type is one of ADR-0031's"
+  },
+  "web-search-prefixed-hash.json": {
+    "path": [
+      "evidence",
+      "canonical_url_hash"
+    ],
+    "rule": "canonical_url_hash is bare hex (ADR-0036)"
+  }
+}

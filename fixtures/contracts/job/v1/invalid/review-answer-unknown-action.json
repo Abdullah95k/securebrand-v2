@@ -1,0 +1,20 @@
+{
+  "schema": "job/v1",
+  "message_id": "01M4AT5G1G8FJCHQ5W2D0F01M5",
+  "produced_at": "2026-10-07T09:12:30Z",
+  "producer": {
+    "service": "admin-api",
+    "version": "1.0.0",
+    "job_id": "01M4AT5G1GYJA9G6EKK6FZAVV2"
+  },
+  "job_id": "01M4990V80ZZGG928KMD5XX36J",
+  "kind": "review_answer",
+  "due_at": "2026-10-07T09:12:30Z",
+  "attempt": 1,
+  "candidate_key": "instagram:17841400000000000",
+  "card_id": "7d1c3e5a-9b2f-5d4e-8a6c-1e3f5a7b9d2c",
+  "decision_id": "01M48KNMHGT10JG2JTNA1C6955",
+  "action": "approve",
+  "request_id": "01J9R5S3V7W1X4Y8Z0A2B6C9DT",
+  "requested_by": "person:01J9P2R4T6V8X0Z2B4D6F8H0KN"
+}

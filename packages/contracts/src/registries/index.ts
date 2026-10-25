@@ -34,6 +34,7 @@ export {
   D3_WRITERS,
   GREEN_VENDORS,
   INDEX_SERVICES,
+  PLATFORM_GROUPS,
   PLATFORM_SERVICES,
   isKnownService,
   isKnownVendor,

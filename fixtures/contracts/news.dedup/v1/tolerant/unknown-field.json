@@ -1,0 +1,34 @@
+{
+  "schema": "news.dedup/v1",
+  "message_id": "01M47X6FV8Z551ZDA9KBFBG5CZ",
+  "produced_at": "2026-10-06T06:07:45Z",
+  "producer": {
+    "service": "news-dedup",
+    "version": "1.0.0",
+    "job_id": "01J9N3A4K8R2T7V5X0M6C1D9HF"
+  },
+  "type": "verdict",
+  "item_id": "bddea078-cc93-5ac8-ba02-c9b47d0284fd",
+  "idempotency_key": "news:article:b81c3e5f0a2d7946e1f0c8a5d3b9e72f46a1c0d8e5b3f97a2c4d6e0b1a8f5c39",
+  "story_id": "01J9N4W6C2R8T5K1V7X3M0DPZA",
+  "is_origin": false,
+  "duplicate_of": "news:article:e7a41b09c35d28f6a1d0b94c7e3f5a82d6c1b0e947f3a5d82c6b1e0a49d7f315",
+  "cluster_size": 5,
+  "version": 1,
+  "rank_in_cluster": 3,
+  "origin_source_id": "3c7f9d52-1e4a-4b86-a0d3-7b2e5c8f1a90",
+  "origin_time": "2026-10-06T05:41:00Z",
+  "matched_by": "simhash",
+  "hamming_distance": 2,
+  "title_overlap": 0.83,
+  "source_id": "a82e1c47-5d3b-49f0-8e6a-2c9b7d1f0e35",
+  "decided_at": "2026-10-06T06:07:44Z",
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "news-article-extractor",
+    "fetched_at": "2026-10-06T06:05:10Z"
+  },
+  "retention_class": "news_excerpt",
+  "simhash": "f3a1c9e5b2d48a6f"
+}

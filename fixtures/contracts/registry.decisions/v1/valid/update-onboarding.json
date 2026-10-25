@@ -1,0 +1,23 @@
+{
+  "schema": "registry.decisions/v1",
+  "message_id": "01M4DP4XG0GKKT7SNGWGG4HVPT",
+  "produced_at": "2026-10-08T12:00:00Z",
+  "producer": {
+    "service": "client-portal",
+    "version": "1.0.0",
+    "job_id": "01M4DP4XG0W86HF7N5JP28387F"
+  },
+  "decision_id": "01M4DP4XG0G9R48GZBC2J51WPF",
+  "decision": "update",
+  "requested_by": "person:01J9P2R4T6V8X0Z2B4D6F8H0KM",
+  "reason": null,
+  "source_id": "a3c0f1e2-5b6d-4c7e-9f80-112233445566",
+  "update": {
+    "source": {
+      "route": "green",
+      "vendor": null,
+      "owned_by_client": true,
+      "push_covered": true
+    }
+  }
+}

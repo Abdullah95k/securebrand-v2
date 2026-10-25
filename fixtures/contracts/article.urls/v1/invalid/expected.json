@@ -1,0 +1,68 @@
+{
+  "article-key.json": {
+    "path": [
+      "idempotency_key"
+    ],
+    "rule": "no article key: the extractor derives it (ADR-0036)"
+  },
+  "canonical-hash-not-the-urls.json": {
+    "path": [
+      "canonical_url_hash"
+    ],
+    "rule": "the one normaliser (Q9)"
+  },
+  "found-by.json": {
+    "path": [
+      "found_by"
+    ],
+    "rule": "found_by becomes found_via (ADR-0036)"
+  },
+  "kind-article-url.json": {
+    "path": [
+      "kind"
+    ],
+    "rule": "kind: article_url goes (ADR-0036)"
+  },
+  "no-metadata-message-id.json": {
+    "path": [
+      "message_id"
+    ],
+    "rule": "every message carries message_id (ADR-0002)"
+  },
+  "no-metadata-produced-at.json": {
+    "path": [
+      "produced_at"
+    ],
+    "rule": "every message carries produced_at (ADR-0002)"
+  },
+  "no-metadata-producer.json": {
+    "path": [
+      "producer"
+    ],
+    "rule": "every message carries producer (ADR-0002)"
+  },
+  "no-metadata-schema.json": {
+    "path": [
+      "schema"
+    ],
+    "rule": "every message carries schema (ADR-0002)"
+  },
+  "prefixed-hash.json": {
+    "path": [
+      "canonical_url_hash"
+    ],
+    "rule": "canonical_url_hash is bare hex (ADR-0036)"
+  },
+  "unknown-found-via.json": {
+    "path": [
+      "found_via"
+    ],
+    "rule": "found_via is closed (ADR-0036)"
+  },
+  "url-key-not-the-urls.json": {
+    "path": [
+      "url_key"
+    ],
+    "rule": "url_key = news:url:<url_hash of the normalised URL> (ADR-0036)"
+  }
+}

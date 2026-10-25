@@ -1,0 +1,85 @@
+{
+  "schema": "poster.profiles/v1",
+  "message_id": "01M47MRAB0MGGEVST6ACD65602",
+  "produced_at": "2026-10-06T03:40:12Z",
+  "producer": {
+    "service": "tg-channel-resolver",
+    "version": "1.0.0",
+    "job_id": "01M48A2Q70TMKPRYDBNVW331AB"
+  },
+  "platform": "telegram",
+  "status": "resolved",
+  "reason": null,
+  "followers": 48210,
+  "verified": null,
+  "client_ids": [
+    "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+  ],
+  "resolved_at": "2026-10-06T03:40:12Z",
+  "cached": false,
+  "cached_until": null,
+  "candidate_key": "telegram:basra_prices",
+  "source_id": null,
+  "source_type": "channel",
+  "account_type": "channel",
+  "individual": false,
+  "public_account": true,
+  "platform_id": "basra_prices",
+  "handle": "basra_prices",
+  "url": "https://t.me/basra_prices",
+  "display_name": "أسعار البصرة",
+  "posts_30d": null,
+  "last_post_at": null,
+  "posts_per_day": null,
+  "duplicate_text_share": null,
+  "default_avatar": null,
+  "account_created_at": null,
+  "owned_by_client": false,
+  "country_signals": {
+    "iraqi_place": true,
+    "platform_country_iq": true,
+    "phone_964": false,
+    "iq_domain": false,
+    "outlet_link": false,
+    "seed_list": false,
+    "signal_evidence": [
+      {
+        "signal": "platform_country_iq",
+        "matched": "IQ",
+        "where": "vendor country"
+      },
+      {
+        "signal": "iraqi_place",
+        "matched": "البصرة",
+        "where": "title"
+      }
+    ]
+  },
+  "lang_share": {
+    "ar": 0.95,
+    "ckb": 0.05,
+    "en": 0,
+    "mixed": 0,
+    "other": 0,
+    "und": 0,
+    "ar_iraqi": 0.71,
+    "sample": 34
+  },
+  "keyword_ids": [],
+  "route": "amber",
+  "vendor": "telemetrio",
+  "review_flags": [],
+  "provenance": {
+    "route": "amber",
+    "vendor": "telemetrio",
+    "service": "tg-channel-resolver",
+    "fetched_at": "2026-10-06T03:40:12Z"
+  },
+  "retention_class": "vendor_agreed",
+  "extras": {
+    "category": "news",
+    "growth": {
+      "subscribers_30d": 1930
+    }
+  }
+}

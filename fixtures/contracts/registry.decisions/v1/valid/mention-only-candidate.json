@@ -1,0 +1,28 @@
+{
+  "schema": "registry.decisions/v1",
+  "message_id": "01M48E580GBJ2STPGR1HBY6987",
+  "produced_at": "2026-10-06T11:04:10Z",
+  "producer": {
+    "service": "qualifier",
+    "version": "1.0.0",
+    "job_id": "01M48E580GR9GANBH5DWDVQCHX"
+  },
+  "decision_id": "01M48E580G5N52ZK2Y0X4A47M0",
+  "decision": "mention_only",
+  "requested_by": "qualifier",
+  "reason": null,
+  "candidate_key": "x:1290000000000000999",
+  "mention_only": {
+    "rule_hit": 7,
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ]
+  },
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "x-user-resolver",
+    "fetched_at": "2026-10-06T11:04:00Z"
+  },
+  "retention_class": "x_24h_sync"
+}

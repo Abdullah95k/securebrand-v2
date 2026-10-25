@@ -1,0 +1,41 @@
+{
+  "schema": "search.results/v1",
+  "message_id": "01M47F7QYGZ70K6B7EC74Q5GCC",
+  "produced_at": "2026-10-06T02:03:46Z",
+  "producer": {
+    "service": "yt-web-search-bridge",
+    "version": "1.0.0",
+    "job_id": "01M47F78AGDCFWH3S8DKZZJENT"
+  },
+  "engine": "mojeek",
+  "source_id": "7b3e5f8a-1c2d-4e4f-9a6b-7c8d9e0f1a2b",
+  "keyword_ids": [],
+  "client_ids": [
+    "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+  ],
+  "query": {
+    "text": "site:youtube.com \"فايبر اكس\"",
+    "variant": null,
+    "lang": null,
+    "country": null,
+    "request_id": null
+  },
+  "result": {
+    "rank": 1,
+    "title": "...",
+    "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "snippet": "...",
+    "date": null,
+    "last_updated": null
+  },
+  "canonical_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  "canonical_url_hash": "0424974c68530290458c8d58674e2637f65abc127057957d7b3acbd24c208f93",
+  "raw_ref": "raw/green/web/2026/10/06/yt-web-search-bridge/000002.jsonl.zst#1",
+  "provenance": {
+    "route": "green",
+    "vendor": "mojeek",
+    "service": "yt-web-search-bridge",
+    "fetched_at": "2026-10-06T02:03:44Z"
+  },
+  "retention_class": "news_excerpt"
+}

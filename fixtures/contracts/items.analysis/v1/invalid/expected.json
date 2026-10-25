@@ -1,0 +1,166 @@
+{
+  "analysis-key-not-the-helpers.json": {
+    "path": [
+      "analysis_key"
+    ],
+    "rule": "analysis_key = item_id:task:model_version (ADR-0023)"
+  },
+  "aspect-matched-text.json": {
+    "path": [
+      "result",
+      "targets",
+      0,
+      "matched_text"
+    ],
+    "rule": "matched_text takes ADR-0031's form, matched_term (ADR-0070)"
+  },
+  "asr-segment-without-end.json": {
+    "path": [
+      "result",
+      "media",
+      0,
+      "segments",
+      0,
+      "end"
+    ],
+    "rule": "a speech segment names its end"
+  },
+  "cluster-without-id.json": {
+    "path": [
+      "result",
+      "cluster_id"
+    ],
+    "rule": "a cluster result names its cluster"
+  },
+  "colon-task.json": {
+    "path": [
+      "task"
+    ],
+    "rule": "task names hold no colon (ADR-0023)"
+  },
+  "entities-private-person.json": {
+    "path": [
+      "result",
+      "entities",
+      0,
+      "type"
+    ],
+    "rule": "only public persons are linked entities; private ones are counted (analysis-entities §5.3)"
+  },
+  "item-fetched-at.json": {
+    "path": [
+      "item_fetched_at"
+    ],
+    "rule": "item_fetched_at gives way to provenance (ADR-0003)"
+  },
+  "logo-box-three-numbers.json": {
+    "path": [
+      "result",
+      "media",
+      0,
+      "logos",
+      0,
+      "box"
+    ],
+    "rule": "a logo box is four numbers"
+  },
+  "media-fetch-short-hash.json": {
+    "path": [
+      "result",
+      "media",
+      0,
+      "sha256"
+    ],
+    "rule": "a media hash is 64 hex"
+  },
+  "no-metadata-message-id.json": {
+    "path": [
+      "message_id"
+    ],
+    "rule": "every message carries message_id (ADR-0002)"
+  },
+  "no-metadata-produced-at.json": {
+    "path": [
+      "produced_at"
+    ],
+    "rule": "every message carries produced_at (ADR-0002)"
+  },
+  "no-metadata-producer.json": {
+    "path": [
+      "producer"
+    ],
+    "rule": "every message carries producer (ADR-0002)"
+  },
+  "no-metadata-schema.json": {
+    "path": [
+      "schema"
+    ],
+    "rule": "every message carries schema (ADR-0002)"
+  },
+  "node-id.json": {
+    "path": [
+      "result",
+      "topics",
+      0,
+      "node_id"
+    ],
+    "rule": "topic ids are one field, topic_id (ADR-0023)"
+  },
+  "ocr-confidence-above-one.json": {
+    "path": [
+      "result",
+      "media",
+      0,
+      "confidence"
+    ],
+    "rule": "confidence is a share"
+  },
+  "ok-with-reason.json": {
+    "path": [
+      "reason"
+    ],
+    "rule": "an ok analysis carries no reason"
+  },
+  "ok-without-result.json": {
+    "path": [
+      "result"
+    ],
+    "rule": "an ok analysis carries its result"
+  },
+  "sentiment-label.json": {
+    "path": [
+      "result",
+      "label"
+    ],
+    "rule": "the sentiment labels are closed"
+  },
+  "skipped-with-result.json": {
+    "path": [
+      "result"
+    ],
+    "rule": "a skipped analysis carries no result"
+  },
+  "skipped-without-reason.json": {
+    "path": [
+      "reason"
+    ],
+    "rule": "a skipped analysis names its reason (Q8)"
+  },
+  "tag-without-score.json": {
+    "path": [
+      "result",
+      "media",
+      0,
+      "tags",
+      0,
+      "score"
+    ],
+    "rule": "a tag carries its score"
+  },
+  "unknown-skip-reason.json": {
+    "path": [
+      "reason"
+    ],
+    "rule": "the skip reasons are closed (Q8)"
+  }
+}

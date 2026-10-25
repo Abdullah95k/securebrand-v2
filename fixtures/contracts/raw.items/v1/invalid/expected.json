@@ -1,0 +1,287 @@
+{
+  "amber-without-vendor.json": {
+    "path": [
+      "envelope",
+      "provenance",
+      "vendor"
+    ],
+    "rule": "an amber record names its vendor (ADR-0051 (c))"
+  },
+  "article-unknown-field.json": {
+    "path": [
+      "payload",
+      "html"
+    ],
+    "rule": "the article extract carries only its typed fields (F-30)"
+  },
+  "article-without-extractor.json": {
+    "path": [
+      "payload",
+      "extractor"
+    ],
+    "rule": "an article payload is the typed extract (F-30)"
+  },
+  "batch.json": {
+    "path": [
+      "envelope",
+      "batch"
+    ],
+    "rule": "batch gives way to raw_ref (ADR-0005)"
+  },
+  "bot-without-update-id.json": {
+    "path": [
+      "envelope",
+      "context",
+      "update_id"
+    ],
+    "rule": "a bot record carries its delivery id in context (ADR-0005)"
+  },
+  "comment-without-author-ref.json": {
+    "path": [
+      "envelope",
+      "author_ref"
+    ],
+    "rule": "a comment carries author_ref, null where the platform gives none (Q3)"
+  },
+  "comment-without-parent.json": {
+    "path": [
+      "envelope",
+      "parent_id"
+    ],
+    "rule": "a comment carries parent_id (ADR-0009)"
+  },
+  "comment-without-root.json": {
+    "path": [
+      "envelope",
+      "root_id"
+    ],
+    "rule": "a comment carries root_id (ADR-0009)"
+  },
+  "flat-route.json": {
+    "path": [
+      "envelope",
+      "route"
+    ],
+    "rule": "route travels only inside provenance (ADR-0003)"
+  },
+  "key-not-the-helpers.json": {
+    "path": [
+      "envelope",
+      "idempotency_key"
+    ],
+    "rule": "the key equals the helper's output for the record (ADR-0006)"
+  },
+  "metrics-without-item-key.json": {
+    "path": [
+      "envelope",
+      "context",
+      "item_key"
+    ],
+    "rule": "a metrics record names the observed item's key (ADR-0034; F-37)"
+  },
+  "neither-source-nor-candidate.json": {
+    "path": [
+      "envelope",
+      "source_id"
+    ],
+    "rule": "a record carries source_id or candidate_key (ADR-0005)"
+  },
+  "no-metadata-message-id.json": {
+    "path": [
+      "envelope",
+      "message_id"
+    ],
+    "rule": "every message carries message_id (ADR-0002)"
+  },
+  "no-metadata-produced-at.json": {
+    "path": [
+      "envelope",
+      "produced_at"
+    ],
+    "rule": "every message carries produced_at (ADR-0002)"
+  },
+  "no-metadata-producer.json": {
+    "path": [
+      "envelope",
+      "producer"
+    ],
+    "rule": "every message carries producer (ADR-0002)"
+  },
+  "no-metadata-schema.json": {
+    "path": [
+      "envelope",
+      "schema"
+    ],
+    "rule": "every message carries schema (ADR-0002)"
+  },
+  "no-provenance.json": {
+    "path": [
+      "envelope",
+      "provenance"
+    ],
+    "rule": "a data message carries provenance (ADR-0003)"
+  },
+  "no-retention-class.json": {
+    "path": [
+      "envelope",
+      "retention_class"
+    ],
+    "rule": "a data message carries retention_class (ADR-0003)"
+  },
+  "non-utc-fetched-at.json": {
+    "path": [
+      "envelope",
+      "provenance",
+      "fetched_at"
+    ],
+    "rule": "message timestamps are UTC with Z"
+  },
+  "numeric-platform-id.json": {
+    "path": [
+      "envelope",
+      "platform_id"
+    ],
+    "rule": "platform ids are strings, never numbers (ADR-0007)"
+  },
+  "partial-false.json": {
+    "path": [
+      "envelope",
+      "context",
+      "partial"
+    ],
+    "rule": "partial is true when present (ADR-0065)"
+  },
+  "post-without-key.json": {
+    "path": [
+      "envelope",
+      "idempotency_key"
+    ],
+    "rule": "a content kind carries idempotency_key (ADR-0005)"
+  },
+  "post-without-platform-id.json": {
+    "path": [
+      "envelope",
+      "platform_id"
+    ],
+    "rule": "a content kind carries platform_id (ADR-0005)"
+  },
+  "prefixed-author-ref.json": {
+    "path": [
+      "envelope",
+      "author_ref"
+    ],
+    "rule": "author_ref is 64 lower-case hex, no prefix (ADR-0010)"
+  },
+  "raw-ref-route-mismatch.json": {
+    "path": [
+      "envelope",
+      "raw_ref"
+    ],
+    "rule": "raw_ref names the record's own route and platform (ADR-0005)"
+  },
+  "reaction-without-author-ref.json": {
+    "path": [
+      "envelope",
+      "author_ref"
+    ],
+    "rule": "a reaction carries author_ref (Q3)"
+  },
+  "reaction-without-platform-id.json": {
+    "path": [
+      "envelope",
+      "platform_id"
+    ],
+    "rule": "a reaction is keyed by its event id (F-37)"
+  },
+  "reason-as-job-kind.json": {
+    "path": [
+      "envelope",
+      "job_kind"
+    ],
+    "rule": "job_kind is a job kind, push or stream (ADR-0005, ADR-0011)"
+  },
+  "resolver-writes-post.json": {
+    "path": [
+      "envelope",
+      "producer",
+      "service"
+    ],
+    "rule": "a raw.items writer writes only its record kinds"
+  },
+  "result-key-not-the-helpers.json": {
+    "path": [
+      "envelope",
+      "idempotency_key"
+    ],
+    "rule": "a web result's key is web:result:<canonical_url_hash> (ADR-0038)"
+  },
+  "search-response-neither.json": {
+    "path": [
+      "envelope",
+      "source_id"
+    ],
+    "rule": "a search response is keyed by the rule's source_id (ADR-0005)"
+  },
+  "source-and-candidate.json": {
+    "path": [
+      "envelope",
+      "candidate_key"
+    ],
+    "rule": "a record carries source_id or candidate_key, never both (ADR-0005 L28)"
+  },
+  "stream-without-connection-id.json": {
+    "path": [
+      "envelope",
+      "context",
+      "connection_id"
+    ],
+    "rule": "a stream record carries its delivery id in context (ADR-0005)"
+  },
+  "undeclared-context-key.json": {
+    "path": [
+      "envelope",
+      "context",
+      "paid"
+    ],
+    "rule": "context holds only its producer's declared keys (ADR-0005)"
+  },
+  "unknown-context-key.json": {
+    "path": [
+      "envelope",
+      "context",
+      "metrics_observation"
+    ],
+    "rule": "context holds only declared keys (ADR-0005)"
+  },
+  "unknown-kind.json": {
+    "path": [
+      "envelope",
+      "kind"
+    ],
+    "rule": "the record kind is one of ADR-0008's"
+  },
+  "unknown-service.json": {
+    "path": [
+      "envelope",
+      "producer",
+      "service"
+    ],
+    "rule": "producer.service is a service of the index (Q1, F-09)"
+  },
+  "uppercase-route.json": {
+    "path": [
+      "envelope",
+      "provenance",
+      "route"
+    ],
+    "rule": "routes are lower case (ADR-0070 c))"
+  },
+  "vendor-spelling.json": {
+    "path": [
+      "envelope",
+      "provenance",
+      "vendor"
+    ],
+    "rule": "one lower-case vendor spelling, from the registry (ADR-0051 (c))"
+  }
+}

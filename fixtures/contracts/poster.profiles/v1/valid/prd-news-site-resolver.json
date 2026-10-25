@@ -1,0 +1,110 @@
+{
+  "schema": "poster.profiles/v1",
+  "message_id": "01M486MEY0M3A9WN6C0RAHJ6BD",
+  "produced_at": "2026-10-06T08:52:40Z",
+  "producer": {
+    "service": "news-site-resolver",
+    "version": "1.0.0",
+    "job_id": "01M486K7W0KPR5FKH5ET9K2SFS"
+  },
+  "platform": "news",
+  "status": "resolved",
+  "reason": null,
+  "followers": null,
+  "verified": null,
+  "client_ids": [
+    "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+  ],
+  "resolved_at": "2026-10-06T08:52:40Z",
+  "cached": false,
+  "cached_until": null,
+  "candidate_key": "news:site:example-daily.iq",
+  "source_id": null,
+  "source_type": "site",
+  "account_type": "site",
+  "individual": false,
+  "public_account": true,
+  "platform_id": "example-daily.iq",
+  "handle": "example-daily.iq",
+  "url": "https://www.example-daily.iq/",
+  "display_name": "Example Daily",
+  "posts_30d": null,
+  "last_post_at": null,
+  "posts_per_day": null,
+  "duplicate_text_share": null,
+  "default_avatar": null,
+  "account_created_at": null,
+  "owned_by_client": false,
+  "country_signals": {
+    "iraqi_place": true,
+    "platform_country_iq": false,
+    "phone_964": true,
+    "iq_domain": true,
+    "outlet_link": false,
+    "seed_list": true,
+    "signal_evidence": [
+      {
+        "signal": "iq_domain",
+        "matched": ".iq",
+        "where": "host"
+      },
+      {
+        "signal": "iraqi_place",
+        "matched": "Baghdad",
+        "where": "masthead"
+      }
+    ]
+  },
+  "lang_share": {
+    "ar": 0.95,
+    "ckb": 0,
+    "en": 0.05,
+    "mixed": 0,
+    "other": 0,
+    "und": 0,
+    "ar_iraqi": 0.05,
+    "sample": 50
+  },
+  "keyword_ids": [],
+  "route": "green",
+  "vendor": null,
+  "review_flags": [],
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "news-site-resolver",
+    "fetched_at": "2026-10-06T08:52:40Z"
+  },
+  "retention_class": "news_excerpt",
+  "proposed_source_id": "5e3b8f02-6d1c-4a97-b2e8-0c9f4d7a1e63",
+  "extras": {
+    "host": "www.example-daily.iq",
+    "site_profile": {
+      "feeds": [
+        {
+          "url": "https://www.example-daily.iq/feed",
+          "format": "rss2",
+          "items": 50,
+          "newest_at": "2026-10-06T05:41:00Z",
+          "has_body": false
+        }
+      ],
+      "news_sitemap": "https://www.example-daily.iq/sitemap-news.xml",
+      "sitemaps": [
+        "https://www.example-daily.iq/sitemap_index.xml"
+      ],
+      "homepage_diff": false,
+      "article_url_patterns": [
+        "^https://www\\.example-daily\\.iq/[a-z-]+/[0-9]{4}/[0-9]{2}/[0-9]{2}/[^/?#]+$"
+      ],
+      "comments_provider": "disqus",
+      "disqus_shortname": "exampledaily",
+      "access_mode": "direct",
+      "articles_per_day_estimate": 31,
+      "last_article_at": "2026-10-06T05:41:00Z"
+    },
+    "proposed_tier": 1,
+    "discovered_by": "search-hit-router",
+    "crawl_allowed": true
+  }
+}

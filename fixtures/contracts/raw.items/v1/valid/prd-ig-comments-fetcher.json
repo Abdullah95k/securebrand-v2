@@ -1,0 +1,46 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M48Z7KD82C1BQ3995KB45WK4",
+    "produced_at": "2026-10-06T16:02:33Z",
+    "producer": {
+      "service": "ig-comments-fetcher",
+      "version": "1.0.0",
+      "job_id": "01J9N5D2P8F4Y3A6W9S1V7KJTE"
+    },
+    "platform": "instagram",
+    "kind": "comment",
+    "provenance": {
+      "route": "amber",
+      "vendor": "sociavault",
+      "service": "ig-comments-fetcher",
+      "fetched_at": "2026-10-06T16:02:31Z"
+    },
+    "retention_class": "vendor_agreed",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01J9N5D2P8F4Y3A6W9S1V7KJTE",
+    "attempt": 1,
+    "job_kind": "comments",
+    "api_version": "sociavault-v1",
+    "raw_ref": "raw/amber/instagram/2026/10/06/ig-comments-fetcher/000031.jsonl.zst#4",
+    "source_id": "c81f5a27-3d94-4be6-8a02-7e6b1f9d4c33",
+    "platform_id": "sc:Cx4kQ2LsT9m:f41c9018d673b1b2cb89aa94bac3c05e6530ecec77f2c90af6807465f36290d3",
+    "idempotency_key": "instagram:comment:sc:Cx4kQ2LsT9m:f41c9018d673b1b2cb89aa94bac3c05e6530ecec77f2c90af6807465f36290d3",
+    "parent_id": "8c4ef77e-d3c5-571c-a6cc-e15ece73d0ca",
+    "root_id": "8c4ef77e-d3c5-571c-a6cc-e15ece73d0ca",
+    "author_ref": "46fc8391cdbcfa7ca85f91d14dd6c510b97e6378c479005fb36470a76922068f",
+    "redacted_fields": [
+      "owner"
+    ],
+    "context": {
+      "series_step": "+6h"
+    }
+  },
+  "payload": {
+    "text": "اكو عرض للطلاب؟",
+    "created_at": "2026-10-06T15:58:12+0000",
+    "like_count": 2
+  }
+}

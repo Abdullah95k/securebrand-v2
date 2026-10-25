@@ -1,0 +1,45 @@
+{
+  "schema": "crawl.policies/v1",
+  "message_id": "01M47YFP6RPT68N865S6QPVCPV",
+  "produced_at": "2026-10-06T06:30:15Z",
+  "producer": {
+    "service": "news-robots-checker",
+    "version": "1.0.0",
+    "job_id": "01J9N3Q8D5W2K7X1R4T9V0MZBC"
+  },
+  "host": "www.example-daily.iq",
+  "status": "blocked",
+  "crawl_allowed": false,
+  "reason": "robots_unreachable",
+  "access_mode": "proxy",
+  "crawl_delay_seconds": 5,
+  "robots_status": "unavailable",
+  "robots_rules": null,
+  "usage_signals": {
+    "search": "yes",
+    "ai_input": "unset",
+    "ai_train": "no"
+  },
+  "rsl": {
+    "found": false
+  },
+  "payment": {
+    "http_402": false,
+    "price": null
+  },
+  "checked_at": "2026-10-06T06:30:14Z",
+  "expires_at": "2026-10-07T06:30:14Z",
+  "policy_version": 3,
+  "changed_fields": [
+    "access_mode"
+  ],
+  "requested_by": "news-article-extractor",
+  "kind": "recheck",
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "news-robots-checker",
+    "fetched_at": "2026-10-06T06:30:11Z"
+  },
+  "retention_class": "news_excerpt"
+}

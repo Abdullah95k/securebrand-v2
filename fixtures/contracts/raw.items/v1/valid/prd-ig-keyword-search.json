@@ -1,0 +1,37 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M47KKX9RKXY9ZBCBMJD8HH7W",
+    "produced_at": "2026-10-06T03:20:19Z",
+    "producer": {
+      "service": "ig-keyword-search",
+      "version": "1.0.0",
+      "job_id": "01J9N9J5T6K8C1E3A5X7Z9QRYM"
+    },
+    "platform": "instagram",
+    "kind": "post",
+    "provenance": {
+      "route": "amber",
+      "vendor": "sociavault",
+      "service": "ig-keyword-search",
+      "fetched_at": "2026-10-06T03:20:17Z"
+    },
+    "retention_class": "vendor_agreed",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01J9N9J5T6K8C1E3A5X7Z9QRYM",
+    "attempt": 1,
+    "job_kind": "rotation",
+    "api_version": "sociavault-v1",
+    "raw_ref": "raw/amber/instagram/2026/10/06/ig-keyword-search/000017.jsonl.zst#1",
+    "source_id": "d07a3b64-9e12-4c85-b3f0-6a1e8c2d5f97",
+    "platform_id": "3012345678901234567",
+    "idempotency_key": "instagram:post:3012345678901234567"
+  },
+  "payload": {
+    "id": "3012345678901234567",
+    "caption": "تجربتي مع شركة المثال",
+    "username": "basra.reviews"
+  }
+}

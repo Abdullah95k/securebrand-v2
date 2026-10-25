@@ -1,0 +1,25 @@
+{
+  "schema": "registry.decisions/v1",
+  "message_id": "01M4YVF1G0ZS9PM5Y4NNTTKTFC",
+  "produced_at": "2026-10-15T04:00:00Z",
+  "producer": {
+    "service": "x-user-timeline-poller",
+    "version": "1.0.0",
+    "job_id": "01M4YVF1G04T6G11FSTWPNFEXA"
+  },
+  "decision_id": "01M4YVF1G0STPEJW81SGCVZRFS",
+  "decision": "retire",
+  "requested_by": "x-user-timeline-poller",
+  "reason": "not_found",
+  "source_id": "a4d2c9e1-5b7f-4e3a-8c60-2f1b9d7e4a35",
+  "retire": {
+    "rule_hit": null
+  },
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "x-user-timeline-poller",
+    "fetched_at": "2026-10-15T03:59:12Z"
+  },
+  "retention_class": "x_24h_sync"
+}

@@ -1,0 +1,1404 @@
+{
+  "description": "Every JSON example in the PRDs' section 6.2, rewritten into its v1 shape as the ADRs require (A6): one fixture per producer and topic, with the rewrites applied; examples that are not messages on a topic or queue name why.",
+  "examples": [
+    {
+      "service": "fb-backfill",
+      "prd": "docs/prds/facebook/fb-backfill.md",
+      "line": 91,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-fb-backfill.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "api_version added (ADR-0005)"
+      ]
+    },
+    {
+      "service": "fb-client-webhook-receiver",
+      "prd": "docs/prds/facebook/fb-client-webhook-receiver.md",
+      "line": 112,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-fb-client-webhook-receiver.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "job_kind push for the jobless receiver; delivery and version go (ADR-0005, ADR-0009)",
+        "parent_id and root_id, the parent's and the post's item_id, stamped from the job's post_ref with the key helper; the envelope copies of the post reference go (ADR-0009, ADR-0011)",
+        "payload_redacted becomes redacted_fields (ADR-0009)",
+        "api_version added (ADR-0005)"
+      ]
+    },
+    {
+      "service": "fb-group-comments-fetcher",
+      "prd": "docs/prds/facebook/fb-group-comments-fetcher.md",
+      "line": 107,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-fb-group-comments-fetcher.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "parent_id and root_id, the parent's and the post's item_id, stamped from the job's post_ref with the key helper; the envelope copies of the post reference go (ADR-0009, ADR-0011)",
+        "producers send no edit marker: version, text_hash, content_hash, observation and edit_of go (ADR-0009)",
+        "series_step moves into context, a declared key (ADR-0005)",
+        "payload_redacted becomes redacted_fields (ADR-0009)",
+        "job_kind comments (ADR-0005)",
+        "api_version added (ADR-0005)"
+      ]
+    },
+    {
+      "service": "fb-group-posts-poller",
+      "prd": "docs/prds/facebook/fb-group-posts-poller.md",
+      "line": 105,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-fb-group-posts-poller.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "job_kind added; metrics_observation, origin, delivery and ingest_mode dropped (ADR-0005)",
+        "api_version added (ADR-0005)",
+        "the poster is an ordinary member here, so its id is replaced by author_ref and listed in redacted_fields; a discovery poster whose clear id stays in the payload carries no author_ref (ADR-0010 L47; Q3)"
+      ]
+    },
+    {
+      "service": "fb-keyword-search",
+      "prd": "docs/prds/facebook/fb-keyword-search.md",
+      "line": 100,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-fb-keyword-search.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "job_kind added; metrics_observation, origin, delivery and ingest_mode dropped (ADR-0005)",
+        "api_version added (ADR-0005)",
+        "query moves into context, a declared key (ADR-0005)",
+        "the poster's id stays in the payload for discovery, so the envelope carries no author_ref; normalize-item computes it (ADR-0010 L47; Q3)"
+      ]
+    },
+    {
+      "service": "fb-page-feed-poller",
+      "prd": "docs/prds/facebook/fb-page-feed-poller.md",
+      "line": 111,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-fb-page-feed-poller.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "job_kind added; metrics_observation, origin, delivery and ingest_mode dropped (ADR-0005)",
+        "api_version added (ADR-0005)"
+      ]
+    },
+    {
+      "service": "fb-page-resolver",
+      "prd": "docs/prds/facebook/fb-page-resolver.md",
+      "line": 102,
+      "schema": "poster.profiles/v1",
+      "fixture": "poster.profiles/v1/valid/prd-fb-page-resolver.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "the nested envelope and profile become ADR-0033's flat message; resolved_type gives way to account_type (ADR-0033)",
+        "cache becomes cached and cached_until (ADR-0033)",
+        "is_verified becomes verified; signals become country_signals with signal_evidence (ADR-0033)",
+        "category, location, website_domains and about move into extras, fb-page-resolver's declared keys",
+        "a Page is an organisation kind, so public_account true (ADR-0010; Q7)"
+      ]
+    },
+    {
+      "service": "fb-page-search",
+      "prd": "docs/prds/facebook/fb-page-search.md",
+      "line": 96,
+      "schema": "discovery.hits/v1",
+      "fixture": "discovery.hits/v1/valid/prd-fb-page-search.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "hit_type and context go; found_at becomes hit_at (ADR-0031)",
+        "keyword_id becomes keyword_ids; source_id is the keyword-rule row (ADR-0004, ADR-0044)",
+        "the candidate takes ADR-0031's shape; name, is_verified, location and the query move into the page_search evidence",
+        "url names the page found (exactly one of item_id and url)"
+      ]
+    },
+    {
+      "service": "fb-post-comments-fetcher",
+      "prd": "docs/prds/facebook/fb-post-comments-fetcher.md",
+      "line": 102,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-fb-post-comments-fetcher.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "parent_id and root_id, the parent's and the post's item_id, stamped from the job's post_ref with the key helper; the envelope copies of the post reference go (ADR-0009, ADR-0011)",
+        "producers send no edit marker: version, text_hash, content_hash, observation and edit_of go (ADR-0009)",
+        "series_step moves into context, a declared key (ADR-0005)",
+        "api_version added (ADR-0005)",
+        "an id-less comment: platform_id is the key's id part, <post id>:<sha256(created_time + text)>, never null (ADR-0009)",
+        "the post id is shortened so the fixture scanner does not read <digits>:<hash> as a bot token",
+        "author_ref null: the read gives no author id (Q3)"
+      ]
+    },
+    {
+      "service": "fb-reactions-fetcher",
+      "prd": "docs/prds/facebook/fb-reactions-fetcher.md",
+      "line": 105,
+      "schema": "item.metrics/v1",
+      "fixture": "item.metrics/v1/valid/prd-fb-reactions-fetcher.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "the label refresh_24h becomes label refresh with step +24h (ADR-0034)",
+        "item_idempotency_key becomes idempotency_key; item_id added (ADR-0034)",
+        "post_created_time becomes created_at; age_seconds goes, readers derive it (ADR-0034)",
+        "reactions_total becomes likes, Facebook's total of all reactions; the types move into reactions_by_type (F-34)"
+      ]
+    },
+    {
+      "service": "ig-account-media-poller",
+      "prd": "docs/prds/instagram/ig-account-media-poller.md",
+      "line": 107,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-ig-account-media-poller.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "job_kind added; metrics_observation, origin, delivery and ingest_mode dropped (ADR-0005)",
+        "api_version added (ADR-0005)"
+      ]
+    },
+    {
+      "service": "ig-account-resolver",
+      "prd": "docs/prds/instagram/ig-account-resolver.md",
+      "line": 105,
+      "schema": "poster.profiles/v1",
+      "fixture": "poster.profiles/v1/valid/prd-ig-account-resolver.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "resolution becomes status; account_class becomes account_type (ADR-0033)",
+        "cache becomes cached and cached_until (ADR-0033)",
+        "job_id and attempt go: producer.job_id carries the resolve job (ADR-0002, ADR-0006)",
+        "the old signal vocabulary (website_tld, city_in_bio) becomes country_signals' six booleans with signal_evidence (ADR-0033)",
+        "media_count, biography and website move into extras",
+        "business_or_creator is a person kind: public_account false on Instagram (ADR-0010 L72; Q7)"
+      ]
+    },
+    {
+      "service": "ig-comments-fetcher",
+      "prd": "docs/prds/instagram/ig-comments-fetcher.md",
+      "line": 96,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-ig-comments-fetcher.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "parent_id and root_id, the parent's and the post's item_id, stamped from the job's post_ref with the key helper; the envelope copies of the post reference go (ADR-0009, ADR-0011)",
+        "producers send no edit marker: version, text_hash, content_hash, observation and edit_of go (ADR-0009)",
+        "series_step moves into context, a declared key (ADR-0005)",
+        "api_version added (ADR-0005)",
+        "an id-less comment keyed <post id>:<sha256(created_time + text)> (ADR-0009); the post is one only the vendor has seen, so its id is sc:<shortcode> (ADR-0007)",
+        "the author fields replaced by author_ref (ADR-0010)"
+      ]
+    },
+    {
+      "service": "ig-hashtag-search",
+      "prd": "docs/prds/instagram/ig-hashtag-search.md",
+      "line": 98,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-ig-hashtag-search.json",
+      "rewrites": [
+        "the flat record becomes {envelope, payload}; raw becomes payload (ADR-0005)",
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "job_kind added; metrics_observation, origin, delivery and ingest_mode dropped (ADR-0005)",
+        "api_version added (ADR-0005)",
+        "edge moves into context, a declared key (ADR-0005)",
+        "raw_ref added (ADR-0005)"
+      ]
+    },
+    {
+      "service": "ig-keyword-search",
+      "prd": "docs/prds/instagram/ig-keyword-search.md",
+      "line": 99,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-ig-keyword-search.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "job_kind added; metrics_observation, origin, delivery and ingest_mode dropped (ADR-0005)",
+        "api_version added (ADR-0005)"
+      ]
+    },
+    {
+      "service": "ig-mentions-fetcher",
+      "prd": "docs/prds/instagram/ig-mentions-fetcher.md",
+      "line": 107,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-ig-mentions-fetcher.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "job_kind added; metrics_observation, origin, delivery and ingest_mode dropped (ADR-0005)",
+        "api_version added (ADR-0005)",
+        "mention_type and mention_of move into context, declared keys (ADR-0005)"
+      ]
+    },
+    {
+      "service": "ig-own-comments-fetcher",
+      "prd": "docs/prds/instagram/ig-own-comments-fetcher.md",
+      "line": 110,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-ig-own-comments-fetcher.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "parent_id and root_id, the parent's and the post's item_id, stamped from the job's post_ref with the key helper; the envelope copies of the post reference go (ADR-0009, ADR-0011)",
+        "producers send no edit marker: version, text_hash, content_hash, observation and edit_of go (ADR-0009)",
+        "series_step moves into context, a declared key (ADR-0005)",
+        "api_version added (ADR-0005)",
+        "the commenter replaced by author_ref (ADR-0010, Q3)"
+      ]
+    },
+    {
+      "service": "ig-webhook-receiver",
+      "prd": "docs/prds/instagram/ig-webhook-receiver.md",
+      "line": 106,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-ig-webhook-receiver.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "parent_id and root_id, the parent's and the post's item_id, stamped from the job's post_ref with the key helper; the envelope copies of the post reference go (ADR-0009, ADR-0011)",
+        "producers send no edit marker: version, text_hash, content_hash, observation and edit_of go (ADR-0009)",
+        "api_version added (ADR-0005)",
+        "received_at moves into context, a declared key (ADR-0005)",
+        "job_kind push for the jobless receiver; delivery goes (ADR-0005)",
+        "the commenter replaced by author_ref (ADR-0010, Q3)"
+      ]
+    },
+    {
+      "service": "li-client-posts-poller",
+      "prd": "docs/prds/linkedin/li-client-posts-poller.md",
+      "line": 108,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-li-client-posts-poller.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "job_kind added; metrics_observation, origin, delivery and ingest_mode dropped (ADR-0005)",
+        "api_version added (ADR-0005)",
+        "an organisation's post takes linkedin_org on every route (ADR-0055; F-04)",
+        "the share-URN key form, selected by the helper's linkedin_urn argument until LI0 decides (ADR-0007; F-28)"
+      ]
+    },
+    {
+      "service": "li-company-posts-poller",
+      "prd": "docs/prds/linkedin/li-company-posts-poller.md",
+      "line": 105,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-li-company-posts-poller.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "job_kind added; metrics_observation, origin, delivery and ingest_mode dropped (ADR-0005)",
+        "api_version added (ADR-0005)",
+        "the key takes the activity URN, linkedin:post:urn:li:activity:<id> (ADR-0007)",
+        "an organisation's post takes linkedin_org, not vendor_agreed (ADR-0055; F-04)"
+      ]
+    },
+    {
+      "service": "li-notification-receiver",
+      "prd": "docs/prds/linkedin/li-notification-receiver.md",
+      "line": 115,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-li-notification-receiver.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "parent_id and root_id, the parent's and the post's item_id, stamped from the job's post_ref with the key helper; the envelope copies of the post reference go (ADR-0009, ADR-0011)",
+        "api_version added (ADR-0005)",
+        "job_kind push for the jobless receiver (ADR-0005)",
+        "the member replaced by author_ref (ADR-0010, Q3)"
+      ]
+    },
+    {
+      "service": "li-org-resolver",
+      "prd": "docs/prds/linkedin/li-org-resolver.md",
+      "line": 82,
+      "schema": "poster.profiles/v1",
+      "fixture": "poster.profiles/v1/valid/prd-li-org-resolver.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "the key linkedin:org:<slug> becomes linkedin:<handle>, one of the four forms (ADR-0032)",
+        "resolution becomes status (ADR-0033)",
+        "country_signals and lang_share take ADR-0033's keys (ar_iq becomes ar_iraqi)",
+        "posts_sampled moves into extras",
+        "an organisation's profile takes linkedin_org (ADR-0055)"
+      ]
+    },
+    {
+      "service": "li-own-comments-fetcher",
+      "prd": "docs/prds/linkedin/li-own-comments-fetcher.md",
+      "line": 108,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-li-own-comments-fetcher.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "parent_id and root_id, the parent's and the post's item_id, stamped from the job's post_ref with the key helper; the envelope copies of the post reference go (ADR-0009, ADR-0011)",
+        "series_step moves into context, a declared key (ADR-0005)",
+        "api_version added (ADR-0005)",
+        "the member replaced by author_ref (ADR-0010, Q3)"
+      ]
+    },
+    {
+      "service": "li-post-comments-fetcher",
+      "prd": "docs/prds/linkedin/li-post-comments-fetcher.md",
+      "line": 110,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-li-post-comments-fetcher.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "parent_id and root_id, the parent's and the post's item_id, stamped from the job's post_ref with the key helper; the envelope copies of the post reference go (ADR-0009, ADR-0011)",
+        "series_step moves into context, a declared key (ADR-0005)",
+        "api_version added (ADR-0005)",
+        "the comment key takes the activity URN form (ADR-0007)",
+        "identity: hashed becomes author_ref with redacted_fields (ADR-0009, ADR-0010)",
+        "a member's comment takes linkedin_48h on every route (ADR-0055; F-04)"
+      ]
+    },
+    {
+      "service": "li-post-search",
+      "prd": "docs/prds/linkedin/li-post-search.md",
+      "line": 86,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-li-post-search.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "job_kind added; metrics_observation, origin, delivery and ingest_mode dropped (ADR-0005)",
+        "api_version added (ADR-0005)",
+        "source_id added: the keyword rule that produced the query (ADR-0004)",
+        "platform_id and raw_ref added (ADR-0005)",
+        "cost_units goes: the job report carries the cost (ADR-0017)",
+        "a company's post takes linkedin_org (ADR-0055; F-04)"
+      ]
+    },
+    {
+      "service": "news-article-extractor",
+      "prd": "docs/prds/news/news-article-extractor.md",
+      "line": 92,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-news-article-extractor.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "api_version added (ADR-0005)",
+        "a topic-driven producer: job_id is its input message's producer.job_id, attempt its own, job_kind rotation for a URL found live (F-05)",
+        "url_key, access_mode and usage_signals move into context, declared keys (ADR-0005, ADR-0068 (c))",
+        "url_key recomputed with the one normaliser (Q9)",
+        "the article key is news:article:<url_hash of the canonical URL> (ADR-0036)"
+      ]
+    },
+    {
+      "service": "news-comments-fetcher",
+      "prd": "docs/prds/news/news-comments-fetcher.md",
+      "line": 95,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-news-comments-fetcher.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "parent_id and root_id, the parent's and the post's item_id, stamped from the job's post_ref with the key helper; the envelope copies of the post reference go (ADR-0009, ADR-0011)",
+        "producers send no edit marker: version, text_hash, content_hash, observation and edit_of go (ADR-0009)",
+        "series_step moves into context, a declared key (ADR-0005)",
+        "api_version added (ADR-0005)",
+        "raw_ref added (ADR-0005)",
+        "the key drops its :v1 suffix: news:comment:<id> (ADR-0009)",
+        "parent_id and root_id are the article's item_id, not its key hex (ADR-0009)",
+        "author_hash becomes the envelope's author_ref (ADR-0010; Q3)"
+      ]
+    },
+    {
+      "service": "news-dedup",
+      "prd": "docs/prds/news/news-dedup.md",
+      "line": 87,
+      "schema": "news.dedup/v1",
+      "fixture": "news.dedup/v1/valid/prd-news-dedup.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "service goes: producer carries it",
+        "item_id added from the article's key, which store-writer writes item_stories by (ADR-0022; Q8)",
+        "dedup_version becomes version, item_stories.version (Q8)",
+        "provenance and retention_class copied from the article (ADR-0003)"
+      ]
+    },
+    {
+      "service": "news-feed-poller",
+      "prd": "docs/prds/news/news-feed-poller.md",
+      "line": 95,
+      "schema": "article.urls/v1",
+      "fixture": "article.urls/v1/valid/prd-news-feed-poller.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "the {envelope, payload} layout and kind: article_url go: one flat schema for every finder (ADR-0036)",
+        "job_id moves to producer.job_id; access_mode leaves the message, crawl_policies holds it (ADR-0036)",
+        "url_key recomputed with the one normaliser (Q9)"
+      ]
+    },
+    {
+      "service": "news-homepage-differ",
+      "prd": "docs/prds/news/news-homepage-differ.md",
+      "line": 100,
+      "schema": "article.urls/v1",
+      "fixture": "article.urls/v1/valid/prd-news-homepage-differ.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "the {envelope, payload} layout and kind: article_url go: one flat schema for every finder (ADR-0036)",
+        "job_id moves to producer.job_id; access_mode leaves the message, crawl_policies holds it (ADR-0036)",
+        "url_key recomputed with the one normaliser (Q9)",
+        "baseline, section_url and rank are not in ADR-0036's list and go"
+      ]
+    },
+    {
+      "service": "news-robots-checker",
+      "prd": "docs/prds/news/news-robots-checker.md",
+      "line": 96,
+      "schema": "crawl.policies/v1",
+      "fixture": "crawl.policies/v1/valid/prd-news-robots-checker.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "service and job_id go: producer carries them",
+        "robots_rules.http_status and .fetched_at become robots_status and provenance.fetched_at; sha256 becomes hash; allow and disallow move into rules (ADR-0040, ADR-0070 b))",
+        "provenance and retention_class added: the message records a fetch of robots.txt (ADR-0003)"
+      ]
+    },
+    {
+      "service": "news-site-resolver",
+      "prd": "docs/prds/news/news-site-resolver.md",
+      "line": 82,
+      "schema": "poster.profiles/v1",
+      "fixture": "poster.profiles/v1/valid/prd-news-site-resolver.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "kind: site goes; proposed_source flattens into the profile; the pre-allocated id travels as proposed_source_id (ADR-0033, ADR-0040)",
+        "host, site_profile, proposed_tier, discovered_by and crawl_allowed move into extras",
+        "times written in UTC with Z",
+        "country_signals and lang_share take ADR-0033's keys",
+        "a news domain is the organisation kind site, public_account true (ADR-0010; Q7)"
+      ]
+    },
+    {
+      "service": "news-sitemap-poller",
+      "prd": "docs/prds/news/news-sitemap-poller.md",
+      "line": 107,
+      "schema": "article.urls/v1",
+      "fixture": "article.urls/v1/valid/prd-news-sitemap-poller.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "the {envelope, payload} layout and kind: article_url go: one flat schema for every finder (ADR-0036)",
+        "job_id moves to producer.job_id; access_mode leaves the message, crawl_policies holds it (ADR-0036)",
+        "url_key recomputed with the one normaliser (Q9)",
+        "language, publication_name and sitemap_url go (ADR-0036)"
+      ]
+    },
+    {
+      "service": "aggregator",
+      "prd": "docs/prds/shared/aggregator.md",
+      "line": 80,
+      "schema": null,
+      "fixture": null,
+      "note": "an aggregates_hourly row in ClickHouse, not a message"
+    },
+    {
+      "service": "alert-evaluator",
+      "prd": "docs/prds/shared/alert-evaluator.md",
+      "line": 86,
+      "schema": "n8n.alert/v1",
+      "fixture": null,
+      "note": "alert/v1 becomes n8n.alert/v1 (Q11, ADR-0067); its rewritten fixture comes with the n8n schemas (A30)"
+    },
+    {
+      "service": "analysis-entities",
+      "prd": "docs/prds/shared/analysis-entities.md",
+      "line": 93,
+      "schema": "items.analysis/v1",
+      "fixture": "items.analysis/v1/valid/prd-analysis-entities.json",
+      "rewrites": [
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "item_fetched_at goes: provenance.fetched_at carries it (ADR-0003)",
+        "item_created_at added (ADR-0023)",
+        "item_id is normalize-item's item, derived from its key; content_hash and input_hash in full (ADR-0006, ADR-0009)"
+      ]
+    },
+    {
+      "service": "analysis-media",
+      "prd": "docs/prds/shared/analysis-media.md",
+      "line": 90,
+      "schema": "items.analysis/v1",
+      "fixture": "items.analysis/v1/valid/prd-analysis-media.json",
+      "rewrites": [
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "item_fetched_at goes: provenance.fetched_at carries it (ADR-0003)",
+        "item_created_at added (ADR-0023)",
+        "item_id is normalize-item's item, derived from its key; content_hash and input_hash in full (ADR-0006, ADR-0009)",
+        "the media hash written in full"
+      ]
+    },
+    {
+      "service": "analysis-sentiment",
+      "prd": "docs/prds/shared/analysis-sentiment.md",
+      "line": 92,
+      "schema": "items.analysis/v1",
+      "fixture": "items.analysis/v1/valid/prd-analysis-sentiment.json",
+      "rewrites": [
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "item_fetched_at goes: provenance.fetched_at carries it (ADR-0003)",
+        "item_created_at added (ADR-0023)",
+        "item_id is normalize-item's item, derived from its key; content_hash and input_hash in full (ADR-0006, ADR-0009)"
+      ]
+    },
+    {
+      "service": "analysis-topics",
+      "prd": "docs/prds/shared/analysis-topics.md",
+      "line": 96,
+      "schema": "items.analysis/v1",
+      "fixture": "items.analysis/v1/valid/prd-analysis-topics.json",
+      "rewrites": [
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "item_fetched_at goes: provenance.fetched_at carries it (ADR-0003)",
+        "item_created_at added (ADR-0023)",
+        "item_id is normalize-item's item, derived from its key; content_hash and input_hash in full (ADR-0006, ADR-0009)",
+        "the task topics:global becomes topics.global, task names hold no colon (ADR-0023)",
+        "node_id becomes topic_id = <taxonomy_id>:<node_id> (ADR-0023, ADR-0048)"
+      ]
+    },
+    {
+      "service": "backfill-orchestrator",
+      "prd": "docs/prds/shared/backfill-orchestrator.md",
+      "line": 106,
+      "schema": "job/v1",
+      "fixture": "job/v1/valid/prd-backfill-orchestrator.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route and vendor go: a job never carries them (ADR-0011, ADR-0018)",
+        "run_id initial becomes a ULID; reason add says why the backfill runs (ADR-0020)",
+        "window_start and window_end added: the 90-day cap's window (ADR-0020)"
+      ],
+      "note": "sent on jobs.fb-backfill, the source's backfill queue"
+    },
+    {
+      "service": "comment-decay-scheduler",
+      "prd": "docs/prds/shared/comment-decay-scheduler.md",
+      "line": 141,
+      "schema": "job/v1",
+      "fixture": "job/v1/valid/prd-comment-decay-scheduler.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route and vendor go (ADR-0011, ADR-0018)",
+        "job_id the deterministic ULID of (due_at; item_id, lane, series_step), so a replayed schedule repeats it (ADR-0006)",
+        "post_ref.item_id from the post's key with the key helper (ADR-0006)"
+      ],
+      "note": "sent on jobs.fb-post-comments-fetcher (profile fb_page)"
+    },
+    {
+      "service": "deletion-propagator",
+      "prd": "docs/prds/shared/deletion-propagator.md",
+      "line": 93,
+      "schema": null,
+      "fixture": null,
+      "note": "the audit record kept in deletion_requests.verification, not a message"
+    },
+    {
+      "service": "keyword-matcher",
+      "prd": "docs/prds/shared/keyword-matcher.md",
+      "line": 98,
+      "schema": "discovery.hits/v1",
+      "fixture": "discovery.hits/v1/valid/prd-keyword-matcher.json",
+      "rewrites": [
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "the hit's own fields go: hit_id, matched_term, form_id and keyword_set_version move into the keyword_hit evidence; status, item_version, kind, offsets, occurrences and raw_ref go (ADR-0031)",
+        "client_id and keyword_id become client_ids and keyword_ids (ADR-0031)",
+        "candidate.author_ref and candidate_pending go: the candidate carries the poster's clear id until poster-resolver classes it (ADR-0010 L49, ADR-0031)",
+        "candidate.type null: keyword-matcher cannot tell the poster kind",
+        "item_id names the item, url null (exactly one)"
+      ]
+    },
+    {
+      "service": "keyword-matcher",
+      "prd": "docs/prds/shared/keyword-matcher.md",
+      "line": 98,
+      "schema": "item.hits/v1",
+      "fixture": "item.hits/v1/valid/prd-keyword-matcher.json",
+      "rewrites": [
+        "the example is the discovery.hits form; an item.hits message is identical except that candidate and candidate_pending give way to poster (§6.2 L119)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "hit_id from the helper, uuid v5 under ns_hits; message_id the deterministic ULID of (hit_at; hit_id, item_version, keyword_set_version) (ADR-0006)",
+        "keyword_set_version written in full, cs:<64 hex> (ADR-0070 a))",
+        "matched_by text added (ADR-0031; F-20)",
+        "raw_ref batch with six digits"
+      ],
+      "note": "its discovery.hits example is under discovery.hits/v1"
+    },
+    {
+      "service": "lang-dialect-id",
+      "prd": "docs/prds/shared/lang-dialect-id.md",
+      "line": 108,
+      "schema": null,
+      "fixture": null,
+      "note": "the service's answer to its caller; it writes no topic and no table"
+    },
+    {
+      "service": "normalize-item",
+      "prd": "docs/prds/shared/normalize-item.md",
+      "line": 94,
+      "schema": "items.normalized/v1",
+      "fixture": "items.normalized/v1/valid/prd-normalize-item.json",
+      "rewrites": [
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "reactions_by_type keys in lower case, as item.metrics defines them (F-34)",
+        "author_ref takes the helper's 64-hex form (ADR-0010); content_hash computed with the helper (ADR-0009)",
+        "views null where the platform gives none (ADR-0034)",
+        "raw_ref batch written with six digits (ADR-0005)",
+        "job_kind, lang_pending and sensitive_event added (ADR-0005, ADR-0070 d), ADR-0059); client_ids copied from the raw envelope (O-10)"
+      ]
+    },
+    {
+      "service": "poster-resolver",
+      "prd": "docs/prds/shared/poster-resolver.md",
+      "line": 91,
+      "schema": "poster.profiles/v1",
+      "fixture": "poster.profiles/v1/valid/prd-poster-resolver.json",
+      "rewrites": [
+        "poster-resolver writes the topic only to re-emit a cached profile, cached: true (ADR-0032)",
+        "schema_version becomes schema; service goes; producer stamped (ADR-0002)",
+        "resolver becomes provenance.service, the resolver that fetched it (ADR-0003)",
+        "keywords becomes keyword_ids; location_text goes (ADR-0033)",
+        "hits_30d moves to poster_profiles.hits_30d (ADR-0045); unresolvable gives way to status (ADR-0033)",
+        "lang_share takes ADR-0033's keys"
+      ]
+    },
+    {
+      "service": "qualifier",
+      "prd": "docs/prds/shared/qualifier.md",
+      "line": 84,
+      "schema": "registry.decisions/v1",
+      "fixture": "registry.decisions/v1/valid/prd-qualifier.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK; service and schema_version go (ADR-0002)",
+        "source_id: null goes: a decision carries exactly one subject, here the candidate key (ADR-0013)",
+        "the source columns move into the add block's source, with rule_hit and origin beside it (ADR-0013)",
+        "the free-text reason iraqi_signals=2;followers=48200 goes: an add's reason is null, the rule is rule_hit and the signals are source.country_signals (ADR-0013, ADR-0014)",
+        "review and expires_at go: they belong to the review and reject types (ADR-0013)",
+        "lifecycle active, push_covered false, url's platform_meta {} and the full country_signals and lang_share keys added: registry-writer's column set (ADR-0013 L25, ADR-0033)",
+        "requested_by names the qualifier (ADR-0013)",
+        "provenance and retention_class: the resolver profile the decision applies, fetched by ig-account-resolver (ADR-0003 L26)"
+      ]
+    },
+    {
+      "service": "quota-governor",
+      "prd": "docs/prds/shared/quota-governor.md",
+      "line": 100,
+      "schema": null,
+      "fixture": null,
+      "note": "a request and its answer over quota-governor's interface, not a message"
+    },
+    {
+      "service": "raw-archiver",
+      "prd": "docs/prds/shared/raw-archiver.md",
+      "line": 99,
+      "schema": null,
+      "fixture": null,
+      "note": "the superseded raw.replay message: there is no raw.replay topic, a replay reads through raw-archiver's read endpoint (ADR-0039, ADR-0070)"
+    },
+    {
+      "service": "registry-writer",
+      "prd": "docs/prds/shared/registry-writer.md",
+      "line": 95,
+      "schema": "source.events/v1",
+      "fixture": "source.events/v1/valid/prd-registry-writer.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK; service and schema_version go (ADR-0002)",
+        "reason null added: every event carries reason, null where none applies (ADR-0014)",
+        "url, display_name, lifecycle, push_covered, added_by, added_at, country_signals, lang_share, platform_meta, health, health_reason, health_set_by, health_changed_at and notes added: the source's columns after the change (ADR-0014, ADR-0013, ADR-0016, ADR-0049, ADR-0065)",
+        "retention_class stays the source's registry column, which a control message may carry (ADR-0003)"
+      ]
+    },
+    {
+      "service": "retention-purger",
+      "prd": "docs/prds/shared/retention-purger.md",
+      "line": 97,
+      "schema": "deletions/v1",
+      "fixture": "deletions/v1/valid/prd-retention-purger.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "deletion_id from the helper: del:<reason>:<scope>:<sha256 of {key, mode, signal_day, target}> (Q2; ADR-0035)",
+        "client_id: null and emitted_at go: the client scope names its key, produced_at says when (ADR-0035)",
+        "item_ids from the key helper, uuid v5 (ADR-0006)",
+        "an item-scope deletion carries its items' provenance (ADR-0003 L28)",
+        "the TikTok kind post becomes video (ADR-0007, ADR-0008)",
+        "platform_ids added beside item_ids"
+      ]
+    },
+    {
+      "service": "source-health-canary",
+      "prd": "docs/prds/shared/source-health-canary.md",
+      "line": 102,
+      "schema": "registry.decisions/v1",
+      "fixture": "registry.decisions/v1/valid/prd-source-health-canary.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK; service and schema_version go (ADR-0002)",
+        "at becomes produced_at; action becomes decision and actor requested_by (ADR-0013)",
+        "health, fallback, scope and evidence move into the health_change block (ADR-0013)",
+        "health degraded with a fallback becomes health fallback: fallback is non-null exactly when health is fallback (ADR-0014 L27, ADR-0050 L31; R-2)",
+        "scope null: an amber-to-amber swap declares none, non_government is a green-to-amber alternate's (source-health-canary L79, ADR-0052 L33 (d); R-2)",
+        "provenance and retention_class added: the canary's probe of the route (ADR-0003 L26)"
+      ]
+    },
+    {
+      "service": "store-writer",
+      "prd": "docs/prds/shared/store-writer.md",
+      "line": 100,
+      "schema": null,
+      "fixture": null,
+      "note": "a ClickHouse items row, not a message; its fields follow items.normalized/v1"
+    },
+    {
+      "service": "tg-bot-channel-receiver",
+      "prd": "docs/prds/telegram/tg-bot-channel-receiver.md",
+      "line": 116,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-tg-bot-channel-receiver.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "api_version added (ADR-0005)",
+        "job_kind push for the jobless receiver; event and ingest_mode go (ADR-0005, ADR-0009)",
+        "telegram_bot replaces vendor_agreed on the bot's records (ADR-0054)",
+        "owned_by_client goes: the source row holds it (ADR-0005, ADR-0013)"
+      ]
+    },
+    {
+      "service": "tg-channel-posts-poller",
+      "prd": "docs/prds/telegram/tg-channel-posts-poller.md",
+      "line": 110,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-tg-channel-posts-poller.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "job_kind added; metrics_observation, origin, delivery and ingest_mode dropped (ADR-0005)",
+        "api_version added (ADR-0005)",
+        "the vendor spelt apify_tugelbay becomes tugelbay (ADR-0051 (c))"
+      ]
+    },
+    {
+      "service": "tg-channel-resolver",
+      "prd": "docs/prds/telegram/tg-channel-resolver.md",
+      "line": 82,
+      "schema": "poster.profiles/v1",
+      "fixture": "poster.profiles/v1/valid/prd-tg-channel-resolver.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "idempotency_key goes; candidate_key added (ADR-0033)",
+        "country_signals and lang_share take ADR-0033's keys (vendor_country becomes platform_country_iq; ar-iq becomes ar_iraqi)",
+        "category and growth move into extras"
+      ]
+    },
+    {
+      "service": "tg-discussion-receiver",
+      "prd": "docs/prds/telegram/tg-discussion-receiver.md",
+      "line": 117,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-tg-discussion-receiver.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "parent_id and root_id, the parent's and the post's item_id, stamped from the job's post_ref with the key helper; the envelope copies of the post reference go (ADR-0009, ADR-0011)",
+        "api_version added (ADR-0005)",
+        "job_kind push; event and ingest_mode go (ADR-0005)",
+        "discussion_source_id moves into context; unthreaded goes: a comment always has a parent, so a parentless one is parked, not published (F-33)",
+        "minimized becomes author_ref with redacted_fields (ADR-0009, ADR-0010)",
+        "telegram_bot replaces vendor_agreed (ADR-0054)"
+      ]
+    },
+    {
+      "service": "tg-message-search",
+      "prd": "docs/prds/telegram/tg-message-search.md",
+      "line": 78,
+      "schema": "discovery.hits/v1",
+      "fixture": "discovery.hits/v1/valid/prd-tg-message-search.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "the item key gives way to item_id; kind goes (ADR-0031)",
+        "poster becomes the candidate; display_name moves into the early_signal evidence",
+        "source_id added: the keyword-rule row that produced the find (ADR-0004)",
+        "hit_at added"
+      ]
+    },
+    {
+      "service": "tt-client-videos-fetcher",
+      "prd": "docs/prds/tiktok/tt-client-videos-fetcher.md",
+      "line": 97,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-tt-client-videos-fetcher.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "job_kind added; metrics_observation, origin, delivery and ingest_mode dropped (ADR-0005)",
+        "api_version added (ADR-0005)",
+        "kind post becomes video, keyed tiktok:video:<id> (ADR-0007, ADR-0008)"
+      ]
+    },
+    {
+      "service": "tt-hashtag-feed-poller",
+      "prd": "docs/prds/tiktok/tt-hashtag-feed-poller.md",
+      "line": 82,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-tt-hashtag-feed-poller.json",
+      "rewrites": [
+        "the flat record becomes {envelope, payload}; raw becomes payload (ADR-0005)",
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "api_version added (ADR-0005)",
+        "raw_ref and job_kind added (ADR-0005)",
+        "source_type goes: the source row holds it (ADR-0005)",
+        "context backfill goes: job_kind says it (ADR-0005)",
+        "the poster's id stays in the payload for discovery, so no author_ref (ADR-0010 L47)",
+        "client_ids added (ADR-0005)"
+      ]
+    },
+    {
+      "service": "tt-keyword-search",
+      "prd": "docs/prds/tiktok/tt-keyword-search.md",
+      "line": 76,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-tt-keyword-search.json",
+      "rewrites": [
+        "the flat record becomes {envelope, payload}; raw becomes payload (ADR-0005)",
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "api_version added (ADR-0005)",
+        "raw_ref and job_kind added (ADR-0005)",
+        "source_type goes (ADR-0005)",
+        "context keyword_id goes: the rule's source_id names it (ADR-0044; F-35)",
+        "client_ids added (ADR-0005)"
+      ]
+    },
+    {
+      "service": "tt-profile-videos-poller",
+      "prd": "docs/prds/tiktok/tt-profile-videos-poller.md",
+      "line": 108,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-tt-profile-videos-poller.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "job_kind added; metrics_observation, origin, delivery and ingest_mode dropped (ADR-0005)",
+        "api_version added (ADR-0005)",
+        "kind post becomes video (ADR-0007, ADR-0008)"
+      ]
+    },
+    {
+      "service": "tt-user-resolver",
+      "prd": "docs/prds/tiktok/tt-user-resolver.md",
+      "line": 89,
+      "schema": "poster.profiles/v1",
+      "fixture": "poster.profiles/v1/valid/prd-tt-user-resolver.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "the nested envelope and profile become ADR-0033's flat message; resolved_type gives way to account_type (ADR-0033)",
+        "idempotency_key and cache_hit go (ADR-0033)",
+        "creator_threshold_met gives way to account_type creator (ADR-0033)",
+        "a TikTok creator is a person kind, never listable: public_account false (ADR-0010 L70; Q7)",
+        "video_count, region, bio and bio_link move into extras"
+      ]
+    },
+    {
+      "service": "tt-video-comments-fetcher",
+      "prd": "docs/prds/tiktok/tt-video-comments-fetcher.md",
+      "line": 100,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-tt-video-comments-fetcher.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "parent_id and root_id, the parent's and the post's item_id, stamped from the job's post_ref with the key helper; the envelope copies of the post reference go (ADR-0009, ADR-0011)",
+        "producers send no edit marker: version, text_hash, content_hash, observation and edit_of go (ADR-0009)",
+        "series_step moves into context, a declared key (ADR-0005)",
+        "api_version added (ADR-0005)",
+        "the commenter replaced by author_ref (ADR-0010, Q3)"
+      ]
+    },
+    {
+      "service": "tt-video-stats-refresher",
+      "prd": "docs/prds/tiktok/tt-video-stats-refresher.md",
+      "line": 88,
+      "schema": "item.metrics/v1",
+      "fixture": "item.metrics/v1/valid/prd-tt-video-stats-refresher.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "the envelope and observation flatten into ADR-0034's message; the metrics:<key>:plus_24h key goes, item_key becomes idempotency_key",
+        "the label plus_24h becomes refresh with step +24h (ADR-0034)",
+        "first_seen_at, due_at, lateness_seconds, baseline_missing and client_ids go (ADR-0034)",
+        "created_at is the video's creation time"
+      ]
+    },
+    {
+      "service": "search-hit-router",
+      "prd": "docs/prds/web/search-hit-router.md",
+      "line": 102,
+      "schema": "discovery.hits/v1",
+      "fixture": "discovery.hits/v1/valid/prd-search-hit-router.json",
+      "rewrites": [
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "the provenance is the engine's that fetched the result (ADR-0003 L25)",
+        "type, platform and poster_ref give way to the candidate block; origin goes (ADR-0031)",
+        "keyword_rule_ids become the rule's source_id; client_ids move to the top (ADR-0031)",
+        "canonical_url_hash bare hex from the one normaliser (ADR-0036; Q9)",
+        "url names the result (exactly one of item_id and url)"
+      ]
+    },
+    {
+      "service": "search-hit-router",
+      "prd": "docs/prds/web/search-hit-router.md",
+      "line": 122,
+      "schema": "article.urls/v1",
+      "fixture": "article.urls/v1/valid/prd-search-hit-router.json",
+      "rewrites": [
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "service and found_by go; found_via web_search and found_at from first_seen_at (ADR-0036)",
+        "url_key added (ADR-0036)",
+        "canonical_url_hash bare hex from the one normaliser (Q9)",
+        "keyword_rule_ids give way to keyword_ids (ADR-0036)",
+        "published_hint goes",
+        "the provenance is the engine's that fetched the result (ADR-0003 L25)"
+      ]
+    },
+    {
+      "service": "web-commoncrawl-scanner",
+      "prd": "docs/prds/web/web-commoncrawl-scanner.md",
+      "line": 87,
+      "schema": "discovery.hits/v1",
+      "fixture": "discovery.hits/v1/valid/prd-web-commoncrawl-scanner.json",
+      "rewrites": [
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "the key news:<domain> becomes news:site:<registrable domain> (ADR-0032, ADR-0037)",
+        "type, platform and poster_ref give way to the candidate block; origin and keyword_rule_id go (ADR-0031)",
+        "source_id null: the scan has no producing source (F-31)",
+        "url names the site (exactly one of item_id and url)"
+      ]
+    },
+    {
+      "service": "web-gdelt-poller",
+      "prd": "docs/prds/web/web-gdelt-poller.md",
+      "line": 95,
+      "schema": "search.results/v1",
+      "fixture": "search.results/v1/valid/prd-web-gdelt-poller.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "keyword_rule_id becomes source_id and keyword_id keyword_ids (ADR-0037)",
+        "job_id, job_kind and attempt go: producer.job_id carries the job (ADR-0037, ADR-0003)",
+        "canonical_url_hash bare hex from the one normaliser (ADR-0036; Q9)",
+        "raw_ref batch with six digits"
+      ]
+    },
+    {
+      "service": "web-search-mojeek",
+      "prd": "docs/prds/web/web-search-mojeek.md",
+      "line": 92,
+      "schema": "search.results/v1",
+      "fixture": "search.results/v1/valid/prd-web-search-mojeek.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "keyword_rule_id becomes source_id and keyword_id keyword_ids (ADR-0037)",
+        "job_id, job_kind and attempt go: producer.job_id carries the job (ADR-0037, ADR-0003)",
+        "canonical_url_hash bare hex from the one normaliser (ADR-0036; Q9)",
+        "raw_ref batch with six digits"
+      ]
+    },
+    {
+      "service": "web-search-perplexity",
+      "prd": "docs/prds/web/web-search-perplexity.md",
+      "line": 93,
+      "schema": "search.results/v1",
+      "fixture": "search.results/v1/valid/prd-web-search-perplexity.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "keyword_rule_id becomes source_id and keyword_id keyword_ids (ADR-0037)",
+        "job_id, job_kind and attempt go: producer.job_id carries the job (ADR-0037, ADR-0003)",
+        "canonical_url_hash bare hex from the one normaliser (ADR-0036; Q9)",
+        "raw_ref batch with six digits",
+        "the engine's truncated request_id written in full"
+      ]
+    },
+    {
+      "service": "x-compliance-sync",
+      "prd": "docs/prds/x/x-compliance-sync.md",
+      "line": 100,
+      "schema": "deletions/v1",
+      "fixture": "deletions/v1/valid/prd-x-compliance-sync.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "deletion_id from the helper: del:<reason>:<scope>:<sha256 of {key, mode, signal_day, target}> (Q2; ADR-0035)",
+        "client_id: null and emitted_at go: the client scope names its key, produced_at says when (ADR-0035)",
+        "item_ids from the key helper, uuid v5 (ADR-0006)",
+        "an item-scope deletion carries its items' provenance (ADR-0003 L28)",
+        "platform_status, countries: null and x_job_id go (ADR-0035)"
+      ]
+    },
+    {
+      "service": "x-compliance-sync",
+      "prd": "docs/prds/x/x-compliance-sync.md",
+      "line": 118,
+      "schema": null,
+      "fixture": null,
+      "note": "the x_compliance_audit record, not a message"
+    },
+    {
+      "service": "x-filtered-stream",
+      "prd": "docs/prds/x/x-filtered-stream.md",
+      "line": 114,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-x-filtered-stream.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "api_version added (ADR-0005)",
+        "job_kind stream for the stream (ADR-0005)",
+        "matching_rules and paid move into context beside connection_id (ADR-0005)"
+      ]
+    },
+    {
+      "service": "x-filtered-stream",
+      "prd": "docs/prds/x/x-filtered-stream.md",
+      "line": 141,
+      "schema": null,
+      "fixture": null,
+      "note": "the stream rules registered at X, not a message on a topic or queue"
+    },
+    {
+      "service": "x-full-archive-search",
+      "prd": "docs/prds/x/x-full-archive-search.md",
+      "line": 109,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-x-full-archive-search.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "api_version added (ADR-0005)",
+        "metrics_observation goes; job_kind stays backfill (ADR-0005)",
+        "paid moves into context (ADR-0005)"
+      ]
+    },
+    {
+      "service": "x-recent-search",
+      "prd": "docs/prds/x/x-recent-search.md",
+      "line": 101,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-x-recent-search.json",
+      "rewrites": [
+        "the flat record becomes {envelope, payload}; raw becomes payload (ADR-0005)",
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "api_version added (ADR-0005)",
+        "raw_ref and job_kind added (ADR-0005)",
+        "source_type, budget_tag and cost_units go (ADR-0005, ADR-0017)",
+        "discovery_hit_emitted goes (ADR-0031); paid moves into context",
+        "includes move inside the payload (ADR-0005)",
+        "the poster's id stays in the payload for discovery, so no author_ref (ADR-0010 L47)"
+      ]
+    },
+    {
+      "service": "x-replies-fetcher",
+      "prd": "docs/prds/x/x-replies-fetcher.md",
+      "line": 109,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-x-replies-fetcher.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "parent_id and root_id, the parent's and the post's item_id, stamped from the job's post_ref with the key helper; the envelope copies of the post reference go (ADR-0009, ADR-0011)",
+        "producers send no edit marker: version, text_hash, content_hash, observation and edit_of go (ADR-0009)",
+        "series_step moves into context, a declared key (ADR-0005)",
+        "api_version added (ADR-0005)",
+        "the key is x:post:<id> for every tweet, a reply's item kind comment (ADR-0007, ADR-0008)",
+        "ledger_key, author_source_id, author_is_source and in_reply_to_ref go (ADR-0064, ADR-0010)",
+        "conversation_id stays in the payload (F-36)",
+        "removed_fields becomes redacted_fields; author_ref takes the helper's 64-hex form (ADR-0009, ADR-0010)",
+        "paid moves into context"
+      ]
+    },
+    {
+      "service": "x-user-resolver",
+      "prd": "docs/prds/x/x-user-resolver.md",
+      "line": 104,
+      "schema": "poster.profiles/v1",
+      "fixture": "poster.profiles/v1/valid/prd-x-user-resolver.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "the nested envelope and profile become ADR-0033's flat message; resolved_type gives way to account_type (ADR-0033)",
+        "cache becomes cached and cached_until (ADR-0033)",
+        "qualifies_as and qualifies_by give way to account_type and the verified flag (ADR-0033)",
+        "post_count is the field x-full-archive-search reads (ADR-0033)",
+        "following, location_text, description, url_domain and account_age_days move into extras",
+        "a verified account passes the public test: public_account true (ADR-0010)"
+      ]
+    },
+    {
+      "service": "x-user-timeline-poller",
+      "prd": "docs/prds/x/x-user-timeline-poller.md",
+      "line": 115,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-x-user-timeline-poller.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "job_kind added; metrics_observation, origin, delivery and ingest_mode dropped (ADR-0005)",
+        "api_version added (ADR-0005)",
+        "paid moves into context, a declared key (ADR-0005)"
+      ]
+    },
+    {
+      "service": "yt-channel-resolver",
+      "prd": "docs/prds/youtube/yt-channel-resolver.md",
+      "line": 106,
+      "schema": "poster.profiles/v1",
+      "fixture": "poster.profiles/v1/valid/prd-yt-channel-resolver.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "the nested envelope and profile become ADR-0033's flat message; resolved_type gives way to account_type (ADR-0033)",
+        "cache becomes cached and cached_until (ADR-0033)",
+        "verdict becomes status; subscribers_hidden false needs no flag (ADR-0033)",
+        "ids_in_call goes",
+        "the channel's description, country, uploads playlist id and counts move into extras (ADR-0065 c))",
+        "signals become country_signals"
+      ]
+    },
+    {
+      "service": "yt-comments-fetcher",
+      "prd": "docs/prds/youtube/yt-comments-fetcher.md",
+      "line": 113,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-yt-comments-fetcher.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "parent_id and root_id, the parent's and the post's item_id, stamped from the job's post_ref with the key helper; the envelope copies of the post reference go (ADR-0009, ADR-0011)",
+        "producers send no edit marker: version, text_hash, content_hash, observation and edit_of go (ADR-0009)",
+        "series_step moves into context, a declared key (ADR-0005)",
+        "api_version added (ADR-0005)",
+        "video_channel_id moves into context (F-25)",
+        "removed_fields becomes redacted_fields with the full payload paths (ADR-0009)",
+        "author_is_source goes (ADR-0010)",
+        "author_ref takes the helper's 64-hex form"
+      ]
+    },
+    {
+      "service": "yt-keyword-search",
+      "prd": "docs/prds/youtube/yt-keyword-search.md",
+      "line": 101,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-yt-keyword-search.json",
+      "rewrites": [
+        "the flat record becomes {envelope, payload}; raw becomes payload (ADR-0005)",
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "api_version added (ADR-0005)",
+        "raw_ref and job_kind added (ADR-0005)",
+        "partial moves into context (ADR-0065 b))",
+        "origin, source_type and cost_units go (ADR-0005, ADR-0017)",
+        "channel_id stays in the payload (F-36)",
+        "client_ids added"
+      ]
+    },
+    {
+      "service": "yt-pubsub-receiver",
+      "prd": "docs/prds/youtube/yt-pubsub-receiver.md",
+      "line": 105,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-yt-pubsub-receiver.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "api_version added (ADR-0005)",
+        "kind post becomes video, keyed youtube:video:<id> (ADR-0007, ADR-0008)",
+        "job_kind push; delivery and version go (ADR-0005, ADR-0009)",
+        "partial moves into context (ADR-0065 b))",
+        "parent_platform_id goes (ADR-0009)"
+      ]
+    },
+    {
+      "service": "yt-pubsub-receiver",
+      "prd": "docs/prds/youtube/yt-pubsub-receiver.md",
+      "line": 127,
+      "schema": "job/v1",
+      "fixture": "job/v1/valid/prd-yt-pubsub-receiver.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "post_ref the scheduler's object for one video, not a bare id (ADR-0011, ADR-0065 a))",
+        "series_step goes; origin_kind push added (ADR-0065 a))"
+      ],
+      "note": "the PRD's second example; its raw.items example is under raw.items/v1"
+    },
+    {
+      "service": "yt-replies-fetcher",
+      "prd": "docs/prds/youtube/yt-replies-fetcher.md",
+      "line": 102,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-yt-replies-fetcher.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "parent_id and root_id, the parent's and the post's item_id, stamped from the job's post_ref with the key helper; the envelope copies of the post reference go (ADR-0009, ADR-0011)",
+        "producers send no edit marker: version, text_hash, content_hash, observation and edit_of go (ADR-0009)",
+        "series_step moves into context, a declared key (ADR-0005)",
+        "api_version added (ADR-0005)",
+        "a reply's parent_id is its parent comment's item_id, root_id the video's (ADR-0009)",
+        "video_channel_id moves into context (F-25)"
+      ]
+    },
+    {
+      "service": "yt-text-purger",
+      "prd": "docs/prds/youtube/yt-text-purger.md",
+      "line": 143,
+      "schema": "deletions/v1",
+      "fixture": "deletions/v1/valid/prd-yt-text-purger.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "deletion_id from the helper: del:<reason>:<scope>:<sha256 of {key, mode, signal_day, target}> (Q2; ADR-0035)",
+        "client_id: null and emitted_at go: the client scope names its key, produced_at says when (ADR-0035)",
+        "item_ids from the key helper, uuid v5 (ADR-0006)",
+        "an item-scope deletion carries its items' provenance (ADR-0003 L28)",
+        "scope text_only becomes item with mode purge_text (ADR-0035)",
+        "video_id and parent_run_id go: the item ids name the comments (ADR-0035)"
+      ]
+    },
+    {
+      "service": "yt-text-purger",
+      "prd": "docs/prds/youtube/yt-text-purger.md",
+      "line": 164,
+      "schema": null,
+      "fixture": null,
+      "note": "a retention_audit row, not a message"
+    },
+    {
+      "service": "yt-uploads-reconciler",
+      "prd": "docs/prds/youtube/yt-uploads-reconciler.md",
+      "line": 111,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-yt-uploads-reconciler.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "batch gives way to raw_ref, which names the object and line (ADR-0005)",
+        "api_version added (ADR-0005)",
+        "kind post becomes video (ADR-0007, ADR-0008)",
+        "partial moves into context; metrics_observation goes (ADR-0005, ADR-0065)"
+      ]
+    },
+    {
+      "service": "yt-uploads-reconciler",
+      "prd": "docs/prds/youtube/yt-uploads-reconciler.md",
+      "line": 133,
+      "schema": "job/v1",
+      "fixture": "job/v1/valid/prd-yt-uploads-reconciler.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "the id list becomes one job per video, post_ref the scheduler's object (ADR-0065 a), ADR-0011)",
+        "due_at added (ADR-0011)"
+      ],
+      "note": "the PRD's second example (b7Tz0qR4mWc gets its own job); its raw.items example is under raw.items/v1"
+    },
+    {
+      "service": "yt-video-details-fetcher",
+      "prd": "docs/prds/youtube/yt-video-details-fetcher.md",
+      "line": 93,
+      "schema": "raw.items/v1",
+      "fixture": "raw.items/v1/valid/prd-yt-video-details-fetcher.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "api_version added (ADR-0005)",
+        "kind post becomes video (ADR-0007, ADR-0008)",
+        "raw_ref added (ADR-0005)",
+        "live_state, call_id and completes_partial_from move into context; partial: false and metrics_observation go (ADR-0005, ADR-0065)",
+        "client_ids added"
+      ]
+    },
+    {
+      "service": "yt-video-details-fetcher",
+      "prd": "docs/prds/youtube/yt-video-details-fetcher.md",
+      "line": 134,
+      "schema": "item.metrics/v1",
+      "fixture": "item.metrics/v1/valid/prd-yt-video-details-fetcher.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "the label refresh_24h becomes label refresh with step +24h (ADR-0034)",
+        "item_idempotency_key becomes idempotency_key; item_id added",
+        "post_created_time becomes created_at; age_seconds and call_id go (ADR-0034)",
+        "kind post becomes video in the key (ADR-0007)"
+      ],
+      "note": "its raw.items example is under raw.items/v1"
+    },
+    {
+      "service": "yt-web-search-bridge",
+      "prd": "docs/prds/youtube/yt-web-search-bridge.md",
+      "line": 107,
+      "schema": "search.results/v1",
+      "fixture": "search.results/v1/valid/prd-yt-web-search-bridge.json",
+      "rewrites": [
+        "schema, message_id, produced_at and producer stamped by the SDK (ADR-0002)",
+        "route, vendor, service and fetched_at fold into provenance (ADR-0003)",
+        "idempotency_key, platform, platform_hint, handled_by, cost and extracted go: the engines' message for all four producers (ADR-0037)",
+        "the string query becomes the query object; the payload becomes the result object (ADR-0037)",
+        "canonical_url and canonical_url_hash added with the one normaliser (ADR-0037 L24; Q9)",
+        "keyword_ids, client_ids and raw_ref added"
+      ]
+    }
+  ]
+}

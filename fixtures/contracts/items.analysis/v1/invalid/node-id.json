@@ -1,0 +1,57 @@
+{
+  "schema": "items.analysis/v1",
+  "message_id": "01M487XT5RZ92C4FRV3WYRSHPV",
+  "produced_at": "2026-10-06T09:15:15Z",
+  "producer": {
+    "service": "analysis-topics",
+    "version": "0.2.0",
+    "job_id": "01M4886GG040V4RTSSHFBF6ADK"
+  },
+  "analysis_key": "729e4ef3-5f84-52f7-872f-06430a625fc6:topics.global:topics-iq-2026.11.tx7",
+  "input_hash": "sha256:6aa41cf296a615f27fdae97bfe364a17469a23d60f5c64c722437f5538faff04",
+  "item_id": "729e4ef3-5f84-52f7-872f-06430a625fc6",
+  "task": "topics.global",
+  "model_version": "topics-iq-2026.11.tx7",
+  "item_created_at": "2026-10-06T08:51:40Z",
+  "item_version": 1,
+  "content_hash": "sha256:96f6861fef1e2acd585acb98b44dbe97d39d2c126fc7a75f661225b47d2cb244",
+  "platform": "facebook",
+  "kind": "post",
+  "source_id": "a3c0f1e2-5b6d-4c7e-9f80-112233445566",
+  "run_kind": "live",
+  "lane": "priority",
+  "status": "ok",
+  "reason": null,
+  "lang": "ar",
+  "dialect": "iraqi",
+  "expires_at": null,
+  "result": {
+    "topics": [
+      {
+        "topic_id": "global:outage",
+        "score": 0.93,
+        "source": "supervised",
+        "node_id": "outage"
+      },
+      {
+        "topic_id": "global:customer_support",
+        "score": 0.41,
+        "source": "supervised"
+      }
+    ],
+    "top_topic": "global:outage",
+    "intent": {
+      "label": "question",
+      "score": 0.72
+    },
+    "low_confidence": false
+  },
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "fb-page-feed-poller",
+    "fetched_at": "2026-10-06T09:13:58Z"
+  },
+  "retention_class": "meta_on_request",
+  "taxonomy_version": 7
+}

@@ -35,7 +35,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run test/unit test/conformance",
     "export:schemas": "node scripts/export-json-schema.ts",
-    "gen:python": "uv run python scripts/gen_python.py"
+    "gen:python": "uv run python scripts/gen_python.py",
+    "gen:fixtures": "uv run python scripts/fixtures/gen.py"
   },
   "dependencies": {
     "canonicalize": "5.1.0",

@@ -22,7 +22,10 @@ import {
   RECORD_KINDS,
   REGISTRY_REASONS,
 } from "../../src/vocabulary.ts";
-import { PACKAGE_DIR } from "../helpers.ts";
+import { createBuilder } from "../../src/builder.ts";
+import { context, extras } from "../../src/context.ts";
+import { validate } from "../../src/validate.ts";
+import { PACKAGE_DIR, copyOf, fixture, samePath } from "../helpers.ts";
 
 // The service index as CONVENTIONS v1.1 L372 to L384 writes it: "Group (n): a, b (amber), ...".
 function conventionsIndex(): { group: string; count: number; services: string[] }[] {
@@ -89,6 +92,52 @@ describe("vendors by route (ADR-0051 (c))", () => {
     expect(isKnownVendor("green", "gdelt")).toBe(true);
     expect(isKnownVendor("green", "sociavault")).toBe(false);
     expect(isKnownVendor("green", "apify_tugelbay")).toBe(false);
+  });
+});
+
+describe("producer mode checks the registry data (A23; Q1, F-09)", () => {
+  const failsAt = (r: ReturnType<typeof validate>, path: (string | number)[]): boolean =>
+    !r.ok && r.issues.some((i) => samePath(i.path, path));
+
+  it("producer mode refuses a producer.service or provenance.vendor the registry data does not list", () => {
+    const f = fixture("item.hits/v1", "valid", "prd-keyword-matcher.json");
+    const service = copyOf(f);
+    (service.producer as Record<string, unknown>).service = "keyword-matcher-v2";
+    expect(failsAt(validate("item.hits/v1", service), ["producer", "service"])).toBe(true);
+    const fetcher = copyOf(f);
+    (fetcher.provenance as Record<string, unknown>).service = "x-searcher";
+    expect(failsAt(validate("item.hits/v1", fetcher), ["provenance", "service"])).toBe(true);
+    const amber = copyOf(fixture("raw.items/v1", "valid", "prd-tg-channel-posts-poller.json"));
+    const env = amber.envelope as Record<string, Record<string, unknown>>;
+    if (env.provenance) env.provenance.vendor = "apify";
+    expect(failsAt(validate("raw.items/v1", amber), ["envelope", "provenance", "vendor"])).toBe(
+      true,
+    );
+  });
+
+  it("the schemas type service names and vendors as patterned strings, not enums", () => {
+    // A name the registry does not list yet passes the consumer, which knows no registry data.
+    const f = fixture("item.hits/v1", "valid", "prd-keyword-matcher.json");
+    const value = copyOf(f);
+    (value.producer as Record<string, unknown>).service = "keyword-matcher-v2";
+    (value.provenance as Record<string, unknown>).vendor = "a-new-engine";
+    expect(validate("item.hits/v1", value, "consumer").ok).toBe(true);
+    (value.producer as Record<string, unknown>).service = "Keyword Matcher";
+    expect(validate("item.hits/v1", value, "consumer").ok).toBe(false);
+  });
+
+  it("the context and extras schemas hold exactly the keys some producer declares", () => {
+    const b = createBuilder("producer");
+    const contextKeys = Object.keys(context(b).shape).sort();
+    const declared = new Set<string>();
+    for (const entry of Object.values(contextKeyRegistry().producers))
+      for (const k of entry.keys) declared.add(k);
+    for (const entry of Object.values(contextKeyRegistry().by_kind))
+      for (const k of entry.keys) declared.add(k);
+    expect(contextKeys).toEqual([...declared].sort());
+    const extrasKeys = Object.keys(extras(b).shape).sort();
+    const resolverKeys = new Set(Object.values(extrasKeyRegistry().resolvers).flat());
+    expect(extrasKeys).toEqual([...resolverKeys].sort());
   });
 });
 

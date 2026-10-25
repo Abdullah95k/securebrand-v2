@@ -1,0 +1,64 @@
+{
+  "schema": "items.normalized/v1",
+  "message_id": "01M47KAFHGHGN24R3HWG2ZY42F",
+  "produced_at": "2026-10-06T03:15:10Z",
+  "producer": {
+    "service": "normalize-item",
+    "version": "1.4.0",
+    "job_id": "01J9N2Q7Z4T8X1V6M3K0H5R2WD"
+  },
+  "item_id": "d8b78eb9-af9e-5d02-9f1e-34ee1686d64c",
+  "idempotency_key": "web:result:f1c1d91eaeff7fb549592e75eeb42ccfc2f53b4812bb1006892e57a748e26b37",
+  "platform": "web",
+  "kind": "result",
+  "source_id": "7b3e5f8a-1c2d-4e4f-9a6b-7c8d9e0f1a2b",
+  "parent_id": null,
+  "root_id": null,
+  "parent_seen": true,
+  "content_hash": "sha256:5b62cf2ba3d77e737aa37687578e873bfe431643c6e9b7cb773e9a2c91f7dd85",
+  "version": 1,
+  "platform_id": "f1c1d91eaeff7fb549592e75eeb42ccfc2f53b4812bb1006892e57a748e26b37",
+  "url": "https://forum.example-iq.net/t/fiberx-wasit-outage/4417",
+  "created_at": null,
+  "title": "انقطاع فايبر اكس في الكوت منذ الصباح",
+  "text": "هل عندكم انقطاع؟ النت مقطوع بالكوت من الصبح وفايبر اكس ما ترد",
+  "text_norm": "هل عندكم انقطاع؟ النت مقطوع بالكوت من الصبح وفايبر اكس ما ترد",
+  "lang": "ar",
+  "lang_conf": 0.98,
+  "dialect": "iraqi",
+  "dialect_conf": 0.84,
+  "script": "arab",
+  "lang_model_version": "lid-iq-2026.09",
+  "lang_pending": false,
+  "author": {
+    "author_ref": null,
+    "author_type": "individual",
+    "author_source_id": null
+  },
+  "media": [],
+  "hashtags": [],
+  "at_mentions": [],
+  "links": [],
+  "metrics_snapshot": {
+    "views": null,
+    "likes": null,
+    "comments": null,
+    "shares": null,
+    "reactions_by_type": null
+  },
+  "expires_at": null,
+  "normalizer_version": "1.4.0",
+  "raw_ref": "raw/green/web/2026/10/06/search-hit-router/000012.jsonl.zst#7",
+  "job_kind": "rotation",
+  "sensitive_event": false,
+  "client_ids": [
+    "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+  ],
+  "provenance": {
+    "route": "green",
+    "vendor": "mojeek",
+    "service": "web-search-mojeek",
+    "fetched_at": "2026-10-06T03:04:11Z"
+  },
+  "retention_class": "news_excerpt"
+}

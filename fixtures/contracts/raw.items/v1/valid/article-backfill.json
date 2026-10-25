@@ -1,0 +1,50 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M4F9MXTGA8D3S7P9T238NAAQ",
+    "produced_at": "2026-10-09T03:00:02Z",
+    "producer": {
+      "service": "news-article-extractor",
+      "version": "1.0.0",
+      "job_id": "01M4F72A8RQ0N3K5D2B7T4W9XC"
+    },
+    "platform": "news",
+    "kind": "article",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "news-article-extractor",
+      "fetched_at": "2026-10-09T03:00:00Z"
+    },
+    "retention_class": "news_excerpt",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01M4F72A8RQ0N3K5D2B7T4W9XC",
+    "attempt": 1,
+    "job_kind": "backfill",
+    "api_version": "extract-v1",
+    "raw_ref": "raw/green/news/2026/10/09/news-article-extractor/000500.jsonl.zst#2",
+    "source_id": "3c7f9d52-1e4a-4b86-a0d3-7b2e5c8f1a90",
+    "platform_id": "e9c744aa0a4d69c97253bbb9df26cc15d70a813c0eff4eec8c121588380dd588",
+    "idempotency_key": "news:article:e9c744aa0a4d69c97253bbb9df26cc15d70a813c0eff4eec8c121588380dd588",
+    "context": {
+      "url_key": "news:url:e9c744aa0a4d69c97253bbb9df26cc15d70a813c0eff4eec8c121588380dd588",
+      "access_mode": "direct"
+    }
+  },
+  "payload": {
+    "url": "https://www.example-daily.iq/economy/2026/09/26/fiberx-wasit",
+    "final_url": "https://www.example-daily.iq/economy/2026/09/26/fiberx-wasit",
+    "canonical_url": "https://www.example-daily.iq/economy/2026/09/26/fiberx-wasit",
+    "title": "فايبر اكس في واسط",
+    "excerpt": "أعلنت شركة فايبر اكس...",
+    "published_at": "2026-09-26T08:00:00Z",
+    "text_full_ref": null,
+    "text_expires_at": null,
+    "text_sha256": null,
+    "title_sha256": "c3f60a1d9c7e4825f1a0d3c9b7e65a24d8f1c0b9a7e3d5f21c6b4a0e9d8f7c14",
+    "extractor": "trafilatura",
+    "extractor_version": "1.12.2"
+  }
+}

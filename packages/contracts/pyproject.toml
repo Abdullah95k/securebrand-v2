@@ -33,6 +33,8 @@ extend = "../../ruff.toml"
 
 [tool.ruff.lint.extend-per-file-ignores]
 "python/tests/**" = ["ANN401"]
+# The fixture generator is data: messages written as dict literals, long Arabic strings included.
+"scripts/fixtures/**" = ["ANN401", "E501"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["listening_contracts"]

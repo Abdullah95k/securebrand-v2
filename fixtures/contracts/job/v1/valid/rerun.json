@@ -1,0 +1,23 @@
+{
+  "schema": "job/v1",
+  "message_id": "01M492GSM04MBQKS6B1F66VY8W",
+  "produced_at": "2026-10-06T17:00:00Z",
+  "producer": {
+    "service": "admin-api",
+    "version": "1.0.0",
+    "job_id": "01M492GSM0Q5WQ8XXJVGDKF849"
+  },
+  "job_id": "01M4950V80ZZGG928KMD5XX36J",
+  "kind": "rerun",
+  "due_at": "2026-10-06T17:00:00Z",
+  "attempt": 1,
+  "run_id": "01M4950V80A8N3K5D2B7T4W9XC",
+  "task": "topics.global",
+  "model_version": "topics-iq-2026.11.tx8",
+  "from": "2026-09-06T00:00:00Z",
+  "to": "2026-10-06T00:00:00Z",
+  "client_id": "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60",
+  "taxonomy_id": "global",
+  "request_id": "01J9R5S3V7W1X4Y8Z0A2B6C9DR",
+  "requested_by": "person:01J9P2R4T6V8X0Z2B4D6F8H0KM"
+}

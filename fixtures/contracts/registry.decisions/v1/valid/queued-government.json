@@ -1,0 +1,28 @@
+{
+  "schema": "registry.decisions/v1",
+  "message_id": "01M48BB750JHNAZ9JRHHAZ95EK",
+  "produced_at": "2026-10-06T10:15:00Z",
+  "producer": {
+    "service": "qualifier",
+    "version": "1.0.0",
+    "job_id": "01M48BB750H2DM59DCBNH9SSRA"
+  },
+  "decision_id": "01M48BB750M561E9TM1SD5KT3G",
+  "decision": "queued",
+  "requested_by": "qualifier",
+  "reason": "amber_excluded_government",
+  "candidate_key": "tiktok:6812345678901234567",
+  "queued": {
+    "rule_hit": 5,
+    "client_ids": [
+      "c7f12d45-b7c5-467d-aa82-e7826ed8abf2"
+    ]
+  },
+  "provenance": {
+    "route": "amber",
+    "vendor": "tikhub",
+    "service": "tt-user-resolver",
+    "fetched_at": "2026-10-06T10:02:31Z"
+  },
+  "retention_class": "vendor_agreed"
+}

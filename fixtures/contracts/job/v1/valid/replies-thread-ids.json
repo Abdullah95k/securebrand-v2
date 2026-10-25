@@ -1,0 +1,26 @@
+{
+  "schema": "job/v1",
+  "message_id": "01M48065C00SNXSPG0R2ZQAYFT",
+  "produced_at": "2026-10-06T07:00:00Z",
+  "producer": {
+    "service": "comment-decay-scheduler",
+    "version": "1.0.0",
+    "job_id": "01M48065C043VAGB0YCMWZ2WFT"
+  },
+  "job_id": "01M4AJJWC0S6C3W3Q5W0W0SRVR",
+  "kind": "replies",
+  "due_at": "2026-10-07T07:00:00Z",
+  "attempt": 1,
+  "source_id": "3a9e5c1d-7f2b-4e8a-b6d0-91c4f2e7a835",
+  "post_ref": {
+    "item_id": "d7341a9c-faec-55ce-8f6b-68b297f70dfe",
+    "platform": "youtube",
+    "platform_id": "dQw4w9WgXcQ",
+    "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "thread_ids": [
+      "UgzK7pQ2mV9xR4tL1bN6AaABAg"
+    ]
+  },
+  "series_step": "+24h",
+  "profile": "yt"
+}

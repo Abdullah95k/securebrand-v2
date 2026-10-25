@@ -1,0 +1,71 @@
+{
+  "schema": "source.events/v1",
+  "message_id": "01M4N31HJGBNKWSDXFG6T1BGPK",
+  "produced_at": "2026-10-11T09:00:02Z",
+  "producer": {
+    "service": "registry-writer",
+    "version": "1.0.0",
+    "job_id": "01M4N31HJGP8TYF11NCMCN2825"
+  },
+  "event": "push_coverage_change",
+  "reason": "lease_lapsed",
+  "source_id": "3c9a7e52-1f4b-4d8e-b6a0-8e2f5c1d7a94",
+  "platform": "youtube",
+  "source_type": "channel",
+  "platform_id": "UCx3Kp9vQ2mLwR7tYb4nJ8sA",
+  "handle": "@shorja.tv",
+  "url": "https://www.youtube.com/channel/UCx3Kp9vQ2mLwR7tYb4nJ8sA",
+  "display_name": "سوق الشورجة",
+  "route": "green",
+  "vendor": null,
+  "tier": 2,
+  "lifecycle": "active",
+  "push_covered": false,
+  "retention_class": "youtube_30d_text",
+  "client_ids": [
+    "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+  ],
+  "owned_by_client": false,
+  "added_by": "qualifier",
+  "followers": 48200,
+  "country_signals": {
+    "iraqi_place": true,
+    "platform_country_iq": false,
+    "phone_964": false,
+    "iq_domain": false,
+    "outlet_link": false,
+    "seed_list": false,
+    "signal_evidence": [
+      {
+        "signal": "iraqi_place",
+        "matched": "Baghdad",
+        "where": "location"
+      }
+    ]
+  },
+  "lang_share": {
+    "ar": 0.9,
+    "ckb": 0,
+    "en": 0.1,
+    "mixed": 0,
+    "other": 0,
+    "und": 0,
+    "ar_iraqi": 0.7,
+    "sample": 22
+  },
+  "platform_meta": {
+    "uploads_playlist_id": "UUx3Kp9vQ2mLwR7tYb4nJ8sA"
+  },
+  "added_at": "2026-10-06T10:14:40Z",
+  "health": "ok",
+  "health_reason": null,
+  "health_set_by": null,
+  "health_changed_at": null,
+  "notes": null,
+  "previous": {
+    "push_covered": true
+  },
+  "decision_id": "01M4N31FM0RS67F8JGC23THC15",
+  "actor": "yt-pubsub-receiver",
+  "at": "2026-10-11T09:00:02Z"
+}

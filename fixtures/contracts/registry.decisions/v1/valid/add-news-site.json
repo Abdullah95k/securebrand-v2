@@ -1,0 +1,73 @@
+{
+  "schema": "registry.decisions/v1",
+  "message_id": "01M486NC7GT6ZDY98Z59JD6XN7",
+  "produced_at": "2026-10-06T08:53:10Z",
+  "producer": {
+    "service": "qualifier",
+    "version": "1.0.0",
+    "job_id": "01M486NC7GDY1RBDY1BDCSY6ZH"
+  },
+  "decision_id": "01M486NC7G542VP7SCK8465T9Z",
+  "decision": "add",
+  "requested_by": "qualifier",
+  "reason": null,
+  "candidate_key": "news:site:example-daily.iq",
+  "add": {
+    "source": {
+      "platform": "news",
+      "source_type": "site",
+      "platform_id": "example-daily.iq",
+      "handle": "example-daily.iq",
+      "url": "https://www.example-daily.iq/",
+      "display_name": "Example Daily",
+      "route": "green",
+      "vendor": null,
+      "tier": 1,
+      "lifecycle": "active",
+      "push_covered": false,
+      "retention_class": "news_excerpt",
+      "client_ids": [
+        "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+      ],
+      "owned_by_client": false,
+      "added_by": "qualifier",
+      "followers": null,
+      "country_signals": {
+        "iraqi_place": true,
+        "platform_country_iq": false,
+        "phone_964": true,
+        "iq_domain": true,
+        "outlet_link": false,
+        "seed_list": true,
+        "signal_evidence": [
+          {
+            "signal": "iq_domain",
+            "matched": ".iq",
+            "where": "host"
+          }
+        ]
+      },
+      "lang_share": {
+        "ar": 0.95,
+        "ckb": 0,
+        "en": 0.05,
+        "mixed": 0,
+        "other": 0,
+        "und": 0,
+        "ar_iraqi": 0.05,
+        "sample": 50
+      },
+      "platform_meta": {}
+    },
+    "proposed_source_id": "5e3b8f02-6d1c-4a97-b2e8-0c9f4d7a1e63",
+    "origin": "discovery",
+    "rule_hit": 6
+  },
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "news-site-resolver",
+    "fetched_at": "2026-10-06T08:52:40Z"
+  },
+  "retention_class": "news_excerpt"
+}

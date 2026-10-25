@@ -1,0 +1,22 @@
+{
+  "schema": "job/v1",
+  "message_id": "01M487S6Q0WFHR8KK52SPKWVV0",
+  "produced_at": "2026-10-06T09:12:44Z",
+  "producer": {
+    "service": "yt-pubsub-receiver",
+    "version": "1.0.0",
+    "job_id": "01M487S6Q006KNN6NFWJGRG3KR"
+  },
+  "job_id": "01J9N7QW3E5R8T2Y6V0H4M9P1A",
+  "kind": "first_sight",
+  "due_at": "2026-10-06T09:12:44Z",
+  "attempt": 1,
+  "source_id": "3c9a7e52-1f4b-4d8e-b6a0-8e2f5c1d7a94",
+  "post_ref": {
+    "item_id": "a2516f93-c835-5449-bffe-6b03bc39e03c",
+    "platform": "youtube",
+    "platform_id": "k7Qm2Xv9TbE"
+  },
+  "origin_kind": "push",
+  "series_step": null
+}

@@ -1,0 +1,39 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M4AKE4E8D2WATWYPGVWYAP90",
+    "produced_at": "2026-10-07T07:14:53Z",
+    "producer": {
+      "service": "fb-reactions-fetcher",
+      "version": "1.0.0",
+      "job_id": "01J9Q1M4V8N2B6X0C3Z7A5S9DF"
+    },
+    "platform": "facebook",
+    "kind": "metrics",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "fb-reactions-fetcher",
+      "fetched_at": "2026-10-07T07:14:51Z"
+    },
+    "retention_class": "meta_on_request",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01J9Q1M4V8N2B6X0C3Z7A5S9DF",
+    "attempt": 1,
+    "job_kind": "metrics",
+    "api_version": "v21.0",
+    "raw_ref": "raw/green/facebook/2026/10/07/fb-reactions-fetcher/000015.jsonl.zst#3",
+    "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11",
+    "context": {}
+  },
+  "payload": {
+    "id": "100064583471102_1198837625012734",
+    "reactions": {
+      "summary": {
+        "total_count": 2421
+      }
+    }
+  }
+}

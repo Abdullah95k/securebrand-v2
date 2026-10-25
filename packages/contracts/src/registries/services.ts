@@ -14,6 +14,9 @@ const VendorsFile = z.object({ amber: z.array(z.string()), green: z.array(z.stri
 const services = ServicesFile.parse(loadRegistry("services.json"));
 const vendors = VendorsFile.parse(loadRegistry("vendors.json"));
 
+/** The platform groups of the service index (Facebook, Instagram, TikTok, X, LinkedIn, Telegram, YouTube, News, Web). */
+export const PLATFORM_GROUPS: Readonly<Record<string, readonly string[]>> =
+  services.platform_groups;
 /** The 66 services of the Facebook to Web groups, which the producer rows call `@platform`. */
 export const PLATFORM_SERVICES: readonly string[] = Object.values(services.platform_groups).flat();
 /** The 86 services of the index. */

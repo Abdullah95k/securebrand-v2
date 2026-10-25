@@ -1,0 +1,21 @@
+{
+  "schema": "job/v1",
+  "message_id": "01M4AKNNN0MA7P5XK8QW59ABMW",
+  "produced_at": "2026-10-06T09:16:03Z",
+  "producer": {
+    "service": "comment-decay-scheduler",
+    "version": "1.0.0",
+    "job_id": "01M487Z91RXR1M47215M7Q5E6F"
+  },
+  "job_id": "01M4AKQG80M146MPDH2EEEMFDT",
+  "kind": "metrics",
+  "due_at": "2026-10-07T07:20:00Z",
+  "attempt": 1,
+  "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11",
+  "post_ref": {
+    "item_id": "bda54111-94d6-54e2-aab6-33e8b5cb48c6",
+    "platform": "facebook",
+    "platform_id": "100064583471102_1198837625012734"
+  },
+  "series_step": "refresh:01J9R5S3V7W1X4Y8Z0A2B6C9DE"
+}

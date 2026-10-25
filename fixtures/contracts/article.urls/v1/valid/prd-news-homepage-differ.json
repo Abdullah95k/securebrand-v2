@@ -1,0 +1,23 @@
+{
+  "schema": "article.urls/v1",
+  "message_id": "01M480D7Y0WQF894V8ZP7ZAABP",
+  "produced_at": "2026-10-06T07:03:52Z",
+  "producer": {
+    "service": "news-homepage-differ",
+    "version": "1.0.0",
+    "job_id": "01J9N3F1V6S4B9Y2D7K0Q8T5NA"
+  },
+  "source_id": "a82e1c47-5d3b-49f0-8e6a-2c9b7d1f0e35",
+  "url": "https://www.example-council.iq/news/20261006-session-decision",
+  "url_key": "news:url:ab084b47b9c32d529fec3a828aab701d4647d65788e2bc467c844a2378d7d31a",
+  "found_via": "homepage_diff",
+  "found_at": "2026-10-06T07:03:51Z",
+  "published_at": null,
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "news-homepage-differ",
+    "fetched_at": "2026-10-06T07:03:51Z"
+  },
+  "retention_class": "news_excerpt"
+}

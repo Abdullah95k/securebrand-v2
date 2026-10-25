@@ -1,0 +1,24 @@
+{
+  "schema": "article.urls/v1",
+  "message_id": "01M47XAQK0FS9FH5CTQRTF6K1E",
+  "produced_at": "2026-10-06T06:10:04Z",
+  "producer": {
+    "service": "news-sitemap-poller",
+    "version": "1.0.0",
+    "job_id": "01J9N3C7P2M5Q8W1Z4T0B6F3JD"
+  },
+  "source_id": "3c7f9d52-1e4a-4b86-a0d3-7b2e5c8f1a90",
+  "url": "https://www.example-daily.iq/economy/2026/10/06/oil-exports",
+  "url_key": "news:url:8aab2f09e773f0042040bf3dfeb8fcd2123f19773a743706ab6d2c2c2371b2e8",
+  "found_via": "news_sitemap",
+  "found_at": "2026-10-06T06:10:03Z",
+  "title": "ارتفاع صادرات النفط في أيلول",
+  "published_at": "2026-10-06T06:05:00Z",
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "news-sitemap-poller",
+    "fetched_at": "2026-10-06T06:10:03Z"
+  },
+  "retention_class": "news_excerpt"
+}

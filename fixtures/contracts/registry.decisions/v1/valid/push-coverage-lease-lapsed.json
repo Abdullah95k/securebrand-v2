@@ -1,0 +1,18 @@
+{
+  "schema": "registry.decisions/v1",
+  "message_id": "01M4N31FM0C3YTAS5W1GEKB6E4",
+  "produced_at": "2026-10-11T09:00:00Z",
+  "producer": {
+    "service": "yt-pubsub-receiver",
+    "version": "1.0.0",
+    "job_id": "01M4N31FM0J1PR5661K8KX5ZQA"
+  },
+  "decision_id": "01M4N31FM0RS67F8JGC23THC15",
+  "decision": "push_coverage",
+  "requested_by": "yt-pubsub-receiver",
+  "reason": "lease_lapsed",
+  "source_id": "3c9a7e52-1f4b-4d8e-b6a0-8e2f5c1d7a94",
+  "push_coverage": {
+    "push_covered": false
+  }
+}

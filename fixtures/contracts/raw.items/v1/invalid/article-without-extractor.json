@@ -1,0 +1,62 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M47WAM80F044Y1P31Q35BV7T",
+    "produced_at": "2026-10-06T05:52:32Z",
+    "producer": {
+      "service": "news-article-extractor",
+      "version": "1.0.0",
+      "job_id": "01J9N3A4K8R2T7V5X0M6C1D9HE"
+    },
+    "platform": "news",
+    "kind": "article",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "news-article-extractor",
+      "fetched_at": "2026-10-06T05:52:30Z"
+    },
+    "retention_class": "news_excerpt",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01J9N3A4K8R2T7V5X0M6C1D9HE",
+    "attempt": 1,
+    "job_kind": "rotation",
+    "api_version": "extract-v1",
+    "raw_ref": "raw/green/news/2026/10/06/news-article-extractor/000412.jsonl.zst#20",
+    "source_id": "3c7f9d52-1e4a-4b86-a0d3-7b2e5c8f1a90",
+    "platform_id": "bfa6375a3060bdfd4e3300b6108b89807201e8e8f68698ce2ae193ececc5efd4",
+    "idempotency_key": "news:article:bfa6375a3060bdfd4e3300b6108b89807201e8e8f68698ce2ae193ececc5efd4",
+    "context": {
+      "url_key": "news:url:bfa6375a3060bdfd4e3300b6108b89807201e8e8f68698ce2ae193ececc5efd4",
+      "access_mode": "direct",
+      "usage_signals": {
+        "search": "yes",
+        "ai_input": "unset",
+        "ai_train": "no"
+      }
+    }
+  },
+  "payload": {
+    "url": "https://www.example-daily.iq/politics/2026/10/06/budget-session?utm_source=rss",
+    "final_url": "https://www.example-daily.iq/politics/2026/10/06/budget-session",
+    "canonical_url": "https://www.example-daily.iq/politics/2026/10/06/budget-session",
+    "title": "البرلمان يحدد موعد جلسة الموازنة",
+    "excerpt": "حدد مجلس النواب يوم الأحد المقبل موعدا لعقد جلسة مخصصة لمناقشة مشروع قانون الموازنة الاتحادية، بحسب بيان لرئاسة المجلس، وسط مطالبات من كتل نيابية بإدراج الخدمات...",
+    "excerpt_chars": 247,
+    "word_count": 412,
+    "author": "فريق التحرير",
+    "published_at": "2026-10-06T05:41:00Z",
+    "language": "ar",
+    "image_urls": [
+      "https://www.example-daily.iq/uploads/2026/10/budget.jpg"
+    ],
+    "text_full_ref": "cache/news/2026/10/06/bfa6375a3060bdfd4e3300b6108b89807201e8e8f68698ce2ae193ececc5efd4.json.zst",
+    "text_expires_at": "2026-10-13T05:52:30Z",
+    "text_sha256": "5d0c9a7e1b3f4682a1c0d9e7b5f34a86c2d1e0f9a7b5c3d18e6f4a2b0c9d7e53",
+    "title_sha256": "b3f60a1d9c7e4825f1a0d3c9b7e65a24d8f1c0b9a7e3d5f21c6b4a0e9d8f7c13",
+    "http_status": 200,
+    "extractor_version": "1.12.2"
+  }
+}

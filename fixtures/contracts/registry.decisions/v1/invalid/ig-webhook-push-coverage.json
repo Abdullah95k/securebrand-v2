@@ -1,0 +1,18 @@
+{
+  "schema": "registry.decisions/v1",
+  "message_id": "01M4871WM0M9KSS364F0XWZTX8",
+  "produced_at": "2026-10-06T09:00:00Z",
+  "producer": {
+    "service": "ig-webhook-receiver",
+    "version": "1.0.0",
+    "job_id": "01M4871WM072S9F5WVBY97QKQR"
+  },
+  "decision_id": "01M4871WM00ZPBV86HG66RZ7CA",
+  "decision": "push_coverage",
+  "requested_by": "ig-webhook-receiver",
+  "reason": null,
+  "source_id": "d4c3b2a1-9f8e-4d7c-8b6a-5f4e3d2c1b0a",
+  "push_coverage": {
+    "push_covered": true
+  }
+}

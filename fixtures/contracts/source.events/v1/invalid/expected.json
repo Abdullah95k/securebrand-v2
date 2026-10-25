@@ -1,0 +1,112 @@
+{
+  "added-with-previous.json": {
+    "path": [
+      "previous"
+    ],
+    "rule": "previous is null on added (ADR-0014)"
+  },
+  "backfill-status.json": {
+    "path": [
+      "backfill_status"
+    ],
+    "rule": "backfill_status events go (ADR-0020)"
+  },
+  "fallback-on-not-fallback.json": {
+    "path": [
+      "health"
+    ],
+    "rule": "entering fallback gives fallback_on (ADR-0014 L27, ADR-0050 L31)"
+  },
+  "flag-on-on-fallback-off.json": {
+    "path": [
+      "reason"
+    ],
+    "rule": "flag_on travels on fallback_on (ADR-0021)"
+  },
+  "health-change-to-fallback.json": {
+    "path": [
+      "health"
+    ],
+    "rule": "entering fallback is fallback_on, never health_change (ADR-0014 L27)"
+  },
+  "lifecycle-decay-reason.json": {
+    "path": [
+      "reason"
+    ],
+    "rule": "decay is the qualifier's rule_hit, not a reason (ADR-0014)"
+  },
+  "no-metadata-message-id.json": {
+    "path": [
+      "message_id"
+    ],
+    "rule": "every message carries message_id (ADR-0002)"
+  },
+  "no-metadata-produced-at.json": {
+    "path": [
+      "produced_at"
+    ],
+    "rule": "every message carries produced_at (ADR-0002)"
+  },
+  "no-metadata-producer.json": {
+    "path": [
+      "producer"
+    ],
+    "rule": "every message carries producer (ADR-0002)"
+  },
+  "no-metadata-schema.json": {
+    "path": [
+      "schema"
+    ],
+    "rule": "every message carries schema (ADR-0002)"
+  },
+  "not-registry-writer.json": {
+    "path": [
+      "producer",
+      "service"
+    ],
+    "rule": "registry-writer alone writes source.events (ADR-0014)"
+  },
+  "platform-meta-other-type.json": {
+    "path": [
+      "platform_meta",
+      "linked_chat_id"
+    ],
+    "rule": "platform_meta keys belong to one platform and source type (ADR-0013 c))"
+  },
+  "provenance.json": {
+    "path": [
+      "provenance"
+    ],
+    "rule": "a control message carries producer only (ADR-0003)"
+  },
+  "push-coverage-flag-reason.json": {
+    "path": [
+      "reason"
+    ],
+    "rule": "push_coverage_change takes lease_lapsed or subscription_failed (ADR-0014)"
+  },
+  "reason-not-on-type.json": {
+    "path": [
+      "reason"
+    ],
+    "rule": "each reason only on the types the closed list names (ADR-0014)"
+  },
+  "retired-as-event.json": {
+    "path": [
+      "event"
+    ],
+    "rule": "dormant and retired become lifecycle_change (ADR-0014)"
+  },
+  "service-field.json": {
+    "path": [
+      "service"
+    ],
+    "rule": "service gives way to producer (ADR-0002)"
+  },
+  "tier-change-with-space.json": {
+    "path": [
+      "event"
+    ],
+    "rule": "tier change becomes tier_change (ADR-0014)"
+  }
+}

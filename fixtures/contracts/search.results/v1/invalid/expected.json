@@ -1,0 +1,70 @@
+{
+  "canonical-hash-not-the-urls.json": {
+    "path": [
+      "canonical_url_hash"
+    ],
+    "rule": "the one normaliser (Q9)"
+  },
+  "datetime-date.json": {
+    "path": [
+      "result",
+      "date"
+    ],
+    "rule": "result dates are calendar dates"
+  },
+  "job-id.json": {
+    "path": [
+      "job_id"
+    ],
+    "rule": "producer.job_id carries the job (ADR-0003)"
+  },
+  "keyword-rule-id.json": {
+    "path": [
+      "keyword_rule_id"
+    ],
+    "rule": "keyword_rule_id becomes source_id (ADR-0037)"
+  },
+  "no-metadata-message-id.json": {
+    "path": [
+      "message_id"
+    ],
+    "rule": "every message carries message_id (ADR-0002)"
+  },
+  "no-metadata-produced-at.json": {
+    "path": [
+      "produced_at"
+    ],
+    "rule": "every message carries produced_at (ADR-0002)"
+  },
+  "no-metadata-producer.json": {
+    "path": [
+      "producer"
+    ],
+    "rule": "every message carries producer (ADR-0002)"
+  },
+  "no-metadata-schema.json": {
+    "path": [
+      "schema"
+    ],
+    "rule": "every message carries schema (ADR-0002)"
+  },
+  "not-an-engine-service.json": {
+    "path": [
+      "producer",
+      "service"
+    ],
+    "rule": "the four engines write search.results (ADR-0037)"
+  },
+  "string-query.json": {
+    "path": [
+      "query"
+    ],
+    "rule": "query is an object (ADR-0037)"
+  },
+  "unknown-engine.json": {
+    "path": [
+      "engine"
+    ],
+    "rule": "the engines are perplexity, mojeek and gdelt (ADR-0037)"
+  }
+}

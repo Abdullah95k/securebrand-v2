@@ -1,0 +1,20 @@
+{
+  "schema": "job/v1",
+  "message_id": "01M4DBVAM0R47K930S2SKFK0H2",
+  "produced_at": "2026-10-08T09:00:00Z",
+  "producer": {
+    "service": "comment-decay-scheduler",
+    "version": "1.0.0",
+    "job_id": "01M4DBVAM0GVDMB89RPNG23YGW"
+  },
+  "job_id": "01M48Q0V80ZZGG928KMD5XX36J",
+  "kind": "reconciliation",
+  "due_at": "2026-10-08T09:00:00Z",
+  "attempt": 1,
+  "source_id": "0f9e8d7c-6b5a-4493-8271-605f4e3d2c1b",
+  "post_ref": {
+    "item_id": "808a77cb-ec32-5760-8f9d-d31b20409d83",
+    "platform": "linkedin",
+    "platform_id": "urn:li:activity:7248000000000000000"
+  }
+}

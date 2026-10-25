@@ -1,0 +1,110 @@
+{
+  "admin-platform-sync.json": {
+    "path": [
+      "reason"
+    ],
+    "rule": "the admin API sends client_request only (ADR-0012 L34)"
+  },
+  "class-on-author-scope.json": {
+    "path": [
+      "retention_class"
+    ],
+    "rule": "a non-item deletion carries no retention_class (ADR-0003 L28)"
+  },
+  "client-scope-with-source.json": {
+    "path": [
+      "source_id"
+    ],
+    "rule": "a client-scope deletion names client_id only (R-1)"
+  },
+  "deletion-id-not-the-helpers.json": {
+    "path": [
+      "deletion_id"
+    ],
+    "rule": "deletion_id from the helper (Q2)"
+  },
+  "detected-at.json": {
+    "path": [
+      "detected_at"
+    ],
+    "rule": "detected_at becomes signal_at (ADR-0035)"
+  },
+  "item-without-ids.json": {
+    "path": [
+      "target",
+      "item_ids"
+    ],
+    "rule": "an item target lists item_ids (ADR-0035)"
+  },
+  "no-metadata-message-id.json": {
+    "path": [
+      "message_id"
+    ],
+    "rule": "every message carries message_id (ADR-0002)"
+  },
+  "no-metadata-produced-at.json": {
+    "path": [
+      "produced_at"
+    ],
+    "rule": "every message carries produced_at (ADR-0002)"
+  },
+  "no-metadata-producer.json": {
+    "path": [
+      "producer"
+    ],
+    "rule": "every message carries producer (ADR-0002)"
+  },
+  "no-metadata-schema.json": {
+    "path": [
+      "schema"
+    ],
+    "rule": "every message carries schema (ADR-0002)"
+  },
+  "null-route-on-platform-sync.json": {
+    "path": [
+      "provenance",
+      "route"
+    ],
+    "rule": "a fetch signal names its route (F-08)"
+  },
+  "route-on-author-request.json": {
+    "path": [
+      "provenance",
+      "route"
+    ],
+    "rule": "a signal that is no fetch has a null route (F-08)"
+  },
+  "short-form.json": {
+    "path": [
+      "scope"
+    ],
+    "rule": "the short form with only a key goes: a deletion names its scope (ADR-0035)"
+  },
+  "subject-in-target.json": {
+    "path": [
+      "target",
+      "author_ref"
+    ],
+    "rule": "the subject appears once, at the top (ADR-0035)"
+  },
+  "text-only-scope.json": {
+    "path": [
+      "scope"
+    ],
+    "rule": "text_only becomes item with purge_text (ADR-0035)"
+  },
+  "vendor-without-route.json": {
+    "path": [
+      "provenance",
+      "vendor"
+    ],
+    "rule": "no vendor without a route"
+  },
+  "withhold-without-item-ids.json": {
+    "path": [
+      "target",
+      "item_ids"
+    ],
+    "rule": "an item target lists item_ids (ADR-0035)"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M48VWEPGVAMEPM8A5Y50MWTC",
+    "produced_at": "2026-10-06T15:04:02Z",
+    "producer": {
+      "service": "li-notification-receiver",
+      "version": "1.0.0",
+      "job_id": "01J9N5K9W8T4R6Y1B3D7F0GHMR"
+    },
+    "platform": "linkedin",
+    "kind": "reaction",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "li-notification-receiver",
+      "fetched_at": "2026-10-06T15:04:00Z"
+    },
+    "retention_class": "linkedin_48h",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01J9N5K9W8T4R6Y1B3D7F0GHMR",
+    "attempt": 1,
+    "job_kind": "push",
+    "api_version": "202610",
+    "raw_ref": "raw/green/linkedin/2026/10/06/li-notification-receiver/000003.jsonl.zst#5",
+    "source_id": "3d2f8a14-6b7c-4e19-8a05-c1f7e2b94d36",
+    "platform_id": "urn:li:activityEvent:7247000000000000777",
+    "redacted_fields": [
+      "actor"
+    ]
+  },
+  "payload": {
+    "action": "LIKE",
+    "object": "urn:li:share:7247000000000000001"
+  }
+}

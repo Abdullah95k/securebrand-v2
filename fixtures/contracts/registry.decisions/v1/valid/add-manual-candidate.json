@@ -1,0 +1,79 @@
+{
+  "schema": "registry.decisions/v1",
+  "message_id": "01M48E40YGBQQRP1P2SRZV11XC",
+  "produced_at": "2026-10-06T11:03:30Z",
+  "producer": {
+    "service": "qualifier",
+    "version": "1.0.0",
+    "job_id": "01M48E40YGNREGFMG1ZYFS0Z2P"
+  },
+  "decision_id": "01M48E40YGV81TN64K40AD1H16",
+  "decision": "add",
+  "requested_by": "qualifier",
+  "reason": null,
+  "candidate_key": "x:1456789012345678901",
+  "add": {
+    "source": {
+      "platform": "x",
+      "source_type": "account",
+      "platform_id": "1456789012345678901",
+      "handle": "example_telecom_iq",
+      "url": "https://x.com/example_telecom_iq",
+      "display_name": "شركة المثال للاتصالات",
+      "route": "green",
+      "vendor": null,
+      "tier": 1,
+      "lifecycle": "active",
+      "push_covered": false,
+      "retention_class": "x_24h_sync",
+      "client_ids": [
+        "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+      ],
+      "owned_by_client": false,
+      "added_by": "ops",
+      "followers": 18400,
+      "country_signals": {
+        "iraqi_place": true,
+        "platform_country_iq": false,
+        "phone_964": false,
+        "iq_domain": false,
+        "outlet_link": false,
+        "seed_list": false,
+        "signal_evidence": [
+          {
+            "signal": "iraqi_place",
+            "matched": "Baghdad",
+            "where": "location"
+          }
+        ]
+      },
+      "lang_share": {
+        "ar": 0.9,
+        "ckb": 0,
+        "en": 0.1,
+        "mixed": 0,
+        "other": 0,
+        "und": 0,
+        "ar_iraqi": 0.7,
+        "sample": 22
+      },
+      "platform_meta": {}
+    },
+    "proposed_source_id": null,
+    "origin": "manual",
+    "rule_hit": 6,
+    "client_priority": [
+      {
+        "client_id": "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60",
+        "priority": true
+      }
+    ]
+  },
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "x-user-resolver",
+    "fetched_at": "2026-10-06T11:02:37Z"
+  },
+  "retention_class": "x_24h_sync"
+}

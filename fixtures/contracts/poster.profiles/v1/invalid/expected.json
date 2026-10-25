@@ -1,0 +1,136 @@
+{
+  "cached-reemit-not-cached.json": {
+    "path": [
+      "cached"
+    ],
+    "rule": "poster-resolver writes only cached re-emits (ADR-0032)"
+  },
+  "extras-not-declared.json": {
+    "path": [
+      "extras",
+      "media_count"
+    ],
+    "rule": "extras hold the resolver's declared keys only (ADR-0033)"
+  },
+  "hits-30d.json": {
+    "path": [
+      "hits_30d"
+    ],
+    "rule": "hits_30d moves to poster_profiles (ADR-0045)"
+  },
+  "individual-flag-mismatch.json": {
+    "path": [
+      "individual"
+    ],
+    "rule": "individual is true exactly when account_type is individual (ADR-0033)"
+  },
+  "individual-full-set.json": {
+    "path": [
+      "public_account"
+    ],
+    "rule": "an ordinary individual's answer is the minimised one (ADR-0033)"
+  },
+  "individual-with-country-signals.json": {
+    "path": [
+      "country_signals"
+    ],
+    "rule": "an ordinary individual's answer carries no country_signals (ADR-0033, ADR-0010)"
+  },
+  "individual-with-display-name.json": {
+    "path": [
+      "display_name"
+    ],
+    "rule": "an ordinary individual's answer carries no display_name (ADR-0033, ADR-0010)"
+  },
+  "individual-with-extras.json": {
+    "path": [
+      "extras"
+    ],
+    "rule": "an ordinary individual's answer carries no extras (ADR-0033, ADR-0010)"
+  },
+  "individual-with-handle.json": {
+    "path": [
+      "handle"
+    ],
+    "rule": "an ordinary individual's answer carries no handle (ADR-0033, ADR-0010)"
+  },
+  "individual-with-url.json": {
+    "path": [
+      "url"
+    ],
+    "rule": "an ordinary individual's answer carries no url (ADR-0033, ADR-0010)"
+  },
+  "key-platform-mismatch.json": {
+    "path": [
+      "candidate_key"
+    ],
+    "rule": "the candidate key's platform is the profile's"
+  },
+  "no-metadata-message-id.json": {
+    "path": [
+      "message_id"
+    ],
+    "rule": "every message carries message_id (ADR-0002)"
+  },
+  "no-metadata-produced-at.json": {
+    "path": [
+      "produced_at"
+    ],
+    "rule": "every message carries produced_at (ADR-0002)"
+  },
+  "no-metadata-producer.json": {
+    "path": [
+      "producer"
+    ],
+    "rule": "every message carries producer (ADR-0002)"
+  },
+  "no-metadata-schema.json": {
+    "path": [
+      "schema"
+    ],
+    "rule": "every message carries schema (ADR-0002)"
+  },
+  "old-lang-share.json": {
+    "path": [
+      "lang_share",
+      "ar_iq"
+    ],
+    "rule": "lang_share takes ADR-0033's keys"
+  },
+  "organisation-not-public.json": {
+    "path": [
+      "public_account"
+    ],
+    "rule": "an organisation kind is a public account (ADR-0010)"
+  },
+  "resolved-type.json": {
+    "path": [
+      "resolved_type"
+    ],
+    "rule": "resolved_type gives way to account_type (ADR-0033)"
+  },
+  "resolved-with-reason.json": {
+    "path": [
+      "reason"
+    ],
+    "rule": "a resolved answer carries no reason (ADR-0033)"
+  },
+  "review-with-unresolvable-reason.json": {
+    "path": [
+      "reason"
+    ],
+    "rule": "the reason belongs to the status (Q8)"
+  },
+  "review-without-reason.json": {
+    "path": [
+      "reason"
+    ],
+    "rule": "a review answer names its reason (ADR-0033)"
+  },
+  "tiktok-person-public.json": {
+    "path": [
+      "public_account"
+    ],
+    "rule": "no TikTok person's account is listable (ADR-0010 L70)"
+  }
+}

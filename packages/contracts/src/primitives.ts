@@ -41,10 +41,24 @@ export const PATTERNS = {
   analysisTask:
     /^(sentiment|sentiment_aspect|topic_cluster|entities|media_fetch|media_ocr|media_tags|media_asr|media_logo|topics\.[A-Za-z0-9_.-]+)$/,
   modelVersion: /^[^\x00-\x20:]+$/,
+  topicsTask: /^topics\.[A-Za-z0-9_.-]+$/,
   analysisKey:
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:(sentiment|sentiment_aspect|topic_cluster|entities|media_fetch|media_ocr|media_tags|media_asr|media_logo|topics\.[A-Za-z0-9_.-]+):[^\x00-\x20:]+$/,
   topicId: /^[A-Za-z0-9_.-]+:[^\x00-\x20]+$/,
   urlKey: /^news:url:[0-9a-f]{64}$/,
+  // del:<reason>:<scope>:<hex> (Q2; ADR-0035).
+  deletionId:
+    /^del:(platform_sync|retention|author_request|client_offboarding|legal|authorization_revoked|client_request):(item|author|source|client):[0-9a-f]{64}$/,
+  // The one schema id that is a pattern (Q5, F-52).
+  dlqSchema: /^dlq\.[a-z0-9]+(-[a-z0-9]+)*\/v1$/,
+  digits: /^[0-9]+$/,
+  // A job queue: jobs.<service>, or an analysis service's jobs.<service>.priority lane (ADR-0023).
+  queue: /^jobs\.[a-z0-9]+(-[a-z0-9]+)*(\.priority)?$/,
+  base64: /^[A-Za-z0-9+/]*={0,2}$/,
+  // A Telegram chat id: a group's or channel's is negative.
+  chatId: /^-?[0-9]+$/,
+  // An ISO 3166-1 alpha-2 country code.
+  country: /^[A-Z]{2}$/,
 } as const;
 /* eslint-enable no-control-regex -- end of the patterns */
 

@@ -1,9 +1,13 @@
 {
   "envelope": {
     "schema": "raw.items/v1",
-    "message_id": "01M47KA7QG5JX8D2N6C4B0RTWZ",
+    "message_id": "01M47KA7QGERAQ2XTKZVWBR2YC",
     "produced_at": "2026-10-06T03:15:02Z",
-    "producer": { "service": "search-hit-router", "version": "1.0.0", "job_id": "01M47F78AGDCFWH3S8DKZZJENT" },
+    "producer": {
+      "service": "search-hit-router",
+      "version": "1.0.0",
+      "job_id": "01M47F78AGDCFWH3S8DKZZJENT"
+    },
     "platform": "web",
     "kind": "result",
     "provenance": {
@@ -13,7 +17,9 @@
       "fetched_at": "2026-10-06T03:04:11Z"
     },
     "retention_class": "news_excerpt",
-    "client_ids": ["0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"],
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
     "job_id": "01M47F78AGDCFWH3S8DKZZJENT",
     "attempt": 1,
     "job_kind": "rotation",

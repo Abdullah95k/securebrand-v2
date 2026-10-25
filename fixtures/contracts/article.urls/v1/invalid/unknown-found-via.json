@@ -1,0 +1,26 @@
+{
+  "schema": "article.urls/v1",
+  "message_id": "01M47W0WQ8B6KFB4674T5B5RYH",
+  "produced_at": "2026-10-06T05:47:13Z",
+  "producer": {
+    "service": "news-feed-poller",
+    "version": "1.0.0",
+    "job_id": "01J9N3A4K8R2T7V5X0M6C1D9HE"
+  },
+  "source_id": "3c7f9d52-1e4a-4b86-a0d3-7b2e5c8f1a90",
+  "url": "https://www.example-daily.iq/politics/2026/10/06/budget-session",
+  "url_key": "news:url:bfa6375a3060bdfd4e3300b6108b89807201e8e8f68698ce2ae193ececc5efd4",
+  "found_via": "rss",
+  "found_at": "2026-10-06T05:47:12Z",
+  "title": "البرلمان يحدد موعد جلسة الموازنة",
+  "published_at": "2026-10-06T05:41:00Z",
+  "feed_url": "https://www.example-daily.iq/feed",
+  "feed_format": "rss2",
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "news-feed-poller",
+    "fetched_at": "2026-10-06T05:47:12Z"
+  },
+  "retention_class": "news_excerpt"
+}

@@ -1,0 +1,41 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M4807FBRPDW49WX1R2MPK1A5",
+    "produced_at": "2026-10-06T07:00:43Z",
+    "producer": {
+      "service": "x-user-timeline-poller",
+      "version": "1.0.0",
+      "job_id": "01J9P4K8W2R6T0Y3N7B5D1F9HC"
+    },
+    "platform": "x",
+    "kind": "post",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "x-user-timeline-poller",
+      "fetched_at": "2026-10-06T07:00:41Z"
+    },
+    "retention_class": "x_24h_sync",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01J9P4K8W2R6T0Y3N7B5D1F9HC",
+    "attempt": 1,
+    "job_kind": "rotation",
+    "api_version": "2",
+    "raw_ref": "raw/green/x/2026/10/06/x-user-timeline-poller/000087.jsonl.zst#21",
+    "source_id": "a4d2c9e1-5b7f-4e3a-8c60-2f1b9d7e4a35",
+    "platform_id": "2107360526334088839",
+    "idempotency_key": "x:post:2107360526334088839",
+    "context": {
+      "paid": true
+    }
+  },
+  "payload": {
+    "id": "2107360526334088839",
+    "text": "تخفيضات نهاية الأسبوع في جميع الفروع",
+    "author_id": "1456789012345678901",
+    "created_at": "2026-10-06T06:58:02.000Z"
+  }
+}

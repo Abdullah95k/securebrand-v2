@@ -1,0 +1,36 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M48AMPEGT9SNCA6YP5D3N688",
+    "produced_at": "2026-10-06T10:02:42Z",
+    "producer": {
+      "service": "li-org-resolver",
+      "version": "1.0.0",
+      "job_id": "01M48AMMG0BSDJZYJZ2V3SKTWF"
+    },
+    "platform": "linkedin",
+    "kind": "post",
+    "provenance": {
+      "route": "amber",
+      "vendor": "harvestapi",
+      "service": "li-org-resolver",
+      "fetched_at": "2026-10-06T10:02:40Z"
+    },
+    "retention_class": "linkedin_org",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01M48AMMG0BSDJZYJZ2V3SKTWF",
+    "attempt": 1,
+    "job_kind": "resolve",
+    "api_version": "harvestapi-v1",
+    "raw_ref": "raw/amber/linkedin/2026/10/06/li-org-resolver/000002.jsonl.zst#3",
+    "candidate_key": "linkedin:urn:li:organization:1234567",
+    "platform_id": "urn:li:activity:7245000000000000123",
+    "idempotency_key": "linkedin:post:urn:li:activity:7245000000000000123"
+  },
+  "payload": {
+    "id": "7245000000000000123",
+    "text": "Example Bank results for the third quarter"
+  }
+}
