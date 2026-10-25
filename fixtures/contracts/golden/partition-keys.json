@@ -72,10 +72,10 @@
       "name": "an ordinary individual's answer keys on its author_ref",
       "schema": "poster.profiles/v1",
       "message": {
-        "author_ref": "5d0c7e91a3b84f26c1e9d07a5b3f8e64a2c0d19b7e5f3a8c6d4b2e0f9a1c7385",
+        "author_ref": "2a630e32b9c6e3f32669ce9f67ce3f9c2d549aabb6f9dfbb0342631fafa9e12b",
         "account_type": "individual"
       },
-      "key": "5d0c7e91a3b84f26c1e9d07a5b3f8e64a2c0d19b7e5f3a8c6d4b2e0f9a1c7385"
+      "key": "2a630e32b9c6e3f32669ce9f67ce3f9c2d549aabb6f9dfbb0342631fafa9e12b"
     },
     {
       "name": "a decision about a candidate keys on the candidate key",
@@ -120,9 +120,9 @@
       "schema": "registry.decisions/v1",
       "message": {
         "decision": "mention_only",
-        "author_ref": "5d0c7e91a3b84f26c1e9d07a5b3f8e64a2c0d19b7e5f3a8c6d4b2e0f9a1c7385"
+        "author_ref": "2a630e32b9c6e3f32669ce9f67ce3f9c2d549aabb6f9dfbb0342631fafa9e12b"
       },
-      "key": "5d0c7e91a3b84f26c1e9d07a5b3f8e64a2c0d19b7e5f3a8c6d4b2e0f9a1c7385"
+      "key": "2a630e32b9c6e3f32669ce9f67ce3f9c2d549aabb6f9dfbb0342631fafa9e12b"
     },
     {
       "name": "a source event keys on the source",
@@ -171,9 +171,9 @@
       "schema": "deletions/v1",
       "message": {
         "scope": "author",
-        "author_ref": "5d0c7e91a3b84f26c1e9d07a5b3f8e64a2c0d19b7e5f3a8c6d4b2e0f9a1c7385"
+        "author_ref": "2a630e32b9c6e3f32669ce9f67ce3f9c2d549aabb6f9dfbb0342631fafa9e12b"
       },
-      "key": "5d0c7e91a3b84f26c1e9d07a5b3f8e64a2c0d19b7e5f3a8c6d4b2e0f9a1c7385"
+      "key": "2a630e32b9c6e3f32669ce9f67ce3f9c2d549aabb6f9dfbb0342631fafa9e12b"
     },
     {
       "name": "a client-scope deletion keys on the client",
@@ -254,9 +254,9 @@
       "queue": "jobs.x-user-resolver",
       "message": {
         "kind": "resolve",
-        "candidate_key": "x:abuali_basra"
+        "candidate_key": "x:example_poster_x"
       },
-      "key": "x:abuali_basra"
+      "key": "x:example_poster_x"
     },
     {
       "name": "a resolver's refresh keys on the source's id form, not its source_id",
@@ -389,9 +389,9 @@
       "message": {
         "queue": "jobs.x-user-resolver",
         "kind": "resolve",
-        "candidate_key": "x:abuali_basra"
+        "candidate_key": "x:example_poster_x"
       },
-      "key": "x:abuali_basra"
+      "key": "x:example_poster_x"
     },
     {
       "name": "a completion report of a sweep keys on its run",

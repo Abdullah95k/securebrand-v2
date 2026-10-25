@@ -28,7 +28,7 @@
     "source_id": "a3d8f0c2-5b17-4e69-8c0d-72e1b94a6f35",
     "platform_id": "4118203958217764",
     "idempotency_key": "facebook:post:4118203958217764",
-    "author_ref": "e4c91a07b5d3f2886a0c1d9e47b3a5f6c2d80e19a7b4c3f5d6e2a1b09c8d7f34",
+    "author_ref": "6aa33b097388d33696a53a803eaf737d2d82ae3287b703859c48f7a6d9bad5d0",
     "redacted_fields": [
       "from.id",
       "from.name"

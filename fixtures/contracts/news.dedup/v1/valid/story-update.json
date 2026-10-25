@@ -12,7 +12,7 @@
   "idempotency_key": "news:article:b81c3e5f0a2d7946e1f0c8a5d3b9e72f46a1c0d8e5b3f97a2c4d6e0b1a8f5c39",
   "story_id": "01J9N4W6C2R8T5K1V7X3M0DPZA",
   "is_origin": false,
-  "duplicate_of": "news:article:e7a41b09c35d28f6a1d0b94c7e3f5a82d6c1b0e947f3a5d82c6b1e0a49d7f315",
+  "duplicate_of": "news:article:bfa6375a3060bdfd4e3300b6108b89807201e8e8f68698ce2ae193ececc5efd4",
   "cluster_size": 5,
   "version": 2,
   "rank_in_cluster": 3,

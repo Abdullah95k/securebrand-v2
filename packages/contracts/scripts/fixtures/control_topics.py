@@ -145,7 +145,13 @@ def decisions() -> None:
             out["retention_class"] = retention_class
         return out
 
-    # The qualifier's add (qualifier §6.2 L84).
+    # The qualifier's add (qualifier §6.2 L84). A topic consumer copies its input's producer.job_id
+    # (F-17): here the poster-resolver profile it applies.
+    profile = json.loads(
+        (
+            __import__("common").ROOT / "poster.profiles/v1/valid/prd-poster-resolver.json"
+        ).read_text()
+    )
     add = dec(
         "qualifier",
         "2026-10-06T10:14:30Z",
@@ -158,7 +164,7 @@ def decisions() -> None:
         retention_class="meta_on_request",
         decision_id=IG_DECISION,
         message_id="01M48BA9VGH96Q50HZX9S88TJC",
-        job_id="01M48BA9VG0RQK3WTX5M2D7Y4N",
+        job_id=profile["producer"]["job_id"],
     )
     valid(s, "prd-qualifier", add)
     prd(
@@ -904,7 +910,7 @@ def decisions() -> None:
             "2026-10-06T11:04:10Z",
             "mention_only",
             None,
-            {"candidate_key": "x:1290000000000000999"},
+            {"candidate_key": "x:1000000000000000004"},
             {**q, "rule_hit": 7},
             "mention",
             provenance=prov("green", None, "x-user-resolver", "2026-10-06T11:04:00Z"),
@@ -916,7 +922,7 @@ def decisions() -> None:
         "2026-10-06T11:03:20Z",
         "mention_only",
         None,
-        {"author_ref": ref("1290000000000000045", "x")},
+        {"author_ref": ref("1000000000000000001", "x")},
         {**q, "rule_hit": 7},
         "mention-author",
         provenance=prov("green", None, "x-user-resolver", "2026-10-06T11:03:10Z"),
@@ -985,7 +991,7 @@ def decisions() -> None:
     invalid(
         s,
         "mention-only-two-subjects",
-        {**mention_author, "candidate_key": "x:1290000000000000045"},
+        {**mention_author, "candidate_key": "x:1000000000000000001"},
         ["candidate_key"],
         "an individual's mention is keyed by author_ref alone (ADR-0033)",
     )
@@ -1461,8 +1467,9 @@ def events() -> None:
         actor: str,
         name: str,
         message_id: str | None = None,
+        job_id: str | None = None,
     ) -> dict[str, Any]:
-        m = meta(s, "registry-writer", ulid_for(at, "job", name), at, name=name)
+        m = meta(s, "registry-writer", job_id or ulid_for(at, "job", name), at, name=name)
         if message_id:
             m["message_id"] = message_id
         return {
@@ -1478,6 +1485,10 @@ def events() -> None:
         }
 
     base_cols = {**IG_COLUMNS, **registry_cols}
+    # registry-writer copies the qualifier decision's producer.job_id (F-17).
+    decision = json.loads(
+        (__import__("common").ROOT / "registry.decisions/v1/valid/prd-qualifier.json").read_text()
+    )
     added = ev(
         "2026-10-06T10:14:40Z",
         "added",
@@ -1488,6 +1499,7 @@ def events() -> None:
         "qualifier",
         "prd",
         message_id="01M48BAKM0NCCYDSZEC6V1PKHV",
+        job_id=decision["producer"]["job_id"],
     )
     added["produced_at"] = "2026-10-06T10:14:41Z"
     valid(s, "prd-registry-writer", added)
@@ -2367,12 +2379,15 @@ def jobs() -> None:
         due_at: str,
         name: str,
         produced_at: str | None = None,
+        producer_job: str | None = None,
         **fields: Any,
     ) -> dict[str, Any]:
         at = produced_at or due_at
         # producer.job_id (F-17): a scheduler's job carries its own job_id, a D3 writer's the
         # request's request_id, any other job the job or input message its producer was handling.
-        if service == "comment-decay-scheduler":
+        if producer_job is not None:
+            run = producer_job
+        elif service == "comment-decay-scheduler":
             run = job_id
         elif service in ("admin-api", "client-portal", "admin-console") and "request_id" in fields:
             run = fields["request_id"]
@@ -2389,6 +2404,13 @@ def jobs() -> None:
 
     def v(name: str, queue: str, obj: dict[str, Any]) -> dict[str, Any]:
         return valid(s, name, obj, queue=queue)
+
+    def raw_job(name: str) -> str:
+        """The job_id of a raw record written earlier, which the job it led to copies (F-17)."""
+        raw = json.loads(
+            (__import__("common").ROOT / f"raw.items/v1/valid/{name}.json").read_text()
+        )
+        return str(raw["envelope"]["job_id"])
 
     def bad(name: str, queue: str, obj: dict[str, Any], path: list[str | int], rule: str) -> None:
         invalid(s, name, obj, path, rule, queue=queue)
@@ -2462,6 +2484,7 @@ def jobs() -> None:
         "01J9N7QW3E5R8T2Y6V0H4M9P1A",
         "2026-10-06T09:12:44Z",
         "prd",
+        producer_job=raw_job("prd-yt-pubsub-receiver"),
         source_id="3c9a7e52-1f4b-4d8e-b6a0-8e2f5c1d7a94",
         post_ref={
             "item_id": iid("youtube", "video", vid),
@@ -2492,6 +2515,7 @@ def jobs() -> None:
         "01J9P4D3A1M6W2C8F5H0K7N4QS",
         "2026-10-06T11:04:28Z",
         "prd",
+        producer_job=raw_job("prd-yt-uploads-reconciler"),
         source_id="a3d9f1c4-5e27-4b8a-9f60-2c1e7d4b8a93",
         post_ref={"item_id": iid("youtube", "video", rv), "platform": "youtube", "platform_id": rv},
         origin_kind="reconciliation",

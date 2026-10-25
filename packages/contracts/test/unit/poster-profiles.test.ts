@@ -12,9 +12,9 @@ describe("poster.profiles/v1 (A27)", () => {
     const base = fixture(ID, "valid", "individual.json");
     expect(validate(ID, base.value).ok).toBe(true);
     const values: Record<string, unknown> = {
-      handle: "abuali_basra",
+      handle: "example_poster_x",
       display_name: "Abu Ali",
-      url: "https://x.com/abuali_basra",
+      url: "https://x.com/example_poster_x",
       country_signals: null,
       extras: {},
     };

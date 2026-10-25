@@ -19,9 +19,9 @@ def test_rejects_a_handle_display_name_url_country_signals_or_extras_on_an_indiv
     base = fixture(ID, "valid", "individual.json")
     assert validate(ID, base.value).ok
     values: dict[str, Any] = {
-        "handle": "abuali_basra",
+        "handle": "example_poster_x",
         "display_name": "Abu Ali",
-        "url": "https://x.com/abuali_basra",
+        "url": "https://x.com/example_poster_x",
         "country_signals": None,
         "extras": {},
     }

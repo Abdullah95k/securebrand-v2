@@ -11,6 +11,7 @@ from common import (
     meta,
     metadata_invalids,
     prd,
+    ref,
     tolerant,
     ulid_for,
     valid,
@@ -436,7 +437,7 @@ def alerts() -> None:
     invalid(
         s,
         "with-author-ref",
-        {**budget, "author_ref": "a" * 64},
+        {**budget, "author_ref": ref("1000000000000000001", "x")},
         ["author_ref"],
         "an alert carries no author_ref (alert-evaluator.md L65; F-51)",
     )
@@ -450,7 +451,7 @@ def alerts() -> None:
     invalid(
         s,
         "with-handle",
-        with_(budget, ("subject", "handle"), "abuali_basra"),
+        with_(budget, ("subject", "handle"), "example_poster_x"),
         ["subject", "handle"],
         "an alert carries no handle (alert-evaluator.md L128; F-51)",
     )

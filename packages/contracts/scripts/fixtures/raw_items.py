@@ -119,6 +119,8 @@ def msg(env: dict[str, Any], payload: dict[str, Any]) -> dict[str, Any]:
 
 
 FB_PAGE = "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+# The public group of fb-keyword-search's PRD example (§5.4 L79), whose platform id stays.
+FB_PRD_GROUP = "271936048205533"
 
 
 def facebook() -> dict[str, Any]:
@@ -207,7 +209,7 @@ def facebook() -> dict[str, Any]:
                 platform_id="1198837625012734_5520817364092219",
                 parent=iid("facebook", "post", post),
                 root=iid("facebook", "post", post),
-                author_ref="5d0c7e91a3b84f26c1e9d07a5b3f8e64a2c0d19b7e5f3a8c6d4b2e0f9a1c7385",
+                author_ref=ref("1000000000000000011", "facebook"),
                 redacted=["from"],
                 job_kind="push",
             ),
@@ -258,7 +260,7 @@ def facebook() -> dict[str, Any]:
                 platform_id="5520817364092218",
                 parent=iid("facebook", "post", gpost),
                 root=iid("facebook", "post", gpost),
-                author_ref="b90e2d41f7a3c6850e1d9b3a7c5f4e2d8a6b0c1f3e5d7a9b2c4e6f8a0d1b3c57",
+                author_ref=ref("1000000000000000012", "facebook"),
                 redacted=["author"],
                 job_kind="comments",
                 context={"series_step": "+1h"},
@@ -308,7 +310,7 @@ def facebook() -> dict[str, Any]:
                 rawref("amber", "facebook", "2026-10-06", "fb-group-posts-poller", 52, 8),
                 source_id=group,
                 platform_id=gpost,
-                author_ref="e4c91a07b5d3f2886a0c1d9e47b3a5f6c2d80e19a7b4c3f5d6e2a1b09c8d7f34",
+                author_ref=ref("1000000000000000013", "facebook"),
                 redacted=["from.id", "from.name"],
                 api_version="scrapecreators-v1",
             ),
@@ -354,10 +356,18 @@ def facebook() -> dict[str, Any]:
                 context={"query": {"variant": "شركة المثال", "rank": 1}},
                 api_version="sociavault-v1",
             ),
+            # The PRD's post object (§5.4 L76-L83), a member's post in a public group; the
+            # member's id and name are invented (D-8).
             {
                 "id": gpost,
-                "message": "شركة المثال فتحت فرع جديد",
-                "from": {"id": "100071234567890", "name": "Example Page"},
+                "text": "الإنترنت من شركة المثال بطيء جداً هالأيام، منو عنده نفس المشكلة؟",
+                "created_time": "2026-10-06T06:30:12+0000",
+                "url": f"https://www.facebook.com/groups/{FB_PRD_GROUP}/posts/{gpost}",
+                "author": {"id": "1000000000000000003", "name": "Example Member"},
+                "context": {"type": "group", "id": FB_PRD_GROUP, "name": "مجموعة أهالي المنطقة"},
+                "reactions": 12,
+                "comments": 9,
+                "shares": 0,
             },
         ),
     )
@@ -375,6 +385,8 @@ def facebook() -> dict[str, Any]:
             R_API,
             "query moves into context, a declared key (ADR-0005)",
             "the poster's id stays in the payload for discovery, so the envelope carries no author_ref; normalize-item computes it (ADR-0010 L47; Q3)",
+            "the payload is the post object of §5.4 L76-L83, a member's post with its group context; the member's id and name replaced by invented ones (D-8)",
+            "keyword-matcher's container candidate for this post is its group, facebook:group:271936048205533 (discovery.hits/v1/valid/container-group.json; ADR-0031 L34)",
         ],
     )
 
@@ -1749,7 +1761,7 @@ def x() -> None:
             {
                 "id": "1843201122334455667",
                 "text": "شبكة دجلة تيليكوم بالبصرة صارت أحسن من قبل بس السعر غالي",
-                "author_id": "1290000000000000045",
+                "author_id": "1000000000000000001",
                 "conversation_id": "1843201122334455667",
                 "created_at": "2026-10-06T09:02:31.000Z",
                 "lang": "ar",
@@ -1759,7 +1771,9 @@ def x() -> None:
                     "like_count": 38,
                     "quote_count": 1,
                 },
-                "includes": {"users": [{"id": "1290000000000000045", "username": "abuali_basra"}]},
+                "includes": {
+                    "users": [{"id": "1000000000000000001", "username": "example_poster_x"}]
+                },
             },
         ),
     )
@@ -1779,6 +1793,7 @@ def x() -> None:
             "discovery_hit_emitted goes (ADR-0031); paid moves into context",
             "includes move inside the payload (ADR-0005)",
             "the poster's id stays in the payload for discovery, so no author_ref (ADR-0010 L47)",
+            "the poster's handle and id replaced by invented ones (D-8)",
         ],
     )
 

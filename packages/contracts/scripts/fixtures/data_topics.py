@@ -462,7 +462,7 @@ def hits() -> None:
         "hit_at": hit_at,
         "url": f"https://x.com/i/status/{x_post}",
         "poster": {
-            "author_ref": ref("1290000000000000045", "x"),
+            "author_ref": ref("1000000000000000001", "x"),
             "author_type": "individual",
             "author_source_id": None,
         },
@@ -486,6 +486,7 @@ def hits() -> None:
             "keyword_set_version written in full, cs:<64 hex> (ADR-0070 a))",
             "matched_by text added (ADR-0031; F-20)",
             "raw_ref batch with six digits",
+            "the poster's handle and id replaced by invented ones (D-8)",
         ],
         note="its discovery.hits example is under discovery.hits/v1",
     )
@@ -567,7 +568,7 @@ def hits() -> None:
     invalid(
         s,
         "poster-handle",
-        with_(base, ("poster", "handle"), "abuali_basra"),
+        with_(base, ("poster", "handle"), "example_poster_x"),
         ["poster", "handle"],
         "no person's handle on a hit (ADR-0010)",
     )
@@ -601,11 +602,11 @@ def discovery() -> None:
     km: dict[str, Any] = {
         **meta(s, "keyword-matcher", "01M4871WM0NJ5SWYGET3ZGFGSP", "2026-10-06T09:14:41Z"),
         "candidate": {
-            "candidate_key": "x:1290000000000000045",
+            "candidate_key": "x:1000000000000000001",
             "platform": "x",
             "type": None,
-            "platform_id": "1290000000000000045",
-            "handle": "abuali_basra",
+            "platform_id": "1000000000000000001",
+            "handle": "example_poster_x",
             "url": None,
         },
         "evidence_type": "keyword_hit",
@@ -638,6 +639,7 @@ def discovery() -> None:
             "candidate.author_ref and candidate_pending go: the candidate carries the poster's clear id until poster-resolver classes it (ADR-0010 L49, ADR-0031)",
             "candidate.type null: keyword-matcher cannot tell the poster kind",
             "item_id names the item, url null (exactly one)",
+            "the poster's handle and id replaced by invented ones (D-8)",
         ],
     )
     fb: dict[str, Any] = {
@@ -811,19 +813,20 @@ def discovery() -> None:
             "url names the site (exactly one of item_id and url)",
         ],
     )
+    # The group of fb-keyword-search's PRD post, named in its raw record's context (ADR-0031 L34).
     group = {
         **km,
         "candidate": {
-            "candidate_key": facebook_group_candidate_key("4118203958217711"),
+            "candidate_key": facebook_group_candidate_key("271936048205533"),
             "platform": "facebook",
             "type": "group",
-            "platform_id": "4118203958217711",
+            "platform_id": "271936048205533",
             "handle": None,
             "url": None,
         },
         "evidence_type": "container",
         "item_id": iid("facebook", "post", "4118203958217764"),
-        "evidence": {"name": "سوق المنصور"},
+        "evidence": {"name": "مجموعة أهالي المنطقة"},
         "source_id": "c7e41b95-0a3d-4f82-b6c9-18d5e2a07f43",
         "provenance": prov("amber", "sociavault", "fb-keyword-search", "2026-10-06T03:12:48Z"),
         "retention_class": "vendor_agreed",
@@ -833,11 +836,11 @@ def discovery() -> None:
         **km,
         **meta(s, "x-recent-search", "01M487XBH07GQE33JRM29CMCMZ", "2026-10-06T09:15:06Z"),
         "candidate": {
-            "candidate_key": "x:1290000000000000045",
+            "candidate_key": "x:1000000000000000001",
             "platform": "x",
             "type": "account",
-            "platform_id": "1290000000000000045",
-            "handle": "abuali_basra",
+            "platform_id": "1000000000000000001",
+            "handle": "example_poster_x",
             "url": None,
         },
         "evidence_type": "early_signal",
@@ -909,7 +912,7 @@ def discovery() -> None:
     invalid(
         s,
         "poster-field",
-        with_(km, ("poster",), {"handle": "abuali_basra"}),
+        with_(km, ("poster",), {"handle": "example_poster_x"}),
         ["poster"],
         "poster goes (ADR-0031)",
     )
@@ -1575,7 +1578,7 @@ def profiles() -> None:
         "resolved_at": "2026-10-06T11:03:10Z",
         "cached": False,
         "cached_until": "2026-11-05T11:03:10Z",
-        "author_ref": ref("1290000000000000045", "x"),
+        "author_ref": ref("1000000000000000001", "x"),
         "account_type": "individual",
         "individual": True,
         "public_account": False,
@@ -1624,9 +1627,10 @@ def profiles() -> None:
         {
             **xp,
             **meta(s, "x-user-resolver", "01J9N8F4C2X7W1R5T3M6Q0ZKDC", "2026-10-06T11:04:00Z"),
-            "candidate_key": "x:1290000000000000999",
-            "platform_id": "1290000000000000999",
-            "handle": "dr_ali_basra",
+            "candidate_key": "x:1000000000000000004",
+            "platform_id": "1000000000000000004",
+            "handle": "example_public_figure_x",
+            "url": "https://x.com/example_public_figure_x",
             "display_name": "د. علي",
             "account_type": "individual",
             "individual": True,
@@ -1639,9 +1643,9 @@ def profiles() -> None:
     valid(s, "manual-origin", {**fbp, "origin": "manual"})
     metadata_invalids(s, fbp)
     for f, v in (
-        ("handle", "abuali_basra"),
+        ("handle", "example_poster_x"),
         ("display_name", "Abu Ali"),
-        ("url", "https://x.com/abuali_basra"),
+        ("url", "https://x.com/example_poster_x"),
         ("country_signals", signals()),
         ("extras", {"following": 3}),
     ):
@@ -2693,7 +2697,7 @@ def deletions() -> None:
         "author",
         "delete",
         "author_ref",
-        ref("1290000000000000045", "x"),
+        ref("1000000000000000001", "x"),
         {"platform": "x"},
         "2026-10-06T09:58:00Z",
         "2026-11-05T09:58:00Z",
@@ -3547,7 +3551,9 @@ def crawl() -> None:
 def dedup() -> None:
     s = "news.dedup/v1"
     k = "news:article:b81c3e5f0a2d7946e1f0c8a5d3b9e72f46a1c0d8e5b3f97a2c4d6e0b1a8f5c39"
-    origin = "news:article:e7a41b09c35d28f6a1d0b94c7e3f5a82d6c1b0e947f3a5d82c6b1e0a49d7f315"
+    # The origin is news-article-extractor's article (its source and published time below), keyed
+    # from its canonical URL with the helper.
+    origin = article_key("https://www.example-daily.iq/politics/2026/10/06/budget-session")
     base: dict[str, Any] = {
         **meta(s, "news-dedup", "01J9N3A4K8R2T7V5X0M6C1D9HF", "2026-10-06T06:07:45Z"),
         "type": "verdict",
@@ -3582,6 +3588,7 @@ def dedup() -> None:
             "item_id added from the article's key, which store-writer writes item_stories by (ADR-0022; Q8)",
             "dedup_version becomes version, item_stories.version (Q8)",
             "provenance and retention_class copied from the article (ADR-0003)",
+            "duplicate_of is news-article-extractor's article, keyed from its canonical URL with the helper (ADR-0036)",
         ],
     )
     valid(

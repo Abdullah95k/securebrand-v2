@@ -203,7 +203,7 @@ describe("provenance (ADR-0003, A18)", () => {
     for (const [path, v] of [
       [["text"], "النت منقطع"],
       [["author_ref"], "a".repeat(64)],
-      [["subject", "handle"], "abuali_basra"],
+      [["subject", "handle"], "example_poster_x"],
     ] as const) {
       const value = copyOf(f);
       const holder = (path.length === 2 ? value.subject : value) as Json;

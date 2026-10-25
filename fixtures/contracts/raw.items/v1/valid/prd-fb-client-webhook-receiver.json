@@ -30,7 +30,7 @@
     "idempotency_key": "facebook:comment:1198837625012734_5520817364092219",
     "parent_id": "bda54111-94d6-54e2-aab6-33e8b5cb48c6",
     "root_id": "bda54111-94d6-54e2-aab6-33e8b5cb48c6",
-    "author_ref": "5d0c7e91a3b84f26c1e9d07a5b3f8e64a2c0d19b7e5f3a8c6d4b2e0f9a1c7385",
+    "author_ref": "01686604a546fbcf45995bae99315c9de8d119f83525a3569ce0f34fc1be662b",
     "redacted_fields": [
       "from"
     ]

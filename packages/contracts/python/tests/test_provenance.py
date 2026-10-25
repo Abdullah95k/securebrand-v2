@@ -185,7 +185,7 @@ def test_an_n8n_alert_accepts_no_item_text_author_ref_or_handle() -> None:
     cases: list[tuple[list[str | int], str]] = [
         (["text"], "النت منقطع"),
         (["author_ref"], "a" * 64),
-        (["subject", "handle"], "abuali_basra"),
+        (["subject", "handle"], "example_poster_x"),
     ]
     for path, v in cases:
         value = f.copy()

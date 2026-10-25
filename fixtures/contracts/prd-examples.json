@@ -75,7 +75,9 @@
         "job_kind added; metrics_observation, origin, delivery and ingest_mode dropped (ADR-0005)",
         "api_version added (ADR-0005)",
         "query moves into context, a declared key (ADR-0005)",
-        "the poster's id stays in the payload for discovery, so the envelope carries no author_ref; normalize-item computes it (ADR-0010 L47; Q3)"
+        "the poster's id stays in the payload for discovery, so the envelope carries no author_ref; normalize-item computes it (ADR-0010 L47; Q3)",
+        "the payload is the post object of §5.4 L76-L83, a member's post with its group context; the member's id and name replaced by invented ones (D-8)",
+        "keyword-matcher's container candidate for this post is its group, facebook:group:271936048205533 (discovery.hits/v1/valid/container-group.json; ADR-0031 L34)"
       ]
     },
     {
@@ -447,7 +449,8 @@
         "service goes: producer carries it",
         "item_id added from the article's key, which store-writer writes item_stories by (ADR-0022; Q8)",
         "dedup_version becomes version, item_stories.version (Q8)",
-        "provenance and retention_class copied from the article (ADR-0003)"
+        "provenance and retention_class copied from the article (ADR-0003)",
+        "duplicate_of is news-article-extractor's article, keyed from its canonical URL with the helper (ADR-0036)"
       ]
     },
     {
@@ -648,7 +651,8 @@
         "client_id and keyword_id become client_ids and keyword_ids (ADR-0031)",
         "candidate.author_ref and candidate_pending go: the candidate carries the poster's clear id until poster-resolver classes it (ADR-0010 L49, ADR-0031)",
         "candidate.type null: keyword-matcher cannot tell the poster kind",
-        "item_id names the item, url null (exactly one)"
+        "item_id names the item, url null (exactly one)",
+        "the poster's handle and id replaced by invented ones (D-8)"
       ]
     },
     {
@@ -663,7 +667,8 @@
         "hit_id from the helper, uuid v5 under ns_hits; message_id the deterministic ULID of (hit_at; hit_id, item_version, keyword_set_version) (ADR-0006)",
         "keyword_set_version written in full, cs:<64 hex> (ADR-0070 a))",
         "matched_by text added (ADR-0031; F-20)",
-        "raw_ref batch with six digits"
+        "raw_ref batch with six digits",
+        "the poster's handle and id replaced by invented ones (D-8)"
       ],
       "note": "its discovery.hits example is under discovery.hits/v1"
     },
@@ -1149,7 +1154,8 @@
         "source_type, budget_tag and cost_units go (ADR-0005, ADR-0017)",
         "discovery_hit_emitted goes (ADR-0031); paid moves into context",
         "includes move inside the payload (ADR-0005)",
-        "the poster's id stays in the payload for discovery, so no author_ref (ADR-0010 L47)"
+        "the poster's id stays in the payload for discovery, so no author_ref (ADR-0010 L47)",
+        "the poster's handle and id replaced by invented ones (D-8)"
       ]
     },
     {

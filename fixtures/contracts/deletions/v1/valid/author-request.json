@@ -7,11 +7,11 @@
     "version": "1.0.0",
     "job_id": "01J9Q8A3V5N7B2D4F6H0K1M9QA"
   },
-  "deletion_id": "del:author_request:author:e43944cb712923935f634d37c353cae4a7f92b9d1d7c0f829d03dafb38875765",
+  "deletion_id": "del:author_request:author:7aacfd951d0a61651276e4deb208bc57cdbf97dde323fec502033dd0127f7cb5",
   "reason": "author_request",
   "scope": "author",
   "mode": "delete",
-  "author_ref": "ad0abdfca5947f1a9ebfb6f8485c492f4b1c816143b75be2783702232f5c75ea",
+  "author_ref": "2a630e32b9c6e3f32669ce9f67ce3f9c2d549aabb6f9dfbb0342631fafa9e12b",
   "target": {
     "platform": "x"
   },

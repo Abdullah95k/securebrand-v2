@@ -8,11 +8,11 @@
     "job_id": "01M4871WM0NJ5SWYGET3ZGFGSP"
   },
   "candidate": {
-    "candidate_key": "x:1290000000000000045",
+    "candidate_key": "x:1000000000000000001",
     "platform": "instagram",
     "type": null,
-    "platform_id": "1290000000000000045",
-    "handle": "abuali_basra",
+    "platform_id": "1000000000000000001",
+    "handle": "example_poster_x",
     "url": null
   },
   "evidence_type": "keyword_hit",

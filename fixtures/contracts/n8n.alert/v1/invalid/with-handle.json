@@ -16,7 +16,7 @@
   "alert": "budget_80",
   "severity": "warning",
   "subject": {
-    "handle": "abuali_basra"
+    "handle": "example_poster_x"
   },
   "summary": "x_pay_per_use: 80% of the post-read budget used",
   "details": {
