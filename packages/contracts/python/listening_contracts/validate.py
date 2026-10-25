@@ -193,6 +193,25 @@ def _as_json(value: object, path: IssuePath, out: _Issues) -> object:
     return value
 
 
+def _constant_types(parsed: object, sent: object, out: _Issues) -> None:
+    """A constant keeps its JSON type, as in Zod and the JSON Schema `const` (review finding 6).
+    Pydantic matches a literal by equality, even in strict mode, and keeps the literal: 0 sent
+    for `Literal[False]` parses as False, true for `Literal[1, 2, 3]` as 1. That is the only swap
+    between a boolean and a number strict Pydantic makes, so a parsed value and the value sent of
+    which one only is a boolean mark one. Unknown fields a consumer drops are not compared."""
+    pending: list[tuple[object, object, IssuePath]] = [(parsed, sent, [])]
+    while pending:
+        a, b, path = pending.pop()
+        if isinstance(a, dict) and isinstance(b, dict):
+            ad, bd = cast(dict[str, object], a), cast(dict[str, object], b)
+            pending.extend((ad[k], bd[k], [*path, k]) for k in ad if k in bd)
+        elif isinstance(a, list) and isinstance(b, list):
+            al, bl = cast(list[object], a), cast(list[object], b)
+            pending.extend((x, y, [*path, i]) for i, (x, y) in enumerate(zip(al, bl, strict=False)))
+        elif isinstance(a, bool) != isinstance(b, bool):
+            out.add(path, "literal_error", "a constant keeps its JSON type")
+
+
 # --- Pydantic issues ----------------------------------------------------------------------------
 
 
@@ -1285,6 +1304,10 @@ def validate(
             for e in error.errors()
         ]
         return ValidationResult(False, issues=issues)
+    dumped: object = parsed.model_dump(mode="json", by_alias=True)
+    _constant_types(dumped, message, out)
+    if out.list:
+        return ValidationResult(False, issues=out.list)
     sid = catalogue_id(schema_id)
     # The rules read the message as sent: in consumer mode it may hold fields the schema drops.
     raw = _rec(message)
@@ -1295,4 +1318,4 @@ def validate(
         _registry_checks(out, sid, raw)
     if out.list:
         return ValidationResult(False, issues=out.list)
-    return ValidationResult(True, parsed.model_dump(mode="json", by_alias=True))
+    return ValidationResult(True, dumped)

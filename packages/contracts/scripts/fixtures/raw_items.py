@@ -2466,6 +2466,14 @@ def invalids() -> None:
     tg = json.loads((ROOT / S / "valid" / "prd-tg-bot-channel-receiver.json").read_text())
     profile = json.loads((ROOT / S / "valid" / "profile.json").read_text())
     resp = json.loads((ROOT / S / "valid" / "search-response.json").read_text())
+    yt = json.loads((ROOT / S / "valid" / "prd-yt-keyword-search.json").read_text())
+    invalid(
+        S,
+        "context-partial-one",
+        with_(yt, ("envelope", "context", "partial"), 1),
+        ["envelope", "context", "partial"],
+        "a constant keeps its JSON type: 0 is not false and true is not 1 (finding 6)",
+    )
     # A payload's strings and keys are well-formed Unicode too (finding 5).
     invalid(
         S,

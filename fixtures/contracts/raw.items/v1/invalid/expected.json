@@ -57,6 +57,14 @@
     ],
     "rule": "a comment carries root_id (ADR-0009)"
   },
+  "context-partial-one.json": {
+    "path": [
+      "envelope",
+      "context",
+      "partial"
+    ],
+    "rule": "a constant keeps its JSON type: 0 is not false and true is not 1 (finding 6)"
+  },
   "flat-route.json": {
     "path": [
       "envelope",

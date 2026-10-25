@@ -546,6 +546,13 @@ def hits() -> None:
     )
     invalid(
         s,
+        "occurrences-false",
+        with_(src_hit, ("occurrences",), False),
+        ["occurrences"],
+        "a constant keeps its JSON type: 0 is not false and true is not 1 (finding 6)",
+    )
+    invalid(
+        s,
         "hit-id-not-the-helpers",
         with_(base, ("hit_id",), "b7e1c9d4-2a53-5f08-9c61-3d4e5f6a7b8c"),
         ["hit_id"],
@@ -1663,6 +1670,13 @@ def profiles() -> None:
             [f],
             f"an ordinary individual's answer carries no {f} (ADR-0033, ADR-0010)",
         )
+    invalid(
+        s,
+        "public-account-zero",
+        with_(ind, ("public_account",), 0),
+        ["public_account"],
+        "a constant keeps its JSON type: 0 is not false and true is not 1 (finding 6)",
+    )
     invalid(
         s,
         "individual-full-set",
@@ -3445,7 +3459,7 @@ def crawl() -> None:
             "changed_fields": ["status", "crawl_allowed", "reason"],
         },
     )
-    valid(
+    rsl_found = valid(
         s,
         "rsl-payment",
         {
@@ -3461,6 +3475,13 @@ def crawl() -> None:
                 "payment": {"type": "per-crawl", "amount": 0.002},
             },
         },
+    )
+    invalid(
+        s,
+        "rsl-found-one",
+        with_(rsl_found, ("rsl", "found"), 1),
+        ["rsl", "found"],
+        "a constant keeps its JSON type: 0 is not false and true is not 1 (finding 6)",
     )
     valid(
         s,

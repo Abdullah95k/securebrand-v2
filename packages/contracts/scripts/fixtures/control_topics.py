@@ -2546,6 +2546,13 @@ def jobs() -> None:
         tier=1,
     )
     v("rotation", "jobs.fb-page-feed-poller", rot)
+    bad(
+        "tier-true",
+        "jobs.fb-page-feed-poller",
+        {**rot, "tier": True},
+        ["tier"],
+        "a constant keeps its JSON type: 0 is not false and true is not 1 (finding 6)",
+    )
     tag = "e1d2c3b4-a596-4877-8b6a-5c4d3e2f1a09"
     igrot = job(
         "jobs.ig-hashtag-search",

@@ -115,6 +115,12 @@
     ],
     "rule": "an organisation kind is a public account (ADR-0010)"
   },
+  "public-account-zero.json": {
+    "path": [
+      "public_account"
+    ],
+    "rule": "a constant keeps its JSON type: 0 is not false and true is not 1 (finding 6)"
+  },
   "resolved-type.json": {
     "path": [
       "resolved_type"
