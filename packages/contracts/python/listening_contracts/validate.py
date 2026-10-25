@@ -1160,12 +1160,14 @@ def _n8n_alert(m: Json, out: _Issues, ctx: _Context) -> None:
     if m.get("audience") not in ("client", "account_manager"):
         return
     # The government rule (alert-evaluator §6.2 L102; F-50) needs the client's type, which the
-    # producer passes; a producer that does not fails closed (CONVENTIONS v1.1 L84).
-    if ctx.client_type is None:
+    # producer passes; a producer that does not fails closed (CONVENTIONS v1.1 L84). A value other
+    # than the two types counts as absent, so the rule fails closed on it too (note 13).
+    client_type = ctx.client_type if ctx.client_type in VOCABULARY["CLIENT_TYPES"] else None
+    if client_type is None:
         if ctx.mode == "producer":
             out.add([], "no_client_type", "a client's alert is validated with the client's type")
         return
-    if ctx.client_type != "government":
+    if client_type != "government":
         return
     # A government client's alert names its keyword or request only, so a subject field added
     # inside the version is refused too (F-50; note 12).

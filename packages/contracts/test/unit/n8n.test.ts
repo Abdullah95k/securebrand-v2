@@ -79,6 +79,18 @@ describe("n8n.alert/v1 and n8n.card/v1 (ADR-0067, A30)", () => {
     }
   });
 
+  it("fails closed on a client type other than commercial or government (note 13)", () => {
+    const f = fixture(ALERT, "valid", "prd-alert-evaluator.json");
+    // A type assertion is the only way a TypeScript caller passes these.
+    for (const clientType of [null, "Government", "gov", ""] as never[]) {
+      const r = validate(ALERT, f.value, "producer", { clientType });
+      expect(r.ok ? [] : r.issues.map((i) => [i.path, i.code]), String(clientType)).toEqual([
+        [[], "no_client_type"],
+      ]);
+      expect(validate(ALERT, f.value, "consumer", { clientType }).ok).toBe(true);
+    }
+  });
+
   it("sends an automatic-fallback notice to ops only (ADR-0021 L58; note 12)", () => {
     const f = fixture(ALERT, "valid", "source-fallback-notice.json");
     for (const audience of ["client", "account_manager"]) {

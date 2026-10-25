@@ -74,6 +74,17 @@ def test_names_a_government_alert_by_keyword_or_request_only_at_the_keyword_leve
         assert validate(ALERT, value, "producer", client_type="commercial").ok, path
 
 
+def test_fails_closed_on_a_client_type_other_than_commercial_or_government() -> None:
+    """Note 13."""
+    f = fixture(ALERT, "valid", "prd-alert-evaluator.json")
+    for client_type in ("Government", "gov", ""):
+        result = validate(ALERT, f.value, "producer", client_type=client_type)  # type: ignore[arg-type]
+        assert [[i["path"], i["code"]] for i in result.issues] == [[[], "no_client_type"]], (
+            client_type
+        )
+        assert validate(ALERT, f.value, "consumer", client_type=client_type).ok  # type: ignore[arg-type]
+
+
 def test_sends_an_automatic_fallback_notice_to_ops_only() -> None:
     """ADR-0021 L58; note 12."""
     f = fixture(ALERT, "valid", "source-fallback-notice.json")

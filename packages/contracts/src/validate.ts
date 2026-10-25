@@ -52,6 +52,7 @@ import {
   type DecisionSubject,
 } from "./registries/index.ts";
 import {
+  CLIENT_TYPES,
   CONTENT_KINDS,
   FETCH_DELETION_REASONS,
   FLAG_REASONS,
@@ -945,7 +946,9 @@ const n8nAlert: Rule = (m, out, ctx) => {
   if (m.audience !== "client" && m.audience !== "account_manager") return;
   // The government rule (alert-evaluator §6.2 L102; F-50) needs the client's type, which the
   // producer passes; a producer that does not fails closed (CONVENTIONS v1.1 L84).
-  const clientType = ctx.options.clientType;
+  // A value other than the two types, null included, counts as absent, so the rule fails closed.
+  const given: unknown = ctx.options.clientType;
+  const clientType = includes(CLIENT_TYPES, given) ? given : undefined;
   if (clientType === undefined) {
     if (ctx.mode === "producer")
       out.add([], "no_client_type", "a client's alert is validated with the client's type");
