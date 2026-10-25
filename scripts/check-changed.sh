@@ -12,8 +12,8 @@
 #                 (CI passes the commit before a push to main)
 #   SB_NO_FETCH   1: a shallow clone never fetches main (it then checks everything)
 #
-# A shallow clone first fetches main's history (git fetch --unshallow origin main) to find the
-# merge base. With no merge base (an unrelated history, a shallow clone that could not fetch) or a
+# A shallow clone first fetches main's history (git fetch --unshallow origin
+# +refs/heads/main:refs/remotes/origin/main) to find the merge base. With no merge base (an unrelated history, a shallow clone that could not fetch) or a
 # CHECK_BASE that is not a commit here, it checks everything and says so: make check never passes
 # silently. A change to the
 # shared Python configuration (ruff.toml, .python-version, uv.toml) checks every Python project,

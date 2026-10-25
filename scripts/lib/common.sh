@@ -53,16 +53,18 @@ sb_select_node
 # A shallow clone (--depth implies --single-branch) may lack origin/main or the commit where the
 # branch left it. Fetch main's full history once; SB_NO_FETCH=1 skips the fetch. Returns 0 when it
 # fetched, so the caller looks for the merge base again. Prints to stderr only: callers capture
-# stdout as the base.
+# stdout as the base. The messages name the full refspec: a plain `git fetch --unshallow origin
+# main` in a single-branch clone fills only FETCH_HEAD, and the clone is then no longer shallow.
+SB_UNSHALLOW_MAIN="git fetch --unshallow origin +refs/heads/main:refs/remotes/origin/main"
 sb_unshallow_for_base() {
   [ "$(git rev-parse --is-shallow-repository 2>/dev/null)" = true ] || return 1
   if [ "${SB_NO_FETCH:-0}" = 1 ]; then
-    echo "warning: shallow clone without the merge base with main: run git fetch --unshallow origin main" >&2
+    echo "warning: shallow clone without the merge base with main: run $SB_UNSHALLOW_MAIN" >&2
     return 1
   fi
-  echo "note: shallow clone without the merge base with main: git fetch --unshallow origin main" >&2
+  echo "note: shallow clone without the merge base with main: $SB_UNSHALLOW_MAIN" >&2
   git fetch --quiet --unshallow origin "+refs/heads/main:refs/remotes/origin/main" >&2 && return 0
-  echo "warning: git fetch --unshallow origin main failed (offline?): run it, then make check again" >&2
+  echo "warning: fetching main's history failed (offline?): run $SB_UNSHALLOW_MAIN, then make check again" >&2
   return 1
 }
 
