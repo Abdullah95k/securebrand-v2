@@ -5,6 +5,12 @@
     ],
     "rule": "poster-resolver writes only cached re-emits (ADR-0032)"
   },
+  "creator-public-null.json": {
+    "path": [
+      "public_account"
+    ],
+    "rule": "a typed account is marked public or not (ADR-0010 L59, ADR-0033 L26)"
+  },
   "extras-not-declared.json": {
     "path": [
       "extras",
@@ -29,6 +35,12 @@
       "public_account"
     ],
     "rule": "an ordinary individual's answer is the minimised one (ADR-0033)"
+  },
+  "individual-public-null.json": {
+    "path": [
+      "public_account"
+    ],
+    "rule": "a typed account is marked public or not (ADR-0010 L59, ADR-0033 L26)"
   },
   "individual-with-country-signals.json": {
     "path": [

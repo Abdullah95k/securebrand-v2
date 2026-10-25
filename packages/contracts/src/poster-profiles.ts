@@ -2,6 +2,8 @@
 // individual's answer (account_type `individual`, public_account false) carries only what the
 // qualifier may read of a person and is keyed by its author_ref; every other answer, a public
 // person's included, carries the full field set and is keyed by its candidate key (ADR-0010).
+// public_account is null exactly when account_type is null: a typed account is marked public or
+// not (ADR-0010 L59, ADR-0033 L24, L26), which validate() checks with the marks of Q7.
 import { z } from "zod";
 import type { SchemaBuilder } from "./builder.ts";
 import { extras } from "./context.ts";

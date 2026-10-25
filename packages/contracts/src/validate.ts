@@ -388,6 +388,12 @@ const posterProfiles: Rule = (m, out) => {
       );
     return;
   }
+  if (m.public_account === null)
+    out.add(
+      ["public_account"],
+      "public_unmarked",
+      "a typed account is marked public or not (ADR-0010 L59, ADR-0033 L26)",
+    );
   if (m.individual !== (type === "individual"))
     out.add(
       ["individual"],

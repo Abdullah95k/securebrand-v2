@@ -1658,6 +1658,34 @@ def profiles() -> None:
         ["public_account"],
         "an ordinary individual's answer is the minimised one (ADR-0033)",
     )
+    # A typed account is marked public or not: null goes with account_type null only.
+    invalid(
+        s,
+        "individual-public-null",
+        {
+            **xp,
+            "candidate_key": "x:1000000000000000002",
+            "platform_id": "1000000000000000002",
+            "handle": "example_person_x",
+            "display_name": "Example Person",
+            "url": "https://x.com/example_person_x",
+            "account_type": "individual",
+            "individual": True,
+            "public_account": None,
+            "verified": False,
+            "followers": 48,
+            "extras": {},
+        },
+        ["public_account"],
+        "a typed account is marked public or not (ADR-0010 L59, ADR-0033 L26)",
+    )
+    invalid(
+        s,
+        "creator-public-null",
+        {**xp, "account_type": "creator", "individual": False, "public_account": None},
+        ["public_account"],
+        "a typed account is marked public or not (ADR-0010 L59, ADR-0033 L26)",
+    )
     invalid(
         s,
         "individual-flag-mismatch",

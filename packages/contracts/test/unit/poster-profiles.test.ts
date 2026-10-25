@@ -44,4 +44,52 @@ describe("poster.profiles/v1 (A27)", () => {
       expect(failsAt(validate(ID, value), ["public_account"]), file).toBe(true);
     }
   });
+
+  // The platforms where a person kind may be listed, so only the marking rule refuses null there.
+  const LISTABLE: Record<string, string> = {
+    x: "prd-x-user-resolver.json",
+    facebook: "prd-fb-page-resolver.json",
+    youtube: "prd-yt-channel-resolver.json",
+    telegram: "prd-tg-channel-resolver.json",
+  };
+  const STATUSES: Record<string, string | null> = {
+    resolved: null,
+    review: "age_gated",
+    unresolvable: "not_found",
+  };
+
+  it("rejects a typed account whose public_account is null (ADR-0010 L59, ADR-0033 L26)", () => {
+    for (const [platform, file] of Object.entries(LISTABLE)) {
+      for (const type of ["individual", "creator"]) {
+        for (const [status, reason] of Object.entries(STATUSES)) {
+          const value = {
+            ...copyOf(fixture(ID, "valid", file)),
+            account_type: type,
+            individual: type === "individual",
+            public_account: null,
+            status,
+            reason,
+          };
+          for (const mode of ["producer", "consumer"] as const) {
+            const r = validate(ID, value, mode);
+            expect(failsAt(r, ["public_account"]), `${platform} ${type} ${status} ${mode}`).toBe(
+              true,
+            );
+          }
+        }
+      }
+    }
+  });
+
+  it("accepts public_account null only with account_type null", () => {
+    for (const file of ["review-age-gated.json", "unresolvable-not-found.json"]) {
+      const f = fixture(ID, "valid", file);
+      const v = f.value as Record<string, unknown>;
+      expect([v.account_type, v.individual, v.public_account], file).toEqual([null, null, null]);
+      for (const mode of ["producer", "consumer"] as const)
+        expect(validate(ID, f.value, mode).ok, `${file} ${mode}`).toBe(true);
+      const typed = { ...copyOf(f), account_type: "page", individual: false };
+      expect(failsAt(validate(ID, typed), ["public_account"]), file).toBe(true);
+    }
+  });
 });

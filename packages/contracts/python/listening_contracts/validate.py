@@ -448,6 +448,12 @@ def _poster_profiles(m: Json, out: _Issues, ctx: _Context) -> None:
                 "no public_account without an account_type",
             )
         return
+    if m.get("public_account") is None:
+        out.add(
+            ["public_account"],
+            "public_unmarked",
+            "a typed account is marked public or not (ADR-0010 L59, ADR-0033 L26)",
+        )
     if m.get("individual") is not (account_type == "individual"):
         out.add(
             ["individual"],
