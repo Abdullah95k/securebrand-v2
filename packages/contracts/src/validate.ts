@@ -17,6 +17,7 @@ import { REPORT_KIND_FIELDS } from "./jobs-completed.ts";
 import { PATTERNS } from "./primitives.ts";
 import {
   analysisKey,
+  cardId,
   canonicalUrlHash,
   deletionId,
   hitId,
@@ -50,6 +51,7 @@ import {
   CONTENT_KINDS,
   FETCH_DELETION_REASONS,
   FLAG_REASONS,
+  GOVERNMENT_ALERT_RULE_TYPES,
   ORGANISATION_ACCOUNT_TYPES,
   PERSON_ACCOUNT_TYPES,
   PERSON_UNLISTABLE_PLATFORMS,
@@ -772,6 +774,108 @@ const dlq: Rule = (m, out, ctx) => {
     );
 };
 
+/** A client or account-manager notice names its client; an ops notice none (F-46). */
+function checkAudience(out: Issues, m: Json): void {
+  const forClient = m.audience === "client" || m.audience === "account_manager";
+  if (forClient && m.client_id === null)
+    out.add(
+      ["client_id"],
+      "client_missing",
+      "a client or account-manager notice names its client (F-46)",
+    );
+  if (!forClient && m.client_id !== null)
+    out.add(["client_id"], "client_extra", "an ops notice names no client (F-46)");
+}
+
+const n8nAlert: Rule = (m, out, ctx) => {
+  if (m.idempotency_key !== `${str(m.alert_id) ?? ""}:${str(m.channel) ?? ""}`)
+    out.add(
+      ["idempotency_key"],
+      "idempotency_key_mismatch",
+      "idempotency_key = <alert_id>:<channel> (alert-evaluator §5.3 L69)",
+    );
+  checkAudience(out, m);
+  const details = rec(m.details);
+  if (details.subject_kind === "source" && details.source_id === undefined)
+    out.add(
+      ["details", "source_id"],
+      "fallback_subject",
+      "a source's fallback notice names the source (ADR-0021)",
+    );
+  if (details.subject_kind === "route") {
+    for (const name of ["platform", "route"]) {
+      if (details[name] === undefined)
+        out.add(
+          ["details", name],
+          "fallback_subject",
+          "a route's fallback notice names the platform and route (ADR-0021)",
+        );
+    }
+  }
+  if (m.audience !== "client" && m.audience !== "account_manager") return;
+  // The government rule (alert-evaluator §6.2 L102; F-50) needs the client's type, which the
+  // producer passes; a producer that does not fails closed (CONVENTIONS v1.1 L84).
+  const clientType = ctx.options.clientType;
+  if (clientType === undefined) {
+    if (ctx.mode === "producer")
+      out.add([], "no_client_type", "a client's alert is validated with the client's type");
+    return;
+  }
+  if (clientType !== "government") return;
+  const subject = rec(m.subject);
+  for (const name of ["source_id", "platform"]) {
+    if (subject[name] !== undefined)
+      out.add(
+        ["subject", name],
+        "government_subject",
+        `a government client's alert names no ${name} (F-50)`,
+      );
+  }
+  const scope = rec(details.scope);
+  for (const name of ["source", "platform"]) {
+    if (scope[name] !== undefined)
+      out.add(
+        ["details", "scope", name],
+        "government_scope",
+        `a government client's alert names no ${name} (alert-evaluator §6.2 L102)`,
+      );
+  }
+  if (details.rule_type !== undefined && !includes(GOVERNMENT_ALERT_RULE_TYPES, details.rule_type))
+    out.add(
+      ["details", "rule_type"],
+      "government_rule_type",
+      "a government client receives the keyword-level rule types only (alert-evaluator §5.3 C L65)",
+    );
+};
+
+const n8nCard: Rule = (m, out) => {
+  if (m.idempotency_key !== `${str(m.card_id) ?? ""}:${str(m.channel) ?? ""}`)
+    out.add(
+      ["idempotency_key"],
+      "idempotency_key_mismatch",
+      "idempotency_key = <card_id>:<channel> (F-23)",
+    );
+  checkAudience(out, m);
+  // The subject key is the candidate's or the source's; the reference is the decision's or the request's.
+  const subject = rec(m.subject);
+  const key = str(subject.candidate_key) ?? str(subject.source_id);
+  const ref = str(subject.decision_id) ?? str(subject.request_id);
+  if (key === undefined || ref === undefined) {
+    out.add(
+      ["subject"],
+      "card_subject",
+      "a card's subject names a candidate or source, and a decision or request (F-47)",
+    );
+    return;
+  }
+  if (derive(() => cardId(str(m.card_type) ?? "", key, ref)) !== m.card_id)
+    out.add(
+      ["card_id"],
+      "card_id_mismatch",
+      "card_id = uuid_v5(ns_cards, <card_type>:<subject key>:<ref>) (F-47)",
+    );
+};
+
 const RULES: Record<string, Rule> = {
   "raw.items/v1": rawItems,
   "items.normalized/v1": itemsNormalized,
@@ -790,9 +894,17 @@ const RULES: Record<string, Rule> = {
   "jobs.completed/v1": jobsCompleted,
   "job/v1": job,
   "dlq.<service>/v1": dlq,
+  "n8n.alert/v1": n8nAlert,
+  "n8n.card/v1": n8nCard,
 };
 
-const CONTROL = new Set(["source.events/v1", "jobs.completed/v1", "job/v1"]);
+const CONTROL = new Set([
+  "source.events/v1",
+  "jobs.completed/v1",
+  "job/v1",
+  "n8n.alert/v1",
+  "n8n.card/v1",
+]);
 
 // --- registry checks (producer mode) ---------------------------------------------------------------
 
@@ -861,7 +973,8 @@ function registryChecks(out: Issues, id: string, m: Json): void {
     );
   } else if (id === "registry.decisions/v1") {
     checkDecisionRow(out, m, service);
-  } else if (id !== "job/v1") {
+  } else if (id !== "job/v1" && !id.startsWith("n8n.")) {
+    // A job's producers are its queue's row; any service sends n8n notices (ADR-0067).
     const detail =
       id === "raw.items/v1"
         ? { kind: str(head.kind) ?? "" }

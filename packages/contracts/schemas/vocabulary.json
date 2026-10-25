@@ -15,6 +15,7 @@
     "organization_or_public_figure"
   ],
   "ADDED_BY": ["qualifier", "client", "ops"],
+  "ALERT_CHANNELS": ["email", "telegram", "slack", "webhook"],
   "ALERT_RULE_TYPES": [
     "volume_spike",
     "negative_share",
@@ -55,6 +56,7 @@
   "BACKFILL_REASONS": ["add", "client", "ops"],
   "CANDIDATE_TYPES": ["page", "group", "account", "creator", "channel", "company_page", "site"],
   "CAPPED_REASONS": ["route_cap", "budget", "deadline", "failed", "no_history", "flag_off"],
+  "CARD_INPUT_KINDS": ["url", "text"],
   "CARD_TYPES": ["qualifier_review", "grant_missing", "manual_url"],
   "CLIENT_TYPES": ["commercial", "government"],
   "COMMENT_PROFILES": [
@@ -156,6 +158,7 @@
     "web_search",
     "commoncrawl"
   ],
+  "FALLBACK_SUBJECT_KINDS": ["source", "route"],
   "FETCH_DELETION_REASONS": ["platform_sync", "authorization_revoked"],
   "FLAG_REASONS": ["flag_off", "flag_on"],
   "FOUND_VIA": [

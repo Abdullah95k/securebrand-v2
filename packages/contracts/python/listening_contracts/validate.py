@@ -29,6 +29,7 @@ from pydantic import BaseModel, ValidationError
 from listening_contracts.errors import ContractError
 from listening_contracts.keys import (
     analysis_key,
+    card_id,
     deletion_id,
     hit_id,
     idempotency_key,
@@ -90,6 +91,7 @@ PERSON_ACCOUNT_TYPES = VOCABULARY["PERSON_ACCOUNT_TYPES"]
 PERSON_UNLISTABLE_PLATFORMS = VOCABULARY["PERSON_UNLISTABLE_PLATFORMS"]
 PROFILE_REVIEW_REASONS = VOCABULARY["PROFILE_REVIEW_REASONS"]
 PROFILE_UNRESOLVABLE_REASONS = VOCABULARY["PROFILE_UNRESOLVABLE_REASONS"]
+GOVERNMENT_ALERT_RULE_TYPES = VOCABULARY["GOVERNMENT_ALERT_RULE_TYPES"]
 X_SERVICES = PLATFORM_GROUPS.get("x", ())
 
 
@@ -841,6 +843,107 @@ def _dlq(m: Json, out: _Issues, ctx: _Context) -> None:
         )
 
 
+def _check_audience(out: _Issues, m: Json) -> None:
+    """A client or account-manager notice names its client; an ops notice none (F-46)."""
+    for_client = m.get("audience") in ("client", "account_manager")
+    if for_client and m.get("client_id") is None:
+        out.add(
+            ["client_id"],
+            "client_missing",
+            "a client or account-manager notice names its client (F-46)",
+        )
+    if not for_client and m.get("client_id") is not None:
+        out.add(["client_id"], "client_extra", "an ops notice names no client (F-46)")
+
+
+def _n8n_alert(m: Json, out: _Issues, ctx: _Context) -> None:
+    want = f"{_str(m.get('alert_id')) or ''}:{_str(m.get('channel')) or ''}"
+    if m.get("idempotency_key") != want:
+        out.add(
+            ["idempotency_key"],
+            "idempotency_key_mismatch",
+            "idempotency_key = <alert_id>:<channel> (alert-evaluator §5.3 L69)",
+        )
+    _check_audience(out, m)
+    details = _rec(m.get("details"))
+    if details.get("subject_kind") == "source" and "source_id" not in details:
+        out.add(
+            ["details", "source_id"],
+            "fallback_subject",
+            "a source's fallback notice names the source (ADR-0021)",
+        )
+    if details.get("subject_kind") == "route":
+        for name in ("platform", "route"):
+            if name not in details:
+                out.add(
+                    ["details", name],
+                    "fallback_subject",
+                    "a route's fallback notice names the platform and route (ADR-0021)",
+                )
+    if m.get("audience") not in ("client", "account_manager"):
+        return
+    # The government rule (alert-evaluator §6.2 L102; F-50) needs the client's type, which the
+    # producer passes; a producer that does not fails closed (CONVENTIONS v1.1 L84).
+    if ctx.client_type is None:
+        if ctx.mode == "producer":
+            out.add([], "no_client_type", "a client's alert is validated with the client's type")
+        return
+    if ctx.client_type != "government":
+        return
+    subject = _rec(m.get("subject"))
+    for name in ("source_id", "platform"):
+        if name in subject:
+            out.add(
+                ["subject", name],
+                "government_subject",
+                f"a government client's alert names no {name} (F-50)",
+            )
+    scope = _rec(details.get("scope"))
+    for name in ("source", "platform"):
+        if name in scope:
+            out.add(
+                ["details", "scope", name],
+                "government_scope",
+                f"a government client's alert names no {name} (alert-evaluator §6.2 L102)",
+            )
+    if "rule_type" in details and details["rule_type"] not in GOVERNMENT_ALERT_RULE_TYPES:
+        out.add(
+            ["details", "rule_type"],
+            "government_rule_type",
+            "a government client receives the keyword-level rule types only"
+            " (alert-evaluator §5.3 C L65)",
+        )
+
+
+def _n8n_card(m: Json, out: _Issues, ctx: _Context) -> None:
+    want = f"{_str(m.get('card_id')) or ''}:{_str(m.get('channel')) or ''}"
+    if m.get("idempotency_key") != want:
+        out.add(
+            ["idempotency_key"],
+            "idempotency_key_mismatch",
+            "idempotency_key = <card_id>:<channel> (F-23)",
+        )
+    _check_audience(out, m)
+    # The subject key is the candidate's or the source's; the reference is the decision's or the
+    # request's.
+    subject = _rec(m.get("subject"))
+    key = _str(subject.get("candidate_key")) or _str(subject.get("source_id"))
+    ref = _str(subject.get("decision_id")) or _str(subject.get("request_id"))
+    if key is None or ref is None:
+        out.add(
+            ["subject"],
+            "card_subject",
+            "a card's subject names a candidate or source, and a decision or request (F-47)",
+        )
+        return
+    if _derive(lambda: card_id(_str(m.get("card_type")) or "", key, ref)) != m.get("card_id"):
+        out.add(
+            ["card_id"],
+            "card_id_mismatch",
+            "card_id = uuid_v5(ns_cards, <card_type>:<subject key>:<ref>) (F-47)",
+        )
+
+
 RULES: dict[str, Rule] = {
     "raw.items/v1": _raw_items,
     "items.normalized/v1": _items_normalized,
@@ -859,9 +962,11 @@ RULES: dict[str, Rule] = {
     "jobs.completed/v1": _jobs_completed,
     "job/v1": _job,
     "dlq.<service>/v1": _dlq,
+    "n8n.alert/v1": _n8n_alert,
+    "n8n.card/v1": _n8n_card,
 }
 
-CONTROL = {"source.events/v1", "jobs.completed/v1", "job/v1"}
+CONTROL = {"source.events/v1", "jobs.completed/v1", "job/v1", "n8n.alert/v1", "n8n.card/v1"}
 
 
 # --- registry checks (producer mode) ------------------------------------------------------------
@@ -931,7 +1036,8 @@ def _registry_checks(out: _Issues, sid: str, m: Json) -> None:
         )
     elif sid == "registry.decisions/v1":
         _check_decision_row(out, m, service)
-    elif sid != "job/v1":
+    elif sid != "job/v1" and not sid.startswith("n8n."):
+        # A job's producers are its queue's row; any service sends n8n notices (ADR-0067).
         target = (_str(m.get("schema")) or sid) if sid == "dlq.<service>/v1" else sid
         allowed = is_allowed_topic_writer(
             target,

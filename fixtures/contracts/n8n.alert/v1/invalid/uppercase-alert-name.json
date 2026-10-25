@@ -1,0 +1,32 @@
+{
+  "schema": "n8n.alert/v1",
+  "message_id": "01M42ZGJ40937YRDFQV903V72T",
+  "produced_at": "2026-10-04T08:12:00Z",
+  "producer": {
+    "service": "quota-governor",
+    "version": "1.0.0",
+    "job_id": "01M42ZGJ40BT8Y0KKM3PZA3PGX"
+  },
+  "alert_id": "01M42ZGJ40QHTHGNT0ZAZ884AY",
+  "idempotency_key": "01M42ZGJ40QHTHGNT0ZAZ884AY:telegram",
+  "channel": "telegram",
+  "fallthrough_channel": "email",
+  "audience": "ops",
+  "client_id": null,
+  "alert": "Budget80",
+  "severity": "warning",
+  "subject": {},
+  "summary": "x_pay_per_use: 80% of the post-read budget used",
+  "details": {
+    "facts": [
+      {
+        "label": "budget",
+        "value": "x_pay_per_use"
+      },
+      {
+        "label": "used",
+        "value": "2,400,312 of 3,000,000 post reads"
+      }
+    ]
+  }
+}

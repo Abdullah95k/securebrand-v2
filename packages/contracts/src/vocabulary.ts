@@ -416,7 +416,10 @@ export const RECONCILIATION_REASONS = ["lease_lapsed"] as const;
 
 // n8n.alert/v1 and n8n.card/v1 (ADR-0067, ADR-0048; Q11).
 export const N8N_CHANNELS = ["email", "telegram", "slack"] as const;
+// An alert may also go to a client's own webhook, which alert-evaluator posts itself (Q15; O-11).
+export const ALERT_CHANNELS = [...N8N_CHANNELS, "webhook"] as const;
 export const N8N_AUDIENCES = ["client", "ops", "account_manager"] as const;
+export const FALLBACK_SUBJECT_KINDS = ["source", "route"] as const; // ADR-0021 L58-L61
 export const ALERT_SEVERITIES = ["info", "warning", "high"] as const;
 export const ALERT_RULE_TYPES = [
   "volume_spike",
@@ -437,6 +440,7 @@ export const GOVERNMENT_ALERT_RULE_TYPES = [
 ] as const;
 export const CLIENT_TYPES = ["commercial", "government"] as const; // CONVENTIONS v1.1 L84
 export const CARD_TYPES = ["qualifier_review", "grant_missing", "manual_url"] as const;
+export const CARD_INPUT_KINDS = ["url", "text"] as const; // a manual_url card's inputs (F-47)
 export const REVIEW_CARD_ACTIONS = [
   "approve_tier_1",
   "approve_tier_2",

@@ -14,6 +14,7 @@ import { buildItemsAnalysis } from "./items-analysis.ts";
 import { buildItemsNormalized } from "./items-normalized.ts";
 import { buildJob } from "./job.ts";
 import { buildJobsCompleted } from "./jobs-completed.ts";
+import { buildN8nAlert, buildN8nCard } from "./n8n.ts";
 import { buildNewsDedup } from "./news-dedup.ts";
 import { buildPosterProfiles } from "./poster-profiles.ts";
 import { buildRawItems } from "./raw-items.ts";
@@ -48,6 +49,9 @@ export const CATALOGUE: readonly CatalogueEntry[] = [
   { id: "jobs.completed/v1", class: "control", build: buildJobsCompleted },
   { id: "job/v1", class: "control", build: buildJob },
   { id: "dlq.<service>/v1", class: "control", build: buildDlq },
+  // Producer-only notices over HTTP, not topics: producer, no provenance (F-51).
+  { id: "n8n.alert/v1", class: "control", build: buildN8nAlert },
+  { id: "n8n.card/v1", class: "control", build: buildN8nCard },
 ];
 
 const built = new Map<Mode, Map<string, z.ZodType>>();

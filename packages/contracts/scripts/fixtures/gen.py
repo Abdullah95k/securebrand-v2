@@ -5,6 +5,7 @@ import shutil
 import common
 import control_topics
 import data_topics
+import n8n_topics
 import raw_items
 
 KEEP = {"golden", "README.md"}
@@ -20,5 +21,6 @@ for child in common.ROOT.iterdir():
 raw_items.run()
 data_topics.run()
 control_topics.run()
+n8n_topics.run()
 common.finish()
 print(f"wrote {len(common.WRITTEN)} fixtures, {len(common.MANIFEST)} manifest entries")

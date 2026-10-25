@@ -821,6 +821,15 @@
       ],
       "from": "ADR-0067 L27; F-23"
     },
+    "ALERT_CHANNELS": {
+      "values": [
+        "email",
+        "telegram",
+        "slack",
+        "webhook"
+      ],
+      "from": "ADR-0067 L25, L27; F-23; Q15 and O-11: webhook for the clients' own alert webhooks, which alert-evaluator posts itself (alert-evaluator.md L69)"
+    },
     "N8N_AUDIENCES": {
       "values": [
         "client",
@@ -828,6 +837,13 @@
         "account_manager"
       ],
       "from": "ADR-0067; F-46"
+    },
+    "FALLBACK_SUBJECT_KINDS": {
+      "values": [
+        "source",
+        "route"
+      ],
+      "from": "ADR-0021 L58-L61; Q11: the automatic-fallback notice names a source or a route"
     },
     "ALERT_SEVERITIES": {
       "values": [
@@ -858,6 +874,13 @@
         "manual_url"
       ],
       "from": "ADR-0067; Q11 (F-47)"
+    },
+    "CARD_INPUT_KINDS": {
+      "values": [
+        "url",
+        "text"
+      ],
+      "from": "Q11 (F-47): a manual_url card's inputs, since buttons cannot carry text (li-org-resolver §13 L159)"
     },
     "REVIEW_CARD_ACTIONS": {
       "values": [

@@ -5,7 +5,7 @@ import { CATALOGUE, schemaFor } from "../../src/catalogue.ts";
 import { SCHEMAS_DIR, pythonModule, schemaFile } from "../../src/export.ts";
 import { PACKAGE_DIR } from "../helpers.ts";
 
-// The schema ids the plan's "Contracts" section lists (n8n.alert/v1 and n8n.card/v1 come with A30).
+// The schema ids the plan's "Contracts" section lists.
 const IDS = [
   "raw.items/v1",
   "items.normalized/v1",
@@ -24,6 +24,8 @@ const IDS = [
   "jobs.completed/v1",
   "job/v1",
   "dlq.<service>/v1",
+  "n8n.alert/v1",
+  "n8n.card/v1",
 ];
 
 describe("the catalogue (ADR-0002, ADR-0030, A1)", () => {

@@ -3729,12 +3729,6 @@ def not_messages() -> None:
             "an aggregates_hourly row in ClickHouse, not a message",
         ),
         (
-            "alert-evaluator",
-            sh + "alert-evaluator.md",
-            86,
-            "alert/v1 becomes n8n.alert/v1 (Q11, ADR-0067); its rewritten fixture comes with the n8n schemas (A30)",
-        ),
-        (
             "deletion-propagator",
             sh + "deletion-propagator.md",
             93,
@@ -3783,15 +3777,7 @@ def not_messages() -> None:
             "a retention_audit row, not a message",
         ),
     ):
-        prd(
-            service,
-            path,
-            line,
-            "n8n.alert/v1" if service == "alert-evaluator" else None,
-            None,
-            [],
-            note=note,
-        )
+        prd(service, path, line, None, None, [], note=note)
 
 
 def run() -> None:

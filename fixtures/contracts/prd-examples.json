@@ -536,8 +536,14 @@
       "prd": "docs/prds/shared/alert-evaluator.md",
       "line": 86,
       "schema": "n8n.alert/v1",
-      "fixture": null,
-      "note": "alert/v1 becomes n8n.alert/v1 (Q11, ADR-0067); its rewritten fixture comes with the n8n schemas (A30)"
+      "fixture": "n8n.alert/v1/valid/prd-alert-evaluator.json",
+      "rewrites": [
+        "schema alert/v1 becomes n8n.alert/v1, with message_id, produced_at and producer (ADR-0067 L25, ADR-0002)",
+        "rule_id, rule_type, renotify, keyword, scope, window, metrics, fingerprint and cooldown_until move into details, the client-alert branch discriminated on rule_type (Q11, F-22)",
+        "idempotency_key <alert_id>:<channel>, channel and fallthrough_channel added: one notice per alert and channel (alert-evaluator §5.3 L69; F-23)",
+        "audience client beside client_id (F-46); alert names the rule, subject the source, platform and keyword (Q11)",
+        "summary added: the one line a channel shows"
+      ]
     },
     {
       "service": "analysis-entities",

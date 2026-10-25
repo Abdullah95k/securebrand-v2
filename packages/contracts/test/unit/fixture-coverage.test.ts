@@ -4,7 +4,9 @@
 import { describe, expect, it } from "vitest";
 import { CATALOGUE } from "../../src/catalogue.ts";
 import {
+  ALERT_RULE_TYPES,
   ANALYSIS_FIXED_TASKS,
+  CARD_TYPES,
   COMPLETION_STATUSES,
   CONTENT_KINDS,
   DECISION_TYPES,
@@ -76,6 +78,16 @@ const DIMENSIONS: Record<string, [string, readonly string[], (m: unknown) => unk
   "jobs.completed/v1": [["status", COMPLETION_STATUSES, (m) => field(m, "status")]],
   "job/v1": [["kind", JOB_KINDS, (m) => field(m, "kind")]],
   "dlq.<service>/v1": [["stage", DLQ_STAGES, (m) => field(m, "stage")]],
+  "n8n.alert/v1": [
+    [
+      "details",
+      [...ALERT_RULE_TYPES, "fallback", "facts"],
+      (m) =>
+        field(m, "details", "rule_type") ??
+        (field(m, "details", "subject_kind") !== undefined ? "fallback" : "facts"),
+    ],
+  ],
+  "n8n.card/v1": [["card_type", CARD_TYPES, (m) => field(m, "card_type")]],
 };
 
 const dirOf = new Map(schemaDirs().map((d) => [schemaIdOf(d), d]));

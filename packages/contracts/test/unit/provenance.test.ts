@@ -133,6 +133,41 @@ describe("provenance (ADR-0003, A18)", () => {
     expect(unexercised, "every decision row has a valid fixture").toEqual([]);
   });
 
+  it("the n8n notices accept no provenance", () => {
+    const provenance = {
+      route: "green",
+      vendor: null,
+      service: "quota-governor",
+      fetched_at: "2026-10-04T08:12:00Z",
+    };
+    for (const [id, file] of [
+      ["n8n.alert/v1", "facts-budget.json"],
+      ["n8n.card/v1", "qualifier-review.json"],
+    ] as const) {
+      const f = fixture(id, "valid", file);
+      for (const mode of ["producer", "consumer"] as const) {
+        expect(
+          failsAt(validate(id, { ...copyOf(f), provenance }, mode, f.options), ["provenance"]),
+          `${id} ${mode}`,
+        ).toBe(true);
+      }
+    }
+  });
+
+  it("an n8n alert accepts no item text, author_ref or handle (F-51)", () => {
+    const f = fixture("n8n.alert/v1", "valid", "facts-budget.json");
+    for (const [path, v] of [
+      [["text"], "النت منقطع"],
+      [["author_ref"], "a".repeat(64)],
+      [["subject", "handle"], "abuali_basra"],
+    ] as const) {
+      const value = copyOf(f);
+      const holder = (path.length === 2 ? value.subject : value) as Json;
+      holder[path[path.length - 1] as string] = v;
+      expect(failsAt(validate("n8n.alert/v1", value), [...path]), path.join(".")).toBe(true);
+    }
+  });
+
   it("a dead letter copies provenance and retention_class from a parsed data message (F-42)", () => {
     const f: Fixture = fixture("dlq/v1", "valid", "consume-data-message.json");
     expect(validate("dlq.<service>/v1", f.value).ok).toBe(true);

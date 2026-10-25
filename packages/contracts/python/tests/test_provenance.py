@@ -113,6 +113,37 @@ def test_each_registry_decisions_row_requires_or_refuses_provenance_as_the_rows_
     assert unexercised == [], "every decision row has a valid fixture"
 
 
+def test_the_n8n_notices_accept_no_provenance() -> None:
+    provenance = {
+        "route": "green",
+        "vendor": None,
+        "service": "quota-governor",
+        "fetched_at": "2026-10-04T08:12:00Z",
+    }
+    for sid, file in (
+        ("n8n.alert/v1", "facts-budget.json"),
+        ("n8n.card/v1", "qualifier-review.json"),
+    ):
+        f = fixture(sid, "valid", file)
+        for mode in ("producer", "consumer"):
+            value = {**f.copy(), "provenance": provenance}
+            assert fails_at(validate(sid, value, mode, **f.options), ["provenance"]), (sid, mode)
+
+
+def test_an_n8n_alert_accepts_no_item_text_author_ref_or_handle() -> None:
+    f = fixture("n8n.alert/v1", "valid", "facts-budget.json")
+    cases: list[tuple[list[str | int], str]] = [
+        (["text"], "النت منقطع"),
+        (["author_ref"], "a" * 64),
+        (["subject", "handle"], "abuali_basra"),
+    ]
+    for path, v in cases:
+        value = f.copy()
+        holder = value["subject"] if len(path) == 2 else value
+        holder[path[-1]] = v
+        assert fails_at(validate("n8n.alert/v1", value), path), path
+
+
 def test_a_dead_letter_copies_provenance_and_retention_class_from_a_parsed_data_message() -> None:
     f = fixture("dlq/v1", "valid", "consume-data-message.json")
     assert validate("dlq.<service>/v1", f.value).ok

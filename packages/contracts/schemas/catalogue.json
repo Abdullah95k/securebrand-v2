@@ -118,6 +118,20 @@
       "file": "dlq/v1.json",
       "module": "dlq_v1",
       "title": "DlqV1"
+    },
+    {
+      "id": "n8n.alert/v1",
+      "class": "control",
+      "file": "n8n.alert/v1.json",
+      "module": "n8n_alert_v1",
+      "title": "N8nAlertV1"
+    },
+    {
+      "id": "n8n.card/v1",
+      "class": "control",
+      "file": "n8n.card/v1.json",
+      "module": "n8n_card_v1",
+      "title": "N8nCardV1"
     }
   ],
   "report_kind_fields": {
