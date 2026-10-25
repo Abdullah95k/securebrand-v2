@@ -5,7 +5,7 @@
   "producer": {
     "service": "comment-decay-scheduler",
     "version": "1.0.0",
-    "job_id": "01M487Z82GPZBVR1QY8MS2ZK6Y"
+    "job_id": "01M48WEPP0MEV3N43VSQZ4M422"
   },
   "job_id": "01M48WEPP0MEV3N43VSQZ4M422",
   "kind": "comments",

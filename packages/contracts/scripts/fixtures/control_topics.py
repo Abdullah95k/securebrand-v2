@@ -2356,8 +2356,16 @@ def jobs() -> None:
         **fields: Any,
     ) -> dict[str, Any]:
         at = produced_at or due_at
+        # producer.job_id (F-17): a scheduler's job carries its own job_id, a D3 writer's the
+        # request's request_id, any other job the job or input message its producer was handling.
+        if service == "comment-decay-scheduler":
+            run = job_id
+        elif service in ("admin-api", "client-portal", "admin-console") and "request_id" in fields:
+            run = fields["request_id"]
+        else:
+            run = ulid_for(at, "run", service, name)
         return {
-            **meta(s, service, ulid_for(at, "run", service, name), at, name=name),
+            **meta(s, service, run, at, name=name),
             "job_id": job_id,
             "kind": kind,
             "due_at": due_at,
@@ -2693,12 +2701,14 @@ def jobs() -> None:
         series_step="+24h",
     )
     v("metrics", "jobs.fb-reactions-fetcher", mj)
+    refresh_job = ulid_for("2026-10-07T07:20:00Z", "refresh-job")
     v(
         "metrics-client-refresh",
         "jobs.fb-reactions-fetcher",
         {
             **mj,
-            "job_id": ulid_for("2026-10-07T07:20:00Z", "refresh-job"),
+            "producer": {**mj["producer"], "job_id": refresh_job},
+            "job_id": refresh_job,
             "due_at": "2026-10-07T07:20:00Z",
             "series_step": "refresh:01J9R5S3V7W1X4Y8Z0A2B6C9DE",
             "message_id": ulid_for("2026-10-07T07:19:00Z", s, "mrefresh"),
