@@ -1,9 +1,12 @@
+from collections.abc import Callable
 from typing import Any
 
 import pytest
 
 from listening_contracts.keys import (
     InstagramMapRow,
+    candidate_key_from_handle,
+    content_hash,
     idempotency_key,
     idless_comment_key,
     instagram_post_key,
@@ -12,13 +15,27 @@ from listening_contracts.keys import (
     linkedin_comment_id,
     linkedin_post_id,
     parse_key,
+    query_key,
     telegram_comment_id,
     telegram_post_id,
 )
+from listening_contracts.url import normalise_url, url_key
 
 from conftest import golden
 
 G = golden("keys.json")
+
+# The golden cases name a helper by its Python name and give its arguments in order.
+HELPERS: dict[str, Callable[..., str]] = {
+    "content_hash": content_hash,
+    "query_key": query_key,
+    "idless_comment_key": idless_comment_key,
+    "idempotency_key": idempotency_key,
+    "item_id": item_id,
+    "normalise_url": normalise_url,
+    "url_key": url_key,
+    "candidate_key_from_handle": candidate_key_from_handle,
+}
 
 
 def _named(cases: list[dict[str, Any]]) -> list[Any]:
@@ -114,6 +131,12 @@ def test_refuses_a_created_time(c: dict[str, Any]) -> None:
     i = c["input"]
     with pytest.raises(ValueError):  # noqa: PT011 - every refusal is a ContractError, a ValueError
         idless_comment_key(i["platform"], i["post_id"], i["created_time"], i["text"])
+
+
+@pytest.mark.parametrize("c", _named(G["unicode_15_1"]))
+def test_the_golden_nfc_vectors_hold_in_both_runtimes(c: dict[str, Any]) -> None:
+    """NFC and lower case of Unicode 15.1.0 (D-2)."""
+    assert HELPERS[c["helper"]](*c["args"]) == c["result"]
 
 
 @pytest.mark.parametrize("c", _named(G["instagram_id_map"]))

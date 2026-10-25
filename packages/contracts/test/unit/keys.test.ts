@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  candidateKeyFromHandle,
+  contentHash,
   idempotencyKey,
   idlessCommentKey,
   instagramPostKey,
@@ -7,9 +9,12 @@ import {
   itemId,
   linkedinCommentId,
   linkedinPostId,
+  normaliseUrl,
   parseKey,
+  queryKey,
   telegramCommentId,
   telegramPostId,
+  urlKey,
   type InstagramMapRow,
 } from "../../src/keys/index.ts";
 import type { ContentKind, Platform } from "../../src/vocabulary.ts";
@@ -46,9 +51,26 @@ interface KeysGolden {
     name: string;
     input: { platform: Platform; post_id: string; created_time: string; text: string };
   }[];
+  unicode_15_1: { name: string; helper: string; args: unknown[]; result: string }[];
 }
 
 const g = golden<KeysGolden>("keys.json");
+
+// The golden cases name a helper by its Python name and give its arguments in order.
+const HELPERS: Record<string, (args: unknown[]) => string> = {
+  content_hash: ([title, text]) => contentHash(title as string | null, text as string | null),
+  query_key: ([platform, forms, terms]) =>
+    queryKey(platform as Platform, forms as string[], terms as string[]),
+  idless_comment_key: ([platform, postId, createdTime, text]) =>
+    idlessCommentKey(platform as Platform, postId as string, createdTime as string, text as string),
+  idempotency_key: ([platform, kind, platformId]) =>
+    idempotencyKey(platform as Platform, kind as ContentKind, platformId as string),
+  item_id: ([key]) => itemId(key as string),
+  normalise_url: ([url]) => normaliseUrl(url as string),
+  url_key: ([url]) => urlKey(url as string),
+  candidate_key_from_handle: ([platform, handle]) =>
+    candidateKeyFromHandle(platform as string, handle as string),
+};
 
 describe("idempotency keys (ADR-0006, ADR-0007)", () => {
   it.each(g.keys.map((c) => [c.name, c] as const))(
@@ -159,6 +181,17 @@ describe("id-less comment keys (ADR-0009)", () => {
     (_name, c) => {
       const i = c.input;
       expect(() => idlessCommentKey(i.platform, i.post_id, i.created_time, i.text)).toThrow();
+    },
+  );
+});
+
+describe("NFC and lower case of Unicode 15.1.0 (D-2)", () => {
+  it.each(g.unicode_15_1.map((c) => [c.name, c] as const))(
+    "the golden NFC vectors hold in both runtimes: %s",
+    (_name, c) => {
+      const helper = HELPERS[c.helper];
+      expect(helper).toBeDefined();
+      expect(helper?.(c.args)).toBe(c.result);
     },
   );
 });

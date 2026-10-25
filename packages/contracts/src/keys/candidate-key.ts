@@ -3,7 +3,7 @@
 // A LinkedIn organisation's id is its URN (`urn:li:organization:<n>`), so a LinkedIn value may hold
 // colons; on the other platforms a colon would make the form ambiguous.
 import { ContractError } from "../errors.ts";
-import { nfc, requireString } from "./text.ts";
+import { lowerCase, nfc, requireString } from "./text.ts";
 
 const ACCOUNT_PLATFORMS = [
   "facebook",
@@ -42,7 +42,7 @@ export function candidateKeyFromId(platform: string, id: string): string {
 /** A handle is stored lower case without a leading '@'. */
 export function candidateKeyFromHandle(platform: string, handle: string): string {
   const p = accountPlatform(platform);
-  const h = nfc(requireString(handle, "handle").replace(/^@/, "")).toLowerCase();
+  const h = lowerCase(nfc(requireString(handle, "handle").replace(/^@/, "")));
   if (!validValue(p, h)) throw new ContractError("bad_candidate", handle);
   return `${p}:${h}`;
 }

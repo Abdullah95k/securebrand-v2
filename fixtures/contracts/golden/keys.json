@@ -1,5 +1,5 @@
 {
-  "description": "Item keys (ADR-0006, ADR-0007, ADR-0009, ADR-0036, ADR-0038). Keys split on the first two colons only; the key is the UTF-8 of its NFC form; item_id = uuid_v5(ns_items, key). Test ids before a colon keep fewer than eight trailing digits, since scripts/check-fixtures.sh reads 8 to 10 digits, a colon and 35 key characters as a Telegram bot token.",
+  "description": "Item keys (ADR-0006, ADR-0007, ADR-0009, ADR-0036, ADR-0038). Keys split on the first two colons only; the key is the UTF-8 of its NFC form; item_id = uuid_v5(ns_items, key). Test ids before a colon keep fewer than eight trailing digits, since scripts/check-fixtures.sh reads 8 to 10 digits, a colon and 35 key characters as a Telegram bot token. The unicode_15_1 cases hold text whose NFC or lower case differs between Unicode 15.1 and later versions, and the plan's own set (an Arabic presentation form, Sorani letters, a skin-tone ZWJ sequence): both languages normalise and lower-case as Unicode 15.1.0 does, and a code point unassigned in 15.1 (registries/unicode-15.1-unassigned.json) passes through unchanged (D-2). Each case names a helper, its arguments and its result.",
   "ns_items": "b0eeaa44-bf4b-4c44-b977-bb8c9485f06e",
   "keys": [
     {
@@ -653,6 +653,127 @@
         "created_time": "2026-10-06T09:15:42",
         "text": "a"
       }
+    }
+  ],
+  "unicode_15_1": [
+    {
+      "name": "beh, ARABIC PEPET (Unicode 16.0), kasra and reh keep their order: content_hash",
+      "helper": "content_hash",
+      "args": [
+        null,
+        "بِࢗر"
+      ],
+      "result": "sha256:e656da10b1f33c570aeb11e6d96d7ae2add8b1c24763de2356138ac6eb7809cb"
+    },
+    {
+      "name": "the same text: query_key",
+      "helper": "query_key",
+      "args": [
+        "x",
+        [
+          "بِࢗر"
+        ],
+        []
+      ],
+      "result": "15c52309fafcb671a2779f87772c91b59ba25b29dbf399ddf9a13072b6629e3f"
+    },
+    {
+      "name": "the same text: the id-less comment key",
+      "helper": "idless_comment_key",
+      "args": [
+        "facebook",
+        "1_2",
+        "2026-10-06T09:15:42Z",
+        "بِࢗر"
+      ],
+      "result": "facebook:comment:1_2:af6222b3f4211df1e70b738fe601b57a009c5f9887763e98cf9c2ae30e700207"
+    },
+    {
+      "name": "TODHRI LETTER I (Unicode 16.0) and a combining dot above stay two code points: the item key",
+      "helper": "idempotency_key",
+      "args": [
+        "x",
+        "post",
+        "id𐗉"
+      ],
+      "result": "x:post:id𐗉"
+    },
+    {
+      "name": "the same key: item_id",
+      "helper": "item_id",
+      "args": [
+        "x:post:id𐗉"
+      ],
+      "result": "14b93824-206b-5bd1-a243-2d55f87ef401"
+    },
+    {
+      "name": "LATIN CAPITAL LETTER RAMS HORN (Unicode 16.0) keeps its case in a host: the normalised URL",
+      "helper": "normalise_url",
+      "args": [
+        "https://ꟋExample.IQ/"
+      ],
+      "result": "https://xn--example-by3z.iq/"
+    },
+    {
+      "name": "the same URL: url_key",
+      "helper": "url_key",
+      "args": [
+        "https://ꟋExample.IQ/"
+      ],
+      "result": "news:url:aad99bfb0308bc87d9582ffd9c445fdf90d643704113094661cff5449af379f6"
+    },
+    {
+      "name": "a capital sigma before RAMS HORN is final, and RAMS HORN keeps its case: query_key",
+      "helper": "query_key",
+      "args": [
+        "x",
+        [
+          "AΣꟋ"
+        ],
+        []
+      ],
+      "result": "b1efff352e67d9105ddaaa5d3f43b35d38ac0a68b1bf588d5027321d8b0122ef"
+    },
+    {
+      "name": "RAMS HORN keeps its case in a handle: the candidate key",
+      "helper": "candidate_key_from_handle",
+      "args": [
+        "x",
+        "@ꟋHandle"
+      ],
+      "result": "x:Ɤhandle"
+    },
+    {
+      "name": "FACE WITH BAGS UNDER EYES (Unicode 16.0) is hashed, never refused: content_hash",
+      "helper": "content_hash",
+      "args": [
+        null,
+        "تعبان 🫩"
+      ],
+      "result": "sha256:acedc153a0029718fab73cc02339571de1fa939e2256c26f414cf09b0b4644f6"
+    },
+    {
+      "name": "an Arabic presentation form, Sorani letters and a skin-tone ZWJ sequence: content_hash",
+      "helper": "content_hash",
+      "args": [
+        null,
+        "ﻻ ڕێگەی کوردستان 👩🏽‍💻"
+      ],
+      "result": "sha256:b4d0c298321162e69574ffc82116f5ab313f8deef7c2a4cc0550ebb9c8733ebd"
+    },
+    {
+      "name": "the same words: query_key",
+      "helper": "query_key",
+      "args": [
+        "x",
+        [
+          "ﻻ ڕێگە"
+        ],
+        [
+          "👩🏽‍💻"
+        ]
+      ],
+      "result": "e6c10ba7f104488a8750dc4c20d8dcfcc8c33c8f7d87970f800e8178f9864c20"
     }
   ]
 }

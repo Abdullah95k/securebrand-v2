@@ -3,9 +3,8 @@ step; fixtures/contracts/golden/urls.json holds both to it. The steps are listed
 docs/contracts/VERSIONING.md."""
 
 import re
-import unicodedata
 
-from listening_contracts._text import require_str, sha256_hex
+from listening_contracts._text import lower_case, nfc, require_str, sha256_hex
 from listening_contracts.errors import ContractError
 
 _RFC3986 = re.compile(r"(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?", re.DOTALL)
@@ -18,10 +17,6 @@ _HEX = re.compile(r"[0-9A-Fa-f]{2}")
 _DEFAULT_PORTS = {"http": 80, "https": 443}
 
 type _Parts = tuple[str | None, str | None, str, str | None]  # scheme, authority, path, query
-
-
-def _nfc(s: str) -> str:
-    return unicodedata.normalize("NFC", s)
 
 
 def _parse(s: str) -> _Parts:
@@ -154,7 +149,7 @@ def _normalise_percent(s: str, literals: frozenset[str]) -> str:
         if kind == "escape":
             out.append(value)
             continue
-        for ch in _nfc(value):
+        for ch in nfc(value):
             if ch in _UNRESERVED or ch in literals:
                 out.append(ch)
             else:
@@ -185,7 +180,7 @@ def _normalise_host(raw: str) -> str:
         if decoded is None:
             raise ContractError("bad_host", raw)
         host = decoded
-    host = _nfc(_nfc(host).lower())
+    host = nfc(lower_case(nfc(host)))
     labels = host.split(".")
     ascii_labels: list[str] = []
     for i, label in enumerate(labels):

@@ -2,7 +2,7 @@
 // search.results producers and search-hit-router. The steps are listed in docs/contracts/VERSIONING.md;
 // the Python twin follows them line by line, and fixtures/contracts/golden/urls.json holds both to them.
 import { ContractError } from "../errors.ts";
-import { nfc, requireString, sha256Hex } from "./text.ts";
+import { lowerCase, nfc, requireString, sha256Hex } from "./text.ts";
 
 const RFC3986 = /^(([^:/?#]+):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?$/s;
 
@@ -234,7 +234,7 @@ function normaliseHost(raw: string): string {
     if (decoded === null) throw new ContractError("bad_host", raw);
     host = decoded;
   }
-  host = nfc(nfc(host).toLowerCase());
+  host = nfc(lowerCase(nfc(host)));
   const labels = host.split(".");
   const ascii = labels.map((label, i) => {
     if (label === "") {

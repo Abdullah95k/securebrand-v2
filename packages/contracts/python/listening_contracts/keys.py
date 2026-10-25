@@ -9,7 +9,7 @@ from collections.abc import Callable, Mapping, Sequence
 from typing import Literal, NamedTuple, TypedDict, cast
 
 from listening_contracts._artefacts import registry
-from listening_contracts._text import hmac_sha256_hex, nfc, require_str, sha256_hex
+from listening_contracts._text import hmac_sha256_hex, lower_case, nfc, require_str, sha256_hex
 from listening_contracts._time import message_time_millis
 from listening_contracts._time import render_key_time as render_key_time
 from listening_contracts.canonical_json import canonical_json
@@ -301,7 +301,7 @@ def folding_profile(platform: str) -> FoldingProfile:
 
 
 def normalise_query_text(profile: FoldingProfile, text: str) -> str:
-    lowered = nfc(require_str(text, "form")).lower()
+    lowered = lower_case(nfc(require_str(text, "form")))
     if profile == "exact":
         return lowered
     return "".join(
@@ -408,7 +408,7 @@ def candidate_key_from_id(platform: str, platform_id: str) -> str:
 def candidate_key_from_handle(platform: str, handle: str) -> str:
     """`<platform>:<handle>`, the handle lower case without a leading '@' (ADR-0032)."""
     p = _account_platform(platform)
-    h = nfc(re.sub(r"^@", "", require_str(handle, "handle"))).lower()
+    h = lower_case(nfc(re.sub(r"^@", "", require_str(handle, "handle"))))
     if not _valid_candidate_value(p, h):
         raise ContractError("bad_candidate", handle)
     return f"{p}:{h}"

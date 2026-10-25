@@ -4,7 +4,7 @@ import { canonicalJson } from "../canonical-json.ts";
 import { ContractError } from "../errors.ts";
 import { loadRegistry } from "../registries/load.ts";
 import { PLATFORMS, type Platform } from "../vocabulary.ts";
-import { compareCodePoints, nfc, requireString, sha256Hex } from "./text.ts";
+import { compareCodePoints, lowerCase, nfc, requireString, sha256Hex } from "./text.ts";
 
 export type FoldingProfile = "exact" | "folded";
 
@@ -34,7 +34,7 @@ export function foldingProfile(platform: Platform): FoldingProfile {
 }
 
 export function normaliseQueryText(profile: FoldingProfile, text: string): string {
-  const lowered = nfc(requireString(text, "form")).toLowerCase();
+  const lowered = lowerCase(nfc(requireString(text, "form")));
   if (profile === "exact") return lowered;
   let out = "";
   for (const ch of lowered) {
