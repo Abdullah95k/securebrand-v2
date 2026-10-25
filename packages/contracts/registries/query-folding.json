@@ -1,0 +1,14 @@
+{
+  "description": "The folding profile query_key uses per platform (ADR-0044; Q10). exact: NFC and lower case only; folded: also tashkeel and tatweel removed and the Arabic letter variants merged. Every platform starts at exact; a platform moves to folded only when its probe records that its search treats those variants as the same, through /contract-change, since the keys change (open items O-1 to O-9).",
+  "profiles": {
+    "facebook": "exact",
+    "instagram": "exact",
+    "tiktok": "exact",
+    "x": "exact",
+    "linkedin": "exact",
+    "telegram": "exact",
+    "youtube": "exact",
+    "news": "exact",
+    "web": "exact"
+  }
+}

@@ -1,0 +1,260 @@
+{
+  "description": "query_key = hex SHA-256 of the RFC 8785 JSON of {context_terms, forms}, each text normalised under the platform's folding profile, deduplicated and sorted by code point (ADR-0044; Q10). exact: NFC then lower case. folded: also removes tashkeel (U+064B to U+065F, U+0670) and tatweel (U+0640) and maps U+0623, U+0625, U+0622 to U+0627, U+0629 to U+0647, U+0649 to U+064A, U+06A9 to U+0643 and U+06CC to U+064A.",
+  "profiles_v1": {
+    "facebook": "exact",
+    "instagram": "exact",
+    "tiktok": "exact",
+    "x": "exact",
+    "linkedin": "exact",
+    "telegram": "exact",
+    "youtube": "exact",
+    "news": "exact",
+    "web": "exact"
+  },
+  "keys": [
+    {
+      "name": "a keyword with handle, hashtag and context",
+      "profile": "exact",
+      "forms": [
+        "زين العراق",
+        "Zain Iraq",
+        "@ZainIraq",
+        "#زين"
+      ],
+      "context_terms": [
+        "انترنت"
+      ],
+      "canonical": "{\"context_terms\":[\"انترنت\"],\"forms\":[\"#زين\",\"@zainiraq\",\"zain iraq\",\"زين العراق\"]}",
+      "query_key": "c4505d3a31a5db0d334d1ae2fa838a2c5cb717ff8740d439f2fc64bcabedf5c3"
+    },
+    {
+      "name": "the same forms in another order with a decomposed form",
+      "profile": "exact",
+      "forms": [
+        "#زين",
+        "@ZainIraq",
+        "zain iraq",
+        "زين العراق"
+      ],
+      "context_terms": [
+        "انترنت"
+      ],
+      "canonical": "{\"context_terms\":[\"انترنت\"],\"forms\":[\"#زين\",\"@zainiraq\",\"zain iraq\",\"زين العراق\"]}",
+      "query_key": "c4505d3a31a5db0d334d1ae2fa838a2c5cb717ff8740d439f2fc64bcabedf5c3"
+    },
+    {
+      "name": "duplicates after lower-casing count once",
+      "profile": "exact",
+      "forms": [
+        "Zain",
+        "zain",
+        "ZAIN"
+      ],
+      "context_terms": [],
+      "canonical": "{\"context_terms\":[],\"forms\":[\"zain\"]}",
+      "query_key": "deda4031a24d11e8c3d468e5e3d8a623841fabc612209e2e54f6841bcb9b60e9"
+    },
+    {
+      "name": "alef with hamza below",
+      "profile": "exact",
+      "forms": [
+        "إنترنت"
+      ],
+      "context_terms": [],
+      "canonical": "{\"context_terms\":[],\"forms\":[\"إنترنت\"]}",
+      "query_key": "607e5753701dc110bcd21af6147919ca9b1b4d15948ea94d5fac28a35f09da1f"
+    },
+    {
+      "name": "bare alef",
+      "profile": "exact",
+      "forms": [
+        "انترنت"
+      ],
+      "context_terms": [],
+      "canonical": "{\"context_terms\":[],\"forms\":[\"انترنت\"]}",
+      "query_key": "703a8072c3981926968767d3dcafc10189321b318d8c9e30c9b0e30cfbc8f570"
+    },
+    {
+      "name": "teh marbuta",
+      "profile": "exact",
+      "forms": [
+        "مدرسة"
+      ],
+      "context_terms": [],
+      "canonical": "{\"context_terms\":[],\"forms\":[\"مدرسة\"]}",
+      "query_key": "97cd2bcbab571966b8150f0cf6ccb8528d81831ef8a690304a8142c0777d92af"
+    },
+    {
+      "name": "heh",
+      "profile": "exact",
+      "forms": [
+        "مدرسه"
+      ],
+      "context_terms": [],
+      "canonical": "{\"context_terms\":[],\"forms\":[\"مدرسه\"]}",
+      "query_key": "807f79623b9b2c7057810add8b8dc0318f154234d5d6fda926e49224264e40f6"
+    },
+    {
+      "name": "alef maksura",
+      "profile": "exact",
+      "forms": [
+        "على"
+      ],
+      "context_terms": [],
+      "canonical": "{\"context_terms\":[],\"forms\":[\"على\"]}",
+      "query_key": "03ef87129ece9ca912da400c35333eb2828b5b2c493a1cb5df5fb702e1ea351c"
+    },
+    {
+      "name": "yeh",
+      "profile": "exact",
+      "forms": [
+        "علي"
+      ],
+      "context_terms": [],
+      "canonical": "{\"context_terms\":[],\"forms\":[\"علي\"]}",
+      "query_key": "7d50d82b373f7f00cf5cb19800387414aa25c3c5705dba94f40fd738e386afe5"
+    },
+    {
+      "name": "alef with hamza below",
+      "profile": "folded",
+      "forms": [
+        "إنترنت"
+      ],
+      "context_terms": [],
+      "canonical": "{\"context_terms\":[],\"forms\":[\"انترنت\"]}",
+      "query_key": "703a8072c3981926968767d3dcafc10189321b318d8c9e30c9b0e30cfbc8f570"
+    },
+    {
+      "name": "bare alef",
+      "profile": "folded",
+      "forms": [
+        "انترنت"
+      ],
+      "context_terms": [],
+      "canonical": "{\"context_terms\":[],\"forms\":[\"انترنت\"]}",
+      "query_key": "703a8072c3981926968767d3dcafc10189321b318d8c9e30c9b0e30cfbc8f570"
+    },
+    {
+      "name": "teh marbuta",
+      "profile": "folded",
+      "forms": [
+        "مدرسة"
+      ],
+      "context_terms": [],
+      "canonical": "{\"context_terms\":[],\"forms\":[\"مدرسه\"]}",
+      "query_key": "807f79623b9b2c7057810add8b8dc0318f154234d5d6fda926e49224264e40f6"
+    },
+    {
+      "name": "heh",
+      "profile": "folded",
+      "forms": [
+        "مدرسه"
+      ],
+      "context_terms": [],
+      "canonical": "{\"context_terms\":[],\"forms\":[\"مدرسه\"]}",
+      "query_key": "807f79623b9b2c7057810add8b8dc0318f154234d5d6fda926e49224264e40f6"
+    },
+    {
+      "name": "alef maksura",
+      "profile": "folded",
+      "forms": [
+        "على"
+      ],
+      "context_terms": [],
+      "canonical": "{\"context_terms\":[],\"forms\":[\"علي\"]}",
+      "query_key": "7d50d82b373f7f00cf5cb19800387414aa25c3c5705dba94f40fd738e386afe5"
+    },
+    {
+      "name": "yeh",
+      "profile": "folded",
+      "forms": [
+        "علي"
+      ],
+      "context_terms": [],
+      "canonical": "{\"context_terms\":[],\"forms\":[\"علي\"]}",
+      "query_key": "7d50d82b373f7f00cf5cb19800387414aa25c3c5705dba94f40fd738e386afe5"
+    },
+    {
+      "name": "tashkeel removed",
+      "profile": "folded",
+      "forms": [
+        "مُدَرِّسَة"
+      ],
+      "context_terms": [],
+      "canonical": "{\"context_terms\":[],\"forms\":[\"مدرسه\"]}",
+      "query_key": "807f79623b9b2c7057810add8b8dc0318f154234d5d6fda926e49224264e40f6"
+    },
+    {
+      "name": "tatweel removed",
+      "profile": "folded",
+      "forms": [
+        "زيـــن"
+      ],
+      "context_terms": [],
+      "canonical": "{\"context_terms\":[],\"forms\":[\"زين\"]}",
+      "query_key": "7bd034625adee7f462fa6c8ae30ada05b77ac66e16f6d7f26f6da55dc238dd9f"
+    },
+    {
+      "name": "plain zain",
+      "profile": "folded",
+      "forms": [
+        "زين"
+      ],
+      "context_terms": [],
+      "canonical": "{\"context_terms\":[],\"forms\":[\"زين\"]}",
+      "query_key": "7bd034625adee7f462fa6c8ae30ada05b77ac66e16f6d7f26f6da55dc238dd9f"
+    },
+    {
+      "name": "Persian keheh and yeh",
+      "profile": "folded",
+      "forms": [
+        "کیک"
+      ],
+      "context_terms": [],
+      "canonical": "{\"context_terms\":[],\"forms\":[\"كيك\"]}",
+      "query_key": "2166ded51d3b35f7b736c634fb1718400f9225c6a53f368600708f26da666552"
+    },
+    {
+      "name": "Arabic kaf and yeh",
+      "profile": "folded",
+      "forms": [
+        "كيك"
+      ],
+      "context_terms": [],
+      "canonical": "{\"context_terms\":[],\"forms\":[\"كيك\"]}",
+      "query_key": "2166ded51d3b35f7b736c634fb1718400f9225c6a53f368600708f26da666552"
+    },
+    {
+      "name": "astral characters sort by code point",
+      "profile": "exact",
+      "forms": [
+        "ﬁx",
+        "😀x"
+      ],
+      "context_terms": [],
+      "canonical": "{\"context_terms\":[],\"forms\":[\"ﬁx\",\"😀x\"]}",
+      "query_key": "fb9814d0711863b383621c9e4301b3654b490265793060a5d0883eface9704df"
+    },
+    {
+      "name": "Greek final sigma and Turkish dotted I lower-case alike",
+      "profile": "exact",
+      "forms": [
+        "ΟΔΟΣ",
+        "İstanbul"
+      ],
+      "context_terms": [],
+      "canonical": "{\"context_terms\":[],\"forms\":[\"i̇stanbul\",\"οδος\"]}",
+      "query_key": "b272e17429c02bb39a75a5a449e3222de5e8afb326e428cc5992f98471abe445"
+    }
+  ],
+  "rejects": [
+    {
+      "name": "no form",
+      "profile": "exact",
+      "forms": [],
+      "context_terms": [
+        "x"
+      ]
+    }
+  ]
+}
