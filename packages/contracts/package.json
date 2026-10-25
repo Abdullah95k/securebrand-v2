@@ -22,6 +22,10 @@
     "./registries": {
       "types": "./dist/registries/index.d.ts",
       "default": "./dist/registries/index.js"
+    },
+    "./db": {
+      "types": "./dist/db/index.d.ts",
+      "default": "./dist/db/index.js"
     }
   },
   "files": [

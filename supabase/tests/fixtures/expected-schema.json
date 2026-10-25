@@ -1,0 +1,217 @@
+{
+  "description": "The catalogue of docs/plans/F3.md's tables (A1): per table in public, its columns in order as `name type[ not null][ default <expression>][ identity]`, and its indexes as `[unique ]<method> (<columns>)[ nulls not distinct][ where <predicate>]`, both as Postgres prints them. Views are listed with their columns.",
+  "tables": {
+    "clients": {
+      "columns": ["client_id uuid not null default gen_random_uuid()", "name text not null", "status text not null default 'active'::text", "client_type text not null", "accepts_amber boolean not null default false", "x_end_user_declared boolean not null default false", "accepted_flagged_vendors text[] not null default '{}'::text[]", "created_at timestamp with time zone not null default now()", "updated_at timestamp with time zone not null default now()"],
+      "indexes": ["unique btree (client_id)"]
+    },
+    "client_settings": {
+      "columns": ["client_id uuid not null", "service text not null", "settings jsonb not null", "updated_at timestamp with time zone not null default now()"],
+      "indexes": ["unique btree (client_id, service)"]
+    },
+    "client_members": {
+      "columns": ["member_id uuid not null default gen_random_uuid()", "user_id uuid not null", "client_id uuid", "role text not null", "added_at timestamp with time zone not null default now()", "added_by text not null"],
+      "indexes": ["unique btree (member_id)", "unique btree (user_id, client_id, role) nulls not distinct", "btree (client_id)"]
+    },
+    "admin_audit": {
+      "columns": ["audit_id bigint not null identity", "request_id text not null", "actor text not null", "action text not null", "subject_ids text[] not null default '{}'::text[]", "before_hash text", "after_hash text", "reason text", "at timestamp with time zone not null default now()"],
+      "indexes": ["unique btree (audit_id)", "btree (request_id)", "btree (at)"]
+    },
+    "sources": {
+      "columns": ["source_id uuid not null default gen_random_uuid()", "platform text not null", "source_type text not null", "platform_id text", "handle text", "url text", "display_name text", "route text not null", "vendor text", "tier smallint not null", "lifecycle text not null default 'active'::text", "push_covered boolean not null default false", "retention_class text not null", "client_ids uuid[] not null default '{}'::uuid[]", "owned_by_client boolean not null default false", "followers bigint", "country_signals jsonb", "lang_share jsonb", "platform_meta jsonb not null default '{}'::jsonb", "added_by text not null", "added_at timestamp with time zone not null default now()", "last_hit_at timestamp with time zone", "last_polled_at timestamp with time zone", "next_poll_at timestamp with time zone", "backfill_status text not null default 'pending'::text", "health text not null default 'ok'::text", "health_reason text", "health_set_by text", "health_changed_at timestamp with time zone", "retired_reason text", "notes text"],
+      "indexes": ["unique btree (source_id)", "unique btree (platform, platform_id)", "btree (platform, route, vendor)", "gin (client_ids)", "btree (lifecycle)"]
+    },
+    "client_sources": {
+      "columns": ["client_id uuid not null", "source_id uuid not null", "priority boolean not null default false", "relation text not null default 'watcher'::text", "added_at timestamp with time zone not null default now()", "added_by text not null"],
+      "indexes": ["unique btree (client_id, source_id)", "btree (source_id)"]
+    },
+    "client_lists": {
+      "columns": ["entry_id uuid not null default gen_random_uuid()", "client_id uuid not null", "list text not null", "list_name text not null default ''::text", "candidate_key text", "source_id uuid", "added_at timestamp with time zone not null default now()", "added_by text not null"],
+      "indexes": ["unique btree (entry_id)", "unique btree (client_id, list, list_name, candidate_key)", "unique btree (client_id, list, list_name, source_id)", "btree (candidate_key)", "btree (source_id)"]
+    },
+    "registry_audit": {
+      "columns": ["audit_id bigint not null identity", "decision_id text not null", "decision text not null", "action text not null", "reason text", "candidate_key text", "author_ref text", "keyword_id uuid", "route_scope jsonb", "source_id uuid", "actor text not null", "before jsonb", "after jsonb", "provenance jsonb", "message_id text", "applied_at timestamp with time zone not null default now()"],
+      "indexes": ["unique btree (audit_id)", "unique btree (decision_id, source_id) nulls not distinct", "unique btree (message_id)", "btree (source_id)", "btree (keyword_id)"]
+    },
+    "registry_outbox": {
+      "columns": ["message_id text not null", "decision_id text not null", "source_id uuid not null", "payload jsonb not null", "created_at timestamp with time zone not null default now()", "published_at timestamp with time zone"],
+      "indexes": ["unique btree (message_id)", "btree (created_at) where (published_at is null)"]
+    },
+    "decisions": {
+      "columns": ["decision_id text not null", "candidate_key text", "author_ref text", "source_id uuid", "decision text not null", "reason text", "rule_hit smallint", "client_ids uuid[] not null default '{}'::uuid[]", "payload jsonb not null", "expires_at timestamp with time zone", "created_at timestamp with time zone not null default now()", "published_at timestamp with time zone"],
+      "indexes": ["unique btree (decision_id)", "btree (candidate_key)", "btree (source_id)", "btree (created_at) where (published_at is null)"]
+    },
+    "poster_profiles": {
+      "columns": ["profile_id uuid not null default gen_random_uuid()", "platform text not null", "candidate_key text", "author_ref text", "key_form text not null", "status text not null", "reason text", "account_type text", "individual boolean", "public_account boolean not null default false", "followers bigint", "verified boolean", "profile jsonb not null default '{}'::jsonb", "hits_30d integer not null default 0", "resolved_at timestamp with time zone", "expires_at timestamp with time zone", "retention_class text", "provenance jsonb"],
+      "indexes": ["unique btree (profile_id)", "unique btree (candidate_key)", "unique btree (author_ref)", "btree (expires_at)"]
+    },
+    "instagram_id_map": {
+      "columns": ["shortcode text not null", "graph_media_id text", "key text not null", "created_at timestamp with time zone not null default now()", "updated_at timestamp with time zone not null default now()"],
+      "indexes": ["unique btree (shortcode)", "unique btree (graph_media_id)", "unique btree (key)"]
+    },
+    "iq_reference": {
+      "columns": ["ref_id uuid not null default gen_random_uuid()", "kind text not null", "name_ar text", "name_ckb text", "name_latin text", "parent_id uuid", "domain text", "added_by text not null", "added_at timestamp with time zone not null default now()"],
+      "indexes": ["unique btree (ref_id)", "unique btree (kind, parent_id, name_latin) nulls not distinct", "unique btree (domain)", "btree (parent_id)"]
+    },
+    "cursors": {
+      "columns": ["cursor_id bigint not null identity", "service text not null", "source_id uuid", "scope_key text not null default ''::text", "cursor text", "next_due_at timestamp with time zone", "last_started_at timestamp with time zone", "last_success_at timestamp with time zone", "last_error text", "consecutive_errors integer not null default 0", "state jsonb not null default '{}'::jsonb", "updated_at timestamp with time zone not null default now()"],
+      "indexes": ["unique btree (cursor_id)", "unique btree (service, source_id, scope_key) nulls not distinct", "btree (service, next_due_at)", "btree (service, last_started_at)"]
+    },
+    "service_runs": {
+      "columns": ["service text not null", "instance text not null", "status text not null", "last_run_at timestamp with time zone", "last_success_at timestamp with time zone", "lag_seconds integer", "error_count integer not null default 0", "last_error text", "state jsonb not null default '{}'::jsonb", "updated_at timestamp with time zone not null default now()"],
+      "indexes": ["unique btree (service, instance)"]
+    },
+    "review_queue": {
+      "columns": ["review_id text not null", "kind text not null", "service text not null", "subject_key text not null", "status text not null default 'open'::text", "opened_at timestamp with time zone not null default now()", "deadline_at timestamp with time zone", "reviewer text", "answer jsonb", "payload jsonb not null default '{}'::jsonb", "closed_at timestamp with time zone"],
+      "indexes": ["unique btree (review_id)", "unique btree (service, kind, subject_key) where (status = 'open'::text)", "btree (status, deadline_at)"]
+    },
+    "feature_flags": {
+      "columns": ["name text not null", "scope text not null default ''::text", "value text", "changed_by text not null", "changed_at timestamp with time zone not null default now()", "reason text not null"],
+      "indexes": ["unique btree (name, scope)"]
+    },
+    "credentials": {
+      "columns": ["credential_id uuid not null default gen_random_uuid()", "owner_kind text not null", "client_id uuid", "owner_name text", "platform text", "role text", "fallback_rank smallint", "scope text not null default ''::text", "vault_ref text", "state text not null default 'ok'::text", "reason text", "changed_at timestamp with time zone not null default now()", "plan text"],
+      "indexes": ["unique btree (credential_id)", "unique btree (owner_kind, client_id, owner_name, platform, role, scope) nulls not distinct", "unique btree (role, fallback_rank) where (owner_kind = 'vendor'::text)"]
+    },
+    "canary_targets": {
+      "columns": ["target_id text not null", "platform text not null", "route text not null", "vendor text", "service text not null", "source_id uuid", "source_type text", "call_params jsonb not null default '{}'::jsonb", "expect_min_items integer", "alternate_route text", "alternate_vendor text", "flag_name text", "scope text", "active boolean not null default true", "quarantined_at timestamp with time zone", "last_ok_at timestamp with time zone"],
+      "indexes": ["unique btree (target_id)"]
+    },
+    "canary_audit": {
+      "columns": ["audit_id bigint not null identity", "record text not null", "target_id text", "decision_id text", "platform text not null", "route text not null", "vendor text", "class text", "http integer", "items integer", "latency_ms integer", "health text", "reason text", "evidence jsonb", "at timestamp with time zone not null default now()"],
+      "indexes": ["unique btree (audit_id)", "unique btree (decision_id)", "btree (at)"]
+    },
+    "budgets": {
+      "columns": ["budget_tag text not null", "sub_counter text not null default ''::text", "period_start timestamp with time zone not null", "unit text not null", "currency text", "unit_price numeric", "period text not null", "reset_rule text not null", "limit bigint", "used bigint not null default 0", "reserved bigint not null default 0", "mode text not null default 'normal'::text", "exhausted_until timestamp with time zone", "stretch_factor numeric", "warn_50_at timestamp with time zone", "warn_80_at timestamp with time zone", "warn_95_at timestamp with time zone", "provider_usage jsonb not null default '{}'::jsonb"],
+      "indexes": ["unique btree (budget_tag, sub_counter, period_start)"]
+    },
+    "budget_reservations": {
+      "columns": ["reservation_id text not null", "request_id text not null", "budget_tag text not null", "sub_counter text not null default ''::text", "service text not null", "job_id text", "charge bigint not null", "resource_ids text[]", "expires_at timestamp with time zone not null", "settled_at timestamp with time zone"],
+      "indexes": ["unique btree (reservation_id)", "unique btree (request_id)", "btree (expires_at)"]
+    },
+    "budget_history": {
+      "columns": ["budget_tag text not null", "sub_counter text not null default ''::text", "period_start timestamp with time zone not null", "period_end timestamp with time zone not null", "limit bigint", "used bigint not null", "cost numeric", "currency text", "closed_at timestamp with time zone not null default now()"],
+      "indexes": ["unique btree (budget_tag, sub_counter, period_start)"]
+    },
+    "budget_config": {
+      "columns": ["budget_tag text not null", "scope text not null default ''::text", "setting text not null", "value jsonb not null", "changed_by text not null", "changed_at timestamp with time zone not null default now()", "reason text not null"],
+      "indexes": ["unique btree (budget_tag, scope, setting)"]
+    },
+    "x_read_ledger": {
+      "columns": ["utc_day date not null", "resource_type text not null", "resource_id text not null", "first_read_at timestamp with time zone not null default now()"],
+      "indexes": ["unique btree (utc_day, resource_type, resource_id)"]
+    },
+    "ig_hashtag_ledger": {
+      "columns": ["ig_user_id text not null", "hashtag_id text not null", "first_queried_at timestamp with time zone not null default now()"],
+      "indexes": ["unique btree (ig_user_id, hashtag_id)", "btree (ig_user_id, first_queried_at)"]
+    },
+    "keywords": {
+      "columns": ["keyword_id uuid not null default gen_random_uuid()", "client_id uuid not null", "label text not null", "forms jsonb not null", "exclusions jsonb not null default '[]'::jsonb", "context_terms jsonb not null default '[]'::jsonb", "purpose text not null", "priority boolean not null default false", "platforms text[] not null default '{}'::text[]", "enabled boolean not null default true", "version integer not null default 1", "rematch_days integer", "query_key text", "screening_status text not null default 'pending'::text", "updated_at timestamp with time zone not null default now()"],
+      "indexes": ["unique btree (keyword_id)", "btree (client_id)", "btree (query_key)", "btree (updated_at)"]
+    },
+    "screened_terms": {
+      "columns": ["term_id uuid not null default gen_random_uuid()", "term text not null", "lang text", "category text", "added_by text not null", "added_at timestamp with time zone not null default now()", "enabled boolean not null default true"],
+      "indexes": ["unique btree (term_id)", "unique btree (term, lang) nulls not distinct"]
+    },
+    "comment_state": {
+      "columns": ["service text not null", "post_item_id uuid not null", "comment_key text not null", "parent_key text", "content_hash text not null", "version integer not null default 1", "state text not null", "first_seen_at timestamp with time zone not null", "last_seen_at timestamp with time zone not null", "reply_count integer"],
+      "indexes": ["unique btree (service, post_item_id, comment_key)", "btree (post_item_id)"]
+    },
+    "comment_series": {
+      "columns": ["item_id uuid not null", "lane text not null", "source_id uuid not null", "route text not null", "profile text not null", "anchor_at timestamp with time zone not null", "next_step text", "next_due_at timestamp with time zone", "status text not null", "in_flight_job_id text", "last_fetched_at timestamp with time zone", "last_new_count integer", "last_total integer", "extended boolean not null default false", "hot_count integer not null default 0", "hot_next_at timestamp with time zone", "hot_until timestamp with time zone"],
+      "indexes": ["unique btree (item_id, lane)", "btree (status, next_due_at)"]
+    },
+    "comment_series_profiles": {
+      "columns": ["profile text not null", "route_label text not null", "platform text not null", "route text not null", "comment_services text[] not null", "series_text text not null", "steps text[] not null", "push boolean not null default false", "replies_text text not null"],
+      "indexes": ["unique btree (profile)", "unique btree (route_label)"]
+    },
+    "backfill_runs": {
+      "columns": ["run_id text not null", "source_id uuid not null", "service text not null", "job_kind text not null", "reason text not null", "requested_by text", "window_start timestamp with time zone not null", "window_end timestamp with time zone not null", "cap jsonb not null", "status text not null default 'pending'::text", "capped_reason text", "oldest_item_at timestamp with time zone", "started_at timestamp with time zone", "finished_at timestamp with time zone", "items_new integer not null default 0", "cost_units numeric not null default 0", "attempt integer not null default 1", "jobs jsonb not null default '[]'::jsonb"],
+      "indexes": ["unique btree (run_id)", "btree (source_id, status)"]
+    },
+    "news_sites": {
+      "columns": ["source_id uuid not null", "host text not null", "status text not null default 'candidate'::text", "feeds jsonb not null default '[]'::jsonb", "news_sitemap text", "sitemaps jsonb not null default '[]'::jsonb", "homepage_diff boolean not null default false", "article_url_patterns jsonb not null default '[]'::jsonb", "access_mode text not null", "articles_per_day_estimate numeric", "last_article_at timestamp with time zone", "comments_provider text not null default 'none'::text", "disqus_shortname text", "disqus_identifier_template text", "comments_health text not null default 'ok'::text", "resolved_at timestamp with time zone", "profile_version integer not null default 1"],
+      "indexes": ["unique btree (source_id)", "unique btree (host)"]
+    },
+    "crawl_policies": {
+      "columns": ["host text not null", "status text not null", "crawl_allowed boolean not null", "reason text", "access_mode text not null", "crawl_delay_seconds integer", "robots_status text not null", "robots_rules jsonb", "usage_signals jsonb not null", "rsl jsonb not null", "payment jsonb", "checked_at timestamp with time zone not null", "expires_at timestamp with time zone not null", "policy_version integer not null", "next_refresh_at timestamp with time zone"],
+      "indexes": ["unique btree (host)"]
+    },
+    "host_gate": {
+      "columns": ["host text not null", "next_slot_at timestamp with time zone not null", "holder text", "spacing_seconds numeric not null"],
+      "indexes": ["unique btree (host)"]
+    },
+    "news_urls": {
+      "columns": ["url_hash text not null", "source_id uuid not null", "url text not null", "found_via text not null", "first_seen_at timestamp with time zone not null default now()", "status text", "canonical_url_hash text", "fetched_at timestamp with time zone", "extractor text", "extractor_version text"],
+      "indexes": ["unique btree (url_hash)", "btree (canonical_url_hash)", "btree (source_id, status)"]
+    },
+    "news_stories": {
+      "columns": ["story_id text not null", "origin_key text not null", "origin_source_id uuid not null", "origin_time timestamp with time zone not null", "cluster_size integer not null default 1", "first_seen_at timestamp with time zone not null default now()", "last_member_at timestamp with time zone not null", "merged_into text"],
+      "indexes": ["unique btree (story_id)"]
+    },
+    "news_story_members": {
+      "columns": ["idempotency_key text not null", "story_id text not null", "source_id uuid not null", "canonical_key text", "simhash bigint", "block_1 integer", "block_2 integer", "block_3 integer", "block_4 integer", "title_sha256 text", "text_sha256 text", "language text", "origin_time timestamp with time zone not null", "fetched_at timestamp with time zone not null", "role text not null", "matched_by text", "hamming_distance integer"],
+      "indexes": ["unique btree (idempotency_key)", "btree (block_1, fetched_at)", "btree (block_2, fetched_at)", "btree (block_3, fetched_at)", "btree (block_4, fetched_at)", "btree (canonical_key)", "btree (text_sha256)"]
+    },
+    "retention_classes": {
+      "columns": ["class text not null", "part text not null", "vendor text not null default ''::text", "anchor text not null", "clock interval", "mode text not null", "executor text not null", "note text not null"],
+      "indexes": ["unique btree (class, part, vendor)"]
+    },
+    "retention_ttls": {
+      "columns": ["class text", "vendor text", "content_ttl interval", "content_anchor text", "row_ttl interval", "row_anchor text"],
+      "indexes": []
+    },
+    "retention_audit": {
+      "columns": ["run_id text not null", "parent_run_id text", "executor text not null", "trigger text not null", "class text", "clock interval", "cutoff timestamp with time zone", "started_at timestamp with time zone not null", "finished_at timestamp with time zone", "candidates integer not null default 0", "emitted integer not null default 0", "completed integer not null default 0", "refreshed integer not null default 0", "text_deleted integer not null default 0", "derived_deleted integer not null default 0", "refresh_missed integer not null default 0", "failures jsonb not null default '[]'::jsonb", "delegated_to text", "verification jsonb", "oldest_remaining_age_seconds bigint", "status text not null", "holds jsonb not null default '[]'::jsonb"],
+      "indexes": ["unique btree (run_id)"]
+    },
+    "deletion_requests": {
+      "columns": ["request_id text not null", "received_at timestamp with time zone not null default now()", "requester_contact text not null", "subject_handle text", "author_ref text", "confirmation jsonb", "status text not null default 'received'::text", "deletion_ids text[] not null default '{}'::text[]", "updated_at timestamp with time zone not null default now()"],
+      "indexes": ["unique btree (request_id)"]
+    },
+    "deletion_propagations": {
+      "columns": ["deletion_id text not null", "reason text not null", "scope text not null", "mode text not null", "retention_class text", "signal_at timestamp with time zone not null", "due_at timestamp with time zone not null", "state text not null default 'received'::text", "items_resolved integer not null default 0", "found integer not null default 0", "verification jsonb", "notices jsonb not null default '[]'::jsonb", "sla_met boolean", "completed_at timestamp with time zone", "reject_reason text"],
+      "indexes": ["unique btree (deletion_id)", "btree (state, due_at)"]
+    },
+    "deletion_propagation_items": {
+      "columns": ["deletion_id text not null", "item_id uuid not null", "source_id uuid", "raw_ref text", "resolved_at timestamp with time zone not null default now()"],
+      "indexes": ["unique btree (deletion_id, item_id)", "btree (item_id)"]
+    },
+    "permitted_uses": {
+      "columns": ["subject_kind text not null", "subject text not null", "use text not null", "allowed boolean not null default true", "clause text not null", "set_by text not null", "set_at timestamp with time zone not null default now()"],
+      "indexes": ["unique btree (subject_kind, subject, use)"]
+    },
+    "x_compliance_audit": {
+      "columns": ["run_id text not null", "trigger text not null", "started_at timestamp with time zone not null", "finished_at timestamp with time zone", "x_jobs jsonb not null default '[]'::jsonb", "ids_submitted jsonb not null default '{}'::jsonb", "ids_returned jsonb not null default '{}'::jsonb", "withheld_in_iq integer not null default 0", "class_mismatch integer not null default 0", "ids_actioned integer not null default 0", "ids_completed integer not null default 0", "signal_to_deleted_seconds jsonb", "evidence jsonb not null default '[]'::jsonb", "status text not null"],
+      "indexes": ["unique btree (run_id)"]
+    },
+    "model_versions": {
+      "columns": ["task text not null", "model_version text not null", "service text not null", "status text not null", "thresholds jsonb not null default '{}'::jsonb", "artefact_path text not null", "evaluation jsonb not null default '{}'::jsonb", "created_at timestamp with time zone not null default now()", "activated_at timestamp with time zone", "retired_at timestamp with time zone"],
+      "indexes": ["unique btree (task, model_version)", "unique btree (task) where (status = 'active'::text)"]
+    },
+    "taxonomy_nodes": {
+      "columns": ["taxonomy_id text not null", "node_id text not null", "label_ar text", "label_ckb text", "label_en text", "description text", "examples jsonb not null default '[]'::jsonb", "status text not null", "taxonomy_version integer not null default 1"],
+      "indexes": ["unique btree (taxonomy_id, node_id)"]
+    },
+    "kb_entities": {
+      "columns": ["entity_id text not null", "type text not null", "name_ar text", "name_ckb text", "name_en text", "parent_id text", "scope text not null", "status text not null", "kb_version integer not null default 1", "public_role text", "role_terms jsonb"],
+      "indexes": ["unique btree (entity_id)"]
+    },
+    "kb_aliases": {
+      "columns": ["alias_id uuid not null default gen_random_uuid()", "entity_id text not null", "text text not null", "lang text", "script text", "folded text not null", "kind text not null", "ambiguous boolean not null default false", "context_cues jsonb not null default '[]'::jsonb"],
+      "indexes": ["unique btree (alias_id)", "btree (folded)"]
+    },
+    "brand_assets": {
+      "columns": ["brand_id text not null", "client_id uuid not null", "name text not null", "object_prefix text not null", "status text not null", "added_at timestamp with time zone not null default now()"],
+      "indexes": ["unique btree (brand_id)"]
+    },
+    "alert_rules": {
+      "columns": ["rule_id uuid not null default gen_random_uuid()", "client_id uuid not null", "type text not null", "keyword_id uuid", "scope text not null", "platform text", "params jsonb not null default '{}'::jsonb", "severity text not null", "channels jsonb not null default '[]'::jsonb", "cooldown_minutes integer not null default 60", "enabled boolean not null default true"],
+      "indexes": ["unique btree (rule_id)"]
+    },
+    "alerts": {
+      "columns": ["alert_id text not null", "rule_id uuid not null", "client_id uuid not null", "fingerprint text not null", "window_key text not null", "status text not null default 'open'::text", "renotify boolean not null default false", "payload jsonb not null default '{}'::jsonb", "opened_at timestamp with time zone not null default now()", "resolved_at timestamp with time zone", "cooldown_until timestamp with time zone"],
+      "indexes": ["unique btree (alert_id)", "unique btree (fingerprint, window_key)"]
+    }
+  }
+}
