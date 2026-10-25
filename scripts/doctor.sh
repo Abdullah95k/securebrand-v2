@@ -59,7 +59,7 @@ else
   if version_ge "$found" "$UV_MIN" && ! version_ge "$found" "$UV_BELOW"; then
     ok "uv $found"
   else
-    bad "uv: expected $UV_RANGE, found $found (uv self update $UV_MIN)"
+    bad "uv: expected $UV_RANGE, found $found (make bootstrap updates it: uv self update $UV_MIN, or python3 -m pip install --user 'uv==$UV_MIN' when pip installed uv)"
   fi
   if uv python find "$PYTHON_PIN" >/dev/null 2>&1; then
     ok "python $PYTHON_PIN (uv)"
@@ -76,9 +76,9 @@ fi
 
 if [ -x node_modules/.bin/supabase ]; then
   found="$(node_modules/.bin/supabase --version 2>/dev/null | tail -1 || echo unknown)"
-  if [ "$found" = "$SUPABASE_PIN" ]; then ok "supabase CLI $found"; else bad "supabase CLI: expected $SUPABASE_PIN, found $found (pnpm install)"; fi
+  if [ "$found" = "$SUPABASE_PIN" ]; then ok "supabase CLI $found"; else bad "supabase CLI: expected $SUPABASE_PIN, found $found (make bootstrap)"; fi
 else
-  bad "supabase CLI: missing (pnpm install puts $SUPABASE_PIN in node_modules/.bin)"
+  bad "supabase CLI: missing (make bootstrap puts $SUPABASE_PIN in node_modules/.bin)"
 fi
 
 if ! command -v docker >/dev/null 2>&1; then

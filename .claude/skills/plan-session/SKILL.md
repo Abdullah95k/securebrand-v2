@@ -24,7 +24,7 @@ Use subagents to read long material and report back, and tell them to keep exact
 
 - **Acceptance map:** every criterion in PRD section 13, as amended by the ADRs that apply (ADR-0001), the test that will prove it (unit, contract, acceptance or e2e) and the fixture it uses.
 - **Uncovered behaviours:** what PRD sections 5 and 8, as amended by the ADRs (ADR-0001), require that no criterion tests (rotation or series timing, catch-up, 429, 401 and 403, empty 200, a 5xx in the middle of pagination, DLQ after five attempts, replay idempotency), each with its own test.
-- **Contracts:** every topic (with version), job queue and kind, table and column the service reads or writes. Confirm each one exists in `packages/contracts` and the migrations. Anything missing goes under "Proposals needed"; never invent it.
+- **Contracts:** every topic (with version), job queue and kind, table and column the service reads or writes. Confirm each one exists in `packages/contracts` and the migrations. Anything missing goes under "Proposals needed"; never invent it. (F2, F3 and F8: list what this session creates, from the ADRs and CONVENTIONS, instead)
 - **Build outline:** files to create; the SDK features used (never re-implement retries, DLQ, cursors, quota, canary, logs or metrics); the mapper to add to normalize-item, if this service emits a new record shape.
 - **Risks:** each risk in PRD section 12 and the test that covers it.
 - **Questions:** every ambiguity or conflict between the PRD, CONVENTIONS, the ADRs and the handoffs that no ADR settles (an ADR wins over the PRD, ADR-0001), and every PRD section 14 question this build depends on.

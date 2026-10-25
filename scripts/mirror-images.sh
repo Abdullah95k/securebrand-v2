@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Copies to this repository's GHCR mirror the pinned tag of every stack image whose <NAME>_REPO in
-# stack/versions.env points there, from its <NAME>_UPSTREAM, for every platform the upstream
-# publishes. Images with an anonymous upstream are left alone. Run by
+# stack/versions.env points there (Redpanda, which has no anonymous upstream, and ClickHouse, whose
+# ECR Public copy refuses CI's pulls), from its <NAME>_UPSTREAM, for every platform the upstream
+# publishes. Images pulled from an anonymous upstream are left alone. Run by
 # .github/workflows/mirror-images.yml after logging in to ghcr.io (and to Docker Hub when its
 # secrets exist); needs docker buildx.
 #

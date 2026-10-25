@@ -43,6 +43,13 @@ describe("version pins", () => {
     }
   });
 
+  it("pulls ClickHouse from this repository's GHCR mirror, copied from the Docker Official Image", () => {
+    // ECR Public refuses anonymous pulls from shared addresses (toomanyrequests: Data limit
+    // exceeded): CI and cloud sessions pull ClickHouse from the mirror instead.
+    expect(versions.CLICKHOUSE_REPO).toBe(`${MIRROR}clickhouse`);
+    expect(versions.CLICKHOUSE_UPSTREAM).toBe("docker.io/library/clickhouse");
+  });
+
   it("pins the base images of the service templates to the toolchain versions", () => {
     expect(readText("services/_template/Dockerfile")).toContain(
       `public.ecr.aws/docker/library/node:${nodeVersion}-bookworm-slim`,

@@ -32,6 +32,11 @@ jobs:
       contents: read
       packages: read
     steps:
+      - name: Keep the Supabase ports out of the ephemeral range
+        # supabase/config.toml publishes 54320-54329 (API 54321, database 54322), inside Linux's
+        # ephemeral range (32768-60999): an outbound connection (an image pull, pnpm install) can
+        # hold one when make up binds it ("address already in use"). First, so no step's sockets do.
+        run: sudo sysctl -w net.ipv4.ip_local_reserved_ports=54320-54329
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
@@ -54,6 +59,8 @@ jobs:
         run: |
           pnpm install --frozen-lockfile
           (cd services/_template-py && uv sync --locked)
+      - name: Prettier (pnpm fmt:check)
+        run: pnpm fmt:check
       - name: Log in to GHCR (the stack's image mirror)
         uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
         with:
@@ -84,6 +91,7 @@ jobs:
           mkdir -p .build-state
           scripts/compose.sh logs --no-color > .build-state/stack.log 2>&1 || true
           docker ps -a > .build-state/containers.txt 2>&1 || true
+          sudo ss -tanp > .build-state/sockets.txt 2>&1 || true
       - name: make down
         if: always()
         run: make down || true

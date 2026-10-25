@@ -7,7 +7,7 @@ paths:
 
 # Frozen contracts
 
-- These paths change only in F2, F3, F8 or a contract-change session started with `ALLOW_CONTRACT_EDITS=1`, applying an approved proposal from `docs/proposals/`.
+- These paths change only in F2, F3 and F8, and in `/contract-change` applying an approved proposal from `docs/proposals/`. Such a session runs on its lane branch, `sb/F2`, `sb/F3`, `sb/F8` or `sb/CC-<proposal>` (the cloud's way, where `ALLOW_CONTRACT_EDITS` cannot be set), or was started with `ALLOW_CONTRACT_EDITS=1`. `.claude/hooks/guard-contracts.sh` blocks every other session, and the policy job fails a pull request that changes these paths without the `contract-change` label.
 - Versioning follows `docs/contracts/VERSIONING.md` (ADR-0002): a change that only adds an optional field stays within its version; anything else is a new version with a dual-publish window.
 - Every change regenerates the JSON Schemas and the Python models, updates the valid and invalid fixtures, and passes the conformance suites in TypeScript and Python.
 - Migrations are forward-only, run cleanly from zero and re-run cleanly; every client-facing table has row-level security with a test.

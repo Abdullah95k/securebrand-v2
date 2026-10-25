@@ -1,4 +1,4 @@
-import { accessSync, constants, readFileSync } from "node:fs";
+import { accessSync, constants, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { ROOT, run } from "../helpers/repo.js";
@@ -13,6 +13,12 @@ function makeTargets(): string[] {
     }
   }
   return [...targets].sort();
+}
+
+function filesUnder(dir: string): string[] {
+  return readdirSync(dir, { recursive: true, withFileTypes: true })
+    .filter((entry) => entry.isFile())
+    .map((entry) => join(entry.parentPath, entry.name));
 }
 
 function pythonProjects(): string[] {
@@ -69,6 +75,42 @@ describe("kit fit", () => {
     expect(() => {
       accessSync(join(ROOT, "scripts", "check-changed.sh"), constants.X_OK);
     }).not.toThrow();
+  });
+
+  it("skills, rules, agents and hooks name make bootstrap as the install step, never a bare pnpm install or uv sync", () => {
+    // A bare pnpm install fails on the cloud shell's Node 22 (.npmrc engine-strict); make bootstrap
+    // installs the pinned toolchain first, then pnpm install --frozen-lockfile and uv sync --locked.
+    const files = ["skills", "rules", "agents", "hooks"].flatMap((dir) =>
+      filesUnder(join(ROOT, ".claude", dir)),
+    );
+    expect(files.length).toBeGreaterThan(10);
+    for (const file of files) {
+      expect(readFileSync(file, "utf8"), file).not.toMatch(/`pnpm install`|`uv sync`/);
+    }
+    expect(
+      readFileSync(join(ROOT, ".claude", "skills", "build-session", "SKILL.md"), "utf8"),
+    ).toContain("make bootstrap");
+    const check = readFileSync(join(ROOT, "scripts", "check-changed.sh"), "utf8");
+    expect(check).toContain("(run make bootstrap)");
+    expect(check).not.toContain("(run pnpm install)");
+  });
+
+  it("settings.json wires the contract guard, the arm hook and the stop gate", () => {
+    const settings = JSON.parse(readFileSync(join(ROOT, ".claude", "settings.json"), "utf8")) as {
+      hooks: Record<string, { matcher?: string; hooks: { command: string }[] }[]>;
+    };
+    const commands = (event: string, matcher?: string): string =>
+      (settings.hooks[event] ?? [])
+        .filter((group) => group.matcher === matcher)
+        .flatMap((group) => group.hooks.map((hook) => hook.command))
+        .join("\n");
+    expect(commands("PreToolUse", "Edit|Write|MultiEdit|NotebookEdit|Bash")).toContain(
+      ".claude/hooks/guard-contracts.sh",
+    );
+    expect(commands("UserPromptExpansion", "build-session|fix-session")).toContain(
+      ".claude/hooks/arm-stop-gate.sh",
+    );
+    expect(commands("Stop")).toContain(".claude/hooks/stop-gate.sh");
   });
 
   it(".gitignore covers build outputs, virtualenvs and caches", () => {
