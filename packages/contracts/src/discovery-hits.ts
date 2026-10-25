@@ -3,7 +3,7 @@
 // four forms and is echoed as issued.
 import { z } from "zod";
 import type { SchemaBuilder } from "./builder.ts";
-import { dataShape, day, metadataShape } from "./metadata.ts";
+import { countDef, dataShape, day, metadataShape, shareDef } from "./metadata.ts";
 import {
   PATTERNS,
   candidateKey,
@@ -82,7 +82,7 @@ export function buildDiscoveryHits(b: SchemaBuilder) {
             matched_terms: z.array(nonEmpty()).optional(),
             lang: token().optional(),
             // The platform's counts under its own names.
-            public_metrics: z.record(z.string().regex(PATTERNS.snakeName), count()).optional(),
+            public_metrics: z.record(z.string(), countDef(b)).optional(), // snake_case keys, validate()
             display_name: z.string().optional(),
           }),
         ),
@@ -134,7 +134,7 @@ export function buildDiscoveryHits(b: SchemaBuilder) {
                 sample_urls: z.array(httpUrl()).optional(),
                 path_signals: z.array(snakeName()).optional(),
                 // Shares keyed by the index's language codes, for example `ara`.
-                language_share: z.record(z.string().regex(PATTERNS.snakeName), share()).optional(),
+                language_share: z.record(z.string(), shareDef(b)).optional(), // snake_case keys, validate()
                 news_score: share().optional(),
               }),
             )

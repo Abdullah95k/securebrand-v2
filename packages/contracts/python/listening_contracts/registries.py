@@ -28,6 +28,9 @@ class _VendorsFile(TypedDict):
 _services = cast(_ServicesFile, registry("services.json"))
 _vendors = cast(_VendorsFile, registry("vendors.json"))
 
+PLATFORM_GROUPS: dict[str, tuple[str, ...]] = {
+    group: tuple(services) for group, services in _services["platform_groups"].items()
+}
 PLATFORM_SERVICES: tuple[str, ...] = tuple(
     s for group in _services["platform_groups"].values() for s in group
 )

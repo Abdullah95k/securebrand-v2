@@ -1,0 +1,1599 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "job/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "job_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "due_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "attempt": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "request_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "requested_by": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "must_finish_by": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "kind": { "type": "string", "const": "rotation" },
+        "tier": { "type": "number", "enum": [1, 2, 3] },
+        "edge": { "type": "string", "enum": ["recent_media", "top_media"] },
+        "crawl_id": { "type": "string", "pattern": "^[^\\x00-\\x20]+$" }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "job_id",
+        "due_at",
+        "attempt",
+        "kind"
+      ],
+      "additionalProperties": false,
+      "title": "RotationJob"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "job/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "job_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "due_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "attempt": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "request_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "requested_by": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "must_finish_by": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "kind": { "type": "string", "const": "reconciliation" },
+        "query": { "type": "string", "minLength": 1 },
+        "window_start": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "window_end": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          }
+        },
+        "client_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          }
+        },
+        "post_ref": { "$ref": "#/$defs/PostRef" },
+        "reason": { "type": "string", "enum": ["lease_lapsed"] }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "job_id",
+        "due_at",
+        "attempt",
+        "kind"
+      ],
+      "additionalProperties": false,
+      "title": "ReconciliationJob"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "job/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "job_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "due_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "attempt": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "request_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "requested_by": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "must_finish_by": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "kind": { "type": "string", "const": "backfill" },
+        "run_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "reason": { "type": "string", "enum": ["add", "client", "ops"] },
+        "window_start": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "window_end": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "cap": { "$ref": "#/$defs/BackfillCap" },
+        "edge": { "type": "string", "enum": ["recent_media", "top_media"] }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "job_id",
+        "due_at",
+        "attempt",
+        "kind",
+        "run_id",
+        "reason",
+        "window_start",
+        "window_end",
+        "cap"
+      ],
+      "additionalProperties": false,
+      "title": "BackfillJob"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "job/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "job_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "due_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "attempt": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "request_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "requested_by": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "must_finish_by": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "kind": { "type": "string", "const": "keyword_history" },
+        "run_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "reason": { "type": "string", "enum": ["add", "client"] },
+        "window_start": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "window_end": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "cap": { "$ref": "#/$defs/BackfillCap" }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "job_id",
+        "due_at",
+        "attempt",
+        "kind",
+        "run_id",
+        "reason",
+        "window_start",
+        "window_end",
+        "cap"
+      ],
+      "additionalProperties": false,
+      "title": "KeywordHistoryJob"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "job/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "job_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "due_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "attempt": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "request_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "requested_by": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "must_finish_by": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "kind": { "type": "string", "const": "comments" },
+        "post_ref": { "$ref": "#/$defs/PostRef" },
+        "series_step": {
+          "type": "string",
+          "pattern": "^(\\+[1-9][0-9]*[hd]|once|hot:[1-9][0-9]*|refresh:[0-7][0-9A-HJKMNP-TV-Z]{25})$"
+        },
+        "profile": {
+          "type": "string",
+          "enum": [
+            "fb_page",
+            "fb_group",
+            "ig_own",
+            "ig_other",
+            "tt",
+            "x",
+            "yt",
+            "li_own",
+            "li_other",
+            "tg_own",
+            "news"
+          ]
+        }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "job_id",
+        "due_at",
+        "attempt",
+        "kind",
+        "post_ref",
+        "series_step",
+        "profile"
+      ],
+      "additionalProperties": false,
+      "title": "CommentsJob"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "job/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "job_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "due_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "attempt": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "request_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "requested_by": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "must_finish_by": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "kind": { "type": "string", "const": "replies" },
+        "post_ref": { "$ref": "#/$defs/PostRef" },
+        "series_step": {
+          "type": "string",
+          "pattern": "^(\\+[1-9][0-9]*[hd]|once|hot:[1-9][0-9]*|refresh:[0-7][0-9A-HJKMNP-TV-Z]{25})$"
+        },
+        "profile": {
+          "type": "string",
+          "enum": [
+            "fb_page",
+            "fb_group",
+            "ig_own",
+            "ig_other",
+            "tt",
+            "x",
+            "yt",
+            "li_own",
+            "li_other",
+            "tg_own",
+            "news"
+          ]
+        },
+        "window_start": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "job_id",
+        "due_at",
+        "attempt",
+        "kind",
+        "post_ref",
+        "series_step",
+        "profile"
+      ],
+      "additionalProperties": false,
+      "title": "RepliesJob"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "job/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "job_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "due_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "attempt": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "request_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "requested_by": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "must_finish_by": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "kind": { "type": "string", "const": "metrics" },
+        "post_ref": { "$ref": "#/$defs/PostRef" },
+        "series_step": {
+          "type": "string",
+          "pattern": "^(\\+24h|\\+7d|refresh:[0-7][0-9A-HJKMNP-TV-Z]{25})$"
+        }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "job_id",
+        "due_at",
+        "attempt",
+        "kind",
+        "post_ref",
+        "series_step"
+      ],
+      "additionalProperties": false,
+      "title": "MetricsJob"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "job/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "job_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "due_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "attempt": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "request_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "requested_by": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "must_finish_by": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "kind": { "type": "string", "const": "first_sight" },
+        "post_ref": { "$ref": "#/$defs/PostRef" },
+        "origin_kind": {
+          "type": "string",
+          "enum": [
+            "rotation",
+            "reconciliation",
+            "backfill",
+            "keyword_history",
+            "comments",
+            "replies",
+            "metrics",
+            "first_sight",
+            "refresh",
+            "resolve",
+            "manual_candidate",
+            "first_check",
+            "recheck",
+            "ops_force",
+            "push",
+            "replay",
+            "rerun",
+            "rematch",
+            "recompute",
+            "retention_sweep",
+            "analyze",
+            "candidate_retry",
+            "review_answer",
+            "export",
+            "stream"
+          ]
+        }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "job_id",
+        "due_at",
+        "attempt",
+        "kind",
+        "post_ref",
+        "origin_kind"
+      ],
+      "additionalProperties": false,
+      "title": "FirstSightJob"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "job/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "job_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "due_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "attempt": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "request_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "requested_by": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "must_finish_by": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "kind": { "type": "string", "const": "refresh" },
+        "candidate_key": {
+          "type": "string",
+          "pattern": "^(facebook:group:[0-9]+|news:site:[a-z0-9-]+(\\.[a-z0-9-]+)+|(facebook|instagram|tiktok|x|telegram|youtube):[^\\x00-\\x20:]+|linkedin:[^\\x00-\\x20]+)$"
+        },
+        "host": {
+          "type": "string",
+          "pattern": "^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*\\.?$"
+        },
+        "reason": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+        "post_ref": { "$ref": "#/$defs/PostRef" },
+        "run_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "refresh_for_client_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          }
+        }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "job_id",
+        "due_at",
+        "attempt",
+        "kind"
+      ],
+      "additionalProperties": false,
+      "title": "RefreshJob"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "job/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "job_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "due_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "attempt": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "request_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "requested_by": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "must_finish_by": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "kind": { "type": "string", "const": "resolve" },
+        "candidate_key": {
+          "type": "string",
+          "pattern": "^(facebook:group:[0-9]+|news:site:[a-z0-9-]+(\\.[a-z0-9-]+)+|(facebook|instagram|tiktok|x|telegram|youtube):[^\\x00-\\x20:]+|linkedin:[^\\x00-\\x20]+)$"
+        },
+        "platform": {
+          "type": "string",
+          "enum": [
+            "facebook",
+            "instagram",
+            "tiktok",
+            "x",
+            "linkedin",
+            "telegram",
+            "youtube",
+            "news",
+            "web"
+          ]
+        },
+        "platform_id": {
+          "anyOf": [{ "type": "string", "pattern": "^[^\\x00-\\x20]+$" }, { "type": "null" }]
+        },
+        "handle": { "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }] },
+        "url": {
+          "anyOf": [
+            { "type": "string", "pattern": "^https?:\\/\\/[^\\x00-\\x20]+$" },
+            { "type": "null" }
+          ]
+        },
+        "client_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          }
+        },
+        "seed_list": { "type": "boolean" },
+        "origin": { "type": "string", "enum": ["discovery", "manual"] }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "job_id",
+        "due_at",
+        "attempt",
+        "kind",
+        "candidate_key",
+        "platform",
+        "platform_id",
+        "handle",
+        "url",
+        "client_ids",
+        "seed_list",
+        "origin"
+      ],
+      "additionalProperties": false,
+      "title": "ResolveJob"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "job/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "job_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "due_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "attempt": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "request_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "requested_by": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "must_finish_by": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "kind": { "type": "string", "const": "manual_candidate" },
+        "candidate_key": {
+          "type": "string",
+          "pattern": "^(facebook:group:[0-9]+|news:site:[a-z0-9-]+(\\.[a-z0-9-]+)+|(facebook|instagram|tiktok|x|telegram|youtube):[^\\x00-\\x20:]+|linkedin:[^\\x00-\\x20]+)$"
+        },
+        "platform": {
+          "type": "string",
+          "enum": [
+            "facebook",
+            "instagram",
+            "tiktok",
+            "x",
+            "linkedin",
+            "telegram",
+            "youtube",
+            "news",
+            "web"
+          ]
+        },
+        "platform_id": {
+          "anyOf": [{ "type": "string", "pattern": "^[^\\x00-\\x20]+$" }, { "type": "null" }]
+        },
+        "handle": { "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }] },
+        "url": {
+          "anyOf": [
+            { "type": "string", "pattern": "^https?:\\/\\/[^\\x00-\\x20]+$" },
+            { "type": "null" }
+          ]
+        },
+        "client_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          }
+        },
+        "seed_list": { "type": "boolean" },
+        "origin": { "type": "string", "const": "manual" }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "job_id",
+        "due_at",
+        "attempt",
+        "request_id",
+        "requested_by",
+        "kind",
+        "candidate_key",
+        "platform",
+        "platform_id",
+        "handle",
+        "url",
+        "client_ids",
+        "seed_list",
+        "origin"
+      ],
+      "additionalProperties": false,
+      "title": "ManualCandidateJob"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "job/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "job_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "due_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "attempt": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "request_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "requested_by": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "must_finish_by": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "kind": { "type": "string", "const": "first_check" },
+        "host": {
+          "type": "string",
+          "pattern": "^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*\\.?$"
+        }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "job_id",
+        "due_at",
+        "attempt",
+        "kind",
+        "host"
+      ],
+      "additionalProperties": false,
+      "title": "FirstCheckJob"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "job/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "job_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "due_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "attempt": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "request_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "requested_by": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "must_finish_by": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "kind": { "type": "string", "const": "recheck" },
+        "host": {
+          "type": "string",
+          "pattern": "^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*\\.?$"
+        }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "job_id",
+        "due_at",
+        "attempt",
+        "requested_by",
+        "kind",
+        "host"
+      ],
+      "additionalProperties": false,
+      "title": "RecheckJob"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "job/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "job_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "due_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "attempt": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "request_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "requested_by": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "must_finish_by": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "kind": { "type": "string", "const": "ops_force" },
+        "post_ref": { "$ref": "#/$defs/PostRef" },
+        "target_ids": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[^\\x00-\\x20]+$" }
+        },
+        "edge": { "type": "string", "enum": ["recent_media", "top_media"] },
+        "client_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "candidate_key": {
+          "type": "string",
+          "pattern": "^(facebook:group:[0-9]+|news:site:[a-z0-9-]+(\\.[a-z0-9-]+)+|(facebook|instagram|tiktok|x|telegram|youtube):[^\\x00-\\x20:]+|linkedin:[^\\x00-\\x20]+)$"
+        },
+        "host": {
+          "type": "string",
+          "pattern": "^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*\\.?$"
+        },
+        "crawl_id": { "type": "string", "pattern": "^[^\\x00-\\x20]+$" }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "job_id",
+        "due_at",
+        "attempt",
+        "kind"
+      ],
+      "additionalProperties": false,
+      "title": "OpsForceJob"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "job/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "job_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "due_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "attempt": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "request_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "requested_by": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "must_finish_by": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "kind": { "type": "string", "const": "push" },
+        "body": {
+          "anyOf": [
+            { "type": "string" },
+            { "type": "object", "propertyNames": { "type": "string" }, "additionalProperties": {} }
+          ]
+        },
+        "received_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "headers": {
+          "type": "object",
+          "propertyNames": { "type": "string" },
+          "additionalProperties": { "type": "string" }
+        }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "job_id",
+        "due_at",
+        "attempt",
+        "kind",
+        "body",
+        "received_at",
+        "headers"
+      ],
+      "additionalProperties": false,
+      "title": "PushJob"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "job/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "job_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "due_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "attempt": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "request_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "requested_by": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "must_finish_by": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "kind": { "type": "string", "const": "replay" },
+        "run_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "from": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "to": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "platforms": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "facebook",
+              "instagram",
+              "tiktok",
+              "x",
+              "linkedin",
+              "telegram",
+              "youtube",
+              "news",
+              "web"
+            ]
+          }
+        },
+        "reason": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "job_id",
+        "due_at",
+        "attempt",
+        "request_id",
+        "requested_by",
+        "kind",
+        "run_id",
+        "from",
+        "to",
+        "reason"
+      ],
+      "additionalProperties": false,
+      "title": "ReplayJob"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "job/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "job_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "due_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "attempt": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "request_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "requested_by": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "must_finish_by": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "kind": { "type": "string", "const": "rerun" },
+        "run_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "task": {
+          "type": "string",
+          "pattern": "^(sentiment|sentiment_aspect|topic_cluster|entities|media_fetch|media_ocr|media_tags|media_asr|media_logo|topics\\.[A-Za-z0-9_.-]+)$"
+        },
+        "model_version": { "type": "string", "pattern": "^[^\\x00-\\x20:]+$" },
+        "from": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "to": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "platforms": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "facebook",
+              "instagram",
+              "tiktok",
+              "x",
+              "linkedin",
+              "telegram",
+              "youtube",
+              "news",
+              "web"
+            ]
+          }
+        },
+        "client_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "taxonomy_id": { "type": "string", "pattern": "^[A-Za-z0-9_.-]+$" }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "job_id",
+        "due_at",
+        "attempt",
+        "request_id",
+        "requested_by",
+        "kind",
+        "run_id",
+        "task",
+        "model_version",
+        "from",
+        "to"
+      ],
+      "additionalProperties": false,
+      "title": "RerunJob"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "job/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "job_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "due_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "attempt": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "request_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "requested_by": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "must_finish_by": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "kind": { "type": "string", "const": "rematch" },
+        "client_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "keyword_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          }
+        },
+        "window_days": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "job_id",
+        "due_at",
+        "attempt",
+        "request_id",
+        "requested_by",
+        "kind",
+        "client_id",
+        "keyword_ids",
+        "window_days"
+      ],
+      "additionalProperties": false,
+      "title": "RematchJob"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "job/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "job_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "due_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "attempt": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "request_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "requested_by": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "must_finish_by": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "kind": { "type": "string", "const": "recompute" },
+        "run_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "deletion_id": {
+          "type": "string",
+          "pattern": "^del:(platform_sync|retention|author_request|client_offboarding|legal|authorization_revoked|client_request):(item|author|source|client):[0-9a-f]{64}$"
+        },
+        "buckets": { "type": "array", "items": { "$ref": "#/$defs/RecomputeBucket" } },
+        "keyword_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          }
+        },
+        "from": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "to": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "job_id",
+        "due_at",
+        "attempt",
+        "kind"
+      ],
+      "additionalProperties": false,
+      "title": "RecomputeJob"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "job/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "job_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "due_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "attempt": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "request_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "requested_by": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "must_finish_by": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "kind": { "type": "string", "const": "retention_sweep" },
+        "run_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "cutoff": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "next_sweep_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "job_id",
+        "due_at",
+        "attempt",
+        "kind",
+        "run_id",
+        "cutoff",
+        "next_sweep_at"
+      ],
+      "additionalProperties": false,
+      "title": "RetentionSweepJob"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "job/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "job_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "due_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "attempt": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "request_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "requested_by": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "must_finish_by": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "kind": { "type": "string", "const": "analyze" },
+        "item_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "item_version": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "content_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "job_id",
+        "due_at",
+        "attempt",
+        "source_id",
+        "kind",
+        "item_id",
+        "item_version",
+        "content_hash"
+      ],
+      "additionalProperties": false,
+      "title": "AnalyzeJob"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "job/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "job_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "due_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "attempt": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "request_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "requested_by": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "must_finish_by": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "kind": { "type": "string", "const": "candidate_retry" },
+        "hit_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "item_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "raw_ref": {
+          "type": "string",
+          "pattern": "^raw\\/(green|amber)\\/(facebook|instagram|tiktok|x|linkedin|telegram|youtube|news|web)\\/[0-9]{4}\\/(0[1-9]|1[0-2])\\/(0[1-9]|[12][0-9]|3[01])\\/[a-z0-9]+(-[a-z0-9]+)*\\/[0-9]{6}\\.jsonl\\.zst#[0-9]+$"
+        },
+        "keyword_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          }
+        },
+        "client_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          }
+        },
+        "hit_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "matched_term": { "type": "string", "minLength": 1 },
+        "form_id": { "type": "string", "minLength": 1 },
+        "keyword_set_version": { "type": "string", "pattern": "^cs:[0-9a-f]{64}$" }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "job_id",
+        "due_at",
+        "attempt",
+        "kind",
+        "hit_id",
+        "item_id",
+        "raw_ref",
+        "keyword_ids",
+        "client_ids",
+        "hit_at",
+        "matched_term",
+        "form_id",
+        "keyword_set_version"
+      ],
+      "additionalProperties": false,
+      "title": "CandidateRetryJob"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "job/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "job_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "due_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "attempt": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "request_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "requested_by": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "must_finish_by": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "kind": { "type": "string", "const": "review_answer" },
+        "candidate_key": {
+          "type": "string",
+          "pattern": "^(facebook:group:[0-9]+|news:site:[a-z0-9-]+(\\.[a-z0-9-]+)+|(facebook|instagram|tiktok|x|telegram|youtube):[^\\x00-\\x20:]+|linkedin:[^\\x00-\\x20]+)$"
+        },
+        "card_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "decision_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "action": {
+          "type": "string",
+          "enum": ["approve_tier_1", "approve_tier_2", "approve_tier_3", "reject", "mention_only"]
+        }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "job_id",
+        "due_at",
+        "attempt",
+        "request_id",
+        "requested_by",
+        "kind",
+        "candidate_key",
+        "card_id",
+        "decision_id",
+        "action"
+      ],
+      "additionalProperties": false,
+      "title": "ReviewAnswerJob"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "job/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "job_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "due_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "attempt": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "request_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "requested_by": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "must_finish_by": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "kind": { "type": "string", "const": "export" },
+        "client_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            { "type": "null" }
+          ]
+        },
+        "from": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "to": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "job_id",
+        "due_at",
+        "attempt",
+        "request_id",
+        "requested_by",
+        "kind",
+        "client_id",
+        "from",
+        "to"
+      ],
+      "additionalProperties": false,
+      "title": "ExportJob"
+    }
+  ],
+  "title": "JobV1",
+  "$defs": {
+    "Producer": {
+      "type": "object",
+      "properties": {
+        "service": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+        "version": { "type": "string", "maxLength": 64, "pattern": "^[^\\x00-\\x20]+$" },
+        "job_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" }
+      },
+      "required": ["service", "version", "job_id"],
+      "additionalProperties": false,
+      "title": "Producer"
+    },
+    "PostRef": {
+      "type": "object",
+      "properties": {
+        "item_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "platform": {
+          "type": "string",
+          "enum": [
+            "facebook",
+            "instagram",
+            "tiktok",
+            "x",
+            "linkedin",
+            "telegram",
+            "youtube",
+            "news",
+            "web"
+          ]
+        },
+        "platform_id": { "type": "string", "pattern": "^[^\\x00-\\x20]+$" },
+        "url": { "type": "string", "pattern": "^https?:\\/\\/[^\\x00-\\x20]+$" },
+        "thread_ids": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[^\\x00-\\x20]+$" }
+        }
+      },
+      "required": ["item_id", "platform", "platform_id"],
+      "additionalProperties": false,
+      "title": "PostRef"
+    },
+    "BackfillCap": {
+      "type": "object",
+      "properties": {
+        "max_age_days": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "max_items": {
+          "anyOf": [
+            { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+            { "type": "null" }
+          ]
+        }
+      },
+      "required": ["max_age_days", "max_items"],
+      "additionalProperties": false,
+      "title": "BackfillCap"
+    },
+    "RecomputeBucket": {
+      "type": "object",
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "hours": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+          }
+        }
+      },
+      "required": ["source_id", "hours"],
+      "additionalProperties": false,
+      "title": "RecomputeBucket"
+    }
+  }
+}

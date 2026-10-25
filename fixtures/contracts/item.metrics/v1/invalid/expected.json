@@ -88,5 +88,13 @@
       "step"
     ],
     "rule": "a refresh observation names its step (ADR-0034)"
+  },
+  "uppercase-reaction.json": {
+    "path": [
+      "metrics",
+      "reactions_by_type",
+      "LIKE"
+    ],
+    "rule": "reaction types in lower case (F-34)"
   }
 }

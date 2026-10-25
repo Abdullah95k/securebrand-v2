@@ -18,7 +18,15 @@
   "metricsStep": "^(\\+24h|\\+7d|refresh:[0-7][0-9A-HJKMNP-TV-Z]{25})$",
   "analysisTask": "^(sentiment|sentiment_aspect|topic_cluster|entities|media_fetch|media_ocr|media_tags|media_asr|media_logo|topics\\.[A-Za-z0-9_.-]+)$",
   "modelVersion": "^[^\\x00-\\x20:]+$",
+  "topicsTask": "^topics\\.[A-Za-z0-9_.-]+$",
   "analysisKey": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:(sentiment|sentiment_aspect|topic_cluster|entities|media_fetch|media_ocr|media_tags|media_asr|media_logo|topics\\.[A-Za-z0-9_.-]+):[^\\x00-\\x20:]+$",
   "topicId": "^[A-Za-z0-9_.-]+:[^\\x00-\\x20]+$",
-  "urlKey": "^news:url:[0-9a-f]{64}$"
+  "urlKey": "^news:url:[0-9a-f]{64}$",
+  "deletionId": "^del:(platform_sync|retention|author_request|client_offboarding|legal|authorization_revoked|client_request):(item|author|source|client):[0-9a-f]{64}$",
+  "dlqSchema": "^dlq\\.[a-z0-9]+(-[a-z0-9]+)*\\/v1$",
+  "digits": "^[0-9]+$",
+  "queue": "^jobs\\.[a-z0-9]+(-[a-z0-9]+)*(\\.priority)?$",
+  "base64": "^[A-Za-z0-9+/]*={0,2}$",
+  "chatId": "^-?[0-9]+$",
+  "country": "^[A-Z]{2}$"
 }

@@ -108,6 +108,13 @@ export const langShare = (b: SchemaBuilder) =>
     }),
   );
 
+/**
+ * A count and a share as named definitions, the value types of the open maps: the Python generator
+ * renders a named value type as a class, an inline one as an alias pyright and ruff refuse.
+ */
+export const countDef = (b: SchemaBuilder) => b.def("Count", () => count());
+export const shareDef = (b: SchemaBuilder) => b.def("Share", () => share());
+
 /** Engagement counts, each null where the platform has none (ADR-0034; F-34). */
 export const metrics = (b: SchemaBuilder) =>
   b.def("Metrics", () =>
@@ -117,8 +124,9 @@ export const metrics = (b: SchemaBuilder) =>
       comments: count().nullable(),
       shares: count().nullable(),
       // Each reaction type the platform returns, in lower case, to its count: platform data, not a
-      // closed list (Facebook like, love, haha, wow, sad, angry, care).
-      reactions_by_type: z.record(z.string().regex(PATTERNS.snakeName), count()).nullable(),
+      // closed list (Facebook like, love, haha, wow, sad, angry, care). validate() checks the keys
+      // are snake_case: a key pattern is a construct the Python generator cannot render (ADR-0030).
+      reactions_by_type: z.record(z.string(), countDef(b)).nullable(),
       saves: count().nullable().optional(),
     }),
   );

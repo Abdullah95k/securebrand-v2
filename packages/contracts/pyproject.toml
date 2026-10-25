@@ -35,6 +35,8 @@ extend = "../../ruff.toml"
 "python/tests/**" = ["ANN401"]
 # The fixture generator is data: messages written as dict literals, long Arabic strings included.
 "scripts/fixtures/**" = ["ANN401", "E501"]
+# Generated from the JSON Schemas (scripts/gen_python.py): a pattern is one long string.
+"python/listening_contracts/models/**" = ["E501"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["listening_contracts"]

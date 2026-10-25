@@ -1,5 +1,6 @@
 import re
 
+from listening_contracts.models.strict import poster_profiles_v1, raw_items_v1
 from listening_contracts.registries import (
     D3_WRITERS,
     INDEX_SERVICES,
@@ -15,9 +16,10 @@ from listening_contracts.registries import (
     required_field_rows,
     topic_writers,
 )
+from listening_contracts.validate import ValidationResult, validate
 from listening_contracts.vocabulary import VOCABULARY
 
-from conftest import PACKAGE_DIR
+from conftest import PACKAGE_DIR, fixture
 
 SPECIAL = {"@queue", "@platform", "@service", "*"}
 
@@ -145,3 +147,41 @@ def test_only_raw_items_writers_declare_context_keys_and_only_resolvers_declare_
     profiles = topic_writers()["poster.profiles/v1"]
     for service in extras_key_registry()["resolvers"]:
         assert service in profiles
+
+
+# Producer mode checks the registry data (A23; Q1, F-09).
+
+
+def _fails_at(result: ValidationResult, path: list[str | int]) -> bool:
+    return not result.ok and path in [i["path"] for i in result.issues]
+
+
+def test_producer_mode_refuses_a_service_or_vendor_the_registry_data_does_not_list() -> None:
+    f = fixture("item.hits/v1", "valid", "prd-keyword-matcher.json")
+    service = f.copy()
+    service["producer"]["service"] = "keyword-matcher-v2"
+    assert _fails_at(validate("item.hits/v1", service), ["producer", "service"])
+    fetcher = f.copy()
+    fetcher["provenance"]["service"] = "x-searcher"
+    assert _fails_at(validate("item.hits/v1", fetcher), ["provenance", "service"])
+    amber = fixture("raw.items/v1", "valid", "prd-tg-channel-posts-poller.json").copy()
+    amber["envelope"]["provenance"]["vendor"] = "apify"
+    assert _fails_at(validate("raw.items/v1", amber), ["envelope", "provenance", "vendor"])
+
+
+def test_the_schemas_type_service_names_and_vendors_as_patterned_strings_not_enums() -> None:
+    # A name the registry does not list yet passes the consumer, which knows no registry data.
+    value = fixture("item.hits/v1", "valid", "prd-keyword-matcher.json").copy()
+    value["producer"]["service"] = "keyword-matcher-v2"
+    value["provenance"]["vendor"] = "a-new-engine"
+    assert validate("item.hits/v1", value, "consumer").ok
+    value["producer"]["service"] = "Keyword Matcher"
+    assert not validate("item.hits/v1", value, "consumer").ok
+
+
+def test_the_context_and_extras_models_hold_exactly_the_keys_some_producer_declares() -> None:
+    declared = {k for e in context_key_registry()["producers"].values() for k in e["keys"]}
+    declared |= {k for e in context_key_registry()["by_kind"].values() for k in e["keys"]}
+    assert sorted(raw_items_v1.Context.model_fields) == sorted(declared)
+    resolver_keys = {k for keys in extras_key_registry()["resolvers"].values() for k in keys}
+    assert sorted(poster_profiles_v1.Extras.model_fields) == sorted(resolver_keys)

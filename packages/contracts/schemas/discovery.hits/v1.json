@@ -1,0 +1,704 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "discovery.hits/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "candidate": { "$ref": "#/$defs/Candidate" },
+        "item_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            { "type": "null" }
+          ]
+        },
+        "url": {
+          "anyOf": [
+            { "type": "string", "pattern": "^https?:\\/\\/[^\\x00-\\x20]+$" },
+            { "type": "null" }
+          ]
+        },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "keyword_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          }
+        },
+        "client_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          }
+        },
+        "hit_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "provenance": { "$ref": "#/$defs/Provenance" },
+        "retention_class": {
+          "type": "string",
+          "enum": [
+            "meta_on_request",
+            "vendor_agreed",
+            "x_24h_sync",
+            "news_excerpt",
+            "telegram_bot",
+            "tiktok_display",
+            "linkedin_48h",
+            "linkedin_org",
+            "youtube_30d_text"
+          ]
+        },
+        "evidence_type": { "type": "string", "const": "keyword_hit" },
+        "evidence": { "$ref": "#/$defs/KeywordHitEvidence" }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "candidate",
+        "item_id",
+        "url",
+        "source_id",
+        "keyword_ids",
+        "client_ids",
+        "hit_at",
+        "provenance",
+        "retention_class",
+        "evidence_type"
+      ],
+      "additionalProperties": false,
+      "title": "KeywordHitDiscovery"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "discovery.hits/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "candidate": { "$ref": "#/$defs/Candidate" },
+        "item_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            { "type": "null" }
+          ]
+        },
+        "url": {
+          "anyOf": [
+            { "type": "string", "pattern": "^https?:\\/\\/[^\\x00-\\x20]+$" },
+            { "type": "null" }
+          ]
+        },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "keyword_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          }
+        },
+        "client_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          }
+        },
+        "hit_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "provenance": { "$ref": "#/$defs/Provenance" },
+        "retention_class": {
+          "type": "string",
+          "enum": [
+            "meta_on_request",
+            "vendor_agreed",
+            "x_24h_sync",
+            "news_excerpt",
+            "telegram_bot",
+            "tiktok_display",
+            "linkedin_48h",
+            "linkedin_org",
+            "youtube_30d_text"
+          ]
+        },
+        "evidence_type": { "type": "string", "const": "container" },
+        "evidence": { "$ref": "#/$defs/ContainerEvidence" }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "candidate",
+        "item_id",
+        "url",
+        "source_id",
+        "keyword_ids",
+        "client_ids",
+        "hit_at",
+        "provenance",
+        "retention_class",
+        "evidence_type"
+      ],
+      "additionalProperties": false,
+      "title": "ContainerDiscovery"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "discovery.hits/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "candidate": { "$ref": "#/$defs/Candidate" },
+        "item_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            { "type": "null" }
+          ]
+        },
+        "url": {
+          "anyOf": [
+            { "type": "string", "pattern": "^https?:\\/\\/[^\\x00-\\x20]+$" },
+            { "type": "null" }
+          ]
+        },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "keyword_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          }
+        },
+        "client_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          }
+        },
+        "hit_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "provenance": { "$ref": "#/$defs/Provenance" },
+        "retention_class": {
+          "type": "string",
+          "enum": [
+            "meta_on_request",
+            "vendor_agreed",
+            "x_24h_sync",
+            "news_excerpt",
+            "telegram_bot",
+            "tiktok_display",
+            "linkedin_48h",
+            "linkedin_org",
+            "youtube_30d_text"
+          ]
+        },
+        "evidence_type": { "type": "string", "const": "early_signal" },
+        "evidence": { "$ref": "#/$defs/EarlySignalEvidence" }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "candidate",
+        "item_id",
+        "url",
+        "source_id",
+        "keyword_ids",
+        "client_ids",
+        "hit_at",
+        "provenance",
+        "retention_class",
+        "evidence_type"
+      ],
+      "additionalProperties": false,
+      "title": "EarlySignalDiscovery"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "discovery.hits/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "candidate": { "$ref": "#/$defs/Candidate" },
+        "item_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            { "type": "null" }
+          ]
+        },
+        "url": {
+          "anyOf": [
+            { "type": "string", "pattern": "^https?:\\/\\/[^\\x00-\\x20]+$" },
+            { "type": "null" }
+          ]
+        },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "keyword_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          }
+        },
+        "client_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          }
+        },
+        "hit_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "provenance": { "$ref": "#/$defs/Provenance" },
+        "retention_class": {
+          "type": "string",
+          "enum": [
+            "meta_on_request",
+            "vendor_agreed",
+            "x_24h_sync",
+            "news_excerpt",
+            "telegram_bot",
+            "tiktok_display",
+            "linkedin_48h",
+            "linkedin_org",
+            "youtube_30d_text"
+          ]
+        },
+        "evidence_type": { "type": "string", "const": "page_search" },
+        "evidence": { "$ref": "#/$defs/PageSearchEvidence" }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "candidate",
+        "item_id",
+        "url",
+        "source_id",
+        "keyword_ids",
+        "client_ids",
+        "hit_at",
+        "provenance",
+        "retention_class",
+        "evidence_type"
+      ],
+      "additionalProperties": false,
+      "title": "PageSearchDiscovery"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "discovery.hits/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "candidate": { "$ref": "#/$defs/Candidate" },
+        "item_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            { "type": "null" }
+          ]
+        },
+        "url": {
+          "anyOf": [
+            { "type": "string", "pattern": "^https?:\\/\\/[^\\x00-\\x20]+$" },
+            { "type": "null" }
+          ]
+        },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "keyword_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          }
+        },
+        "client_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          }
+        },
+        "hit_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "provenance": { "$ref": "#/$defs/Provenance" },
+        "retention_class": {
+          "type": "string",
+          "enum": [
+            "meta_on_request",
+            "vendor_agreed",
+            "x_24h_sync",
+            "news_excerpt",
+            "telegram_bot",
+            "tiktok_display",
+            "linkedin_48h",
+            "linkedin_org",
+            "youtube_30d_text"
+          ]
+        },
+        "evidence_type": { "type": "string", "const": "web_search" },
+        "evidence": { "$ref": "#/$defs/WebSearchEvidence" }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "candidate",
+        "item_id",
+        "url",
+        "source_id",
+        "keyword_ids",
+        "client_ids",
+        "hit_at",
+        "provenance",
+        "retention_class",
+        "evidence_type"
+      ],
+      "additionalProperties": false,
+      "title": "WebSearchDiscovery"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string", "const": "discovery.hits/v1" },
+        "message_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" },
+        "produced_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "producer": { "$ref": "#/$defs/Producer" },
+        "candidate": { "$ref": "#/$defs/Candidate" },
+        "item_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            { "type": "null" }
+          ]
+        },
+        "url": {
+          "anyOf": [
+            { "type": "string", "pattern": "^https?:\\/\\/[^\\x00-\\x20]+$" },
+            { "type": "null" }
+          ]
+        },
+        "source_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            { "type": "null" }
+          ]
+        },
+        "keyword_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          }
+        },
+        "client_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          }
+        },
+        "hit_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "provenance": { "$ref": "#/$defs/Provenance" },
+        "retention_class": {
+          "type": "string",
+          "enum": [
+            "meta_on_request",
+            "vendor_agreed",
+            "x_24h_sync",
+            "news_excerpt",
+            "telegram_bot",
+            "tiktok_display",
+            "linkedin_48h",
+            "linkedin_org",
+            "youtube_30d_text"
+          ]
+        },
+        "evidence_type": { "type": "string", "const": "commoncrawl" },
+        "evidence": { "$ref": "#/$defs/CommoncrawlEvidence" }
+      },
+      "required": [
+        "schema",
+        "message_id",
+        "produced_at",
+        "producer",
+        "candidate",
+        "item_id",
+        "url",
+        "source_id",
+        "keyword_ids",
+        "client_ids",
+        "hit_at",
+        "provenance",
+        "retention_class",
+        "evidence_type"
+      ],
+      "additionalProperties": false,
+      "title": "CommoncrawlDiscovery"
+    }
+  ],
+  "title": "DiscoveryHitsV1",
+  "$defs": {
+    "Producer": {
+      "type": "object",
+      "properties": {
+        "service": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+        "version": { "type": "string", "maxLength": 64, "pattern": "^[^\\x00-\\x20]+$" },
+        "job_id": { "type": "string", "pattern": "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" }
+      },
+      "required": ["service", "version", "job_id"],
+      "additionalProperties": false,
+      "title": "Producer"
+    },
+    "Candidate": {
+      "type": "object",
+      "properties": {
+        "candidate_key": {
+          "type": "string",
+          "pattern": "^(facebook:group:[0-9]+|news:site:[a-z0-9-]+(\\.[a-z0-9-]+)+|(facebook|instagram|tiktok|x|telegram|youtube):[^\\x00-\\x20:]+|linkedin:[^\\x00-\\x20]+)$"
+        },
+        "platform": {
+          "type": "string",
+          "enum": [
+            "facebook",
+            "instagram",
+            "tiktok",
+            "x",
+            "linkedin",
+            "telegram",
+            "youtube",
+            "news",
+            "web"
+          ]
+        },
+        "type": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": ["page", "group", "account", "creator", "channel", "company_page", "site"]
+            },
+            { "type": "null" }
+          ]
+        },
+        "platform_id": {
+          "anyOf": [{ "type": "string", "pattern": "^[^\\x00-\\x20]+$" }, { "type": "null" }]
+        },
+        "handle": { "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }] },
+        "url": {
+          "anyOf": [
+            { "type": "string", "pattern": "^https?:\\/\\/[^\\x00-\\x20]+$" },
+            { "type": "null" }
+          ]
+        }
+      },
+      "required": ["candidate_key", "platform", "type", "platform_id", "handle", "url"],
+      "additionalProperties": false,
+      "title": "Candidate"
+    },
+    "Provenance": {
+      "type": "object",
+      "properties": {
+        "route": { "type": "string", "enum": ["green", "amber"] },
+        "vendor": {
+          "anyOf": [{ "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" }, { "type": "null" }]
+        },
+        "service": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+        "fetched_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        }
+      },
+      "required": ["route", "vendor", "service", "fetched_at"],
+      "additionalProperties": false,
+      "title": "Provenance"
+    },
+    "KeywordHitEvidence": {
+      "type": "object",
+      "properties": {
+        "hit_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "matched_term": { "type": "string", "minLength": 1 },
+        "form_id": { "type": "string", "minLength": 1 },
+        "keyword_set_version": { "type": "string", "pattern": "^cs:[0-9a-f]{64}$" }
+      },
+      "additionalProperties": false,
+      "title": "KeywordHitEvidence"
+    },
+    "ContainerEvidence": {
+      "type": "object",
+      "properties": { "name": { "type": "string", "minLength": 1 } },
+      "additionalProperties": false,
+      "title": "ContainerEvidence"
+    },
+    "EarlySignalEvidence": {
+      "type": "object",
+      "properties": {
+        "matched_terms": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "lang": { "type": "string", "pattern": "^[^\\x00-\\x20]+$" },
+        "public_metrics": {
+          "type": "object",
+          "propertyNames": { "type": "string" },
+          "additionalProperties": { "$ref": "#/$defs/Count" }
+        },
+        "display_name": { "type": "string" }
+      },
+      "additionalProperties": false,
+      "title": "EarlySignalEvidence"
+    },
+    "Count": { "type": "integer", "minimum": 0, "maximum": 9007199254740991, "title": "Count" },
+    "PageSearchEvidence": {
+      "type": "object",
+      "properties": {
+        "query": { "type": "string", "minLength": 1 },
+        "name": { "type": "string" },
+        "is_verified": { "type": "boolean" },
+        "location": { "$ref": "#/$defs/SearchLocation" }
+      },
+      "additionalProperties": false,
+      "title": "PageSearchEvidence"
+    },
+    "SearchLocation": {
+      "type": "object",
+      "properties": {
+        "city": { "type": ["string", "null"] },
+        "country": { "type": ["string", "null"] }
+      },
+      "required": ["city", "country"],
+      "additionalProperties": false,
+      "title": "SearchLocation"
+    },
+    "WebSearchEvidence": {
+      "type": "object",
+      "properties": {
+        "canonical_url_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "engines": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["perplexity", "mojeek", "gdelt"] }
+        },
+        "sightings": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "first_seen_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,3})?Z$"
+        },
+        "title": { "type": "string" },
+        "snippet": { "type": "string" }
+      },
+      "additionalProperties": false,
+      "title": "WebSearchEvidence"
+    },
+    "CommoncrawlEvidence": {
+      "type": "object",
+      "properties": {
+        "crawl_id": { "type": "string", "pattern": "^[^\\x00-\\x20]+$" },
+        "captures": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "first_capture": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$"
+        },
+        "last_capture": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$"
+        },
+        "sample_urls": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^https?:\\/\\/[^\\x00-\\x20]+$" }
+        },
+        "path_signals": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" }
+        },
+        "language_share": {
+          "type": "object",
+          "propertyNames": { "type": "string" },
+          "additionalProperties": { "$ref": "#/$defs/Share" }
+        },
+        "news_score": { "type": "number", "minimum": 0, "maximum": 1 }
+      },
+      "additionalProperties": false,
+      "title": "CommoncrawlEvidence"
+    },
+    "Share": { "type": "number", "minimum": 0, "maximum": 1, "title": "Share" }
+  }
+}

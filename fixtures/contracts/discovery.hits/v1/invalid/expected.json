@@ -1,4 +1,12 @@
 {
+  "camel-case-metric.json": {
+    "path": [
+      "evidence",
+      "public_metrics",
+      "retweetCount"
+    ],
+    "rule": "metric names are snake_case (Q8)"
+  },
   "candidate-platform-mismatch.json": {
     "path": [
       "candidate",
@@ -107,6 +115,14 @@
       "evidence_type"
     ],
     "rule": "evidence_type is one of ADR-0031's"
+  },
+  "uppercase-language.json": {
+    "path": [
+      "evidence",
+      "language_share",
+      "ARA"
+    ],
+    "rule": "language keys are snake_case (Q8)"
   },
   "web-search-prefixed-hash.json": {
     "path": [

@@ -959,6 +959,20 @@ def discovery() -> None:
         ["evidence", "canonical_url_hash"],
         "canonical_url_hash is bare hex (ADR-0036)",
     )
+    invalid(
+        s,
+        "camel-case-metric",
+        with_(xr, ("evidence", "public_metrics"), {"retweetCount": 2}),
+        ["evidence", "public_metrics", "retweetCount"],
+        "metric names are snake_case (Q8)",
+    )
+    invalid(
+        s,
+        "uppercase-language",
+        with_(cc, ("evidence", "language_share"), {"ARA": 0.93}),
+        ["evidence", "language_share", "ARA"],
+        "language keys are snake_case (Q8)",
+    )
     tolerant(s, "unknown-evidence-key", with_(shr, ("evidence", "domain_rank"), 4))
 
 
@@ -2409,6 +2423,13 @@ def metrics_topic() -> None:
         with_(fb, ("item_idempotency_key",), fb["idempotency_key"]),
         ["item_idempotency_key"],
         "one name, idempotency_key (ADR-0034)",
+    )
+    invalid(
+        s,
+        "uppercase-reaction",
+        with_(fb, ("metrics", "reactions_by_type"), {"LIKE": 2210}),
+        ["metrics", "reactions_by_type", "LIKE"],
+        "reaction types in lower case (F-34)",
     )
     invalid(
         s,

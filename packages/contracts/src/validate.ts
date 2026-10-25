@@ -14,6 +14,7 @@ import type { Mode } from "./builder.ts";
 import { catalogueId, schemaFor } from "./catalogue.ts";
 import { canonicalJson } from "./canonical-json.ts";
 import { REPORT_KIND_FIELDS } from "./jobs-completed.ts";
+import { PATTERNS } from "./primitives.ts";
 import {
   analysisKey,
   canonicalUrlHash,
@@ -165,6 +166,18 @@ function checkPlatformMeta(out: Issues, path: IssuePath, columns: Json): void {
   }
 }
 
+/**
+ * The keys of the open maps (reaction types, metric names, languages) are snake_case (F-34): a rule
+ * here because a key pattern is a construct the Python generator cannot render (ADR-0030).
+ */
+function checkSnakeKeys(out: Issues, path: IssuePath, map: unknown): void {
+  if (!isRecord(map)) return;
+  for (const key of Object.keys(map)) {
+    if (!PATTERNS.snakeName.test(key))
+      out.add([...path, key], "key_pattern", `${key} is not snake_case`);
+  }
+}
+
 /** provenance and retention_class travel together (ADR-0003). */
 function checkPairing(out: Issues, m: Json, prefix: IssuePath = []): void {
   const p = m.provenance !== undefined;
@@ -236,6 +249,11 @@ const rawItems: Rule = (m, out) => {
 
 const itemsNormalized: Rule = (m, out) => {
   checkItemKey(out, ["idempotency_key"], m.platform, m.kind, m.platform_id, m.idempotency_key);
+  checkSnakeKeys(
+    out,
+    ["metrics_snapshot", "reactions_by_type"],
+    rec(m.metrics_snapshot).reactions_by_type,
+  );
   if (derive(() => itemId(str(m.idempotency_key) ?? "")) !== m.item_id)
     out.add(
       ["item_id"],
@@ -295,6 +313,9 @@ const itemHits: Rule = (m, out) => {
 };
 
 const discoveryHits: Rule = (m, out) => {
+  const evidence = rec(m.evidence);
+  checkSnakeKeys(out, ["evidence", "public_metrics"], evidence.public_metrics);
+  checkSnakeKeys(out, ["evidence", "language_share"], evidence.language_share);
   if (m.item_id !== null && m.url !== null)
     out.add(["url"], "item_and_url", "exactly one of item_id and url (ADR-0031)");
   if (m.item_id === null && m.url === null)
@@ -507,6 +528,7 @@ const itemsAnalysis: Rule = (m, out) => {
 };
 
 const itemMetrics: Rule = (m, out) => {
+  checkSnakeKeys(out, ["metrics", "reactions_by_type"], rec(m.metrics).reactions_by_type);
   const key = str(m.idempotency_key) ?? "";
   if (derive(() => itemId(key)) !== m.item_id)
     out.add(
