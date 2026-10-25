@@ -5,7 +5,14 @@ The build plan in `build-plan/` is run by one orchestrator Claude Code session i
 ## Rules the user set
 
 - One worker session works on one session ID only (one service, package, gate or decision), never two.
-- Every worker runs on Claude Opus 5.5 (`claude-opus-5-5`) at maximum effort. The kit's skills declare `effort: max`, and the `prd-reviewer` subagent runs on Opus. (The user moved the build off Claude Fable 5.1 on 2026-10-06 to save Fable credit.)
+- Up to seven worker sessions run at the same time, on independent lanes; the orchestrator raises or lowers the number as the work needs (the user, 25 Oct 2026).
+- Each worker runs on the model its task needs: Opus 5.5, Sonnet 5.5 or Haiku 5.5, chosen by the reasoning the task takes and its impact on later work (the user, 25 Oct 2026). The orchestrator uses:
+  - Opus for plans, reviews and rechecks, decision and spec sessions, contract, schema, SDK and security work, and fix rounds with hard findings;
+  - Sonnet for builds of medium services from an approved plan, probes, simple fix rounds, continuations and doc follow-ups;
+  - Haiku for mechanical work.
+
+  The user moved the build off Claude Fable 5.1 on 2026-10-06.
+- Speed and token use matter; quality comes first where it needs the cost. When weekly usage reaches 90%, the orchestrator stops launching work until the weekly limit resets (the user, 25 Oct 2026).
 - The orchestrator approves build plans, after checking each one against its brief, PRD, ADRs and handoffs. Questions the documents do not settle go to the user through the orchestrator, in batches.
 - The orchestrator merges foundation, core, service, app and gate lanes once their gates are met. The user reads and merges the decision lanes (D1, D2, D3), the lanes that freeze the contracts (F2, F3, F8) and every contract-change pull request.
 - Plan approvals are recorded in the plan's header as "Approved by: the orchestrator, under the user's delegation (docs/orchestration/README.md), <date>". The user's decisions in D2 and later decision lanes are recorded as "decided by: the user, relayed by the orchestrator on <date>". The user's merge of the lane's pull request ratifies them. (The user chose this on 7 Oct 2026.)
