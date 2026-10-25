@@ -2762,6 +2762,13 @@ def deletions() -> None:
     )
     invalid(
         s,
+        "unknown-requester",
+        {**author, "requested_by": "no-such-service"},
+        ["requested_by"],
+        "a requester that names a service is one the registry lists (Q18; F-09)",
+    )
+    invalid(
+        s,
         "route-on-author-request",
         with_(author, ("provenance", "route"), "green"),
         ["provenance", "route"],
@@ -3428,6 +3435,13 @@ def crawl() -> None:
         {**base, "requested_by": "person:01J9P2R4T6V8X0Z2B4D6F8H0KM"},
         ["requested_by"],
         "a recheck names the service that asked, never a person (F-43)",
+    )
+    invalid(
+        s,
+        "ops-force-unknown-requester",
+        {**base, "kind": "ops_force", "requested_by": "no-such-service"},
+        ["requested_by"],
+        "a requester that names a service is one the registry lists (Q18; F-09)",
     )
     invalid(
         s,

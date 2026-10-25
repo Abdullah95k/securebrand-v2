@@ -1218,6 +1218,13 @@ def decisions() -> None:
     )
     invalid(
         s,
+        "unknown-requester",
+        {**add, "requested_by": "no-such-service"},
+        ["requested_by"],
+        "a requester that names a service is one the registry lists (Q18; F-09)",
+    )
+    invalid(
+        s,
         "budget-wait-not-hashtag",
         {
             **dec(
@@ -1721,6 +1728,13 @@ def events() -> None:
         {**added, "previous": {"tier": 3}},
         ["previous"],
         "previous is null on added (ADR-0014)",
+    )
+    invalid(
+        s,
+        "unknown-actor",
+        {**added, "actor": "no-such-service"},
+        ["actor"],
+        "an actor that names a service is one the registry lists (Q18; F-09)",
     )
     invalid(
         s,
@@ -3344,6 +3358,13 @@ def jobs() -> None:
         "the admin API's ops_force names its request (ADR-0012 L34)",
     )
     bad(
+        "ops-force-unknown-requester",
+        "jobs.fb-page-feed-poller",
+        {**ops, "requested_by": "no-such-service"},
+        ["requested_by"],
+        "a requester that names a service is one the registry lists (Q18; F-09)",
+    )
+    bad(
         "recheck-without-requester",
         "jobs.news-robots-checker",
         without(recheck, "requested_by"),
@@ -3411,6 +3432,13 @@ def jobs() -> None:
         without(replay, "requested_by"),
         ["requested_by"],
         "a replay names who asked (ADR-0012 L34)",
+    )
+    bad(
+        "replay-unknown-requester",
+        "jobs.normalize-item",
+        {**replay, "requested_by": "no-such-service"},
+        ["requested_by"],
+        "a requester that names a service is one the registry lists (Q18; F-09)",
     )
     rerun = json.loads((__import__("common").ROOT / s / "valid" / "rerun.json").read_text())
     bad(

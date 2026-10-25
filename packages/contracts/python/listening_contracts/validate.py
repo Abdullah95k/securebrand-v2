@@ -1028,6 +1028,16 @@ def _check_decision_row(out: _Issues, m: Json, service: str) -> None:
         )
 
 
+# The topics whose requester may name a service or a person (Q18), on source events the actor.
+_REQUESTER_TOPICS = (
+    "registry.decisions/v1",
+    "source.events/v1",
+    "deletions/v1",
+    "job/v1",
+    "crawl.policies/v1",
+)
+
+
 def _registry_checks(out: _Issues, sid: str, m: Json) -> None:
     raw = sid == "raw.items/v1"
     head = _rec(m.get("envelope")) if raw else m
@@ -1064,13 +1074,17 @@ def _registry_checks(out: _Issues, sid: str, m: Json) -> None:
                 f"{service} writes {sid} only with {condition['field']} = {condition['equals']}",
             )
     _check_provenance(out, head.get("provenance"), [*prefix, "provenance"])
-    # A requester that is a service by definition: a recheck's, the service whose host gate asked
-    # (ADR-0040; F-43), checked as producer.service is (F-09).
-    if sid in ("job/v1", "crawl.policies/v1") and m.get("kind") == "recheck":
-        requester = _str(m.get("requested_by")) or ""
-        if not is_known_service(requester):
+    # A requester, checked as producer.service is (F-09). A recheck's is a service by definition,
+    # the service whose host gate asked (ADR-0040; F-43). Any other names a service when it matches
+    # the service pattern, which D3's person reference never does; a person stays unchecked (Q18).
+    where = "actor" if sid == "source.events/v1" else "requested_by"
+    if sid in _REQUESTER_TOPICS:
+        is_recheck = sid in ("job/v1", "crawl.policies/v1") and m.get("kind") == "recheck"
+        requester = _str(m.get(where))
+        named = is_recheck or (requester is not None and matches("service", requester))
+        if named and not is_known_service(requester or ""):
             out.add(
-                ["requested_by"], "unknown_service", f"{requester} is no service of the index (Q1)"
+                [where], "unknown_service", f"{requester or ''} is no service of the index (Q1)"
             )
     # Every other (route, vendor) pair a message names.
     if sid == "poster.profiles/v1" and m.get("route") is not None:

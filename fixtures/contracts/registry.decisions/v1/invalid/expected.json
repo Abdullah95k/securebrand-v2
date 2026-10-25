@@ -311,5 +311,11 @@
       "source_id"
     ],
     "rule": "a decision carries exactly one subject (ADR-0013)"
+  },
+  "unknown-requester.json": {
+    "path": [
+      "requested_by"
+    ],
+    "rule": "a requester that names a service is one the registry lists (Q18; F-09)"
   }
 }

@@ -93,6 +93,12 @@
     ],
     "rule": "text_only becomes item with purge_text (ADR-0035)"
   },
+  "unknown-requester.json": {
+    "path": [
+      "requested_by"
+    ],
+    "rule": "a requester that names a service is one the registry lists (Q18; F-09)"
+  },
   "vendor-without-route.json": {
     "path": [
       "provenance",

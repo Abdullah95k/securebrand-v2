@@ -108,5 +108,11 @@
       "event"
     ],
     "rule": "tier change becomes tier_change (ADR-0014)"
+  },
+  "unknown-actor.json": {
+    "path": [
+      "actor"
+    ],
+    "rule": "an actor that names a service is one the registry lists (Q18; F-09)"
   }
 }

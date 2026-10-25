@@ -143,6 +143,13 @@
     ],
     "rule": "every message carries schema (ADR-0002)"
   },
+  "ops-force-unknown-requester.json": {
+    "path": [
+      "requested_by"
+    ],
+    "rule": "a requester that names a service is one the registry lists (Q18; F-09)",
+    "queue": "jobs.fb-page-feed-poller"
+  },
   "ops-force-without-request.json": {
     "path": [
       "request_id"
@@ -213,6 +220,13 @@
     ],
     "rule": "a rematch names its window (keyword-matcher §5.3 H)",
     "queue": "jobs.keyword-matcher"
+  },
+  "replay-unknown-requester.json": {
+    "path": [
+      "requested_by"
+    ],
+    "rule": "a requester that names a service is one the registry lists (Q18; F-09)",
+    "queue": "jobs.normalize-item"
   },
   "replay-without-requester.json": {
     "path": [

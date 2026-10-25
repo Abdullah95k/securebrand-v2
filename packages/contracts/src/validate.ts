@@ -963,6 +963,15 @@ function checkDecisionRow(out: Issues, m: Json, service: string): void {
     );
 }
 
+// The topics whose requester may name a service or a person (Q18), on source events the actor.
+const REQUESTER_TOPICS = new Set([
+  "registry.decisions/v1",
+  "source.events/v1",
+  "deletions/v1",
+  "job/v1",
+  "crawl.policies/v1",
+]);
+
 function registryChecks(out: Issues, id: string, m: Json): void {
   const head = id === "raw.items/v1" ? rec(m.envelope) : m;
   const prefix: IssuePath = id === "raw.items/v1" ? ["envelope"] : [];
@@ -1000,12 +1009,16 @@ function registryChecks(out: Issues, id: string, m: Json): void {
       );
   }
   checkProvenance(out, head.provenance, [...prefix, "provenance"]);
-  // A requester that is a service by definition: a recheck's, the service whose host gate asked
-  // (ADR-0040; F-43), checked as producer.service is (F-09).
-  if ((id === "job/v1" || id === "crawl.policies/v1") && m.kind === "recheck") {
-    const requester = str(m.requested_by) ?? "";
-    if (!isKnownService(requester))
-      out.add(["requested_by"], "unknown_service", `${requester} is no service of the index (Q1)`);
+  // A requester, checked as producer.service is (F-09). A recheck's is a service by definition,
+  // the service whose host gate asked (ADR-0040; F-43). Any other names a service when it matches
+  // the service pattern, which D3's person reference never does; a person stays unchecked (Q18).
+  const where = id === "source.events/v1" ? "actor" : "requested_by";
+  if (REQUESTER_TOPICS.has(id)) {
+    const isRecheck = (id === "job/v1" || id === "crawl.policies/v1") && m.kind === "recheck";
+    const requester = str(m[where]);
+    const named = isRecheck || (requester !== undefined && PATTERNS.service.test(requester));
+    if (named && !isKnownService(requester ?? ""))
+      out.add([where], "unknown_service", `${requester ?? ""} is no service of the index (Q1)`);
   }
   // Every other (route, vendor) pair a message names.
   if (id === "poster.profiles/v1" && m.route !== undefined && m.route !== null)
