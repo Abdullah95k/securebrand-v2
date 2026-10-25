@@ -71,6 +71,24 @@ describe("kit fit", () => {
     }).not.toThrow();
   });
 
+  it("settings.json wires the contract guard, the arm hook and the stop gate", () => {
+    const settings = JSON.parse(readFileSync(join(ROOT, ".claude", "settings.json"), "utf8")) as {
+      hooks: Record<string, { matcher?: string; hooks: { command: string }[] }[]>;
+    };
+    const commands = (event: string, matcher?: string): string =>
+      (settings.hooks[event] ?? [])
+        .filter((group) => group.matcher === matcher)
+        .flatMap((group) => group.hooks.map((hook) => hook.command))
+        .join("\n");
+    expect(commands("PreToolUse", "Edit|Write|MultiEdit|NotebookEdit|Bash")).toContain(
+      ".claude/hooks/guard-contracts.sh",
+    );
+    expect(commands("UserPromptExpansion", "build-session|fix-session")).toContain(
+      ".claude/hooks/arm-stop-gate.sh",
+    );
+    expect(commands("Stop")).toContain(".claude/hooks/stop-gate.sh");
+  });
+
   it(".gitignore covers build outputs, virtualenvs and caches", () => {
     const ignore = readFileSync(join(ROOT, ".gitignore"), "utf8").split("\n");
     for (const entry of [
