@@ -1,0 +1,70 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M480ZYJ8SBF84QC171C92YC6",
+    "produced_at": "2026-10-06T07:14:05Z",
+    "producer": {
+      "service": "yt-video-details-fetcher",
+      "version": "1.0.0",
+      "job_id": "01JAB3K7T2W9M4Q8R1X5Y6Z0NC"
+    },
+    "platform": "youtube",
+    "kind": "video",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "yt-video-details-fetcher",
+      "fetched_at": "2026-10-06T07:14:03Z"
+    },
+    "retention_class": "youtube_30d_text",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01JAB3K7T2W9M4Q8R1X5Y6Z0NC",
+    "attempt": 1,
+    "job_kind": "first_sight",
+    "api_version": "v3",
+    "raw_ref": "raw/green/youtube/2026/10/06/yt-video-details-fetcher/000210.jsonl.zst#4",
+    "source_id": "2b7d4e90-1c3a-4f6e-8d25-7a9b0c1e3f42",
+    "platform_id": "Xy12AbCdEfG",
+    "idempotency_key": "youtube:video:Xy12AbCdEfG",
+    "context": {
+      "live_state": "none",
+      "call_id": "01JAB3K7V0H5D2E8F1G3J4K6MN",
+      "completes_partial_from": "yt-pubsub-receiver"
+    }
+  },
+  "payload": {
+    "id": "Xy12AbCdEfG",
+    "snippet": {
+      "publishedAt": "2026-10-06T07:12:09Z",
+      "channelId": "UCq3Ov8nVbT0xY1zKp2LmA4w",
+      "title": "جولة في سوق الشورجة",
+      "description": "جولة مصورة في أقدم أسواق بغداد",
+      "tags": [
+        "بغداد",
+        "الشورجة"
+      ],
+      "defaultAudioLanguage": "ar",
+      "liveBroadcastContent": "none",
+      "thumbnails": {
+        "high": {
+          "url": "https://i.ytimg.com/vi/Xy12AbCdEfG/hqdefault.jpg"
+        }
+      }
+    },
+    "contentDetails": {
+      "duration": "PT12M41S"
+    },
+    "statistics": {
+      "viewCount": "312",
+      "likeCount": "41",
+      "commentCount": "6"
+    },
+    "topicDetails": {
+      "topicCategories": [
+        "https://en.wikipedia.org/wiki/Society"
+      ]
+    }
+  }
+}

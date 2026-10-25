@@ -1,0 +1,275 @@
+{
+  "description": "deletion_id = 'del:<reason>:<scope>:' + hex SHA-256 of the RFC 8785 JSON of {key, mode, signal_day, target}; key the scope's top-level key value (item scope: the item's source_id); every target array sorted by code point; signal_day the UTC date of signal_at (ADR-0035; Q2, decided by the user).",
+  "deletion_ids": [
+    {
+      "name": "item scope, platform sync",
+      "input": {
+        "reason": "platform_sync",
+        "scope": "item",
+        "key": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11",
+        "mode": "delete",
+        "signal_at": "2026-10-06T09:15:42Z",
+        "target": {
+          "platform": "facebook",
+          "kind": "comment",
+          "platform_ids": [
+            "123456789012345_987654321098766",
+            "123456789012345_987654321098765"
+          ],
+          "item_ids": [
+            "5e451f01-092c-58e3-a20c-eacc7334cba3",
+            "468e9fab-540e-56c5-8f9b-771aa7ac6fe1"
+          ]
+        }
+      },
+      "canonical": "{\"key\":\"6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11\",\"mode\":\"delete\",\"signal_day\":\"2026-10-06\",\"target\":{\"item_ids\":[\"468e9fab-540e-56c5-8f9b-771aa7ac6fe1\",\"5e451f01-092c-58e3-a20c-eacc7334cba3\"],\"kind\":\"comment\",\"platform\":\"facebook\",\"platform_ids\":[\"123456789012345_987654321098765\",\"123456789012345_987654321098766\"]}}",
+      "deletion_id": "del:platform_sync:item:15b8ed2e7a52f05c77f33d7339d5aa9fffceb37a173d2f1baff219e80ec4dd9a"
+    },
+    {
+      "name": "target order does not change the id",
+      "input": {
+        "reason": "platform_sync",
+        "scope": "item",
+        "key": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11",
+        "mode": "delete",
+        "signal_at": "2026-10-06T09:15:42Z",
+        "target": {
+          "platform": "facebook",
+          "kind": "comment",
+          "platform_ids": [
+            "123456789012345_987654321098765",
+            "123456789012345_987654321098766"
+          ],
+          "item_ids": [
+            "468e9fab-540e-56c5-8f9b-771aa7ac6fe1",
+            "5e451f01-092c-58e3-a20c-eacc7334cba3"
+          ]
+        }
+      },
+      "canonical": "{\"key\":\"6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11\",\"mode\":\"delete\",\"signal_day\":\"2026-10-06\",\"target\":{\"item_ids\":[\"468e9fab-540e-56c5-8f9b-771aa7ac6fe1\",\"5e451f01-092c-58e3-a20c-eacc7334cba3\"],\"kind\":\"comment\",\"platform\":\"facebook\",\"platform_ids\":[\"123456789012345_987654321098765\",\"123456789012345_987654321098766\"]}}",
+      "deletion_id": "del:platform_sync:item:15b8ed2e7a52f05c77f33d7339d5aa9fffceb37a173d2f1baff219e80ec4dd9a"
+    },
+    {
+      "name": "a same-day replay keeps its id",
+      "input": {
+        "reason": "platform_sync",
+        "scope": "item",
+        "key": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11",
+        "mode": "delete",
+        "signal_at": "2026-10-06T23:59:59.999Z",
+        "target": {
+          "platform": "facebook",
+          "kind": "comment",
+          "platform_ids": [
+            "123456789012345_987654321098766",
+            "123456789012345_987654321098765"
+          ],
+          "item_ids": [
+            "5e451f01-092c-58e3-a20c-eacc7334cba3",
+            "468e9fab-540e-56c5-8f9b-771aa7ac6fe1"
+          ]
+        }
+      },
+      "canonical": "{\"key\":\"6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11\",\"mode\":\"delete\",\"signal_day\":\"2026-10-06\",\"target\":{\"item_ids\":[\"468e9fab-540e-56c5-8f9b-771aa7ac6fe1\",\"5e451f01-092c-58e3-a20c-eacc7334cba3\"],\"kind\":\"comment\",\"platform\":\"facebook\",\"platform_ids\":[\"123456789012345_987654321098765\",\"123456789012345_987654321098766\"]}}",
+      "deletion_id": "del:platform_sync:item:15b8ed2e7a52f05c77f33d7339d5aa9fffceb37a173d2f1baff219e80ec4dd9a"
+    },
+    {
+      "name": "the same signal on another day gets a new id",
+      "input": {
+        "reason": "platform_sync",
+        "scope": "item",
+        "key": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11",
+        "mode": "delete",
+        "signal_at": "2026-10-07T00:00:00Z",
+        "target": {
+          "platform": "facebook",
+          "kind": "comment",
+          "platform_ids": [
+            "123456789012345_987654321098766",
+            "123456789012345_987654321098765"
+          ],
+          "item_ids": [
+            "5e451f01-092c-58e3-a20c-eacc7334cba3",
+            "468e9fab-540e-56c5-8f9b-771aa7ac6fe1"
+          ]
+        }
+      },
+      "canonical": "{\"key\":\"6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11\",\"mode\":\"delete\",\"signal_day\":\"2026-10-07\",\"target\":{\"item_ids\":[\"468e9fab-540e-56c5-8f9b-771aa7ac6fe1\",\"5e451f01-092c-58e3-a20c-eacc7334cba3\"],\"kind\":\"comment\",\"platform\":\"facebook\",\"platform_ids\":[\"123456789012345_987654321098765\",\"123456789012345_987654321098766\"]}}",
+      "deletion_id": "del:platform_sync:item:ffbcc318eab5e62db256dcaa2a4496e550dcc2be1f11c1243c08064b416fcfd0"
+    },
+    {
+      "name": "client offboarding, client X",
+      "input": {
+        "reason": "client_offboarding",
+        "scope": "client",
+        "key": "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60",
+        "mode": "delete",
+        "signal_at": "2026-10-06T00:00:00Z",
+        "target": {}
+      },
+      "canonical": "{\"key\":\"0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60\",\"mode\":\"delete\",\"signal_day\":\"2026-10-06\",\"target\":{}}",
+      "deletion_id": "del:client_offboarding:client:8ff83b522c67ea6a4eaaad0082718b5edfbe56e8d6cd3634d425b11ea40329a9"
+    },
+    {
+      "name": "client offboarding, client Y with an equal target",
+      "input": {
+        "reason": "client_offboarding",
+        "scope": "client",
+        "key": "7e5d4c3b-2a19-4f8e-b7d6-c5b4a3f2e1d0",
+        "mode": "delete",
+        "signal_at": "2026-10-06T00:00:00Z",
+        "target": {}
+      },
+      "canonical": "{\"key\":\"7e5d4c3b-2a19-4f8e-b7d6-c5b4a3f2e1d0\",\"mode\":\"delete\",\"signal_day\":\"2026-10-06\",\"target\":{}}",
+      "deletion_id": "del:client_offboarding:client:0112a42ad960df2132400214cdbe343d186dcaf8965746fb411030842532e0d7"
+    },
+    {
+      "name": "author request, author 1",
+      "input": {
+        "reason": "author_request",
+        "scope": "author",
+        "key": "e4672a83d0f01f4c692e2f40a26de0dfd506b1a15f7bc470b1fd4962b3c077d0",
+        "mode": "delete",
+        "signal_at": "2026-10-06T08:00:00Z",
+        "target": {}
+      },
+      "canonical": "{\"key\":\"e4672a83d0f01f4c692e2f40a26de0dfd506b1a15f7bc470b1fd4962b3c077d0\",\"mode\":\"delete\",\"signal_day\":\"2026-10-06\",\"target\":{}}",
+      "deletion_id": "del:author_request:author:51246514d67ae285cc47a547d6e045526262d0b9973e17c126bd97532190ad08"
+    },
+    {
+      "name": "author request, author 2 with an equal target",
+      "input": {
+        "reason": "author_request",
+        "scope": "author",
+        "key": "2808d4f265c3e5b358b31863ecf1fc4458b89e855c728b832c8d20dd263cfc48",
+        "mode": "delete",
+        "signal_at": "2026-10-06T08:00:00Z",
+        "target": {}
+      },
+      "canonical": "{\"key\":\"2808d4f265c3e5b358b31863ecf1fc4458b89e855c728b832c8d20dd263cfc48\",\"mode\":\"delete\",\"signal_day\":\"2026-10-06\",\"target\":{}}",
+      "deletion_id": "del:author_request:author:647e065d0dd53ee0e89f7f3ff44a3f9d68c91ff45fbfae792783b8339611ceb6"
+    },
+    {
+      "name": "author request, author 1 under the second key",
+      "input": {
+        "reason": "author_request",
+        "scope": "author",
+        "key": "df0af43d83f64d712edf579ae410100013e192d85d62e6c52018c130c3e351f1",
+        "mode": "delete",
+        "signal_at": "2026-10-06T08:00:00Z",
+        "target": {}
+      },
+      "canonical": "{\"key\":\"df0af43d83f64d712edf579ae410100013e192d85d62e6c52018c130c3e351f1\",\"mode\":\"delete\",\"signal_day\":\"2026-10-06\",\"target\":{}}",
+      "deletion_id": "del:author_request:author:adc33ae45568bb3b018ef2da1917030df862e82b54f8d0ac43463be772559ac6"
+    },
+    {
+      "name": "retention purge_text of one item",
+      "input": {
+        "reason": "retention",
+        "scope": "item",
+        "key": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11",
+        "mode": "purge_text",
+        "signal_at": "2026-10-01T00:00:00Z",
+        "target": {
+          "platform": "youtube",
+          "kind": "comment",
+          "platform_ids": [
+            "UgzX1abcDEF-ghiJKL4AaABAg"
+          ],
+          "item_ids": [
+            "bdbcfeba-6af0-53b3-80db-258bdb519048"
+          ]
+        }
+      },
+      "canonical": "{\"key\":\"6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11\",\"mode\":\"purge_text\",\"signal_day\":\"2026-10-01\",\"target\":{\"item_ids\":[\"bdbcfeba-6af0-53b3-80db-258bdb519048\"],\"kind\":\"comment\",\"platform\":\"youtube\",\"platform_ids\":[\"UgzX1abcDEF-ghiJKL4AaABAg\"]}}",
+      "deletion_id": "del:retention:item:ef791f89508f371a04112bc9433c5c54e36b4828035aafae42f24f28fb45b1b3"
+    },
+    {
+      "name": "retention delete of the same item",
+      "input": {
+        "reason": "retention",
+        "scope": "item",
+        "key": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11",
+        "mode": "delete",
+        "signal_at": "2026-10-01T00:00:00Z",
+        "target": {
+          "platform": "youtube",
+          "kind": "comment",
+          "platform_ids": [
+            "UgzX1abcDEF-ghiJKL4AaABAg"
+          ],
+          "item_ids": [
+            "bdbcfeba-6af0-53b3-80db-258bdb519048"
+          ]
+        }
+      },
+      "canonical": "{\"key\":\"6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11\",\"mode\":\"delete\",\"signal_day\":\"2026-10-01\",\"target\":{\"item_ids\":[\"bdbcfeba-6af0-53b3-80db-258bdb519048\"],\"kind\":\"comment\",\"platform\":\"youtube\",\"platform_ids\":[\"UgzX1abcDEF-ghiJKL4AaABAg\"]}}",
+      "deletion_id": "del:retention:item:db65b165921afe7b7f0493a371a403aabfd46db7491736b4a86c58a24fd26b23"
+    },
+    {
+      "name": "another chunk of the same sweep",
+      "input": {
+        "reason": "retention",
+        "scope": "item",
+        "key": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11",
+        "mode": "purge_text",
+        "signal_at": "2026-10-01T00:00:00Z",
+        "target": {
+          "platform": "youtube",
+          "kind": "comment",
+          "platform_ids": [
+            "UgzX1abcDEF-ghiJKL4AaABAh"
+          ],
+          "item_ids": [
+            "62457cd3-061c-5551-b2e1-2482b4aa7580"
+          ]
+        }
+      },
+      "canonical": "{\"key\":\"6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11\",\"mode\":\"purge_text\",\"signal_day\":\"2026-10-01\",\"target\":{\"item_ids\":[\"62457cd3-061c-5551-b2e1-2482b4aa7580\"],\"kind\":\"comment\",\"platform\":\"youtube\",\"platform_ids\":[\"UgzX1abcDEF-ghiJKL4AaABAh\"]}}",
+      "deletion_id": "del:retention:item:4ec5c89f950f8005252eaf4c52e36716dc4d40b7834f56da7bedc24e1d231949"
+    },
+    {
+      "name": "X compliance, author scope with user ids",
+      "input": {
+        "reason": "platform_sync",
+        "scope": "author",
+        "key": "e4672a83d0f01f4c692e2f40a26de0dfd506b1a15f7bc470b1fd4962b3c077d0",
+        "mode": "delete",
+        "signal_at": "2026-10-06T03:00:00Z",
+        "target": {
+          "user_ids": [
+            "1234567890"
+          ]
+        }
+      },
+      "canonical": "{\"key\":\"e4672a83d0f01f4c692e2f40a26de0dfd506b1a15f7bc470b1fd4962b3c077d0\",\"mode\":\"delete\",\"signal_day\":\"2026-10-06\",\"target\":{\"user_ids\":[\"1234567890\"]}}",
+      "deletion_id": "del:platform_sync:author:b71831b4015fa9b70d566484be1142980e948a62a04ed967913db483fa93a177"
+    },
+    {
+      "name": "withhold in Iraq",
+      "input": {
+        "reason": "legal",
+        "scope": "item",
+        "key": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11",
+        "mode": "withhold",
+        "signal_at": "2026-10-06T03:00:00Z",
+        "target": {
+          "platform": "youtube",
+          "kind": "comment",
+          "platform_ids": [
+            "UgzX1abcDEF-ghiJKL4AaABAg"
+          ],
+          "item_ids": [
+            "bdbcfeba-6af0-53b3-80db-258bdb519048"
+          ],
+          "countries": [
+            "IQ",
+            "DE"
+          ]
+        }
+      },
+      "canonical": "{\"key\":\"6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11\",\"mode\":\"withhold\",\"signal_day\":\"2026-10-06\",\"target\":{\"countries\":[\"DE\",\"IQ\"],\"item_ids\":[\"bdbcfeba-6af0-53b3-80db-258bdb519048\"],\"kind\":\"comment\",\"platform\":\"youtube\",\"platform_ids\":[\"UgzX1abcDEF-ghiJKL4AaABAg\"]}}",
+      "deletion_id": "del:legal:item:e3103c29b6ec50167a4d0c5ec84d767393466f718d6681f8851a947663218f11"
+    }
+  ]
+}

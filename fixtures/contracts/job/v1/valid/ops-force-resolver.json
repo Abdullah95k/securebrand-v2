@@ -1,0 +1,17 @@
+{
+  "schema": "job/v1",
+  "message_id": "01M48RVB90MBTSG0DG9BEM4MQ4",
+  "produced_at": "2026-10-06T14:11:00Z",
+  "producer": {
+    "service": "admin-api",
+    "version": "1.0.0",
+    "job_id": "01J9R5S3V7W1X4Y8Z0A2B6C9DM"
+  },
+  "job_id": "01M48Z0V80ZZGG928KMD5XX36J",
+  "kind": "ops_force",
+  "due_at": "2026-10-06T14:11:00Z",
+  "attempt": 1,
+  "candidate_key": "facebook:100064583471102",
+  "request_id": "01J9R5S3V7W1X4Y8Z0A2B6C9DM",
+  "requested_by": "person:01J9P2R4T6V8X0Z2B4D6F8H0KM"
+}

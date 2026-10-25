@@ -1,0 +1,78 @@
+{
+  "schema": "poster.profiles/v1",
+  "message_id": "01M48E2D68128JABMQ8P0X22YK",
+  "produced_at": "2026-10-06T11:02:37Z",
+  "producer": {
+    "service": "x-user-resolver",
+    "version": "1.0.0",
+    "job_id": "01J9N8F4C2X7W1R5T3M6Q0ZKDA"
+  },
+  "platform": "x",
+  "status": "resolved",
+  "reason": null,
+  "followers": 18400,
+  "verified": true,
+  "client_ids": [
+    "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+  ],
+  "resolved_at": "2026-10-06T11:02:37Z",
+  "cached": false,
+  "cached_until": "2026-11-05T11:02:37Z",
+  "candidate_key": "x:1456789012345678901",
+  "source_id": null,
+  "source_type": "account",
+  "account_type": "creator",
+  "individual": false,
+  "public_account": null,
+  "platform_id": "1456789012345678901",
+  "handle": "example_telecom_iq",
+  "url": "https://x.com/example_telecom_iq",
+  "display_name": "شركة المثال للاتصالات",
+  "posts_30d": null,
+  "last_post_at": null,
+  "posts_per_day": null,
+  "duplicate_text_share": null,
+  "default_avatar": null,
+  "account_created_at": "2019-03-14T08:22:51Z",
+  "owned_by_client": false,
+  "country_signals": {
+    "iraqi_place": true,
+    "platform_country_iq": false,
+    "phone_964": false,
+    "iq_domain": true,
+    "outlet_link": false,
+    "seed_list": false,
+    "signal_evidence": [
+      {
+        "signal": "iraqi_place",
+        "matched": "Baghdad",
+        "where": "location"
+      },
+      {
+        "signal": "iq_domain",
+        "matched": "example-telecom.iq",
+        "where": "description"
+      }
+    ]
+  },
+  "lang_share": null,
+  "keyword_ids": [],
+  "route": "green",
+  "vendor": null,
+  "review_flags": [],
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "x-user-resolver",
+    "fetched_at": "2026-10-06T11:02:37Z"
+  },
+  "retention_class": "x_24h_sync",
+  "post_count": 5310,
+  "extras": {
+    "following": 212,
+    "location_text": "بغداد، العراق",
+    "description": "الحساب الرسمي لشركة المثال | example-telecom.iq",
+    "url_domain": "example-telecom.iq",
+    "account_age_days": 2763
+  }
+}

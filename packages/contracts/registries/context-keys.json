@@ -1,0 +1,131 @@
+{
+  "description": "Each raw.items producer's declared `context` keys (ADR-0005: the producer-specific fields go there, each defined), from its PRD 6.2 example as its ADRs leave it. A key is optional unless it is listed under `required`; a producer not listed declares none. `by_kind` adds keys for a record kind whatever its producer: a `metrics` record names the observed item's key in `item_key` (ADR-0034). The types are the `context` schema's (src/context.ts); keys grow inside the version as optional fields (ADR-0002, Q1). Producer mode refuses a key its producer does not declare and a missing required key.",
+  "producers": {
+    "fb-backfill": {
+      "keys": ["window"],
+      "required": []
+    },
+    "fb-group-comments-fetcher": {
+      "keys": ["series_step"],
+      "required": []
+    },
+    "fb-keyword-search": {
+      "keys": ["query"],
+      "required": []
+    },
+    "fb-post-comments-fetcher": {
+      "keys": ["series_step"],
+      "required": []
+    },
+    "ig-comments-fetcher": {
+      "keys": ["series_step"],
+      "required": []
+    },
+    "ig-hashtag-search": {
+      "keys": ["edge"],
+      "required": []
+    },
+    "ig-mentions-fetcher": {
+      "keys": ["mention_type", "mention_of"],
+      "required": []
+    },
+    "ig-own-comments-fetcher": {
+      "keys": ["series_step"],
+      "required": []
+    },
+    "ig-webhook-receiver": {
+      "keys": ["received_at"],
+      "required": []
+    },
+    "li-own-comments-fetcher": {
+      "keys": ["series_step"],
+      "required": []
+    },
+    "li-post-comments-fetcher": {
+      "keys": ["series_step"],
+      "required": []
+    },
+    "news-article-extractor": {
+      "keys": ["url_key", "access_mode", "usage_signals"],
+      "required": []
+    },
+    "news-comments-fetcher": {
+      "keys": ["series_step"],
+      "required": []
+    },
+    "tg-bot-channel-receiver": {
+      "keys": ["update_id"],
+      "required": ["update_id"]
+    },
+    "tg-discussion-receiver": {
+      "keys": ["update_id", "discussion_source_id"],
+      "required": ["update_id"]
+    },
+    "tt-hashtag-feed-poller": {
+      "keys": ["hashtag_id", "hashtag_name", "page"],
+      "required": []
+    },
+    "tt-keyword-search": {
+      "keys": ["variant", "country", "page"],
+      "required": []
+    },
+    "tt-video-comments-fetcher": {
+      "keys": ["series_step"],
+      "required": []
+    },
+    "web-commoncrawl-scanner": {
+      "keys": ["crawl_id", "host"],
+      "required": []
+    },
+    "x-filtered-stream": {
+      "keys": ["connection_id", "matching_rules", "paid"],
+      "required": ["connection_id"]
+    },
+    "x-full-archive-search": {
+      "keys": ["paid"],
+      "required": []
+    },
+    "x-recent-search": {
+      "keys": ["query_arm", "matched_terms", "paid"],
+      "required": []
+    },
+    "x-replies-fetcher": {
+      "keys": ["series_step", "paid"],
+      "required": []
+    },
+    "x-user-timeline-poller": {
+      "keys": ["paid"],
+      "required": []
+    },
+    "yt-comments-fetcher": {
+      "keys": ["series_step", "video_channel_id"],
+      "required": []
+    },
+    "yt-keyword-search": {
+      "keys": ["partial"],
+      "required": ["partial"]
+    },
+    "yt-pubsub-receiver": {
+      "keys": ["partial"],
+      "required": ["partial"]
+    },
+    "yt-replies-fetcher": {
+      "keys": ["series_step", "video_channel_id"],
+      "required": []
+    },
+    "yt-uploads-reconciler": {
+      "keys": ["partial"],
+      "required": ["partial"]
+    },
+    "yt-video-details-fetcher": {
+      "keys": ["live_state", "call_id", "completes_partial_from"],
+      "required": []
+    }
+  },
+  "by_kind": {
+    "metrics": {
+      "keys": ["item_key"],
+      "required": ["item_key"]
+    }
+  }
+}

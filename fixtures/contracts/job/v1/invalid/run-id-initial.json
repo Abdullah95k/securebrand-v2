@@ -1,0 +1,23 @@
+{
+  "schema": "job/v1",
+  "message_id": "01M48BAQH0ACW9QY4GFT9ZKNCQ",
+  "produced_at": "2026-10-06T10:14:44Z",
+  "producer": {
+    "service": "backfill-orchestrator",
+    "version": "1.0.0",
+    "job_id": "01M48BAQH0ZB6N9X10ZAZCNK57"
+  },
+  "job_id": "01J9P3Y6B2N7C4D8F0G5H1JKQR",
+  "kind": "backfill",
+  "due_at": "2026-10-06T10:14:44Z",
+  "attempt": 1,
+  "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11",
+  "run_id": "initial",
+  "reason": "add",
+  "window_start": "2026-07-08T10:14:44Z",
+  "window_end": "2026-10-06T10:14:44Z",
+  "cap": {
+    "max_age_days": 90,
+    "max_items": 600
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M487XFE098BVBC50S67FAAZQ",
+    "produced_at": "2026-10-06T09:15:04Z",
+    "producer": {
+      "service": "tg-bot-channel-receiver",
+      "version": "1.0.0",
+      "job_id": "01M487XDFG8JDZ667B758J62C2"
+    },
+    "platform": "telegram",
+    "kind": "post",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "tg-bot-channel-receiver",
+      "fetched_at": "2026-10-06T09:15:02Z"
+    },
+    "retention_class": "telegram_bot",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01M487XDFG8JDZ667B758J62C2",
+    "attempt": 1,
+    "job_kind": "push",
+    "api_version": "bot-api-9",
+    "raw_ref": "raw/green/telegram/2026/10/06/tg-bot-channel-receiver/000311.jsonl.zst#4",
+    "source_id": "8c41f2d7-5a3e-4b96-a0d1-7e2c9b3f4a58",
+    "platform_id": "iq_example_owned/5127",
+    "idempotency_key": "telegram:post:iq_example_owned/5127",
+    "context": {}
+  },
+  "payload": {
+    "message_id": 5127,
+    "chat": {
+      "id": -1001849302001,
+      "username": "iq_example_owned",
+      "type": "channel"
+    },
+    "date": 1791278100,
+    "text": "عرض جديد"
+  }
+}

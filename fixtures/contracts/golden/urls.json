@@ -1,0 +1,493 @@
+{
+  "description": "The one URL normaliser (ADR-0036; Q9; the steps in docs/contracts/VERSIONING.md). url_hash = hex SHA-256 of the normalised URL's UTF-8; url_key = news:url:<url_hash>; the article and web-result keys use the same hash of the canonical URL. The http/https and www/bare pairs show the known limit.",
+  "urls": [
+    {
+      "name": "the engines' example: utm_source dropped (web-search-perplexity §6.2 L101-L102)",
+      "input": "https://www.example-daily.iq/economy/2026/10/05/fiberx-wasit?utm_source=fb",
+      "normalised": "https://www.example-daily.iq/economy/2026/10/05/fiberx-wasit",
+      "url_hash": "fab8520795a70dfe8cdae271a98f16d663794dab09ebcccb3a560660fd321664",
+      "url_key": "news:url:fab8520795a70dfe8cdae271a98f16d663794dab09ebcccb3a560660fd321664",
+      "article_key": "news:article:fab8520795a70dfe8cdae271a98f16d663794dab09ebcccb3a560660fd321664",
+      "web_result_key": "web:result:fab8520795a70dfe8cdae271a98f16d663794dab09ebcccb3a560660fd321664"
+    },
+    {
+      "name": "a feed's article URL unchanged (news-feed-poller §6.2)",
+      "input": "https://www.example-daily.iq/politics/2026/10/06/budget-session",
+      "normalised": "https://www.example-daily.iq/politics/2026/10/06/budget-session",
+      "url_hash": "bfa6375a3060bdfd4e3300b6108b89807201e8e8f68698ce2ae193ececc5efd4",
+      "url_key": "news:url:bfa6375a3060bdfd4e3300b6108b89807201e8e8f68698ce2ae193ececc5efd4",
+      "article_key": "news:article:bfa6375a3060bdfd4e3300b6108b89807201e8e8f68698ce2ae193ececc5efd4",
+      "web_result_key": "web:result:bfa6375a3060bdfd4e3300b6108b89807201e8e8f68698ce2ae193ececc5efd4"
+    },
+    {
+      "name": "a sitemap's article URL unchanged (news-sitemap-poller §6.2)",
+      "input": "https://www.example-daily.iq/economy/2026/10/06/oil-exports",
+      "normalised": "https://www.example-daily.iq/economy/2026/10/06/oil-exports",
+      "url_hash": "8aab2f09e773f0042040bf3dfeb8fcd2123f19773a743706ab6d2c2c2371b2e8",
+      "url_key": "news:url:8aab2f09e773f0042040bf3dfeb8fcd2123f19773a743706ab6d2c2c2371b2e8",
+      "article_key": "news:article:8aab2f09e773f0042040bf3dfeb8fcd2123f19773a743706ab6d2c2c2371b2e8",
+      "web_result_key": "web:result:8aab2f09e773f0042040bf3dfeb8fcd2123f19773a743706ab6d2c2c2371b2e8"
+    },
+    {
+      "name": "a homepage link unchanged (news-homepage-differ §6.2)",
+      "input": "https://www.example-council.iq/news/20261006-session-decision",
+      "normalised": "https://www.example-council.iq/news/20261006-session-decision",
+      "url_hash": "ab084b47b9c32d529fec3a828aab701d4647d65788e2bc467c844a2378d7d31a",
+      "url_key": "news:url:ab084b47b9c32d529fec3a828aab701d4647d65788e2bc467c844a2378d7d31a",
+      "article_key": "news:article:ab084b47b9c32d529fec3a828aab701d4647d65788e2bc467c844a2378d7d31a",
+      "web_result_key": "web:result:ab084b47b9c32d529fec3a828aab701d4647d65788e2bc467c844a2378d7d31a"
+    },
+    {
+      "name": "GDELT's URL unchanged (web-gdelt-poller §6.2)",
+      "input": "https://www.example-gulf-news.com/2026/10/05/fiberx-expands",
+      "normalised": "https://www.example-gulf-news.com/2026/10/05/fiberx-expands",
+      "url_hash": "19bddee118fdcfec35f1695139ff290fff8e9ac8e749c91a5db3e059a06ac0e7",
+      "url_key": "news:url:19bddee118fdcfec35f1695139ff290fff8e9ac8e749c91a5db3e059a06ac0e7",
+      "article_key": "news:article:19bddee118fdcfec35f1695139ff290fff8e9ac8e749c91a5db3e059a06ac0e7",
+      "web_result_key": "web:result:19bddee118fdcfec35f1695139ff290fff8e9ac8e749c91a5db3e059a06ac0e7"
+    },
+    {
+      "name": "scheme and host lower-cased, fragment and tracking dropped, parameters sorted",
+      "input": "HTTPS://www.Alsumaria.TV/news/1234/?utm_source=fb&utm_medium=social&b=2&a=1#comments",
+      "normalised": "https://www.alsumaria.tv/news/1234/?a=1&b=2",
+      "url_hash": "27eb661efa9e06a97fa8e59f66564166f1f12e2417a13a7db70df4c65bbc0668",
+      "url_key": "news:url:27eb661efa9e06a97fa8e59f66564166f1f12e2417a13a7db70df4c65bbc0668",
+      "article_key": "news:article:27eb661efa9e06a97fa8e59f66564166f1f12e2417a13a7db70df4c65bbc0668",
+      "web_result_key": "web:result:27eb661efa9e06a97fa8e59f66564166f1f12e2417a13a7db70df4c65bbc0668"
+    },
+    {
+      "name": "default http port dropped, path case kept",
+      "input": "HTTP://Example.IQ:80/Path",
+      "normalised": "http://example.iq/Path",
+      "url_hash": "fe4fa26980e2db62492ed010ed1d6efdab6b536a7c5fca4b21941e0ca789c19f",
+      "url_key": "news:url:fe4fa26980e2db62492ed010ed1d6efdab6b536a7c5fca4b21941e0ca789c19f",
+      "article_key": "news:article:fe4fa26980e2db62492ed010ed1d6efdab6b536a7c5fca4b21941e0ca789c19f",
+      "web_result_key": "web:result:fe4fa26980e2db62492ed010ed1d6efdab6b536a7c5fca4b21941e0ca789c19f"
+    },
+    {
+      "name": "default https port dropped, empty path becomes a slash",
+      "input": "https://example.iq:443",
+      "normalised": "https://example.iq/",
+      "url_hash": "2d9b9c39f698edab008e32560921717efbda7f4e198e86a156c179c8a142a29a",
+      "url_key": "news:url:2d9b9c39f698edab008e32560921717efbda7f4e198e86a156c179c8a142a29a",
+      "article_key": "news:article:2d9b9c39f698edab008e32560921717efbda7f4e198e86a156c179c8a142a29a",
+      "web_result_key": "web:result:2d9b9c39f698edab008e32560921717efbda7f4e198e86a156c179c8a142a29a"
+    },
+    {
+      "name": "empty port dropped",
+      "input": "https://example.iq:/a",
+      "normalised": "https://example.iq/a",
+      "url_hash": "31e10b19e52b321b36096af419eb3060940ad2e8f86c00bce4888fc47a402802",
+      "url_key": "news:url:31e10b19e52b321b36096af419eb3060940ad2e8f86c00bce4888fc47a402802",
+      "article_key": "news:article:31e10b19e52b321b36096af419eb3060940ad2e8f86c00bce4888fc47a402802",
+      "web_result_key": "web:result:31e10b19e52b321b36096af419eb3060940ad2e8f86c00bce4888fc47a402802"
+    },
+    {
+      "name": "another port kept, leading zeros removed",
+      "input": "https://example.iq:08443/a",
+      "normalised": "https://example.iq:8443/a",
+      "url_hash": "67fe4bda114cc300b6b1afbd9de0958eba93a85222b768bfff63b0ad48438233",
+      "url_key": "news:url:67fe4bda114cc300b6b1afbd9de0958eba93a85222b768bfff63b0ad48438233",
+      "article_key": "news:article:67fe4bda114cc300b6b1afbd9de0958eba93a85222b768bfff63b0ad48438233",
+      "web_result_key": "web:result:67fe4bda114cc300b6b1afbd9de0958eba93a85222b768bfff63b0ad48438233"
+    },
+    {
+      "name": "raw Arabic slug percent-encoded as UTF-8 with upper-case hex",
+      "input": "https://www.shafaq.com/ar/سياسة/خبر-عاجل",
+      "normalised": "https://www.shafaq.com/ar/%D8%B3%D9%8A%D8%A7%D8%B3%D8%A9/%D8%AE%D8%A8%D8%B1-%D8%B9%D8%A7%D8%AC%D9%84",
+      "url_hash": "182e1f932ce98759892f88c78ce4d94aeccb180b0dcd73c225f977376baa07db",
+      "url_key": "news:url:182e1f932ce98759892f88c78ce4d94aeccb180b0dcd73c225f977376baa07db",
+      "article_key": "news:article:182e1f932ce98759892f88c78ce4d94aeccb180b0dcd73c225f977376baa07db",
+      "web_result_key": "web:result:182e1f932ce98759892f88c78ce4d94aeccb180b0dcd73c225f977376baa07db"
+    },
+    {
+      "name": "the same slug encoded with lower-case hex",
+      "input": "https://www.shafaq.com/ar/%d8%b3%d9%8a%d8%a7%d8%b3%d8%a9/%d8%ae%d8%a8%d8%b1-%d8%b9%d8%a7%d8%ac%d9%84",
+      "normalised": "https://www.shafaq.com/ar/%D8%B3%D9%8A%D8%A7%D8%B3%D8%A9/%D8%AE%D8%A8%D8%B1-%D8%B9%D8%A7%D8%AC%D9%84",
+      "url_hash": "182e1f932ce98759892f88c78ce4d94aeccb180b0dcd73c225f977376baa07db",
+      "url_key": "news:url:182e1f932ce98759892f88c78ce4d94aeccb180b0dcd73c225f977376baa07db",
+      "article_key": "news:article:182e1f932ce98759892f88c78ce4d94aeccb180b0dcd73c225f977376baa07db",
+      "web_result_key": "web:result:182e1f932ce98759892f88c78ce4d94aeccb180b0dcd73c225f977376baa07db"
+    },
+    {
+      "name": "a decomposed Arabic slug takes the NFC form",
+      "input": "https://example.iq/أخبار",
+      "normalised": "https://example.iq/%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1",
+      "url_hash": "305ac52a3751e32dd19635b3507980febd67e14c64b0bc39490cb33d56ae7070",
+      "url_key": "news:url:305ac52a3751e32dd19635b3507980febd67e14c64b0bc39490cb33d56ae7070",
+      "article_key": "news:article:305ac52a3751e32dd19635b3507980febd67e14c64b0bc39490cb33d56ae7070",
+      "web_result_key": "web:result:305ac52a3751e32dd19635b3507980febd67e14c64b0bc39490cb33d56ae7070"
+    },
+    {
+      "name": "encoded unreserved characters decoded",
+      "input": "https://example.iq/%7Euser/a%2Db%2E%5Fc",
+      "normalised": "https://example.iq/~user/a-b._c",
+      "url_hash": "22b09d9560ee3c7c683650b7262ab448263e343896e53e22b112d95185d9d32b",
+      "url_key": "news:url:22b09d9560ee3c7c683650b7262ab448263e343896e53e22b112d95185d9d32b",
+      "article_key": "news:article:22b09d9560ee3c7c683650b7262ab448263e343896e53e22b112d95185d9d32b",
+      "web_result_key": "web:result:22b09d9560ee3c7c683650b7262ab448263e343896e53e22b112d95185d9d32b"
+    },
+    {
+      "name": "encoded reserved characters kept, hex upper-cased",
+      "input": "https://example.iq/a%2fb?x=%3d",
+      "normalised": "https://example.iq/a%2Fb?x=%3D",
+      "url_hash": "ce205f146f0b2ba1a0c3f18e401e6d17eaf56af488d07fd2f91b7fe125f9466f",
+      "url_key": "news:url:ce205f146f0b2ba1a0c3f18e401e6d17eaf56af488d07fd2f91b7fe125f9466f",
+      "article_key": "news:article:ce205f146f0b2ba1a0c3f18e401e6d17eaf56af488d07fd2f91b7fe125f9466f",
+      "web_result_key": "web:result:ce205f146f0b2ba1a0c3f18e401e6d17eaf56af488d07fd2f91b7fe125f9466f"
+    },
+    {
+      "name": "an empty query dropped",
+      "input": "https://example.iq/a?",
+      "normalised": "https://example.iq/a",
+      "url_hash": "31e10b19e52b321b36096af419eb3060940ad2e8f86c00bce4888fc47a402802",
+      "url_key": "news:url:31e10b19e52b321b36096af419eb3060940ad2e8f86c00bce4888fc47a402802",
+      "article_key": "news:article:31e10b19e52b321b36096af419eb3060940ad2e8f86c00bce4888fc47a402802",
+      "web_result_key": "web:result:31e10b19e52b321b36096af419eb3060940ad2e8f86c00bce4888fc47a402802"
+    },
+    {
+      "name": "a query of tracking parameters only dropped",
+      "input": "https://example.iq/a?utm_campaign=x&fbclid=abc&gclid=def",
+      "normalised": "https://example.iq/a",
+      "url_hash": "31e10b19e52b321b36096af419eb3060940ad2e8f86c00bce4888fc47a402802",
+      "url_key": "news:url:31e10b19e52b321b36096af419eb3060940ad2e8f86c00bce4888fc47a402802",
+      "article_key": "news:article:31e10b19e52b321b36096af419eb3060940ad2e8f86c00bce4888fc47a402802",
+      "web_result_key": "web:result:31e10b19e52b321b36096af419eb3060940ad2e8f86c00bce4888fc47a402802"
+    },
+    {
+      "name": "an encoded tracking parameter name dropped",
+      "input": "https://example.iq/a?utm%5Fsource=x&id=7",
+      "normalised": "https://example.iq/a?id=7",
+      "url_hash": "9d0ddfa366fe24e4f4246feda5b18f46df324f2d8ae6f18e47bbccbbd5b370f8",
+      "url_key": "news:url:9d0ddfa366fe24e4f4246feda5b18f46df324f2d8ae6f18e47bbccbbd5b370f8",
+      "article_key": "news:article:9d0ddfa366fe24e4f4246feda5b18f46df324f2d8ae6f18e47bbccbbd5b370f8",
+      "web_result_key": "web:result:9d0ddfa366fe24e4f4246feda5b18f46df324f2d8ae6f18e47bbccbbd5b370f8"
+    },
+    {
+      "name": "tracking names match exactly, so upper case stays",
+      "input": "https://example.iq/a?UTM_SOURCE=x",
+      "normalised": "https://example.iq/a?UTM_SOURCE=x",
+      "url_hash": "6d7a0377837be507f6a40b2db195353c10bbf21646c806f57d692be78ce2aea9",
+      "url_key": "news:url:6d7a0377837be507f6a40b2db195353c10bbf21646c806f57d692be78ce2aea9",
+      "article_key": "news:article:6d7a0377837be507f6a40b2db195353c10bbf21646c806f57d692be78ce2aea9",
+      "web_result_key": "web:result:6d7a0377837be507f6a40b2db195353c10bbf21646c806f57d692be78ce2aea9"
+    },
+    {
+      "name": "repeated parameters kept, sorted by name then value",
+      "input": "https://example.iq/s?tag=b&tag=a&q=1",
+      "normalised": "https://example.iq/s?q=1&tag=a&tag=b",
+      "url_hash": "0b2c0178aa9fe468a3fe5f174fd37b335c52c21a54229cdc1f7e403c938987ad",
+      "url_key": "news:url:0b2c0178aa9fe468a3fe5f174fd37b335c52c21a54229cdc1f7e403c938987ad",
+      "article_key": "news:article:0b2c0178aa9fe468a3fe5f174fd37b335c52c21a54229cdc1f7e403c938987ad",
+      "web_result_key": "web:result:0b2c0178aa9fe468a3fe5f174fd37b335c52c21a54229cdc1f7e403c938987ad"
+    },
+    {
+      "name": "a parameter without a value and one with an empty value",
+      "input": "https://example.iq/s?x=&flag",
+      "normalised": "https://example.iq/s?flag&x=",
+      "url_hash": "8db2a8100de3fb69caa29043fea83dc2192dd5bdcffdf69c7d6fea07603ccdd1",
+      "url_key": "news:url:8db2a8100de3fb69caa29043fea83dc2192dd5bdcffdf69c7d6fea07603ccdd1",
+      "article_key": "news:article:8db2a8100de3fb69caa29043fea83dc2192dd5bdcffdf69c7d6fea07603ccdd1",
+      "web_result_key": "web:result:8db2a8100de3fb69caa29043fea83dc2192dd5bdcffdf69c7d6fea07603ccdd1"
+    },
+    {
+      "name": "empty parameters dropped",
+      "input": "https://example.iq/s?&&q=1&",
+      "normalised": "https://example.iq/s?q=1",
+      "url_hash": "250829b34f3a0017eb9139879955c0f7d3dec8fb85cd413d6786cd3c2d0d0bc0",
+      "url_key": "news:url:250829b34f3a0017eb9139879955c0f7d3dec8fb85cd413d6786cd3c2d0d0bc0",
+      "article_key": "news:article:250829b34f3a0017eb9139879955c0f7d3dec8fb85cd413d6786cd3c2d0d0bc0",
+      "web_result_key": "web:result:250829b34f3a0017eb9139879955c0f7d3dec8fb85cd413d6786cd3c2d0d0bc0"
+    },
+    {
+      "name": "a plus sign stays a plus sign",
+      "input": "https://example.iq/s?q=a+b",
+      "normalised": "https://example.iq/s?q=a+b",
+      "url_hash": "8efa35d8f1670fd13204a158ea6cfa43e99443769f68bd6a3e50452020ed0212",
+      "url_key": "news:url:8efa35d8f1670fd13204a158ea6cfa43e99443769f68bd6a3e50452020ed0212",
+      "article_key": "news:article:8efa35d8f1670fd13204a158ea6cfa43e99443769f68bd6a3e50452020ed0212",
+      "web_result_key": "web:result:8efa35d8f1670fd13204a158ea6cfa43e99443769f68bd6a3e50452020ed0212"
+    },
+    {
+      "name": "a raw Arabic query value",
+      "input": "https://example.iq/s?q=زين",
+      "normalised": "https://example.iq/s?q=%D8%B2%D9%8A%D9%86",
+      "url_hash": "b6d39170c564630ef50c8efe3fb34ce4b30a2401f274a48a9e4cf784ef238f37",
+      "url_key": "news:url:b6d39170c564630ef50c8efe3fb34ce4b30a2401f274a48a9e4cf784ef238f37",
+      "article_key": "news:article:b6d39170c564630ef50c8efe3fb34ce4b30a2401f274a48a9e4cf784ef238f37",
+      "web_result_key": "web:result:b6d39170c564630ef50c8efe3fb34ce4b30a2401f274a48a9e4cf784ef238f37"
+    },
+    {
+      "name": "the same query value encoded",
+      "input": "https://example.iq/s?q=%D8%B2%D9%8A%D9%86",
+      "normalised": "https://example.iq/s?q=%D8%B2%D9%8A%D9%86",
+      "url_hash": "b6d39170c564630ef50c8efe3fb34ce4b30a2401f274a48a9e4cf784ef238f37",
+      "url_key": "news:url:b6d39170c564630ef50c8efe3fb34ce4b30a2401f274a48a9e4cf784ef238f37",
+      "article_key": "news:article:b6d39170c564630ef50c8efe3fb34ce4b30a2401f274a48a9e4cf784ef238f37",
+      "web_result_key": "web:result:b6d39170c564630ef50c8efe3fb34ce4b30a2401f274a48a9e4cf784ef238f37"
+    },
+    {
+      "name": "a trailing slash kept",
+      "input": "https://example.iq/news/",
+      "normalised": "https://example.iq/news/",
+      "url_hash": "35fcfef2fa05cdf9b3a2021a536274baa424d406e28fa83149f6cd65d21bcd5b",
+      "url_key": "news:url:35fcfef2fa05cdf9b3a2021a536274baa424d406e28fa83149f6cd65d21bcd5b",
+      "article_key": "news:article:35fcfef2fa05cdf9b3a2021a536274baa424d406e28fa83149f6cd65d21bcd5b",
+      "web_result_key": "web:result:35fcfef2fa05cdf9b3a2021a536274baa424d406e28fa83149f6cd65d21bcd5b"
+    },
+    {
+      "name": "no trailing slash",
+      "input": "https://example.iq/news",
+      "normalised": "https://example.iq/news",
+      "url_hash": "ce9246f45a24c01507607443c15594880d3f871cebef5b9e3e174fd1f65d968d",
+      "url_key": "news:url:ce9246f45a24c01507607443c15594880d3f871cebef5b9e3e174fd1f65d968d",
+      "article_key": "news:article:ce9246f45a24c01507607443c15594880d3f871cebef5b9e3e174fd1f65d968d",
+      "web_result_key": "web:result:ce9246f45a24c01507607443c15594880d3f871cebef5b9e3e174fd1f65d968d"
+    },
+    {
+      "name": "www kept",
+      "input": "https://www.example.iq/",
+      "normalised": "https://www.example.iq/",
+      "url_hash": "1e333a15f7de4c3fa9c8ef4cb21f6f92eab1a4f302517b517f3d44cad3dfd626",
+      "url_key": "news:url:1e333a15f7de4c3fa9c8ef4cb21f6f92eab1a4f302517b517f3d44cad3dfd626",
+      "article_key": "news:article:1e333a15f7de4c3fa9c8ef4cb21f6f92eab1a4f302517b517f3d44cad3dfd626",
+      "web_result_key": "web:result:1e333a15f7de4c3fa9c8ef4cb21f6f92eab1a4f302517b517f3d44cad3dfd626"
+    },
+    {
+      "name": "bare host",
+      "input": "https://example.iq/",
+      "normalised": "https://example.iq/",
+      "url_hash": "2d9b9c39f698edab008e32560921717efbda7f4e198e86a156c179c8a142a29a",
+      "url_key": "news:url:2d9b9c39f698edab008e32560921717efbda7f4e198e86a156c179c8a142a29a",
+      "article_key": "news:article:2d9b9c39f698edab008e32560921717efbda7f4e198e86a156c179c8a142a29a",
+      "web_result_key": "web:result:2d9b9c39f698edab008e32560921717efbda7f4e198e86a156c179c8a142a29a"
+    },
+    {
+      "name": "http, the known limit",
+      "input": "http://example.iq/story",
+      "normalised": "http://example.iq/story",
+      "url_hash": "5f7aeb5907a63b996d91191625d4dac01544919d87575649d71ae5baa726693b",
+      "url_key": "news:url:5f7aeb5907a63b996d91191625d4dac01544919d87575649d71ae5baa726693b",
+      "article_key": "news:article:5f7aeb5907a63b996d91191625d4dac01544919d87575649d71ae5baa726693b",
+      "web_result_key": "web:result:5f7aeb5907a63b996d91191625d4dac01544919d87575649d71ae5baa726693b"
+    },
+    {
+      "name": "https, the known limit",
+      "input": "https://example.iq/story",
+      "normalised": "https://example.iq/story",
+      "url_hash": "56dbd83d199eb016a5d4b922858d47c9433f8a060b58b66d454562d39e6b7125",
+      "url_key": "news:url:56dbd83d199eb016a5d4b922858d47c9433f8a060b58b66d454562d39e6b7125",
+      "article_key": "news:article:56dbd83d199eb016a5d4b922858d47c9433f8a060b58b66d454562d39e6b7125",
+      "web_result_key": "web:result:56dbd83d199eb016a5d4b922858d47c9433f8a060b58b66d454562d39e6b7125"
+    },
+    {
+      "name": "relative with dot segments against a feed base",
+      "input": "../2026/10/story.html?utm_source=rss",
+      "base": "https://www.alsabaah.iq/news/feed/",
+      "normalised": "https://www.alsabaah.iq/news/2026/10/story.html",
+      "url_hash": "6f1ef31c48dfb6aca515243c7a799b67be50a1a0d9d041508f814bc30a13d3ed",
+      "url_key": "news:url:6f1ef31c48dfb6aca515243c7a799b67be50a1a0d9d041508f814bc30a13d3ed",
+      "article_key": "news:article:6f1ef31c48dfb6aca515243c7a799b67be50a1a0d9d041508f814bc30a13d3ed",
+      "web_result_key": "web:result:6f1ef31c48dfb6aca515243c7a799b67be50a1a0d9d041508f814bc30a13d3ed"
+    },
+    {
+      "name": "absolute path against a base",
+      "input": "/a/b?c=1",
+      "base": "https://example.iq/x/y",
+      "normalised": "https://example.iq/a/b?c=1",
+      "url_hash": "b421aa098da6f9afe7ef3af913cc8d5fa151d488e2bf1a11b012828cc9c0bc4f",
+      "url_key": "news:url:b421aa098da6f9afe7ef3af913cc8d5fa151d488e2bf1a11b012828cc9c0bc4f",
+      "article_key": "news:article:b421aa098da6f9afe7ef3af913cc8d5fa151d488e2bf1a11b012828cc9c0bc4f",
+      "web_result_key": "web:result:b421aa098da6f9afe7ef3af913cc8d5fa151d488e2bf1a11b012828cc9c0bc4f"
+    },
+    {
+      "name": "network-path reference takes the base scheme",
+      "input": "//cdn.example.iq/x",
+      "base": "https://example.iq/",
+      "normalised": "https://cdn.example.iq/x",
+      "url_hash": "6a3dc845b40bd995845129337f253a77cdd0cddf0c0633fd5ea9c3839a294038",
+      "url_key": "news:url:6a3dc845b40bd995845129337f253a77cdd0cddf0c0633fd5ea9c3839a294038",
+      "article_key": "news:article:6a3dc845b40bd995845129337f253a77cdd0cddf0c0633fd5ea9c3839a294038",
+      "web_result_key": "web:result:6a3dc845b40bd995845129337f253a77cdd0cddf0c0633fd5ea9c3839a294038"
+    },
+    {
+      "name": "a relative reference with only a query",
+      "input": "?page=2",
+      "base": "https://example.iq/list",
+      "normalised": "https://example.iq/list?page=2",
+      "url_hash": "180a4aaced4ef3bfd1eeed93c041d933690eaa602dcbb14b5b0c3ed6ccf1234f",
+      "url_key": "news:url:180a4aaced4ef3bfd1eeed93c041d933690eaa602dcbb14b5b0c3ed6ccf1234f",
+      "article_key": "news:article:180a4aaced4ef3bfd1eeed93c041d933690eaa602dcbb14b5b0c3ed6ccf1234f",
+      "web_result_key": "web:result:180a4aaced4ef3bfd1eeed93c041d933690eaa602dcbb14b5b0c3ed6ccf1234f"
+    },
+    {
+      "name": "dot segments removed",
+      "input": "https://example.iq/a/./b/../c",
+      "normalised": "https://example.iq/a/c",
+      "url_hash": "f05009290c080604dab0200fda4ecdbe83029a1f1117abe92565c63011ebd281",
+      "url_key": "news:url:f05009290c080604dab0200fda4ecdbe83029a1f1117abe92565c63011ebd281",
+      "article_key": "news:article:f05009290c080604dab0200fda4ecdbe83029a1f1117abe92565c63011ebd281",
+      "web_result_key": "web:result:f05009290c080604dab0200fda4ecdbe83029a1f1117abe92565c63011ebd281"
+    },
+    {
+      "name": "encoded dot segments removed",
+      "input": "https://example.iq/a/%2E%2E/b",
+      "normalised": "https://example.iq/b",
+      "url_hash": "9cec4db9d756cd47e1d24c22c2e82c10ed7e84252fe640b893bb130ce98ad8e8",
+      "url_key": "news:url:9cec4db9d756cd47e1d24c22c2e82c10ed7e84252fe640b893bb130ce98ad8e8",
+      "article_key": "news:article:9cec4db9d756cd47e1d24c22c2e82c10ed7e84252fe640b893bb130ce98ad8e8",
+      "web_result_key": "web:result:9cec4db9d756cd47e1d24c22c2e82c10ed7e84252fe640b893bb130ce98ad8e8"
+    },
+    {
+      "name": "an Arabic host in its punycode form",
+      "input": "https://موقع.عراق/أخبار",
+      "normalised": "https://xn--4gbrim.xn--mgbtx2b/%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1",
+      "url_hash": "3efcbb43b3e9ddcfe61f7e373066f2b2661eb9c7686abfed5cff405558824174",
+      "url_key": "news:url:3efcbb43b3e9ddcfe61f7e373066f2b2661eb9c7686abfed5cff405558824174",
+      "article_key": "news:article:3efcbb43b3e9ddcfe61f7e373066f2b2661eb9c7686abfed5cff405558824174",
+      "web_result_key": "web:result:3efcbb43b3e9ddcfe61f7e373066f2b2661eb9c7686abfed5cff405558824174"
+    },
+    {
+      "name": "a Latin IDN host lower-cased then punycoded",
+      "input": "https://Café.Example/",
+      "normalised": "https://xn--caf-dma.example/",
+      "url_hash": "d9615ac3aa31e745390f81263cf1ad80a33d4cfbe78cb31a6f11d114af297371",
+      "url_key": "news:url:d9615ac3aa31e745390f81263cf1ad80a33d4cfbe78cb31a6f11d114af297371",
+      "article_key": "news:article:d9615ac3aa31e745390f81263cf1ad80a33d4cfbe78cb31a6f11d114af297371",
+      "web_result_key": "web:result:d9615ac3aa31e745390f81263cf1ad80a33d4cfbe78cb31a6f11d114af297371"
+    },
+    {
+      "name": "space and quote in the path encoded",
+      "input": "https://example.iq/a b\"c",
+      "normalised": "https://example.iq/a%20b%22c",
+      "url_hash": "5eb0a7d24b187a0b788292d470d9208753a990eeb688b932ecbacb8ebfe4381e",
+      "url_key": "news:url:5eb0a7d24b187a0b788292d470d9208753a990eeb688b932ecbacb8ebfe4381e",
+      "article_key": "news:article:5eb0a7d24b187a0b788292d470d9208753a990eeb688b932ecbacb8ebfe4381e",
+      "web_result_key": "web:result:5eb0a7d24b187a0b788292d470d9208753a990eeb688b932ecbacb8ebfe4381e"
+    },
+    {
+      "name": "a lone percent sign encoded",
+      "input": "https://example.iq/100%",
+      "normalised": "https://example.iq/100%25",
+      "url_hash": "cdef484a76855205b02236390080e8259b84c5cce4923d800519b33f82d1406b",
+      "url_key": "news:url:cdef484a76855205b02236390080e8259b84c5cce4923d800519b33f82d1406b",
+      "article_key": "news:article:cdef484a76855205b02236390080e8259b84c5cce4923d800519b33f82d1406b",
+      "web_result_key": "web:result:cdef484a76855205b02236390080e8259b84c5cce4923d800519b33f82d1406b"
+    },
+    {
+      "name": "a percent sign not followed by hex encoded",
+      "input": "https://example.iq/%zz",
+      "normalised": "https://example.iq/%25zz",
+      "url_hash": "ced0b81492a9ff9ab5626bb912afe92fea3aa3079440fc989e78d6215f4c87f9",
+      "url_key": "news:url:ced0b81492a9ff9ab5626bb912afe92fea3aa3079440fc989e78d6215f4c87f9",
+      "article_key": "news:article:ced0b81492a9ff9ab5626bb912afe92fea3aa3079440fc989e78d6215f4c87f9",
+      "web_result_key": "web:result:ced0b81492a9ff9ab5626bb912afe92fea3aa3079440fc989e78d6215f4c87f9"
+    },
+    {
+      "name": "tab and newline removed, outer spaces trimmed",
+      "input": "  https://example.iq/a\tb\nc  ",
+      "normalised": "https://example.iq/abc",
+      "url_hash": "cdd44df59e9cf2cdb31a780a369c58ebff89322ae0589acb0e2e52c6b9faf857",
+      "url_key": "news:url:cdd44df59e9cf2cdb31a780a369c58ebff89322ae0589acb0e2e52c6b9faf857",
+      "article_key": "news:article:cdd44df59e9cf2cdb31a780a369c58ebff89322ae0589acb0e2e52c6b9faf857",
+      "web_result_key": "web:result:cdd44df59e9cf2cdb31a780a369c58ebff89322ae0589acb0e2e52c6b9faf857"
+    },
+    {
+      "name": "an empty fragment dropped",
+      "input": "https://example.iq/a#",
+      "normalised": "https://example.iq/a",
+      "url_hash": "31e10b19e52b321b36096af419eb3060940ad2e8f86c00bce4888fc47a402802",
+      "url_key": "news:url:31e10b19e52b321b36096af419eb3060940ad2e8f86c00bce4888fc47a402802",
+      "article_key": "news:article:31e10b19e52b321b36096af419eb3060940ad2e8f86c00bce4888fc47a402802",
+      "web_result_key": "web:result:31e10b19e52b321b36096af419eb3060940ad2e8f86c00bce4888fc47a402802"
+    },
+    {
+      "name": "an IPv4 host kept",
+      "input": "http://192.168.1.10/x",
+      "normalised": "http://192.168.1.10/x",
+      "url_hash": "c04c42c49903c1705da4fb3c0087a086997354d893256ea18e4dcc5b81ba847f",
+      "url_key": "news:url:c04c42c49903c1705da4fb3c0087a086997354d893256ea18e4dcc5b81ba847f",
+      "article_key": "news:article:c04c42c49903c1705da4fb3c0087a086997354d893256ea18e4dcc5b81ba847f",
+      "web_result_key": "web:result:c04c42c49903c1705da4fb3c0087a086997354d893256ea18e4dcc5b81ba847f"
+    },
+    {
+      "name": "an IPv6 host lower-cased",
+      "input": "http://[2001:DB8::1]:8080/x",
+      "normalised": "http://[2001:db8::1]:8080/x",
+      "url_hash": "cfb20a5285f6ecf29e7096a10db206acd4ebf2eb6496dea9e8844f2d119474ee",
+      "url_key": "news:url:cfb20a5285f6ecf29e7096a10db206acd4ebf2eb6496dea9e8844f2d119474ee",
+      "article_key": "news:article:cfb20a5285f6ecf29e7096a10db206acd4ebf2eb6496dea9e8844f2d119474ee",
+      "web_result_key": "web:result:cfb20a5285f6ecf29e7096a10db206acd4ebf2eb6496dea9e8844f2d119474ee"
+    },
+    {
+      "name": "a trailing dot on the host kept",
+      "input": "https://example.iq./a",
+      "normalised": "https://example.iq./a",
+      "url_hash": "b58ad37225f4e39386631cbff1a2a555c20f7b2c3d13c8a90c7b3b9196ed653b",
+      "url_key": "news:url:b58ad37225f4e39386631cbff1a2a555c20f7b2c3d13c8a90c7b3b9196ed653b",
+      "article_key": "news:article:b58ad37225f4e39386631cbff1a2a555c20f7b2c3d13c8a90c7b3b9196ed653b",
+      "web_result_key": "web:result:b58ad37225f4e39386631cbff1a2a555c20f7b2c3d13c8a90c7b3b9196ed653b"
+    },
+    {
+      "name": "sub-delimiters in the path kept as written",
+      "input": "https://example.iq/a;b=c,d!e$f'(g)*h+i&j@k:l",
+      "normalised": "https://example.iq/a;b=c,d!e$f'(g)*h+i&j@k:l",
+      "url_hash": "66504b080f3441f103cd96e031be7e64751d3c8c0071e613981b11d8278e8099",
+      "url_key": "news:url:66504b080f3441f103cd96e031be7e64751d3c8c0071e613981b11d8278e8099",
+      "article_key": "news:article:66504b080f3441f103cd96e031be7e64751d3c8c0071e613981b11d8278e8099",
+      "web_result_key": "web:result:66504b080f3441f103cd96e031be7e64751d3c8c0071e613981b11d8278e8099"
+    },
+    {
+      "name": "brackets and braces in the path encoded",
+      "input": "https://example.iq/a[1]{2}|3^4`5",
+      "normalised": "https://example.iq/a%5B1%5D%7B2%7D%7C3%5E4%605",
+      "url_hash": "f3007c0c38c89ba958302447c7f217e2a447939f32b024b039a02d57bbd21a46",
+      "url_key": "news:url:f3007c0c38c89ba958302447c7f217e2a447939f32b024b039a02d57bbd21a46",
+      "article_key": "news:article:f3007c0c38c89ba958302447c7f217e2a447939f32b024b039a02d57bbd21a46",
+      "web_result_key": "web:result:f3007c0c38c89ba958302447c7f217e2a447939f32b024b039a02d57bbd21a46"
+    }
+  ],
+  "rejects": [
+    {
+      "name": "credentials in the URL",
+      "input": "https://user:pass@example.iq/"
+    },
+    {
+      "name": "a scheme other than http or https",
+      "input": "ftp://example.iq/x"
+    },
+    {
+      "name": "a mailto URL",
+      "input": "mailto:news@example.iq"
+    },
+    {
+      "name": "a relative URL without a base",
+      "input": "/a/b"
+    },
+    {
+      "name": "a port beyond 65535",
+      "input": "https://example.iq:99999/"
+    },
+    {
+      "name": "a port that is not a number",
+      "input": "https://example.iq:abc/"
+    },
+    {
+      "name": "an empty host",
+      "input": "https:///a"
+    },
+    {
+      "name": "a backslash in the host",
+      "input": "https://example.iq\\a"
+    },
+    {
+      "name": "an empty label in the host",
+      "input": "https://example..iq/"
+    },
+    {
+      "name": "a base that is not absolute",
+      "input": "a/b",
+      "base": "/x/"
+    }
+  ]
+}

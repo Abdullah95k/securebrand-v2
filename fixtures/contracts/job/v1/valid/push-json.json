@@ -1,0 +1,38 @@
+{
+  "schema": "job/v1",
+  "message_id": "01M489BG30ZQ00RXDDQT00ZP8M",
+  "produced_at": "2026-10-06T09:40:12Z",
+  "producer": {
+    "service": "fb-client-webhook-receiver",
+    "version": "1.0.0",
+    "job_id": "01M489BG30N9YPFJ7R4SHJ3CVJ"
+  },
+  "job_id": "01M4930V80ZZGG928KMD5XX36J",
+  "kind": "push",
+  "due_at": "2026-10-06T09:40:12Z",
+  "attempt": 1,
+  "source_id": "a3c0f1e2-5b6d-4c7e-9f80-112233445566",
+  "body": {
+    "object": "page",
+    "entry": [
+      {
+        "id": "1234567890",
+        "time": 1791278412,
+        "changes": [
+          {
+            "field": "feed",
+            "value": {
+              "item": "comment",
+              "verb": "add"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "received_at": "2026-10-06T09:40:12Z",
+  "headers": {
+    "content-type": "application/json",
+    "x-hub-signature-256": "sha256=5d1c9e3a7f2b4d6e8a0c1e3f5a7b9d1c3e5f7a9b1d3f5a7c9e1b3d5f7a9c1e3b"
+  }
+}

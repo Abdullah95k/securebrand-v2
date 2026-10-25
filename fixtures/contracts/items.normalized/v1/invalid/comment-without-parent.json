@@ -1,0 +1,65 @@
+{
+  "schema": "items.normalized/v1",
+  "message_id": "01M4AJRZP0AJMWHY99BDEBA800",
+  "produced_at": "2026-10-07T07:03:20Z",
+  "producer": {
+    "service": "normalize-item",
+    "version": "1.4.0",
+    "job_id": "01J9P4D2K8W6Y3N0Q5T7V1X9ZC"
+  },
+  "item_id": "84e1698b-e085-5270-8d93-6d70736a1a53",
+  "idempotency_key": "youtube:comment:UgzK7pQ2mV9xR4tL1bN6AaABAg",
+  "platform": "youtube",
+  "kind": "comment",
+  "source_id": "3a9e5c1d-7f2b-4e8a-b6d0-91c4f2e7a835",
+  "parent_id": null,
+  "root_id": "b55b9981-9761-5bd6-9315-861dcaa1c311",
+  "parent_seen": true,
+  "content_hash": "sha256:9d0dfafdd7bfd50ab772c5b5f7f1e2a5c0212ec2aade48572e3bea3fa6970c71",
+  "version": 1,
+  "platform_id": "UgzK7pQ2mV9xR4tL1bN6AaABAg",
+  "url": null,
+  "created_at": "2026-10-07T06:40:00Z",
+  "title": null,
+  "text": "حلو الفيديو",
+  "text_norm": "حلو الفيديو",
+  "lang": "ar",
+  "lang_conf": 0.98,
+  "dialect": "iraqi",
+  "dialect_conf": 0.84,
+  "script": "arab",
+  "lang_model_version": "lid-iq-2026.09",
+  "lang_pending": false,
+  "author": {
+    "author_ref": "8a1e32a57530df4634d3c3cee844a67b99c704a7a032e015f162fa78eab92fbd",
+    "author_type": "individual",
+    "author_source_id": null
+  },
+  "media": [],
+  "hashtags": [],
+  "at_mentions": [],
+  "links": [],
+  "metrics_snapshot": {
+    "views": null,
+    "likes": 3,
+    "comments": null,
+    "shares": null,
+    "reactions_by_type": null
+  },
+  "expires_at": null,
+  "normalizer_version": "1.4.0",
+  "raw_ref": "raw/green/youtube/2026/10/07/yt-comments-fetcher/000057.jsonl.zst#1",
+  "job_kind": "comments",
+  "sensitive_event": false,
+  "client_ids": [
+    "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+  ],
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "yt-comments-fetcher",
+    "fetched_at": "2026-10-07T07:03:11Z"
+  },
+  "retention_class": "youtube_30d_text",
+  "video_channel_id": "UC7xQe2lW9pK3bN5aV1rT8sQ"
+}

@@ -1,0 +1,45 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M4ARG418HJWYNQHC5SKFWNW6",
+    "produced_at": "2026-10-07T08:43:21Z",
+    "producer": {
+      "service": "li-post-comments-fetcher",
+      "version": "1.0.0",
+      "job_id": "01J9N4H6P3R8T1V5X7Z0C2DMKE"
+    },
+    "platform": "linkedin",
+    "kind": "comment",
+    "provenance": {
+      "route": "amber",
+      "vendor": "harvestapi",
+      "service": "li-post-comments-fetcher",
+      "fetched_at": "2026-10-07T08:43:19Z"
+    },
+    "retention_class": "linkedin_48h",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01J9N4H6P3R8T1V5X7Z0C2DMKE",
+    "attempt": 1,
+    "job_kind": "comments",
+    "api_version": "harvestapi-v1",
+    "raw_ref": "raw/amber/linkedin/2026/10/07/li-post-comments-fetcher/000011.jsonl.zst#5",
+    "source_id": "8a4e1c27-5d3b-4f60-b9a2-7e0c6d1f3a58",
+    "platform_id": "urn:li:comment:(urn:li:activity:7246999999999999999,7246999999999999888)",
+    "idempotency_key": "linkedin:comment:urn:li:comment:(urn:li:activity:7246999999999999999,7246999999999999888)",
+    "parent_id": "a564048e-6445-5fff-949e-019c3b328e9d",
+    "root_id": "a564048e-6445-5fff-949e-019c3b328e9d",
+    "author_ref": "439db305a9511f73a61d0ee8d7adeb12f07578e81aaff30c6e203314d0a3e93d",
+    "redacted_fields": [
+      "author"
+    ],
+    "context": {
+      "series_step": "+24h"
+    }
+  },
+  "payload": {
+    "id": "7246999999999999888",
+    "text": "Great news for Basra"
+  }
+}

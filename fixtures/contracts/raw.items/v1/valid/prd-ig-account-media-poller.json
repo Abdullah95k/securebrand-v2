@@ -1,0 +1,39 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M488V8J0TFP2XS3KN2AR4B9C",
+    "produced_at": "2026-10-06T09:31:20Z",
+    "producer": {
+      "service": "ig-account-media-poller",
+      "version": "1.0.0",
+      "job_id": "01J9N3B8K2D5W7Y4T1P6Q0ZRMC"
+    },
+    "platform": "instagram",
+    "kind": "post",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "ig-account-media-poller",
+      "fetched_at": "2026-10-06T09:31:18Z"
+    },
+    "retention_class": "meta_on_request",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01J9N3B8K2D5W7Y4T1P6Q0ZRMC",
+    "attempt": 1,
+    "job_kind": "rotation",
+    "api_version": "v21.0",
+    "raw_ref": "raw/green/instagram/2026/10/06/ig-account-media-poller/000087.jsonl.zst#5",
+    "source_id": "a3d94c10-5e7b-4f28-b6c1-92e0d4a7f835",
+    "platform_id": "17912345678901234",
+    "idempotency_key": "instagram:post:17912345678901234"
+  },
+  "payload": {
+    "id": "17912345678901234",
+    "caption": "افتتاح فرعنا الجديد في الكرادة",
+    "timestamp": "2026-10-06T08:02:00+0000",
+    "like_count": 210,
+    "comments_count": 14
+  }
+}

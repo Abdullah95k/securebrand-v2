@@ -1,0 +1,44 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M487S8NGPH5QEBZEW28GBNNJ",
+    "produced_at": "2026-10-06T09:12:46Z",
+    "producer": {
+      "service": "yt-pubsub-receiver",
+      "version": "1.0.0",
+      "job_id": "01J9N7QV8D2K6M4P0R3S5T7W9X"
+    },
+    "platform": "youtube",
+    "kind": "video",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "yt-pubsub-receiver",
+      "fetched_at": "2026-10-06T09:12:44Z"
+    },
+    "retention_class": "youtube_30d_text",
+    "client_ids": [
+      "9e4d2b17-6a3c-4f81-a5d9-2c7b0e6f3a18"
+    ],
+    "job_id": "01J9N7QV8D2K6M4P0R3S5T7W9X",
+    "attempt": 1,
+    "job_kind": "push",
+    "api_version": "pubsubhubbub-0.4",
+    "raw_ref": "raw/green/youtube/2026/10/06/yt-pubsub-receiver/000117.jsonl.zst#3",
+    "source_id": "3c9a7e52-1f4b-4d8e-b6a0-8e2f5c1d7a94",
+    "platform_id": "k7Qm2Xv9TbE",
+    "idempotency_key": "youtube:video:k7Qm2Xv9TbE",
+    "context": {
+      "partial": true
+    }
+  },
+  "payload": {
+    "id": "yt:video:k7Qm2Xv9TbE",
+    "yt:videoId": "k7Qm2Xv9TbE",
+    "yt:channelId": "UCx3Kp9vQ2mLwR7tYb4nJ8sA",
+    "title": "جولة في سوق الشورجة قبل العيد",
+    "link": "https://www.youtube.com/watch?v=k7Qm2Xv9TbE",
+    "published": "2026-10-06T09:12:03+00:00",
+    "updated": "2026-10-06T09:12:41.118204512+00:00"
+  }
+}

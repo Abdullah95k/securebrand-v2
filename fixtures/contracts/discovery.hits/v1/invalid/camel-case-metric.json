@@ -1,0 +1,45 @@
+{
+  "schema": "discovery.hits/v1",
+  "message_id": "01M487XHCG6YP8JK8SVQZ8F68D",
+  "produced_at": "2026-10-06T09:15:06Z",
+  "producer": {
+    "service": "x-recent-search",
+    "version": "1.0.0",
+    "job_id": "01M487XBH07GQE33JRM29CMCMZ"
+  },
+  "candidate": {
+    "candidate_key": "x:1000000000000000001",
+    "platform": "x",
+    "type": "account",
+    "platform_id": "1000000000000000001",
+    "handle": "example_poster_x",
+    "url": null
+  },
+  "evidence_type": "early_signal",
+  "item_id": "f1397628-acdf-59e2-9cab-8bd2207f871d",
+  "url": null,
+  "source_id": "7c1d9a2e-55b4-4f1e-8a0c-3e9f6b2d4a71",
+  "keyword_ids": [
+    "0b6b8c7e-0000-4e0f-9c3a-5f2d1e8a7b61"
+  ],
+  "client_ids": [
+    "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+  ],
+  "hit_at": "2026-10-06T08:51:40Z",
+  "evidence": {
+    "matched_terms": [
+      "دجلة تيليكوم"
+    ],
+    "lang": "ar",
+    "public_metrics": {
+      "retweetCount": 2
+    }
+  },
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "x-recent-search",
+    "fetched_at": "2026-10-06T09:15:04Z"
+  },
+  "retention_class": "x_24h_sync"
+}

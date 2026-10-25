@@ -1,0 +1,56 @@
+{
+  "schema": "registry.decisions/v1",
+  "message_id": "01M481X54G1RGZSCT559FEYBTG",
+  "produced_at": "2026-10-06T07:30:02Z",
+  "producer": {
+    "service": "client-portal",
+    "version": "1.0.0",
+    "job_id": "01M481X54G0556ETKT1PT8FKEW"
+  },
+  "decision_id": "01M481X54G2TQT3GMDWFDM5R0K",
+  "decision": "add",
+  "requested_by": "person:01J9P2R4T6V8X0Z2B4D6F8H0KM",
+  "reason": null,
+  "source_id": "4b9e2c71-8d3a-4f56-a0e1-7c2d9b8f3a64",
+  "add": {
+    "source": {
+      "platform": "facebook",
+      "source_type": "page",
+      "platform_id": "104998877665544",
+      "handle": "fiberx.iq",
+      "url": "https://www.facebook.com/fiberx.iq",
+      "display_name": "FiberX",
+      "route": "green",
+      "vendor": null,
+      "tier": 1,
+      "lifecycle": "active",
+      "push_covered": false,
+      "retention_class": "meta_on_request",
+      "client_ids": [
+        "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+      ],
+      "owned_by_client": true,
+      "added_by": "client",
+      "followers": null,
+      "country_signals": null,
+      "lang_share": null,
+      "platform_meta": {}
+    },
+    "proposed_source_id": "4b9e2c71-8d3a-4f56-a0e1-7c2d9b8f3a64",
+    "origin": null,
+    "rule_hit": null,
+    "client_priority": [
+      {
+        "client_id": "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60",
+        "priority": true
+      }
+    ]
+  },
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "client-portal",
+    "fetched_at": "2026-10-06T07:30:00Z"
+  },
+  "retention_class": "meta_on_request"
+}

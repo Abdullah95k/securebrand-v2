@@ -1,0 +1,354 @@
+{
+  "action-field.json": {
+    "path": [
+      "action"
+    ],
+    "rule": "action becomes decision (ADR-0013)"
+  },
+  "actor-field.json": {
+    "path": [
+      "actor"
+    ],
+    "rule": "actor becomes requested_by (ADR-0013)"
+  },
+  "admin-clear-degraded.json": {
+    "path": [
+      "producer",
+      "service"
+    ],
+    "rule": "the admin API clears a health reason with health ok only (Q12)"
+  },
+  "amber-swap-with-scope.json": {
+    "path": [
+      "health_change",
+      "scope"
+    ],
+    "rule": "an amber-to-amber swap declares no scope (source-health-canary L79, ADR-0052 L33 (d); R-2)"
+  },
+  "budget-wait-not-hashtag.json": {
+    "path": [
+      "producer",
+      "service"
+    ],
+    "rule": "budget_wait is ig-hashtag-search's alone (ADR-0052 L32 (c))"
+  },
+  "credential-revoked-degraded.json": {
+    "path": [
+      "health_change",
+      "health"
+    ],
+    "rule": "credential_revoked is never degraded (ADR-0016 L27; F-11)"
+  },
+  "dormant-decay-with-provenance.json": {
+    "path": [
+      "provenance"
+    ],
+    "rule": "a rule-9 dormant comes from the sweep over stored statistics: no provenance (D-3)"
+  },
+  "fallback-without-target.json": {
+    "path": [
+      "health_change",
+      "fallback"
+    ],
+    "rule": "fallback is non-null exactly when health is fallback (R-2)"
+  },
+  "flag-off-degraded.json": {
+    "path": [
+      "health_change",
+      "health"
+    ],
+    "rule": "flag_off takes health blocked only (ADR-0021 L61; F-11)"
+  },
+  "flag-off-not-admin.json": {
+    "path": [
+      "producer",
+      "service"
+    ],
+    "rule": "only the admin API sends flag_off and flag_on (ADR-0021 L61; F-11)"
+  },
+  "free-text-reason.json": {
+    "path": [
+      "reason"
+    ],
+    "rule": "reason is one closed list (ADR-0013, ADR-0014)"
+  },
+  "ig-webhook-push-coverage.json": {
+    "path": [
+      "producer",
+      "service"
+    ],
+    "rule": "a client-owned Instagram account is never push_covered (ADR-0049, ADR-0066)"
+  },
+  "keyword-platform-meta-other-platform.json": {
+    "path": [
+      "add",
+      "platform_meta",
+      "youtube"
+    ],
+    "rule": "only Instagram hashtags carry keyword platform_meta (F-13)"
+  },
+  "keyword-platform-meta-wrong-key.json": {
+    "path": [
+      "add",
+      "platform_meta",
+      "instagram",
+      "linked_chat_id"
+    ],
+    "rule": "a keyword's Instagram platform_meta names its bound account only (F-13)"
+  },
+  "lease-lapsed-still-covered.json": {
+    "path": [
+      "push_coverage",
+      "push_covered"
+    ],
+    "rule": "a lapsed lease turns coverage off (ADR-0013)"
+  },
+  "mention-only-two-subjects.json": {
+    "path": [
+      "candidate_key"
+    ],
+    "rule": "an individual's mention is keyed by author_ref alone (ADR-0033)"
+  },
+  "no-metadata-message-id.json": {
+    "path": [
+      "message_id"
+    ],
+    "rule": "every message carries message_id (ADR-0002)"
+  },
+  "no-metadata-produced-at.json": {
+    "path": [
+      "produced_at"
+    ],
+    "rule": "every message carries produced_at (ADR-0002)"
+  },
+  "no-metadata-producer.json": {
+    "path": [
+      "producer"
+    ],
+    "rule": "every message carries producer (ADR-0002)"
+  },
+  "no-metadata-schema.json": {
+    "path": [
+      "schema"
+    ],
+    "rule": "every message carries schema (ADR-0002)"
+  },
+  "not-a-decision-producer.json": {
+    "path": [
+      "producer",
+      "service"
+    ],
+    "rule": "no producer row lets keyword-matcher send an add (ADR-0012, ADR-0013)"
+  },
+  "owned-add-id-mismatch.json": {
+    "path": [
+      "add",
+      "proposed_source_id"
+    ],
+    "rule": "an owned property's add carries its pre-allocated id as the subject (ADR-0066; F-39)"
+  },
+  "owned-add-without-id.json": {
+    "path": [
+      "add",
+      "proposed_source_id"
+    ],
+    "rule": "an owned property's add carries its pre-allocated id as the subject (ADR-0066; F-39)"
+  },
+  "platform-meta-other-platform.json": {
+    "path": [
+      "add",
+      "source",
+      "platform_meta",
+      "uploads_playlist_id"
+    ],
+    "rule": "platform_meta keys belong to one platform and source type (ADR-0065 c), ADR-0041)"
+  },
+  "promote-with-block.json": {
+    "path": [
+      "promote"
+    ],
+    "rule": "promote carries no block (ADR-0013)"
+  },
+  "provenance-refused.json": {
+    "path": [
+      "provenance"
+    ],
+    "rule": "a decision a person enters carries requested_by, never provenance (ADR-0003 L26)"
+  },
+  "provenance-required.json": {
+    "path": [
+      "provenance"
+    ],
+    "rule": "the qualifier's decisions from profiles carry provenance (ADR-0003 L26)"
+  },
+  "provenance-without-class.json": {
+    "path": [
+      "retention_class"
+    ],
+    "rule": "provenance and retention_class travel together (ADR-0003)"
+  },
+  "queued-over-cap-reason.json": {
+    "path": [
+      "reason"
+    ],
+    "rule": "over the cap is rule_hit 5 with reason null (qualifier §5.2)"
+  },
+  "reject-without-expiry.json": {
+    "path": [
+      "reject",
+      "expires_at"
+    ],
+    "rule": "a reject carries its 180-day memory (qualifier §5.2)"
+  },
+  "remove-client-without-client.json": {
+    "path": [
+      "remove_client",
+      "client_id"
+    ],
+    "rule": "remove_client names the client (retention-purger §5.3 L76)"
+  },
+  "retire-reason-not-allowed.json": {
+    "path": [
+      "producer",
+      "service"
+    ],
+    "rule": "owner_request is retention-purger's (ADR-0069)"
+  },
+  "review-on-add.json": {
+    "path": [
+      "review"
+    ],
+    "rule": "review goes from add: requested_by names the reviewer (ADR-0013, ADR-0067)"
+  },
+  "review-unknown-reason.json": {
+    "path": [
+      "reason"
+    ],
+    "rule": "the review reasons are ADR-0033's"
+  },
+  "route-degraded-without-reason.json": {
+    "path": [
+      "reason"
+    ],
+    "rule": "a route-level state other than ok names its reason"
+  },
+  "route-flag-off-blocked.json": {
+    "path": [
+      "health_change",
+      "health"
+    ],
+    "rule": "the canary's flag_off returns a route to degraded (ADR-0021 L61; F-40)"
+  },
+  "route-health-with-source.json": {
+    "path": [
+      "source_id"
+    ],
+    "rule": "a route-level health_change carries no source_id (ADR-0013)"
+  },
+  "route-ok-with-reason.json": {
+    "path": [
+      "reason"
+    ],
+    "rule": "a route's return to ok carries no reason"
+  },
+  "route-unknown-vendor.json": {
+    "path": [
+      "health_change",
+      "fallback",
+      "vendor"
+    ],
+    "rule": "vendors are the registry's, by route (ADR-0051)"
+  },
+  "rule-hit-out-of-range.json": {
+    "path": [
+      "dormant",
+      "rule_hit"
+    ],
+    "rule": "rule_hit is one of the qualifier's ten rules"
+  },
+  "schema-version.json": {
+    "path": [
+      "schema_version"
+    ],
+    "rule": "schema_version gives way to schema (ADR-0002)"
+  },
+  "scope-without-fallback.json": {
+    "path": [
+      "health_change",
+      "scope"
+    ],
+    "rule": "scope is null unless health is fallback (R-2)"
+  },
+  "source-health-fallback.json": {
+    "path": [
+      "health_change",
+      "health"
+    ],
+    "rule": "a source-level health_change never sets fallback (ADR-0016)"
+  },
+  "target-without-fallback.json": {
+    "path": [
+      "health_change",
+      "fallback"
+    ],
+    "rule": "fallback is non-null exactly when health is fallback (R-2)"
+  },
+  "tier-change-profile-without-provenance.json": {
+    "path": [
+      "provenance"
+    ],
+    "rule": "a tier_change under rule 6 or 10 applies a resolver profile and carries its provenance (ADR-0003 L26; D-3)"
+  },
+  "tier-change-rule-not-allowed.json": {
+    "path": [
+      "producer",
+      "service"
+    ],
+    "rule": "the qualifier's tier_change comes from rules 6, 9 and 10 only (D-3)"
+  },
+  "tier-change-sweep-with-provenance.json": {
+    "path": [
+      "provenance"
+    ],
+    "rule": "a rule-9 tier_change comes from the sweep over stored statistics: no provenance (D-3)"
+  },
+  "tier-down.json": {
+    "path": [
+      "decision"
+    ],
+    "rule": "tier_down becomes tier_change (ADR-0013)"
+  },
+  "tier-out-of-range.json": {
+    "path": [
+      "tier_change",
+      "tier"
+    ],
+    "rule": "tiers are 1, 2 and 3 (ADR-0049)"
+  },
+  "top-level-source-column.json": {
+    "path": [
+      "tier"
+    ],
+    "rule": "the source columns travel in the add block (ADR-0013)"
+  },
+  "two-subjects.json": {
+    "path": [
+      "source_id"
+    ],
+    "rule": "a decision carries exactly one subject (ADR-0013)"
+  },
+  "unknown-requester.json": {
+    "path": [
+      "requested_by"
+    ],
+    "rule": "a requester that names a service is one the registry lists (Q18; F-09)"
+  },
+  "update-vendor-unlisted.json": {
+    "path": [
+      "update",
+      "source",
+      "vendor"
+    ],
+    "rule": "a vendor named without its route is one the registry lists (ADR-0051; note 11)"
+  }
+}

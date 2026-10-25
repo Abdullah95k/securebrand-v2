@@ -1,0 +1,36 @@
+{
+  "schema": "registry.decisions/v1",
+  "message_id": "01M48Z2Y002W5X5EH6V7P5S7GX",
+  "produced_at": "2026-10-06T16:00:00Z",
+  "producer": {
+    "service": "source-health-canary",
+    "version": "1.0.0",
+    "job_id": "01M48Z2Y00BA6W24Q4AXW5TT5P"
+  },
+  "decision_id": "01M48Z2Y00KTSK99BBMYFWCFZS",
+  "decision": "health_change",
+  "requested_by": "source-health-canary",
+  "reason": "server",
+  "platform": "x",
+  "route": "green",
+  "vendor": null,
+  "health_change": {
+    "health": "blocked",
+    "fallback": null,
+    "scope": null,
+    "evidence": {
+      "window_minutes": 15,
+      "samples": 30,
+      "empty_200": 0,
+      "rate": 0.0,
+      "targets": 3
+    }
+  },
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "source-health-canary",
+    "fetched_at": "2026-10-06T15:59:58Z"
+  },
+  "retention_class": "x_24h_sync"
+}

@@ -69,7 +69,10 @@ schema_paths = []
 enabled = true
 # Specifies an ordered list of seed files to load during db reset.
 # Supports glob patterns relative to supabase directory: "./seeds/*.sql"
-sql_paths = ["./seed.sql"]
+# F3 (plan T4): the synthetic control-plane data (local, CI and, through
+# scripts/migrate/postgres.sh --seed, staging), then the local-only Auth users, which have no
+# password and never reach staging.
+sql_paths = ["./seeds/synthetic.sql", "./seeds/local-auth.sql"]
 
 [db.network_restrictions]
 # Enable management of network restrictions.

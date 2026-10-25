@@ -1,0 +1,38 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M48KN3Y8RDTKMY0AGRD3C3PJ",
+    "produced_at": "2026-10-06T12:40:13Z",
+    "producer": {
+      "service": "ig-account-resolver",
+      "version": "1.0.0",
+      "job_id": "01J9N8H3S5J7B9D2Z4W6Y8NPXK"
+    },
+    "platform": "instagram",
+    "kind": "profile",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "ig-account-resolver",
+      "fetched_at": "2026-10-06T12:40:11Z"
+    },
+    "retention_class": "meta_on_request",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01J9N8H3S5J7B9D2Z4W6Y8NPXK",
+    "attempt": 1,
+    "job_kind": "resolve",
+    "api_version": "v21.0",
+    "raw_ref": "raw/green/instagram/2026/10/06/ig-account-resolver/000009.jsonl.zst#1",
+    "candidate_key": "instagram:furat_restaurant"
+  },
+  "payload": {
+    "business_discovery": {
+      "id": "17841400112233445",
+      "username": "furat_restaurant",
+      "followers_count": 48200,
+      "media_count": 913
+    }
+  }
+}

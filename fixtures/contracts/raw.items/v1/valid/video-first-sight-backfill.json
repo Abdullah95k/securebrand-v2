@@ -1,0 +1,38 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M481X8280KDGCKRSQRJWJ24V",
+    "produced_at": "2026-10-06T07:30:05Z",
+    "producer": {
+      "service": "yt-video-details-fetcher",
+      "version": "1.0.0",
+      "job_id": "01JAB3M2T2W9M4Q8R1X5Y6Z0ND"
+    },
+    "platform": "youtube",
+    "kind": "video",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "yt-video-details-fetcher",
+      "fetched_at": "2026-10-06T07:30:03Z"
+    },
+    "retention_class": "youtube_30d_text",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01JAB3M2T2W9M4Q8R1X5Y6Z0ND",
+    "attempt": 1,
+    "job_kind": "backfill",
+    "api_version": "v3",
+    "raw_ref": "raw/green/youtube/2026/10/06/yt-video-details-fetcher/000211.jsonl.zst#1",
+    "source_id": "a3d9f1c4-5e27-4b8a-9f60-2c1e7d4b8a93",
+    "platform_id": "Pq83LmZ2xAb",
+    "idempotency_key": "youtube:video:Pq83LmZ2xAb"
+  },
+  "payload": {
+    "id": "Pq83LmZ2xAb",
+    "snippet": {
+      "publishedAt": "2026-08-01T10:00:00Z"
+    }
+  }
+}

@@ -1,0 +1,149 @@
+{
+  "capped-reason-on-done.json": {
+    "path": [
+      "capped_reason"
+    ],
+    "rule": "capped_reason goes with status capped (ADR-0020)"
+  },
+  "capped-without-reason.json": {
+    "path": [
+      "capped_reason"
+    ],
+    "rule": "a capped job names its cap (ADR-0020)"
+  },
+  "coverage-days.json": {
+    "path": [
+      "coverage_days"
+    ],
+    "rule": "coverage_days goes (ADR-0017)"
+  },
+  "failed-with-capped-reason.json": {
+    "path": [
+      "capped_reason"
+    ],
+    "rule": "capped_reason goes with status capped (ADR-0020)"
+  },
+  "gap-unfilled-on-rotation.json": {
+    "path": [
+      "gap_unfilled"
+    ],
+    "rule": "gap_unfilled belongs to the X gap job (ADR-0064)"
+  },
+  "gone-video-gone.json": {
+    "path": [
+      "reason"
+    ],
+    "rule": "one spelling, not_found (Q8)"
+  },
+  "kind-field-on-other-kind.json": {
+    "path": [
+      "complete"
+    ],
+    "rule": "complete is a comments and replies field (ADR-0017)"
+  },
+  "missing-key.json": {
+    "path": [
+      "source_id"
+    ],
+    "rule": "a report carries its job's partition key (ADR-0004, ADR-0017)"
+  },
+  "negative-cost.json": {
+    "path": [
+      "report",
+      "cost_units"
+    ],
+    "rule": "cost_units is not negative"
+  },
+  "no-metadata-message-id.json": {
+    "path": [
+      "message_id"
+    ],
+    "rule": "every message carries message_id (ADR-0002)"
+  },
+  "no-metadata-produced-at.json": {
+    "path": [
+      "produced_at"
+    ],
+    "rule": "every message carries produced_at (ADR-0002)"
+  },
+  "no-metadata-producer.json": {
+    "path": [
+      "producer"
+    ],
+    "rule": "every message carries producer (ADR-0002)"
+  },
+  "no-metadata-schema.json": {
+    "path": [
+      "schema"
+    ],
+    "rule": "every message carries schema (ADR-0002)"
+  },
+  "not-the-queue-service.json": {
+    "path": [
+      "producer",
+      "service"
+    ],
+    "rule": "the job wrapper of the queue's own service writes the report (ADR-0017)"
+  },
+  "oldest-item-on-comments.json": {
+    "path": [
+      "oldest_item_at"
+    ],
+    "rule": "oldest_item_at is a backfill and keyword_history field (ADR-0017)"
+  },
+  "provenance.json": {
+    "path": [
+      "provenance"
+    ],
+    "rule": "a control message carries producer only (ADR-0003)"
+  },
+  "quota-denied-with-reason.json": {
+    "path": [
+      "reason"
+    ],
+    "rule": "quota_denied carries no reason (Q8)"
+  },
+  "report-capped.json": {
+    "path": [
+      "report",
+      "capped"
+    ],
+    "rule": "the status says capped (ADR-0017)"
+  },
+  "skipped-without-reason.json": {
+    "path": [
+      "reason"
+    ],
+    "rule": "a flag-off skip names flag_off (Q8)"
+  },
+  "status-ok.json": {
+    "path": [
+      "status"
+    ],
+    "rule": "ok becomes done (ADR-0017)"
+  },
+  "uncovered-not-partial.json": {
+    "path": [
+      "uncovered"
+    ],
+    "rule": "an uncovered window goes with status partial (ADR-0064)"
+  },
+  "uncovered-on-gap-job.json": {
+    "path": [
+      "uncovered"
+    ],
+    "rule": "uncovered belongs to the rotation on jobs.x-recent-search (ADR-0064)"
+  },
+  "unknown-not-allowed-reason.json": {
+    "path": [
+      "reason"
+    ],
+    "rule": "one spelling, amber_excluded_government (Q8)"
+  },
+  "x-field-off-x.json": {
+    "path": [
+      "paid_user_reads"
+    ],
+    "rule": "paid_user_reads is an X job's field (ADR-0017)"
+  }
+}

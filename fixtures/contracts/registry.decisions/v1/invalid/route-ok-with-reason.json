@@ -1,0 +1,30 @@
+{
+  "schema": "registry.decisions/v1",
+  "message_id": "01M48SBTM029WJKPE7YNRCB1C5",
+  "produced_at": "2026-10-06T14:20:00Z",
+  "producer": {
+    "service": "source-health-canary",
+    "version": "1.0.0",
+    "job_id": "01M48SBTM079P0G3B5V3A7DRS8"
+  },
+  "decision_id": "01M48SBTM0CM9F7S1VA4846RMS",
+  "decision": "health_change",
+  "requested_by": "source-health-canary",
+  "reason": "empty_200_rate",
+  "platform": "tiktok",
+  "route": "amber",
+  "vendor": "tikhub",
+  "health_change": {
+    "health": "ok",
+    "fallback": null,
+    "scope": null,
+    "evidence": null
+  },
+  "provenance": {
+    "route": "amber",
+    "vendor": "tikhub",
+    "service": "source-health-canary",
+    "fetched_at": "2026-10-06T14:19:58Z"
+  },
+  "retention_class": "vendor_agreed"
+}

@@ -1,0 +1,37 @@
+{
+  "schema": "item.metrics/v1",
+  "message_id": "01M4AKTKVGR35ZYE7YXCNHPTX2",
+  "produced_at": "2026-10-07T07:21:42Z",
+  "producer": {
+    "service": "yt-video-details-fetcher",
+    "version": "1.0.0",
+    "job_id": "01JAD6P2R8S4T0V5W7X9Y3Z1AB"
+  },
+  "item_id": "4526dbcb-0e7d-592f-bec9-e00a2ce32b86",
+  "idempotency_key": "youtube:video:Xy12AbCdEfG",
+  "platform": "youtube",
+  "platform_id": "Xy12AbCdEfG",
+  "source_id": "2b7d4e90-1c3a-4f6e-8d25-7a9b0c1e3f42",
+  "created_at": "2026-10-06T07:12:09Z",
+  "observation": {
+    "label": "refresh",
+    "step": "+24h",
+    "observed_at": "2026-10-07T07:21:40Z"
+  },
+  "metrics": {
+    "views": 48213,
+    "likes": 1904,
+    "comments": 377,
+    "shares": null,
+    "reactions_by_type": null
+  },
+  "channel_id": "UCq3Ov8nVbT0xY1zKp2LmA4w",
+  "live_state": "none",
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "yt-video-details-fetcher",
+    "fetched_at": "2026-10-07T07:21:40Z"
+  },
+  "retention_class": "youtube_30d_text"
+}

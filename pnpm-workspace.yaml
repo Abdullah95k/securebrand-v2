@@ -6,6 +6,7 @@ packages:
   - tools/*
   - tools/probes/*
   - tests/e2e/*
+  - supabase
 
 # pnpm switches itself to the version in package.json "packageManager".
 managePackageManagerVersions: true

@@ -1,0 +1,964 @@
+{
+  "description": "The closed lists of the contracts and the registry name lists, each with the decision that gives its values, written from the ADRs and the plan's lists, not from the source. vocabulary.test.ts and test_vocabulary.py compare the package's lists with this record. A closed list gains a value only through a new version (Q1); the vendor names grow inside the version as registry data.",
+  "lists": {
+    "PLATFORMS": {
+      "values": [
+        "facebook",
+        "instagram",
+        "tiktok",
+        "x",
+        "linkedin",
+        "telegram",
+        "youtube",
+        "news",
+        "web"
+      ],
+      "from": "CONVENTIONS v1.1 L105"
+    },
+    "ROUTES": {
+      "values": [
+        "green",
+        "amber"
+      ],
+      "from": "ADR-0070 c), CONVENTIONS v1.1 L13"
+    },
+    "RETENTION_CLASSES": {
+      "values": [
+        "meta_on_request",
+        "vendor_agreed",
+        "x_24h_sync",
+        "news_excerpt",
+        "telegram_bot",
+        "tiktok_display",
+        "linkedin_48h",
+        "linkedin_org",
+        "youtube_30d_text"
+      ],
+      "from": "ADR-0054, ADR-0055, ADR-0056"
+    },
+    "SOURCE_TYPES": {
+      "values": [
+        "page",
+        "group",
+        "account",
+        "creator",
+        "channel",
+        "company_page",
+        "site",
+        "hashtag",
+        "keyword_rule"
+      ],
+      "from": "CONVENTIONS v1.1 L105"
+    },
+    "CANDIDATE_TYPES": {
+      "values": [
+        "page",
+        "group",
+        "account",
+        "creator",
+        "channel",
+        "company_page",
+        "site"
+      ],
+      "from": "search-hit-router §5.3 L74-L83; the poster kinds of the source_type list"
+    },
+    "CONTENT_KINDS": {
+      "values": [
+        "post",
+        "video",
+        "comment",
+        "article",
+        "result"
+      ],
+      "from": "ADR-0008"
+    },
+    "ARCHIVE_ONLY_KINDS": {
+      "values": [
+        "profile",
+        "reaction",
+        "search_response",
+        "metrics"
+      ],
+      "from": "ADR-0008"
+    },
+    "RECORD_KINDS": {
+      "values": [
+        "post",
+        "video",
+        "comment",
+        "article",
+        "result",
+        "profile",
+        "reaction",
+        "search_response",
+        "metrics"
+      ],
+      "from": "ADR-0008"
+    },
+    "JOB_KINDS": {
+      "values": [
+        "rotation",
+        "reconciliation",
+        "backfill",
+        "keyword_history",
+        "comments",
+        "replies",
+        "metrics",
+        "first_sight",
+        "refresh",
+        "resolve",
+        "manual_candidate",
+        "first_check",
+        "recheck",
+        "ops_force",
+        "push",
+        "replay",
+        "rerun",
+        "rematch",
+        "recompute",
+        "retention_sweep",
+        "analyze",
+        "candidate_retry",
+        "review_answer",
+        "export"
+      ],
+      "from": "ADR-0011; review_answer and export from ADR-0067 L26, L33 (Q13)"
+    },
+    "JOB_KIND_VALUES": {
+      "values": [
+        "rotation",
+        "reconciliation",
+        "backfill",
+        "keyword_history",
+        "comments",
+        "replies",
+        "metrics",
+        "first_sight",
+        "refresh",
+        "resolve",
+        "manual_candidate",
+        "first_check",
+        "recheck",
+        "ops_force",
+        "push",
+        "replay",
+        "rerun",
+        "rematch",
+        "recompute",
+        "retention_sweep",
+        "analyze",
+        "candidate_retry",
+        "review_answer",
+        "export",
+        "stream"
+      ],
+      "from": "ADR-0005 (push and stream for jobless receivers)"
+    },
+    "LIFECYCLES": {
+      "values": [
+        "active",
+        "dormant",
+        "retired"
+      ],
+      "from": "ADR-0049"
+    },
+    "HEALTHS": {
+      "values": [
+        "ok",
+        "degraded",
+        "fallback",
+        "blocked"
+      ],
+      "from": "ADR-0016"
+    },
+    "TIERS": {
+      "values": [
+        1,
+        2,
+        3
+      ],
+      "from": "ADR-0049"
+    },
+    "ADDED_BY": {
+      "values": [
+        "qualifier",
+        "client",
+        "ops"
+      ],
+      "from": "CONVENTIONS v1.1 L105"
+    },
+    "VISIBILITIES": {
+      "values": [
+        "owner",
+        "watchers",
+        "pool"
+      ],
+      "from": "ADR-0053"
+    },
+    "LANG_LABELS": {
+      "values": [
+        "ar",
+        "ckb",
+        "en",
+        "mixed",
+        "other",
+        "und"
+      ],
+      "from": "ADR-0033 (lang_share adds ar_iraqi and sample)"
+    },
+    "ORGANISATION_ACCOUNT_TYPES": {
+      "values": [
+        "page",
+        "group",
+        "business",
+        "organization",
+        "channel",
+        "company_page",
+        "site"
+      ],
+      "from": "ADR-0010 L55; Q7"
+    },
+    "PERSON_ACCOUNT_TYPES": {
+      "values": [
+        "creator",
+        "public_figure",
+        "individual",
+        "business_or_creator",
+        "organization_or_public_figure"
+      ],
+      "from": "ADR-0010 L55; Q7"
+    },
+    "ACCOUNT_TYPES": {
+      "values": [
+        "page",
+        "group",
+        "business",
+        "organization",
+        "channel",
+        "company_page",
+        "site",
+        "creator",
+        "public_figure",
+        "individual",
+        "business_or_creator",
+        "organization_or_public_figure"
+      ],
+      "from": "ADR-0010 L55; Q7"
+    },
+    "PERSON_UNLISTABLE_PLATFORMS": {
+      "values": [
+        "tiktok",
+        "instagram",
+        "linkedin"
+      ],
+      "from": "ADR-0010 L70-L72"
+    },
+    "DELETION_REASONS": {
+      "values": [
+        "platform_sync",
+        "retention",
+        "author_request",
+        "client_offboarding",
+        "legal",
+        "authorization_revoked",
+        "client_request"
+      ],
+      "from": "ADR-0035, ADR-0054"
+    },
+    "NON_FETCH_DELETION_REASONS": {
+      "values": [
+        "author_request",
+        "client_offboarding",
+        "client_request",
+        "legal",
+        "retention"
+      ],
+      "from": "ADR-0003 L28; F-08"
+    },
+    "FETCH_DELETION_REASONS": {
+      "values": [
+        "platform_sync",
+        "authorization_revoked"
+      ],
+      "from": "ADR-0003 L28; F-08"
+    },
+    "DELETION_SCOPES": {
+      "values": [
+        "item",
+        "author",
+        "source",
+        "client"
+      ],
+      "from": "ADR-0035"
+    },
+    "DELETION_MODES": {
+      "values": [
+        "delete",
+        "purge_text",
+        "purge_derived",
+        "withhold"
+      ],
+      "from": "ADR-0035"
+    },
+    "COMPLETION_STATUSES": {
+      "values": [
+        "done",
+        "partial",
+        "capped",
+        "quota_denied",
+        "failed",
+        "skipped_flag_off",
+        "not_allowed",
+        "gone"
+      ],
+      "from": "ADR-0017"
+    },
+    "CAPPED_REASONS": {
+      "values": [
+        "route_cap",
+        "budget",
+        "deadline",
+        "failed",
+        "no_history",
+        "flag_off"
+      ],
+      "from": "ADR-0020"
+    },
+    "SKIPPED_FLAG_OFF_REASONS": {
+      "values": [
+        "flag_off"
+      ],
+      "from": "ADR-0017; Q8"
+    },
+    "NOT_ALLOWED_REASONS": {
+      "values": [
+        "amber_excluded_government",
+        "outside_window",
+        "not_root",
+        "not_permitted",
+        "no_amber_client",
+        "x_gate_closed"
+      ],
+      "from": "ADR-0017, ADR-0050, ADR-0052; Q8"
+    },
+    "GONE_REASONS": {
+      "values": [
+        "not_found",
+        "comments_disabled",
+        "no_thread"
+      ],
+      "from": "ADR-0017; Q8"
+    },
+    "EVIDENCE_TYPES": {
+      "values": [
+        "keyword_hit",
+        "container",
+        "early_signal",
+        "page_search",
+        "web_search",
+        "commoncrawl"
+      ],
+      "from": "ADR-0031"
+    },
+    "FOUND_VIA": {
+      "values": [
+        "feed",
+        "news_sitemap",
+        "homepage_diff",
+        "sitemap_backfill",
+        "web_search",
+        "commoncrawl"
+      ],
+      "from": "ADR-0036, ADR-0059"
+    },
+    "OBSERVATION_LABELS": {
+      "values": [
+        "first_sight",
+        "poll",
+        "backfill",
+        "refresh",
+        "ops_force",
+        "live_end"
+      ],
+      "from": "ADR-0034"
+    },
+    "DECISION_TYPES": {
+      "values": [
+        "add",
+        "update",
+        "remove_client",
+        "tier_change",
+        "dormant",
+        "promote",
+        "retire",
+        "push_coverage",
+        "health_change",
+        "queued",
+        "mention_only",
+        "reject",
+        "review"
+      ],
+      "from": "ADR-0013"
+    },
+    "EVENT_TYPES": {
+      "values": [
+        "added",
+        "updated",
+        "tier_change",
+        "lifecycle_change",
+        "health_change",
+        "fallback_on",
+        "fallback_off",
+        "push_coverage_change"
+      ],
+      "from": "ADR-0014"
+    },
+    "SOURCE_HEALTH_REASONS": {
+      "values": [
+        "bot_removed",
+        "privacy_mode",
+        "grant_missing",
+        "account_unavailable",
+        "credential_revoked",
+        "not_found",
+        "uploads_playlist_missing",
+        "query_rejected",
+        "feed_gone",
+        "push_gap",
+        "crawl_disallowed"
+      ],
+      "from": "ADR-0016, ADR-0013, ADR-0021"
+    },
+    "FLAG_REASONS": {
+      "values": [
+        "flag_off",
+        "flag_on"
+      ],
+      "from": "ADR-0021, ADR-0014"
+    },
+    "ROUTE_HEALTH_REASONS": {
+      "values": [
+        "empty_200_rate",
+        "low_yield",
+        "server",
+        "auth"
+      ],
+      "from": "source-health-canary §5.3 L64, §6.2 L102"
+    },
+    "PUSH_COVERAGE_REASONS": {
+      "values": [
+        "lease_lapsed",
+        "subscription_failed"
+      ],
+      "from": "ADR-0013, ADR-0014"
+    },
+    "RETIRE_REASONS": {
+      "values": [
+        "owner_request",
+        "authorization_revoked",
+        "not_found"
+      ],
+      "from": "ADR-0069, ADR-0035, ADR-0016"
+    },
+    "REVIEW_REASONS": {
+      "values": [
+        "age_gated",
+        "not_indexed",
+        "unclassified",
+        "ambiguous",
+        "schema_unknown",
+        "grant_missing"
+      ],
+      "from": "ADR-0033"
+    },
+    "REGISTRY_REASONS": {
+      "values": [
+        "bot_removed",
+        "privacy_mode",
+        "grant_missing",
+        "account_unavailable",
+        "credential_revoked",
+        "not_found",
+        "uploads_playlist_missing",
+        "query_rejected",
+        "feed_gone",
+        "push_gap",
+        "crawl_disallowed",
+        "flag_off",
+        "flag_on",
+        "empty_200_rate",
+        "low_yield",
+        "server",
+        "auth",
+        "lease_lapsed",
+        "subscription_failed",
+        "owner_request",
+        "authorization_revoked",
+        "budget_wait",
+        "client_removed",
+        "review_timeout",
+        "amber_excluded_government",
+        "age_gated",
+        "not_indexed",
+        "unclassified",
+        "ambiguous",
+        "schema_unknown"
+      ],
+      "from": "ADR-0014 (one closed list), ADR-0016, ADR-0021, ADR-0069, ADR-0052; Q8"
+    },
+    "PROFILE_STATUSES": {
+      "values": [
+        "resolved",
+        "review",
+        "unresolvable"
+      ],
+      "from": "ADR-0033"
+    },
+    "PROFILE_REVIEW_REASONS": {
+      "values": [
+        "age_gated",
+        "not_indexed",
+        "unclassified",
+        "ambiguous",
+        "schema_unknown",
+        "grant_missing"
+      ],
+      "from": "ADR-0033; Q8"
+    },
+    "PROFILE_UNRESOLVABLE_REASONS": {
+      "values": [
+        "not_found",
+        "private",
+        "suspended",
+        "protected"
+      ],
+      "from": "ADR-0033; Q8"
+    },
+    "REVIEW_FLAGS": {
+      "values": [
+        "watchlist_only",
+        "hidden_subscriber_count",
+        "made_for_kids"
+      ],
+      "from": "ADR-0033; yt-channel-resolver §5.2 L62, §13 L187; Q8"
+    },
+    "COUNTRY_SIGNALS": {
+      "values": [
+        "iraqi_place",
+        "platform_country_iq",
+        "phone_964",
+        "iq_domain",
+        "outlet_link",
+        "seed_list"
+      ],
+      "from": "ADR-0033"
+    },
+    "ANALYSIS_FIXED_TASKS": {
+      "values": [
+        "sentiment",
+        "sentiment_aspect",
+        "topic_cluster",
+        "entities",
+        "media_fetch",
+        "media_ocr",
+        "media_tags",
+        "media_asr",
+        "media_logo"
+      ],
+      "from": "ADR-0023; analysis-sentiment §6.2 L89, analysis-topics §5.3 L74, analysis-media §6.2 L87"
+    },
+    "ANALYSIS_RUN_KINDS": {
+      "values": [
+        "live",
+        "rerun"
+      ],
+      "from": "the analysis PRDs §6.2; Q8"
+    },
+    "ANALYSIS_LANES": {
+      "values": [
+        "priority",
+        "standard"
+      ],
+      "from": "ADR-0023; analysis-sentiment §5.1 L51; Q8"
+    },
+    "ANALYSIS_STATUSES": {
+      "values": [
+        "ok",
+        "skipped"
+      ],
+      "from": "the analysis PRDs; Q8"
+    },
+    "ANALYSIS_SKIP_REASONS": {
+      "values": [
+        "no_text",
+        "unsupported_lang",
+        "low_priority_source",
+        "unsupported_media",
+        "media_unavailable",
+        "ai_input_refused",
+        "use_not_permitted"
+      ],
+      "from": "the analysis PRDs §5.2, §5.3, §8; ADR-0068 L47, L53 (F-26); Q8"
+    },
+    "SENTIMENT_LABELS": {
+      "values": [
+        "positive",
+        "negative",
+        "neutral",
+        "mixed"
+      ],
+      "from": "analysis-sentiment §6.2 L105-L110"
+    },
+    "INTENT_LABELS": {
+      "values": [
+        "complaint",
+        "question",
+        "praise",
+        "request",
+        "announcement",
+        "other"
+      ],
+      "from": "analysis-topics §3 L26; Q8"
+    },
+    "TOPIC_SOURCES": {
+      "values": [
+        "supervised",
+        "zero_shot"
+      ],
+      "from": "analysis-topics §6.2 L109-L117"
+    },
+    "ENTITY_TYPES": {
+      "values": [
+        "brand",
+        "company",
+        "institution",
+        "place",
+        "product",
+        "person_public"
+      ],
+      "from": "analysis-entities §6.2 L106-L114"
+    },
+    "UNLINKED_ENTITY_TYPES": {
+      "values": [
+        "brand",
+        "company",
+        "institution",
+        "place",
+        "product"
+      ],
+      "from": "analysis-entities §5.3 L67, L71: unlinked forms are organisations, places and products, never persons"
+    },
+    "ENTITY_SOURCES": {
+      "values": [
+        "model",
+        "gazetteer",
+        "both"
+      ],
+      "from": "analysis-entities §6.2, §8 L129"
+    },
+    "HIT_STATUSES": {
+      "values": [
+        "active",
+        "retracted"
+      ],
+      "from": "keyword-matcher §5.2 L50, §5.3 L81"
+    },
+    "MATCHED_BY": {
+      "values": [
+        "text",
+        "source"
+      ],
+      "from": "ADR-0031"
+    },
+    "AUTHOR_TYPES": {
+      "values": [
+        "source",
+        "individual"
+      ],
+      "from": "ADR-0010; normalize-item §5.2 L54"
+    },
+    "SEARCH_ENGINES": {
+      "values": [
+        "perplexity",
+        "mojeek",
+        "gdelt"
+      ],
+      "from": "ADR-0037"
+    },
+    "CRAWL_STATUSES": {
+      "values": [
+        "allowed",
+        "disallowed",
+        "paywalled",
+        "blocked"
+      ],
+      "from": "news-robots-checker §5.3; Q8"
+    },
+    "ACCESS_MODES": {
+      "values": [
+        "direct",
+        "headless",
+        "proxy",
+        "blocked"
+      ],
+      "from": "news-robots-checker §5.3; Q8"
+    },
+    "ROBOTS_STATUSES": {
+      "values": [
+        "ok",
+        "unavailable"
+      ],
+      "from": "ADR-0070 b); Q8"
+    },
+    "USAGE_SIGNAL_VALUES": {
+      "values": [
+        "yes",
+        "no",
+        "unset"
+      ],
+      "from": "ADR-0068; news-robots-checker; Q8"
+    },
+    "CRAWL_REASONS": {
+      "values": [
+        "robots_unreachable",
+        "content_signal_search_no",
+        "robots_disallowed",
+        "rsl_prohibited",
+        "rsl_payment",
+        "http_402",
+        "challenge"
+      ],
+      "from": "news-robots-checker §5.3 L66-L79; Q8"
+    },
+    "CRAWL_JOB_KINDS": {
+      "values": [
+        "first_check",
+        "refresh",
+        "recheck",
+        "ops_force"
+      ],
+      "from": "ADR-0011, ADR-0022, ADR-0040"
+    },
+    "DEDUP_TYPES": {
+      "values": [
+        "verdict",
+        "story_update"
+      ],
+      "from": "news-dedup §6.2 L88-L104"
+    },
+    "DEDUP_MATCHED_BY": {
+      "values": [
+        "simhash",
+        "canonical",
+        "text_sha256",
+        "title_sha256"
+      ],
+      "from": "news-dedup §6.2, §5.2 L55, §8 L120; ADR-0036; Q8"
+    },
+    "DLQ_STAGES": {
+      "values": [
+        "consume",
+        "produce"
+      ],
+      "from": "Q5; F-21"
+    },
+    "DLQ_ERROR_CLASSES": {
+      "values": [
+        "schema_unknown",
+        "invalid",
+        "producer_not_allowed",
+        "attempts_exhausted",
+        "query_rejected"
+      ],
+      "from": "Q5; ADR-0002, ADR-0012, ADR-0057; x-full-archive-search §8 L147"
+    },
+    "COMMENT_PROFILES": {
+      "values": [
+        "fb_page",
+        "fb_group",
+        "ig_own",
+        "ig_other",
+        "tt",
+        "x",
+        "yt",
+        "li_own",
+        "li_other",
+        "tg_own",
+        "news"
+      ],
+      "from": "comment-decay-scheduler §5.1, §6.2; ADR-0060"
+    },
+    "BACKFILL_REASONS": {
+      "values": [
+        "add",
+        "client",
+        "ops"
+      ],
+      "from": "ADR-0020"
+    },
+    "KEYWORD_HISTORY_REASONS": {
+      "values": [
+        "add",
+        "client"
+      ],
+      "from": "ADR-0064, ADR-0059"
+    },
+    "HASHTAG_EDGES": {
+      "values": [
+        "recent_media",
+        "top_media"
+      ],
+      "from": "ig-hashtag-search §6.2; ADR-0041; F-27"
+    },
+    "RESOLVE_ORIGINS": {
+      "values": [
+        "discovery",
+        "manual"
+      ],
+      "from": "ADR-0032"
+    },
+    "RECONCILIATION_REASONS": {
+      "values": [
+        "lease_lapsed"
+      ],
+      "from": "ADR-0011; yt-uploads-reconciler §5.1 L51"
+    },
+    "N8N_CHANNELS": {
+      "values": [
+        "email",
+        "telegram",
+        "slack"
+      ],
+      "from": "ADR-0067 L27; F-23"
+    },
+    "ALERT_CHANNELS": {
+      "values": [
+        "email",
+        "telegram",
+        "slack",
+        "webhook"
+      ],
+      "from": "ADR-0067 L25, L27; F-23; Q15 and O-11: webhook for the clients' own alert webhooks, which alert-evaluator posts itself (alert-evaluator.md L69)"
+    },
+    "N8N_AUDIENCES": {
+      "values": [
+        "client",
+        "ops",
+        "account_manager"
+      ],
+      "from": "ADR-0067; F-46"
+    },
+    "FALLBACK_SUBJECT_KINDS": {
+      "values": [
+        "source",
+        "route"
+      ],
+      "from": "ADR-0021 L58-L61; Q11: the automatic-fallback notice names a source or a route"
+    },
+    "ALERT_SEVERITIES": {
+      "values": [
+        "info",
+        "warning",
+        "high"
+      ],
+      "from": "alert-evaluator §6.2 L90; Q8, Q11 (F-48)"
+    },
+    "ALERT_RULE_TYPES": {
+      "values": [
+        "volume_spike",
+        "negative_share",
+        "new_high_reach_poster",
+        "keyword_first_seen",
+        "post_deleted_high_reach",
+        "engagement_spike",
+        "topic_spike",
+        "entity_or_logo",
+        "story"
+      ],
+      "from": "ADR-0048 L42, L58-L65; alert-evaluator §5.3 L57-L61; Q8 (F-22)"
+    },
+    "CARD_TYPES": {
+      "values": [
+        "qualifier_review",
+        "grant_missing",
+        "manual_url"
+      ],
+      "from": "ADR-0067; Q11 (F-47)"
+    },
+    "CARD_INPUT_KINDS": {
+      "values": [
+        "url",
+        "text"
+      ],
+      "from": "Q11 (F-47): a manual_url card's inputs, since buttons cannot carry text (li-org-resolver §13 L159)"
+    },
+    "REVIEW_CARD_ACTIONS": {
+      "values": [
+        "approve_tier_1",
+        "approve_tier_2",
+        "approve_tier_3",
+        "reject",
+        "mention_only"
+      ],
+      "from": "qualifier §5.3 L67"
+    },
+    "KNOWN_ALERT_NAMES": {
+      "values": [
+        "budget_80",
+        "x_enterprise_required",
+        "authorization_revoked",
+        "registry_duplicate",
+        "rotation_behind",
+        "subscription_failed",
+        "keyword_first_seen"
+      ],
+      "from": "the alert names ADRs fix (Q11); alert stays an open snake_case name"
+    },
+    "GOVERNMENT_ALERT_RULE_TYPES": {
+      "values": [
+        "volume_spike",
+        "negative_share",
+        "keyword_first_seen"
+      ],
+      "from": "alert-evaluator §5.3 C L65; ADR-0048 L67 (the four new types are refused for government clients)"
+    },
+    "CLIENT_TYPES": {
+      "values": [
+        "commercial",
+        "government"
+      ],
+      "from": "CONVENTIONS v1.1 L84 (clients.client_type, the one government marker; a missing value fails closed)"
+    }
+  },
+  "registry": {
+    "VENDORS_AMBER": {
+      "values": [
+        "sociavault",
+        "scrapecreators",
+        "tikhub",
+        "ensembledata",
+        "harvestapi",
+        "telemetrio",
+        "tugelbay",
+        "sovereigntaylor"
+      ],
+      "from": "ADR-0051 (c)"
+    },
+    "VENDORS_GREEN": {
+      "values": [
+        "perplexity",
+        "mojeek",
+        "gdelt"
+      ],
+      "from": "ADR-0051 (c)"
+    },
+    "D3_WRITERS": {
+      "values": [
+        "admin-api",
+        "client-portal",
+        "admin-console"
+      ],
+      "from": "Q4; ADR-0012 L34, ADR-0043 L29, ADR-0044 L32, ADR-0066 L24"
+    }
+  }
+}

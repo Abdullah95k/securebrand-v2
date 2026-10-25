@@ -1,0 +1,50 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M48PNWM0ZENT8TDXXY603XNP",
+    "produced_at": "2026-10-06T13:33:04Z",
+    "producer": {
+      "service": "li-own-comments-fetcher",
+      "version": "1.0.0",
+      "job_id": "01J9N3F8T2K5W7Y1B4C6D0RGMA"
+    },
+    "platform": "linkedin",
+    "kind": "comment",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "li-own-comments-fetcher",
+      "fetched_at": "2026-10-06T13:33:02Z"
+    },
+    "retention_class": "linkedin_48h",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01J9N3F8T2K5W7Y1B4C6D0RGMA",
+    "attempt": 1,
+    "job_kind": "comments",
+    "api_version": "202610",
+    "raw_ref": "raw/green/linkedin/2026/10/06/li-own-comments-fetcher/000019.jsonl.zst#7",
+    "source_id": "3d2f8a14-6b7c-4e19-8a05-c1f7e2b94d36",
+    "platform_id": "urn:li:comment:(urn:li:share:7247000000000000001,7247000000000000099)",
+    "idempotency_key": "linkedin:comment:urn:li:comment:(urn:li:share:7247000000000000001,7247000000000000099)",
+    "parent_id": "d889901d-a86a-5d59-93d7-dff472b77b58",
+    "root_id": "d889901d-a86a-5d59-93d7-dff472b77b58",
+    "author_ref": "60d772e64b449a61e78aa7d8d1aad383e790add406f6c6885e8080cbdde000c4",
+    "redacted_fields": [
+      "actor"
+    ],
+    "context": {
+      "series_step": "+6h"
+    }
+  },
+  "payload": {
+    "id": "7247000000000000099",
+    "message": {
+      "text": "مبروك الافتتاح"
+    },
+    "created": {
+      "time": 1791289982000
+    }
+  }
+}

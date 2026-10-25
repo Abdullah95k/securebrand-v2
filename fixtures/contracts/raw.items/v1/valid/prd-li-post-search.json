@@ -1,0 +1,47 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M47K62XG96AENNEHF2R52DK2",
+    "produced_at": "2026-10-06T03:12:46Z",
+    "producer": {
+      "service": "li-post-search",
+      "version": "1.0.0",
+      "job_id": "01M4871WM0G35N2F2R5GBPWABM"
+    },
+    "platform": "linkedin",
+    "kind": "post",
+    "provenance": {
+      "route": "amber",
+      "vendor": "harvestapi",
+      "service": "li-post-search",
+      "fetched_at": "2026-10-06T03:12:44Z"
+    },
+    "retention_class": "linkedin_org",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01M4871WM0G35N2F2R5GBPWABM",
+    "attempt": 1,
+    "job_kind": "rotation",
+    "api_version": "harvestapi-v1",
+    "raw_ref": "raw/amber/linkedin/2026/10/06/li-post-search/000009.jsonl.zst#14",
+    "source_id": "5b2e9c71-4d08-4a3f-9e61-0c7d2b8f4a19",
+    "platform_id": "urn:li:activity:7281234567890123456",
+    "idempotency_key": "linkedin:post:urn:li:activity:7281234567890123456"
+  },
+  "payload": {
+    "url": "https://www.linkedin.com/posts/example-bank_activity-7281234567890123456-ab12",
+    "text": "post text exactly as returned",
+    "postedAt": "2026-10-05T19:40:00Z",
+    "author": {
+      "type": "company",
+      "name": "Example Bank",
+      "url": "https://www.linkedin.com/company/example-bank/"
+    },
+    "engagement": {
+      "reactions": 41,
+      "comments": 6,
+      "reposts": 2
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "supabase",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The control-plane schema: Supabase migrations, seeds, the seed and type generators, the service-schema runner and their tests (F3)",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --config vitest.config.ts",
+    "test:acceptance": "vitest run --config vitest.acceptance.config.ts",
+    "gen:seeds": "node tools/gen-seeds.ts",
+    "gen:types": "node tools/gen-types.ts"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/pg": "catalog:",
+    "contracts": "workspace:*",
+    "pg": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

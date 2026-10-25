@@ -1,0 +1,40 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M47KA7QGERAQ2XTKZVWBR2YC",
+    "produced_at": "2026-10-06T03:15:02Z",
+    "producer": {
+      "service": "search-hit-router",
+      "version": "1.0.0",
+      "job_id": "01M47F78AGDCFWH3S8DKZZJENT"
+    },
+    "platform": "web",
+    "kind": "result",
+    "provenance": {
+      "route": "green",
+      "vendor": "mojeek",
+      "service": "web-search-mojeek",
+      "fetched_at": "2026-10-06T03:04:11Z"
+    },
+    "retention_class": "news_excerpt",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01M47F78AGDCFWH3S8DKZZJENT",
+    "attempt": 1,
+    "job_kind": "rotation",
+    "api_version": "search.results/v1",
+    "raw_ref": "raw/green/web/2026/10/06/search-hit-router/000012.jsonl.zst#7",
+    "source_id": "7b3e5f8a-1c2d-4e4f-9a6b-7c8d9e0f1a2b",
+    "platform_id": "f1c1d91eaeff7fb549592e75eeb42ccfc2f53b4812bb1006892e57a748e26b37",
+    "idempotency_key": "web:result:f1c1d91eaeff7fb549592e75eeb42ccfc2f53b4812bb1006892e57a748e26b37"
+  },
+  "payload": {
+    "engine": "mojeek",
+    "rank": 3,
+    "title": "انقطاع فايبر اكس في الكوت منذ الصباح",
+    "url": "https://forum.example-iq.net/t/fiberx-wasit-outage/4417?utm_source=mojeek",
+    "canonical_url": "https://forum.example-iq.net/t/fiberx-wasit-outage/4417",
+    "snippet": "هل عندكم انقطاع؟ النت مقطوع بالكوت من الصبح وفايبر اكس ما ترد"
+  }
+}

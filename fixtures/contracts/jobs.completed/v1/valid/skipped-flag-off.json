@@ -1,0 +1,25 @@
+{
+  "schema": "jobs.completed/v1",
+  "message_id": "01M48C8GN0QNP166H7XBJ3DYZ3",
+  "produced_at": "2026-10-06T10:31:00Z",
+  "producer": {
+    "service": "tt-keyword-search",
+    "version": "1.0.0",
+    "job_id": "01M48J0V80ZZGG928KMD5XX36J"
+  },
+  "job_id": "01M48J0V80ZZGG928KMD5XX36J",
+  "queue": "jobs.tt-keyword-search",
+  "kind": "rotation",
+  "source_id": "1e2d3c4b-5a69-4788-9a6b-5c4d3e2f1a0b",
+  "attempt": 1,
+  "status": "skipped_flag_off",
+  "reason": "flag_off",
+  "finished_at": "2026-10-06T10:31:00Z",
+  "report": {
+    "new_count": 0,
+    "seen_count": 0,
+    "pages": 0,
+    "cost_units": 0,
+    "reply_candidates": []
+  }
+}
