@@ -59,7 +59,7 @@ else
   if version_ge "$found" "$UV_MIN" && ! version_ge "$found" "$UV_BELOW"; then
     ok "uv $found"
   else
-    bad "uv: expected $UV_RANGE, found $found (uv self update $UV_MIN)"
+    bad "uv: expected $UV_RANGE, found $found (make bootstrap updates it: uv self update $UV_MIN, or python3 -m pip install --user 'uv==$UV_MIN' when pip installed uv)"
   fi
   if uv python find "$PYTHON_PIN" >/dev/null 2>&1; then
     ok "python $PYTHON_PIN (uv)"
