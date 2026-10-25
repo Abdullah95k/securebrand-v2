@@ -57,6 +57,7 @@ export function cleanEnv(extra: NodeJS.ProcessEnv = {}): NodeJS.ProcessEnv {
       key.startsWith("GITHUB_") ||
       key.startsWith("POLICY_") ||
       key === "CHECK_BASE" ||
+      key === "SB_NO_FETCH" ||
       key === "PR_LABELS" ||
       key === "CI" ||
       key === "E2E_DIR" ||
@@ -64,6 +65,10 @@ export function cleanEnv(extra: NodeJS.ProcessEnv = {}): NodeJS.ProcessEnv {
       // Set by the scripts that started this test run (make test): a script under test must take
       // the test's PATH as its caller's.
       key === "SB_CALLER_PATH" ||
+      // Set in the Claude Code session that runs the tests: a hook under test must decide from the
+      // test's payload and repository alone (ALLOW_CONTRACT_EDITS=1 would let every write through).
+      key === "ALLOW_CONTRACT_EDITS" ||
+      key === "CLAUDE_PROJECT_DIR" ||
       // make passes its command-line variables (SERVICE=, GATE=, ...) to nested makes through
       // MAKEFLAGS and the environment; a test that runs make must start from none of them.
       [

@@ -5,7 +5,7 @@
 #
 #   IMAGE_REGISTRY=upstream  pull the compose images from their publishers (see stack-images.sh)
 #   SUPABASE_FULL=1          start every Supabase service (default: db, kong, auth and rest only)
-#   IMAGE_PULL_WAIT_SECONDS  keep retrying a failed image pull this long (default 0)
+#   IMAGE_PULL_WAIT_SECONDS  keep retrying a failed pull of this repository's GHCR mirror this long (default 300; 0 tries once)
 set -euo pipefail
 # shellcheck source=lib/common.sh
 . "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
@@ -23,28 +23,51 @@ eval "$("$SB_SCRIPTS_DIR/stack-images.sh")"
 echo "make up: compose images from the ${IMAGE_REGISTRY:-default} registries in stack/versions.env" \
   "(IMAGE_REGISTRY=upstream pulls from the publishers instead)"
 
-# IMAGE_PULL_WAIT_SECONDS (CI sets it) keeps retrying a pull that fails, for the minute or two the
-# mirror workflow needs after a push that changes stack/versions.env.
+# A failed pull of this repository's GHCR mirror is retried for IMAGE_PULL_WAIT_SECONDS (default 300;
+# CI sets 600): the minute or two the mirror workflow needs to copy a new tag. Another registry's
+# short throttle ("Rate exceeded", a 5xx) is retried up to 3 times; a data limit or any other refusal
+# does not pass within minutes, so it fails at once with the registry's answer.
+# IMAGE_PULL_RETRY_SECONDS spaces the attempts (20).
+PULL_WAIT="${IMAGE_PULL_WAIT_SECONDS:-300}"
+PULL_ERROR=""
 pull() {
-  local deadline=$((SECONDS + ${IMAGE_PULL_WAIT_SECONDS:-0}))
-  until docker pull --quiet "$1" >/dev/null; do
-    [ "$SECONDS" -lt "$deadline" ] || return 1
-    echo "make up: $1 is not available yet; retrying in 20 s" >&2
-    sleep 20
+  local deadline=$((SECONDS + PULL_WAIT)) tries=0 more
+  until PULL_ERROR="$(docker pull --quiet "$1" 2>&1 >/dev/null)"; do
+    PULL_ERROR="$(printf '%s\n' "$PULL_ERROR" | tail -1)"
+    tries=$((tries + 1))
+    case "$1" in
+      ghcr.io/abdullah95k/*)
+        [ "$SECONDS" -lt "$deadline" ] || return 1
+        more=", for up to $((deadline - SECONDS)) s more (IMAGE_PULL_WAIT_SECONDS=$PULL_WAIT)"
+        ;;
+      *)
+        case "$PULL_ERROR" in
+          *"Rate exceeded"* | *"unexpected HTTP status: 5"*) [ "$tries" -le 3 ] || return 1 ;;
+          *) return 1 ;;
+        esac
+        more=" (attempt $((tries + 1)) of 4)"
+        ;;
+    esac
+    echo "make up: pulling $1 failed (${PULL_ERROR:-no answer}); retrying in ${IMAGE_PULL_RETRY_SECONDS:-20} s$more" >&2
+    sleep "${IMAGE_PULL_RETRY_SECONDS:-20}"
   done
 }
 
 for image in "$REDPANDA_IMAGE" "$CLICKHOUSE_IMAGE" "$SEAWEEDFS_IMAGE"; do
   docker image inspect "$image" >/dev/null 2>&1 && continue
   if ! pull "$image"; then
+    echo "make up: could not pull $image; the registry answered: ${PULL_ERROR:-nothing} (IMAGE_PULL_WAIT_SECONDS=$PULL_WAIT s applies to this repository's mirror)" >&2
     case "$image" in
       ghcr.io/abdullah95k/*)
-        echo "make up: could not pull $image from this repository's GHCR mirror." >&2
-        echo "  The mirror packages must be public (a one-time user action, see docs/handoffs/F1.md)," >&2
+        echo "  This repository's GHCR mirror packages must be public (a one-time user action, see docs/handoffs/F1.md)," >&2
         echo "  or log in first: docker login ghcr.io. Meanwhile: IMAGE_REGISTRY=upstream make up" >&2
         echo "  (Docker Hub may answer 429 to anonymous pulls from shared addresses)." >&2
         ;;
-      *) echo "make up: could not pull $image" >&2 ;;
+      *)
+        echo "  Run make up again later (a data limit, toomanyrequests: Data limit exceeded, can last hours)," >&2
+        echo "  or IMAGE_REGISTRY=upstream make up to pull from the publishers instead (Docker Hub may answer 429" >&2
+        echo "  to anonymous pulls)." >&2
+        ;;
     esac
     exit 1
   fi
@@ -62,16 +85,7 @@ case "$code" in
   *) sb_die "could not create the S3 bucket ${S3_BUCKET} (HTTP $code)" ;;
 esac
 
-if "$CLI" status >/dev/null 2>&1; then
-  echo "make up: Supabase is already running"
-else
-  EXCLUDE="realtime,storage-api,imgproxy,mailpit,postgres-meta,studio,edge-runtime,logflare,vector,supavisor"
-  if [ "${SUPABASE_FULL:-0}" = 1 ]; then
-    "$CLI" start
-  else
-    "$CLI" start --exclude "$EXCLUDE"
-  fi
-fi
+"$SB_SCRIPTS_DIR/supabase-start.sh"
 
 "$SB_SCRIPTS_DIR/wait-for-stack.sh"
 echo "make up: the local stack is up. Connection variables: eval \"\$(scripts/stack-env.sh)\"; a quick round trip: make smoke"

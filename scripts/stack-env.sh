@@ -44,7 +44,7 @@ sb_export S3_FORCE_PATH_STYLE "true"
 [ "$SUPABASE" = 1 ] || exit 0
 CLI="$ROOT/node_modules/.bin/supabase"
 if [ ! -x "$CLI" ]; then
-  echo "stack-env: the Supabase CLI is not installed (pnpm install); SUPABASE_* left out" >&2
+  echo "stack-env: the Supabase CLI is not installed (make bootstrap); SUPABASE_* left out" >&2
   exit 0
 fi
 if ! STATUS="$(cd "$ROOT" && "$CLI" status -o env 2>/dev/null)"; then

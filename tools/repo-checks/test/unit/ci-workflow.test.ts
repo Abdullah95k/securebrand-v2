@@ -121,6 +121,35 @@ describe("GitHub workflows", () => {
     }
   });
 
+  it("reserves every Supabase host port in the check job before any other step opens a connection", () => {
+    // An outbound connection takes its local port from the ephemeral range (32768-60999), so it
+    // can hold a Supabase port just when make up binds it ("address already in use").
+    const steps = ci.jobs.check?.steps ?? [];
+    const reserve = steps.findIndex((s) =>
+      /sudo sysctl -w net\.ipv4\.ip_local_reserved_ports=54320-54329/.test(s.run ?? ""),
+    );
+    expect(reserve).toBe(0);
+    expect(reserve).toBeLessThan(steps.findIndex((s) => (s.run ?? "").trim() === "make up"));
+    const config = readFileSync(join(ROOT, "supabase", "config.toml"), "utf8");
+    const ports = [...config.matchAll(/^\s*(?:port|shadow_port)\s*=\s*(\d+)/gm)].map((m) =>
+      Number(m[1]),
+    );
+    expect(ports).toContain(54322);
+    for (const port of ports.filter((p) => p >= 32768)) {
+      expect(port).toBeGreaterThanOrEqual(54320);
+      expect(port).toBeLessThanOrEqual(54329);
+    }
+  });
+
+  it("the check job runs pnpm fmt:check before it starts the stack", () => {
+    // Only make check's format acceptance test checked formatting, and only when root tooling
+    // changed; a docs-only or service-only pull request was never format-checked.
+    const steps = ci.jobs.check?.steps ?? [];
+    const fmt = steps.findIndex((s) => (s.run ?? "").trim() === "pnpm fmt:check");
+    expect(fmt).toBeGreaterThan(-1);
+    expect(fmt).toBeLessThan(steps.findIndex((s) => (s.run ?? "").trim() === "make up"));
+  });
+
   it("on a push to main, make check compares with the commit before the push", () => {
     const step = (ci.jobs.check?.steps ?? []).find((s) => (s.run ?? "").includes("make check"));
     expect(step).toBeDefined();
@@ -168,11 +197,11 @@ describe("GitHub workflows", () => {
     }
   });
 
-  it("the mirror workflow runs on demand and on pushes to any branch that change stack/versions.env", () => {
+  it("the mirror workflow runs on demand and on pushes to main that change stack/versions.env", () => {
     expect(mirror.on).toHaveProperty("workflow_dispatch");
     const push = mirror.on?.push as { paths: string[]; branches?: string[] };
     expect(push.paths).toContain("stack/versions.env");
-    expect(push.branches).toBeUndefined();
+    expect(push.branches).toEqual(["main"]);
     expect(mirror.permissions).toMatchObject({ packages: "write" });
     const job = Object.values(mirror.jobs)[0];
     expect(job).toBeDefined();
@@ -187,17 +216,26 @@ describe("GitHub workflows", () => {
     expect(copy?.env?.MIRROR_REPLACE).toBe("${{ github.ref == 'refs/heads/main' && '1' || '' }}");
   });
 
-  it("dependabot covers npm, uv, docker and github-actions weekly and grouped with a low limit", () => {
+  it("dependabot covers npm, uv and github-actions weekly and grouped with a low limit", () => {
     const config = parse(readFileSync(join(ROOT, ".github", "dependabot.yml"), "utf8")) as {
       updates: {
         "package-ecosystem": string;
         schedule: { interval: string };
         "open-pull-requests-limit": number;
         groups?: Record<string, unknown>;
+        ignore?: { "dependency-name": string; "update-types"?: string[] }[];
       }[];
     };
     const ecosystems = config.updates.map((u) => u["package-ecosystem"]).sort();
-    expect(ecosystems).toEqual(["docker", "github-actions", "npm", "uv"]);
+    // The service templates' base images follow .node-version, .python-version and uv.toml, so
+    // they are bumped by hand with the toolchain (pins.test.ts), not by Dependabot's docker updates.
+    expect(ecosystems).toEqual(["github-actions", "npm", "uv"]);
+    // uv-build follows uv.toml's required-version range, so a minor bump of the 0.x tool is planned.
+    const uv = config.updates.find((u) => u["package-ecosystem"] === "uv");
+    expect(uv?.ignore).toContainEqual({
+      "dependency-name": "uv-build",
+      "update-types": ["version-update:semver-minor"],
+    });
     for (const update of config.updates) {
       expect(update.schedule.interval).toBe("weekly");
       expect(update["open-pull-requests-limit"]).toBeLessThanOrEqual(3);

@@ -1,5 +1,16 @@
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { cleanEnv, script, TempRepo } from "../helpers/repo.js";
+import { cleanEnv, ROOT, run, script, TempRepo } from "../helpers/repo.js";
+
+function gitIn(dir: string, ...args: string[]): string {
+  const result = run("git", args, { cwd: dir });
+  if (result.code !== 0) {
+    throw new Error(`git ${args.join(" ")} failed in ${dir}:\n${result.output}`);
+  }
+  return result.stdout.trim();
+}
 
 // A small workspace shaped like this repository: TypeScript packages with a dependency edge
 // (b depends on a), tools and end-to-end workspaces, and independent Python projects, one of
@@ -293,6 +304,123 @@ describe("scripts/check-changed.sh", () => {
       "tools/probes/news",
     ]);
   });
+
+  // A shallow clone of sb/T1 from a local bare origin (file://, no network): --depth implies
+  // --single-branch, so origin/main is missing, and the merge base lies beyond the shallow history.
+  function shallowClone(extra: string[] = []): { dir: string; cleanup: () => void } {
+    const tmp = mkdtempSync(join(tmpdir(), "shallow-"));
+    const origin = join(tmp, "origin.git");
+    gitIn(tmp, "clone", "-q", "--bare", repo.dir, origin);
+    const dir = join(tmp, "shallow");
+    gitIn(
+      tmp,
+      ...["-c", "protocol.file.allow=always", "clone", "-q", "--depth", "1", ...extra],
+      ...["--branch", "sb/T1", `file://${origin}`, dir],
+    );
+    return { dir, cleanup: () => rmSync(tmp, { recursive: true, force: true }) };
+  }
+
+  it("fetches main's history in a shallow clone and compares with the real merge base", () => {
+    repo.write("packages/a/index.js", "export const a = 7;\n").commit("a");
+    const main = repo.git("rev-parse", "main");
+    const clone = shallowClone();
+    try {
+      const result = script("check-changed.sh", ["--plan"], { cwd: clone.dir });
+      expect(result.code, result.output).toBe(0);
+      const planned = parsePlan(result.stdout);
+      expect(planned.base, result.output).toBe(main);
+      expect(planned.ts).toEqual(["a", "b"]);
+      expect(result.stderr).toMatch(/shallow clone/);
+      expect(gitIn(clone.dir, "rev-parse", "--is-shallow-repository")).toBe("false");
+    } finally {
+      clone.cleanup();
+    }
+  });
+
+  // The fetch the scripts run and name: a plain `git fetch --unshallow origin main` leaves origin/main
+  // missing in a single-branch clone (its refspec covers only the branch it cloned).
+  const UNSHALLOW = "git fetch --unshallow origin +refs/heads/main:refs/remotes/origin/main";
+
+  it("names the shallow clone and git fetch --unshallow when main cannot be fetched", () => {
+    repo.write("packages/a/index.js", "export const a = 8;\n").commit("a");
+    const clone = shallowClone();
+    try {
+      gitIn(clone.dir, "remote", "set-url", "origin", "file:///nonexistent");
+      const result = script("check-changed.sh", ["--plan"], { cwd: clone.dir });
+      expect(result.code, result.output).toBe(0);
+      expect(parsePlan(result.stdout).base).toBe("none");
+      expect(result.stderr).toContain(`run ${UNSHALLOW}`);
+    } finally {
+      clone.cleanup();
+    }
+  });
+
+  it("SB_NO_FETCH=1 leaves the clone shallow and names the fetch to run", () => {
+    repo.write("packages/a/index.js", "export const a = 9;\n").commit("a");
+    const clone = shallowClone();
+    try {
+      const result = script("check-changed.sh", ["--plan"], {
+        cwd: clone.dir,
+        env: cleanEnv({ SB_NO_FETCH: "1" }),
+      });
+      expect(result.code, result.output).toBe(0);
+      expect(parsePlan(result.stdout).base).toBe("none");
+      expect(result.stderr).toContain(`run ${UNSHALLOW}`);
+      expect(gitIn(clone.dir, "rev-parse", "--is-shallow-repository")).toBe("true");
+    } finally {
+      clone.cleanup();
+    }
+  });
+
+  it("the fetch its warning names, run by hand, finds the merge base in a single-branch shallow clone", () => {
+    repo.write("packages/a/index.js", "export const a = 10;\n").commit("a");
+    const main = repo.git("rev-parse", "main");
+    const clone = shallowClone();
+    try {
+      const warned = script("check-changed.sh", ["--plan"], {
+        cwd: clone.dir,
+        env: cleanEnv({ SB_NO_FETCH: "1" }),
+      });
+      const command = /run (git fetch [^\n]*)$/m.exec(warned.stderr)?.[1] ?? "";
+      expect(command, warned.output).toMatch(/^git fetch --unshallow origin /);
+      gitIn(clone.dir, ...command.split(" ").slice(1));
+      const result = script("check-changed.sh", ["--plan"], { cwd: clone.dir });
+      expect(parsePlan(result.stdout).base, result.output).toBe(main);
+      // review-session tells a reviewer in a shallow clone to run the same fetch.
+      expect(
+        readFileSync(join(ROOT, ".claude", "skills", "review-session", "SKILL.md"), "utf8"),
+      ).toContain(UNSHALLOW);
+    } finally {
+      clone.cleanup();
+    }
+  });
+
+  it.each([
+    ["with --base origin/main", ["--base", "origin/main"]],
+    ["without --base", []],
+  ])(
+    "the policy checks in a shallow clone compare with the merge base, not main's tip (%s)",
+    (_, args) => {
+      // main moved on after sb/T1 left it, with a change under a contract path that sb/T1 lacks:
+      // compared with main's tip, sb/T1 would seem to change that path.
+      repo.write("services/c/index.js", "export const c = 9;\n").commit("c");
+      const mainBefore = repo.git("rev-parse", "main");
+      repo.checkout("main");
+      repo.write("packages/contracts/x.ts", "export {};\n").commit("main moves on");
+      repo.checkout("sb/T1");
+      let clone: { dir: string; cleanup: () => void } | undefined;
+      try {
+        clone = shallowClone(["--no-single-branch"]);
+        const result = script("policy/check-contract-paths.sh", args, { cwd: clone.dir });
+        expect(result.code, result.output).toBe(0);
+        expect(result.stdout).toContain("no contract path changed");
+      } finally {
+        // Every test of this file shares the repository (beforeAll): put main back, whatever failed.
+        repo.git("branch", "-f", "main", mainBefore);
+        clone?.cleanup();
+      }
+    },
+  );
 
   it("warns and checks everything when CHECK_BASE is not a commit of this repository", () => {
     repo.write("packages/a/index.js", "export const a = 5;\n");

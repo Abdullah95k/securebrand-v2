@@ -1,13 +1,17 @@
-# Copies the stack images that have no anonymous upstream (stack/versions.env) to this repository's
-# GHCR packages, so make up works where Docker Hub answers 429 (cloud sessions, CI). It runs on
-# demand and on every push, on any branch, that changes the pins, so a lane can prove make up before
-# it merges. It pulls from Docker Hub anonymously unless the DOCKERHUB_USERNAME and DOCKERHUB_TOKEN
-# secrets exist. New packages are private until the user makes them public (docs/handoffs/F1.md).
+# Copies every stack image whose _REPO in stack/versions.env points to this repository's GHCR
+# packages (Redpanda, which has no anonymous upstream, and ClickHouse, whose ECR Public copy refuses
+# CI's pulls), so make up works where Docker Hub answers 429 (cloud sessions, CI). It runs on every
+# push to main that changes the pins, and on demand (Actions, Mirror images, Run workflow), on any
+# branch, for a lane that changes a mirrored pin and must prove make up before it merges. A run off
+# main never replaces a tag already mirrored. It pulls from Docker Hub anonymously unless the
+# DOCKERHUB_USERNAME and DOCKERHUB_TOKEN secrets exist. New packages are private until the user
+# makes them public (docs/handoffs/F1.md).
 name: Mirror images
 
 on:
   workflow_dispatch:
   push:
+    branches: [main]
     paths:
       - stack/versions.env
       - scripts/mirror-images.sh

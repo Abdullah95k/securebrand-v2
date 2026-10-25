@@ -34,7 +34,7 @@ Zod schemas for every topic, job and envelope; JSON Schema export; Pydantic mode
 - When PRD examples disagree on a field, the ADR decides, never a majority of examples
 - Keys must be byte-identical in TypeScript and Python: fix Unicode normalisation and JSON canonicalisation in the golden vectors
 - Every data payload carries provenance (route, vendor, service, fetched_at) and retention_class; jobs, `jobs.completed` and `source.events` carry `producer` (ADR-0003)
-- Start this session with ALLOW_CONTRACT_EDITS=1: it is one of the few allowed to write the contract paths
+- Start this session with ALLOW_CONTRACT_EDITS=1, or run it on its lane branch sb/F2 (cloud): it is one of the few allowed to write the contract paths
 
 ## Done when
 

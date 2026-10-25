@@ -9,7 +9,7 @@ Social-media and news listening for the Iraqi market: 86 services, one per PRD i
 - Amber (vendor) code runs only behind its flag (`FB_VENDOR_ROUTE`, `IG_VENDOR_ROUTE`, `TT_VENDOR_ROUTE`, `LI_VENDOR_ROUTE`, `TG_VENDOR_ROUTE`, `TG_POSTS_ACTOR`), off by default.
 - Private individuals are never profiled, listed or backfilled: every author is a keyed reference (`author_ref`). Public accounts as defined in ADR-0010 (registered sources, organisations, pages, channels and media, and verified or widely followed accounts, where the platform's terms allow) may be listed and ranked.
 - Every data output (a message that carries or derives from a platform fetch) carries provenance (route, vendor, service, fetched_at) and `retention_class`; job and control messages carry `producer` (ADR-0003).
-- IMPORTANT: contracts are frozen. Never edit `packages/contracts`, `supabase/migrations` or `clickhouse/migrations` (a hook blocks it). If you need a change, write `docs/proposals/<session>-<topic>.md` from `build-plan/templates/PROPOSAL.md` and stop.
+- IMPORTANT: contracts are frozen. Only F2, F3 and F8, which build them, and `/contract-change` applying an approved proposal on `sb/CC-<proposal>` edit `packages/contracts`, `supabase/migrations` or `clickhouse/migrations` (`.claude/rules/contracts.md`). Every other session never edits them (a hook blocks it): if you need a change, write `docs/proposals/<session>-<topic>.md` from `build-plan/templates/PROPOSAL.md` and stop.
 
 ## Commands
 

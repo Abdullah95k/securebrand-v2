@@ -18,10 +18,10 @@ The full plan, with the build map and every wave table, is the "Listening platfo
 | Plan | `claude --worktree <ID> --permission-mode plan` | `/plan-session <ID>`, read the plan (Ctrl+G), approve |
 | Build | `/clear` in the same worktree | `/build-session <ID>` |
 | Review | a new terminal: `claude --worktree <ID>` | `/review-session <ID>` |
-| Fix | the build session, or a fresh one (F2, F3 and F8 with `ALLOW_CONTRACT_EDITS=1`) | `/fix-session <ID>`, then in a fresh session `/review-session <ID> recheck` |
+| Fix | the build session, or a fresh one (F2, F3 and F8 with `ALLOW_CONTRACT_EDITS=1`, or on its lane branch sb/<ID> (cloud)) | `/fix-session <ID>`, then in a fresh session `/review-session <ID> recheck` |
 | Merge | when the review has no open blocker or should-fix, and everything in "Needs first" has merged | |
 
-Other kinds: `/probe-platform <platform> <cap>` in Manual mode (`--permission-mode default`), `/integration-gate <G>` on an up-to-date main, `/decide-session <D1|D2|D3>` (not in plan mode: it writes documents), and `/contract-change <proposal>` in a session started with `ALLOW_CONTRACT_EDITS=1`. F2, F3 and F8 also start with `ALLOW_CONTRACT_EDITS=1`, because they create the contract paths.
+Other kinds: `/probe-platform <platform> <cap>` in Manual mode (`--permission-mode default`), `/integration-gate <G>` on an up-to-date main, `/decide-session <D1|D2|D3>` (not in plan mode: it writes documents), and `/contract-change <proposal>` in a session started with `ALLOW_CONTRACT_EDITS=1`, or that runs on the branch sb/CC-<proposal> (cloud). F2, F3 and F8 also start with `ALLOW_CONTRACT_EDITS=1`, or run on their lane branch sb/<ID> (cloud), because they create the contract paths.
 
 Typing `/build-session` or `/fix-session` arms the stop gate for that session: Claude cannot finish while the checks for the changed packages fail (three rounds at most), unless it has filed a proposal or an issue. Other sessions are never gated.
 

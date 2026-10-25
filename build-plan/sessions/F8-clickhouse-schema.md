@@ -32,7 +32,7 @@ Migrations for items, comments, analysis, metrics_timeseries, aggregates_hourly,
 
 - Upserts keyed on item_id need an explicit version column (ReplacingMergeTree or equivalent) so a replay never wins over a newer edit
 - Raw text TTLs differ by retention class; item-level derived rows follow their item's class; aggregates keep ten years, per-channel YouTube rollups 36 months (ADR-0054, ADR-0056)
-- Start this session with ALLOW_CONTRACT_EDITS=1: it is one of the few allowed to write the contract paths
+- Start this session with ALLOW_CONTRACT_EDITS=1, or run it on its lane branch sb/F8 (cloud): it is one of the few allowed to write the contract paths
 
 ## Done when
 

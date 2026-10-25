@@ -10,9 +10,12 @@
 #                 the local stack up
 #   CHECK_BASE    compare with this commit instead of the merge base with origin/main or main
 #                 (CI passes the commit before a push to main)
+#   SB_NO_FETCH   1: a shallow clone never fetches main (it then checks everything)
 #
-# With no merge base (a shallow clone, an unrelated history) or a CHECK_BASE that is not a commit
-# here, it checks everything and says so: make check never passes silently. A change to the
+# A shallow clone first fetches main's history (git fetch --unshallow origin
+# +refs/heads/main:refs/remotes/origin/main) to find the merge base. With no merge base (an unrelated history, a shallow clone that could not fetch) or a
+# CHECK_BASE that is not a commit here, it checks everything and says so: make check never passes
+# silently. A change to the
 # shared Python configuration (ruff.toml, .python-version, uv.toml) checks every Python project,
 # and a change under fixtures/ (other than a README) every workspace and Python project.
 # Every step runs even after a failure; the exit status is non-zero when any step failed.
@@ -78,10 +81,12 @@ if [ -f package.json ] && [ -f turbo.json ]; then
       TURBO_FILTERS+=("--filter=repo-checks")
     fi
   fi
-  TS_PACKAGES="$("${TURBO[@]}" ls ${TURBO_FILTERS[@]+"${TURBO_FILTERS[@]}"} --output json 2>/dev/null |
-    node -e 'const j = JSON.parse(require("fs").readFileSync(0, "utf8"));
-             console.log(j.packages.items.map((p) => p.name).sort().join(" "));')" ||
-    sb_die "turbo could not list the workspaces (run pnpm install)"
+  # set -e: capture turbo's answer with a fallback, so that only one line reaches the session.
+  TURBO_JSON="$("${TURBO[@]}" ls ${TURBO_FILTERS[@]+"${TURBO_FILTERS[@]}"} --output json 2>/dev/null || true)"
+  [ -n "$TURBO_JSON" ] || sb_die "turbo could not list the workspaces (run make bootstrap)"
+  TS_PACKAGES="$(node -e 'const j = JSON.parse(require("fs").readFileSync(0, "utf8"));
+           console.log(j.packages.items.map((p) => p.name).sort().join(" "));' <<<"$TURBO_JSON" 2>/dev/null)" ||
+    sb_die "turbo's workspace list could not be read (run make bootstrap)"
 fi
 
 # --- Python: the nearest pyproject.toml above each changed file, plus path dependants. ----------

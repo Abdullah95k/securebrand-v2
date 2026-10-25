@@ -311,7 +311,7 @@ def brief(s):
         traps.append(f"Cap: {CAPS[i]}")
         traps.append('Scrub before anything is committed: tokens, signed URLs, private individuals\' names, handles, ids and avatars')
     if i in ('F2', 'F3', 'F8'):
-        traps.append('Start this session with ALLOW_CONTRACT_EDITS=1: it is one of the few allowed to write the contract paths')
+        traps.append(f'Start this session with ALLOW_CONTRACT_EDITS=1, or run it on its lane branch sb/{i} (cloud): it is one of the few allowed to write the contract paths')
     L.append(fmt_list(traps) if traps else '- Nothing beyond this brief and its PRD.')
     L.append('')
     L.append('## Done when')

@@ -37,6 +37,10 @@ services read only them.
 | Supabase API gateway        | 54321                            | `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`                                                                |
 | Supabase Postgres           | 54322                            | `SUPABASE_DB_URL`                                                                                                               |
 
+Supabase's ports (54320 to 54329, `supabase/config.toml`) lie in Linux's ephemeral range, so CI
+reserves them first (`net.ipv4.ip_local_reserved_ports`), and `make up` retries a start that meets
+a port in use once (`scripts/supabase-start.sh`).
+
 The ClickHouse and S3 credentials are fixed development values in `stack/local.env` (matching
 the `clickhouse-users` and `seaweedfs-s3` configs in `compose.yaml`); they work on localhost only
 and guard nothing. Supabase's URL and keys are read live from `supabase status` and never written
@@ -58,17 +62,21 @@ The SDK (F4, F6) applies the topic prefix in test mode.
 ## Images
 
 `versions.env` pins every image by exact tag. Each image is pulled from an upstream that serves
-anonymous pulls when its publisher offers an official image there (ClickHouse's Docker Official
-Image on ECR Public, SeaweedFS's own GHCR image, Supabase's images on ECR Public); Redpanda, which
-publishes only on Docker Hub, is copied to this repository's GHCR packages by
-`.github/workflows/mirror-images.yml` (on demand, and on every push that changes `versions.env`).
+anonymous pulls when its publisher offers an official image there (SeaweedFS's own GHCR image,
+Supabase's images on ECR Public). Redpanda, which publishes only on Docker Hub, and ClickHouse, whose
+Docker Official Image on ECR Public refuses anonymous pulls from shared addresses (`toomanyrequests:
+Data limit exceeded`), are copied to this repository's GHCR packages by
+`.github/workflows/mirror-images.yml` (on demand, and on every push to main that changes
+`versions.env`).
 Docker Hub limits anonymous pulls per address and answers 429 on shared addresses such as the
 cloud sessions'. `IMAGE_REGISTRY=upstream make up` pulls every image from its publisher's registry
 instead. `scripts/compose.sh <command>` runs docker compose with the pins set.
 
 To change a pin, edit `versions.env` (the tag, and for a new image its `_REPO` and `_UPSTREAM`), add
-or update its row in `docs/dependencies.md`, and push: the mirror workflow copies a new Redpanda tag.
-A tag already in the mirror is compared with its upstream by manifest digest on every run. When they
+or update its row in `docs/dependencies.md`, and push. A lane that changes a mirrored pin (Redpanda,
+ClickHouse) runs the mirror workflow on its branch (Actions, Mirror images, Run workflow) before its
+CI, so that `make up` finds the new tag; the push to main runs it again. A tag already in the mirror
+is compared with its upstream by manifest digest on every run. When they
 differ, the run fails and names both digests; only a run on main, where `versions.env` is reviewed,
 replaces the mirrored tag.
 

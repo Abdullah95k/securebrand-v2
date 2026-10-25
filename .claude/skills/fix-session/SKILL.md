@@ -8,7 +8,7 @@ effort: max
 
 # Fix session $0
 
-The stop gate is armed for this session: you can finish only when the checks for the changed packages pass.
+The stop gate is armed for this session: you can finish only when the checks for the changed packages pass, or after filing a proposal or an issue in this session. A question you stop on goes in `docs/issues/$0-q<n>.md`: the question, the options and your recommendation.
 
 1. Read `docs/reviews/$0.md`, the brief (`ls build-plan/sessions/$0-*`) and `docs/plans/$0.md`.
 2. For every open blocker and should-fix, in order: first a test that fails because of the finding, then the fix, then show the test passing. One commit per finding, its message starting `$0 fix: <finding title>`.
