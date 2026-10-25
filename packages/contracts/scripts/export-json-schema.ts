@@ -15,7 +15,8 @@ function listFiles(dir: string): string[] {
 }
 
 const artefacts = await exportArtefacts();
-for (const stale of listFiles(SCHEMAS_DIR)) if (!artefacts.has(stale)) rmSync(join(SCHEMAS_DIR, stale));
+for (const stale of listFiles(SCHEMAS_DIR))
+  if (!artefacts.has(stale)) rmSync(join(SCHEMAS_DIR, stale));
 for (const [path, text] of artefacts) {
   const target = join(SCHEMAS_DIR, path);
   mkdirSync(dirname(target), { recursive: true });

@@ -13,7 +13,12 @@ interface QueryKeyGolden {
     canonical: string;
     query_key: string;
   }[];
-  rejects: { name: string; profile: "exact" | "folded"; forms: string[]; context_terms: string[] }[];
+  rejects: {
+    name: string;
+    profile: "exact" | "folded";
+    forms: string[];
+    context_terms: string[];
+  }[];
 }
 
 const g = golden<QueryKeyGolden>("query-key.json");

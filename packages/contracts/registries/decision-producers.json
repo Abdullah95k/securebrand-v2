@@ -1,0 +1,266 @@
+{
+  "description": "The producers allowed per registry.decisions type, as rows of ADR-0012's producer table (ADR-0013), with the subject each row decides about and its Provenance column (F-14): `required`, `refused` (the decision carries `requested_by` and no provenance, or reports state with no fetch behind it) or `optional`. A row may narrow the `reason` values (null for none) and the `health` values it allows. `@platform` names the 66 platform services of the service index; `*` any service of the index, here through the SDK credential client (the D3 writers have their own rows). Producer mode refuses a decision no row allows; registry-writer, the topic's one consumer, applies the same rows.",
+  "rows": [
+    {
+      "decisions": ["add"],
+      "subject": "candidate_key",
+      "producers": ["qualifier"],
+      "reasons": [null],
+      "provenance": "required",
+      "from": "ADR-0013; ADR-0003 L26 (discovered and manual candidates)"
+    },
+    {
+      "decisions": ["add"],
+      "subject": "source_id",
+      "producers": ["client-portal", "admin-console"],
+      "provenance": "refused",
+      "from": "ADR-0066; ADR-0003 L26 (an owned property, with its pre-allocated id)"
+    },
+    {
+      "decisions": ["add"],
+      "subject": "source_id",
+      "producers": ["tg-bot-channel-receiver", "tg-discussion-receiver"],
+      "provenance": "required",
+      "from": "ADR-0013 (F2: from the received update; a client's channel and its linked group)"
+    },
+    {
+      "decisions": ["add", "update"],
+      "subject": "keyword_id",
+      "producers": ["client-portal", "admin-console"],
+      "provenance": "refused",
+      "from": "ADR-0044 L30, L32"
+    },
+    {
+      "decisions": ["update"],
+      "subject": "source_id",
+      "producers": ["qualifier"],
+      "reasons": [null],
+      "provenance": "required",
+      "from": "ADR-0013; ADR-0003 L26 (a refreshed profile)"
+    },
+    {
+      "decisions": ["update"],
+      "subject": "source_id",
+      "producers": ["@platform"],
+      "reasons": [null],
+      "provenance": "required",
+      "from": "ADR-0013, ADR-0040 (F2: facts a service learns about its own sources; news-site-resolver's identity changes)"
+    },
+    {
+      "decisions": ["update"],
+      "subject": "source_id",
+      "producers": ["ig-hashtag-search"],
+      "reasons": ["budget_wait"],
+      "provenance": "refused",
+      "from": "ADR-0052 L32 (c) (F2: a budget state)"
+    },
+    {
+      "decisions": ["update"],
+      "subject": "source_id",
+      "producers": ["client-portal", "admin-console"],
+      "reasons": [null],
+      "provenance": "refused",
+      "from": "ADR-0013, ADR-0043, ADR-0044 (a page a client starts administering, a client's priority list)"
+    },
+    {
+      "decisions": ["remove_client"],
+      "subject": "source_id",
+      "producers": ["retention-purger", "client-portal", "admin-console"],
+      "reasons": ["client_removed"],
+      "provenance": "refused",
+      "from": "ADR-0013; retention-purger §5.3 L76 (F2: no fetch)"
+    },
+    {
+      "decisions": ["tier_change", "dormant"],
+      "subject": "source_id",
+      "producers": ["qualifier"],
+      "reasons": [null],
+      "provenance": "optional",
+      "from": "ADR-0013; required when the decision applies a resolver profile (ADR-0003 L26), refused for the sweep over stored statistics (F2): the message does not say which, so both are accepted"
+    },
+    {
+      "decisions": ["promote"],
+      "subject": "source_id",
+      "producers": ["@platform"],
+      "reasons": [null],
+      "provenance": "required",
+      "from": "ADR-0013 (F2: a dormant source seen posting)"
+    },
+    {
+      "decisions": ["promote"],
+      "subject": "source_id",
+      "producers": ["qualifier"],
+      "reasons": [null],
+      "provenance": "refused",
+      "from": "ADR-0013 (F2: the sweep)"
+    },
+    {
+      "decisions": ["retire"],
+      "subject": "source_id",
+      "producers": ["qualifier"],
+      "reasons": [null],
+      "provenance": "refused",
+      "from": "ADR-0013, ADR-0069 (F2: rule 9, decay)"
+    },
+    {
+      "decisions": ["retire"],
+      "subject": "source_id",
+      "producers": ["retention-purger"],
+      "reasons": ["owner_request"],
+      "provenance": "refused",
+      "from": "ADR-0069 (F2)"
+    },
+    {
+      "decisions": ["retire"],
+      "subject": "source_id",
+      "producers": ["tt-client-videos-fetcher"],
+      "reasons": ["authorization_revoked"],
+      "provenance": "required",
+      "from": "ADR-0035, ADR-0069 (F2: the refused call)"
+    },
+    {
+      "decisions": ["retire"],
+      "subject": "source_id",
+      "producers": ["@platform"],
+      "reasons": ["not_found"],
+      "provenance": "required",
+      "from": "ADR-0013, ADR-0069 (F2: a confirmed vanished account or channel)"
+    },
+    {
+      "decisions": ["push_coverage"],
+      "subject": "source_id",
+      "producers": [
+        "fb-client-webhook-receiver",
+        "yt-pubsub-receiver",
+        "x-filtered-stream",
+        "tg-bot-channel-receiver",
+        "tg-discussion-receiver"
+      ],
+      "reasons": [null, "lease_lapsed", "subscription_failed"],
+      "provenance": "refused",
+      "from": "ADR-0013, ADR-0049, ADR-0066 (F2: a lease or subscription state; not ig-webhook-receiver)"
+    },
+    {
+      "decisions": ["health_change"],
+      "subject": "source_id",
+      "producers": ["@platform"],
+      "reasons": [
+        "bot_removed",
+        "privacy_mode",
+        "grant_missing",
+        "account_unavailable",
+        "not_found",
+        "uploads_playlist_missing",
+        "query_rejected",
+        "feed_gone",
+        "push_gap"
+      ],
+      "healths": ["ok", "degraded", "blocked"],
+      "provenance": "required",
+      "from": "ADR-0013, ADR-0016 (F2: the failed call; set by the service that met it, cleared by it with ok, Q12)"
+    },
+    {
+      "decisions": ["health_change"],
+      "subject": "source_id",
+      "producers": ["*"],
+      "reasons": ["credential_revoked"],
+      "healths": ["ok", "blocked"],
+      "provenance": "required",
+      "from": "ADR-0016 L27 (any service through the SDK credential client; never degraded)"
+    },
+    {
+      "decisions": ["health_change"],
+      "subject": "source_id",
+      "producers": ["news-robots-checker"],
+      "reasons": ["crawl_disallowed"],
+      "healths": ["ok", "degraded", "blocked"],
+      "provenance": "required",
+      "from": "ADR-0040; ADR-0003 L26"
+    },
+    {
+      "decisions": ["health_change"],
+      "subject": "source_id",
+      "producers": ["admin-api"],
+      "reasons": ["flag_off", "flag_on"],
+      "healths": ["blocked"],
+      "provenance": "refused",
+      "from": "ADR-0021 L61, ADR-0013 L26 (requested_by names the person)"
+    },
+    {
+      "decisions": ["health_change"],
+      "subject": "source_id",
+      "producers": ["admin-api"],
+      "reasons": [
+        "bot_removed",
+        "privacy_mode",
+        "grant_missing",
+        "account_unavailable",
+        "credential_revoked",
+        "not_found",
+        "uploads_playlist_missing",
+        "query_rejected",
+        "feed_gone",
+        "push_gap",
+        "crawl_disallowed"
+      ],
+      "healths": ["ok"],
+      "provenance": "refused",
+      "from": "Q12; ADR-0016 L25, ADR-0021 L61, ADR-0012 L34 (clears the source's current health_reason)"
+    },
+    {
+      "decisions": ["health_change"],
+      "subject": "platform",
+      "producers": ["source-health-canary"],
+      "reasons": [null, "empty_200_rate", "low_yield", "server", "auth", "flag_off"],
+      "provenance": "required",
+      "from": "ADR-0013, ADR-0016; ADR-0003 L26; ADR-0021 L61 (F-40)"
+    },
+    {
+      "decisions": ["queued"],
+      "subject": "candidate_key",
+      "producers": ["qualifier"],
+      "reasons": [null, "amber_excluded_government"],
+      "provenance": "required",
+      "from": "ADR-0013; ADR-0003 L26 (from resolver profiles; a reviewer's answer the qualifier applies adds requested_by)"
+    },
+    {
+      "decisions": ["mention_only"],
+      "subject": "candidate_key",
+      "producers": ["qualifier"],
+      "reasons": [null],
+      "provenance": "required",
+      "from": "ADR-0013; ADR-0003 L26 (from resolver profiles; a reviewer's answer the qualifier applies adds requested_by)"
+    },
+    {
+      "decisions": ["reject"],
+      "subject": "candidate_key",
+      "producers": ["qualifier"],
+      "reasons": [null, "review_timeout"],
+      "provenance": "required",
+      "from": "ADR-0013; ADR-0003 L26 (from resolver profiles; a reviewer's answer the qualifier applies adds requested_by)"
+    },
+    {
+      "decisions": ["review"],
+      "subject": "candidate_key",
+      "producers": ["qualifier"],
+      "reasons": [
+        null,
+        "age_gated",
+        "not_indexed",
+        "unclassified",
+        "ambiguous",
+        "schema_unknown",
+        "grant_missing"
+      ],
+      "provenance": "required",
+      "from": "ADR-0013; ADR-0003 L26 (from resolver profiles; a reviewer's answer the qualifier applies adds requested_by)"
+    },
+    {
+      "decisions": ["mention_only"],
+      "subject": "author_ref",
+      "producers": ["qualifier"],
+      "provenance": "required",
+      "from": "ADR-0013, ADR-0033 (an ordinary individual's mention, keyed by author_ref)"
+    }
+  ]
+}

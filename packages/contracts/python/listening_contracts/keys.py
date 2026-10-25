@@ -381,6 +381,8 @@ def deletion_id(
 
 _ACCOUNT_PLATFORMS = ("facebook", "instagram", "tiktok", "x", "linkedin", "telegram", "youtube")
 _CANDIDATE_VALUE = re.compile(r"[^\x00-\x20:]+")
+# A LinkedIn organisation's id is its URN (`urn:li:organization:<n>`), so its value may hold colons.
+_CANDIDATE_URN_VALUE = re.compile(r"[^\x00-\x20]+")
 _DOMAIN = re.compile(r"[a-z0-9-]+(\.[a-z0-9-]+)+")
 
 
@@ -390,10 +392,15 @@ def _account_platform(platform: str) -> str:
     return platform
 
 
+def _valid_candidate_value(platform: str, value: str) -> bool:
+    pattern = _CANDIDATE_URN_VALUE if platform == "linkedin" else _CANDIDATE_VALUE
+    return pattern.fullmatch(value) is not None
+
+
 def candidate_key_from_id(platform: str, platform_id: str) -> str:
     """`<platform>:<platform_id>`; an id keeps its case (ADR-0032)."""
     p = _account_platform(platform)
-    if _CANDIDATE_VALUE.fullmatch(require_str(platform_id, "id")) is None:
+    if not _valid_candidate_value(p, require_str(platform_id, "id")):
         raise ContractError("bad_candidate", platform_id)
     return f"{p}:{platform_id}"
 
@@ -402,7 +409,7 @@ def candidate_key_from_handle(platform: str, handle: str) -> str:
     """`<platform>:<handle>`, the handle lower case without a leading '@' (ADR-0032)."""
     p = _account_platform(platform)
     h = nfc(re.sub(r"^@", "", require_str(handle, "handle"))).lower()
-    if _CANDIDATE_VALUE.fullmatch(h) is None:
+    if not _valid_candidate_value(p, h):
         raise ContractError("bad_candidate", handle)
     return f"{p}:{h}"
 
@@ -436,8 +443,7 @@ def parse_candidate_key(key: str) -> ParsedCandidateKey:
     if m:
         return {"platform": "news", "form": "site", "value": m.group(1)}
     platform, colon, value = key.partition(":")
-    _account_platform(platform if colon else "")
-    if _CANDIDATE_VALUE.fullmatch(value) is None:
+    if not _valid_candidate_value(_account_platform(platform if colon else ""), value):
         raise ContractError("bad_candidate", key)
     return {"platform": platform, "form": "account", "value": value}
 

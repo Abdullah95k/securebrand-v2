@@ -1,0 +1,189 @@
+{
+  "description": "Each producing service's visibility, keyed by provenance.service, which keyword-matcher's gate reads (ADR-0053 L32; F-18). `owner`, `watchers` and `pool` are fixed; `owner_or_watchers` and `owner_or_pool` are the owned-property rule of CONVENTIONS v1.1 L386, resolved against the source's owned_by_client. `limit` names the client filter the gate applies on top: `amber` (only clients that accept amber, ADR-0052) or `x_gate` (only declared clients until X_PLAN = enterprise, ADR-0050). A service whose records never become client-facing items declares none.",
+  "services": {
+    "fb-backfill": {
+      "rule": "owner_or_watchers",
+      "limit": null
+    },
+    "fb-client-webhook-receiver": {
+      "rule": "owner",
+      "limit": null
+    },
+    "fb-group-comments-fetcher": {
+      "rule": "pool",
+      "limit": "amber"
+    },
+    "fb-group-posts-poller": {
+      "rule": "pool",
+      "limit": "amber"
+    },
+    "fb-keyword-search": {
+      "rule": "pool",
+      "limit": "amber"
+    },
+    "fb-page-feed-poller": {
+      "rule": "owner_or_watchers",
+      "limit": null
+    },
+    "fb-post-comments-fetcher": {
+      "rule": "owner_or_watchers",
+      "limit": null
+    },
+    "ig-account-media-poller": {
+      "rule": "owner_or_watchers",
+      "limit": null
+    },
+    "ig-comments-fetcher": {
+      "rule": "pool",
+      "limit": "amber"
+    },
+    "ig-hashtag-search": {
+      "rule": "watchers",
+      "limit": null
+    },
+    "ig-keyword-search": {
+      "rule": "pool",
+      "limit": "amber"
+    },
+    "ig-mentions-fetcher": {
+      "rule": "owner",
+      "limit": null
+    },
+    "ig-own-comments-fetcher": {
+      "rule": "owner",
+      "limit": null
+    },
+    "ig-webhook-receiver": {
+      "rule": "owner",
+      "limit": null
+    },
+    "li-client-posts-poller": {
+      "rule": "owner",
+      "limit": null
+    },
+    "li-company-posts-poller": {
+      "rule": "pool",
+      "limit": "amber"
+    },
+    "li-notification-receiver": {
+      "rule": "owner",
+      "limit": null
+    },
+    "li-org-resolver": {
+      "rule": "pool",
+      "limit": "amber"
+    },
+    "li-own-comments-fetcher": {
+      "rule": "owner",
+      "limit": null
+    },
+    "li-post-comments-fetcher": {
+      "rule": "pool",
+      "limit": "amber"
+    },
+    "li-post-search": {
+      "rule": "pool",
+      "limit": "amber"
+    },
+    "news-article-extractor": {
+      "rule": "pool",
+      "limit": null
+    },
+    "news-comments-fetcher": {
+      "rule": "pool",
+      "limit": null
+    },
+    "tg-bot-channel-receiver": {
+      "rule": "owner_or_pool",
+      "limit": null
+    },
+    "tg-channel-posts-poller": {
+      "rule": "pool",
+      "limit": "amber"
+    },
+    "tg-discussion-receiver": {
+      "rule": "owner_or_pool",
+      "limit": null
+    },
+    "tg-message-search": {
+      "rule": "pool",
+      "limit": "amber"
+    },
+    "tt-client-videos-fetcher": {
+      "rule": "owner",
+      "limit": null
+    },
+    "tt-hashtag-feed-poller": {
+      "rule": "pool",
+      "limit": "amber"
+    },
+    "tt-keyword-search": {
+      "rule": "pool",
+      "limit": "amber"
+    },
+    "tt-profile-videos-poller": {
+      "rule": "pool",
+      "limit": "amber"
+    },
+    "tt-video-comments-fetcher": {
+      "rule": "pool",
+      "limit": "amber"
+    },
+    "web-search-mojeek": {
+      "rule": "pool",
+      "limit": null
+    },
+    "web-search-perplexity": {
+      "rule": "pool",
+      "limit": null
+    },
+    "x-filtered-stream": {
+      "rule": "pool",
+      "limit": "x_gate"
+    },
+    "x-full-archive-search": {
+      "rule": "pool",
+      "limit": "x_gate"
+    },
+    "x-recent-search": {
+      "rule": "pool",
+      "limit": "x_gate"
+    },
+    "x-replies-fetcher": {
+      "rule": "pool",
+      "limit": "x_gate"
+    },
+    "x-user-timeline-poller": {
+      "rule": "pool",
+      "limit": "x_gate"
+    },
+    "yt-comments-fetcher": {
+      "rule": "pool",
+      "limit": null
+    },
+    "yt-keyword-search": {
+      "rule": "pool",
+      "limit": null
+    },
+    "yt-pubsub-receiver": {
+      "rule": "pool",
+      "limit": null
+    },
+    "yt-replies-fetcher": {
+      "rule": "pool",
+      "limit": null
+    },
+    "yt-uploads-reconciler": {
+      "rule": "pool",
+      "limit": null
+    },
+    "yt-video-details-fetcher": {
+      "rule": "pool",
+      "limit": null
+    },
+    "yt-web-search-bridge": {
+      "rule": "pool",
+      "limit": null
+    }
+  }
+}

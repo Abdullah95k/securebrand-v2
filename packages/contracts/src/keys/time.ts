@@ -3,9 +3,18 @@ import { ContractError } from "../errors.ts";
 
 const KEY_TIME =
   /^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})(\.[0-9]+)?(Z|[+-][0-9]{2}:?[0-9]{2})$/;
-const MESSAGE_TIME = /^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})(\.([0-9]{1,3}))?Z$/;
+const MESSAGE_TIME =
+  /^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})(\.([0-9]{1,3}))?Z$/;
 
-function utcMillis(y: number, mo: number, d: number, h: number, mi: number, s: number, t: string): number {
+function utcMillis(
+  y: number,
+  mo: number,
+  d: number,
+  h: number,
+  mi: number,
+  s: number,
+  t: string,
+): number {
   if (mo < 1 || mo > 12 || h > 23 || mi > 59 || s > 59) throw new ContractError("bad_time", t);
   const ms = Date.UTC(y, mo - 1, d, h, mi, s);
   const back = new Date(ms);
@@ -19,7 +28,14 @@ function utcMillis(y: number, mo: number, d: number, h: number, mi: number, s: n
 export function renderKeyTime(t: string): string {
   const m = KEY_TIME.exec(t);
   if (!m) throw new ContractError("bad_time", `${t} is not a time with seconds and an offset`);
-  const [y, mo, d, h, mi, s] = m.slice(1, 7).map(Number) as [number, number, number, number, number, number];
+  const [y, mo, d, h, mi, s] = m.slice(1, 7).map(Number) as [
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+  ];
   let ms = utcMillis(y, mo, d, h, mi, s, t);
   const off = m[8] ?? "Z";
   if (off !== "Z") {
@@ -35,6 +51,13 @@ export function renderKeyTime(t: string): string {
 export function messageTimeMillis(t: string): number {
   const m = MESSAGE_TIME.exec(t);
   if (!m) throw new ContractError("bad_time", `${t} is not a UTC timestamp`);
-  const [y, mo, d, h, mi, s] = m.slice(1, 7).map(Number) as [number, number, number, number, number, number];
+  const [y, mo, d, h, mi, s] = m.slice(1, 7).map(Number) as [
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+  ];
   return utcMillis(y, mo, d, h, mi, s, t) + Number((m[8] ?? "0").padEnd(3, "0"));
 }

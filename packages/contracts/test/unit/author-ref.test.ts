@@ -15,7 +15,8 @@ const key2 = utf8(g.second_test_key_utf8);
 
 describe("author_ref (ADR-0010)", () => {
   it("derives the golden author_refs", () => {
-    for (const c of g.author_refs) expect(authorRef(key1, c.platform, c.author_platform_id)).toBe(c.author_ref);
+    for (const c of g.author_refs)
+      expect(authorRef(key1, c.platform, c.author_platform_id)).toBe(c.author_ref);
     const s = g.under_second_key;
     expect(authorRef(key2, s.platform, s.author_platform_id)).toBe(s.author_ref);
   });
@@ -31,7 +32,9 @@ describe("author_ref (ADR-0010)", () => {
 
   it("matches a reference under any of several keys", () => {
     const s = g.under_second_key;
-    expect(matchesAuthorRef(s.author_ref, s.platform, s.author_platform_id, [key1, key2])).toBe(true);
+    expect(matchesAuthorRef(s.author_ref, s.platform, s.author_platform_id, [key1, key2])).toBe(
+      true,
+    );
     expect(matchesAuthorRef(s.author_ref, s.platform, s.author_platform_id, [key1])).toBe(false);
     expect(matchesAuthorRef(s.author_ref, s.platform, "999", [key1, key2])).toBe(false);
   });

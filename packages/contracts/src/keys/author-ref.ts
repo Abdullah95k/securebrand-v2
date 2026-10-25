@@ -5,8 +5,10 @@ import { PLATFORMS } from "../vocabulary.ts";
 import { hmacSha256Hex, nfc, requireString } from "./text.ts";
 
 export function authorRef(key: Uint8Array, platform: string, authorPlatformId: string): string {
-  if (!(key instanceof Uint8Array) || key.length === 0) throw new ContractError("bad_key", "the HMAC key is empty");
-  if (!(PLATFORMS as readonly string[]).includes(platform)) throw new ContractError("bad_platform", platform);
+  if (!(key instanceof Uint8Array) || key.length === 0)
+    throw new ContractError("bad_key", "the HMAC key is empty");
+  if (!(PLATFORMS as readonly string[]).includes(platform))
+    throw new ContractError("bad_platform", platform);
   if (requireString(authorPlatformId, "author platform id") === "") {
     throw new ContractError("bad_author_id", "the author platform id is empty");
   }

@@ -1,0 +1,534 @@
+{
+  "description": "The producer table of ADR-0012: one row per (queue, kind) with the services allowed to emit it, written as the plan's table is (several queues or kinds per row). `@queue` names the queue's own service (`jobs.<service>` and `jobs.<service>.priority`). The SDK producer refuses, and the consumer's wrapper dead-letters, a job whose (queue, kind, producer.service) has no row; a kind with no row on a queue leaves that consumer. `required_fields` names the kind fields a row requires where one kind serves several queues or producers with different fields (dotted for a nested field); validate() checks both when it is given the queue.",
+  "rows": [
+    {
+      "queues": [
+        "jobs.fb-page-feed-poller",
+        "jobs.fb-group-posts-poller",
+        "jobs.fb-keyword-search",
+        "jobs.fb-page-search",
+        "jobs.ig-account-media-poller",
+        "jobs.ig-hashtag-search",
+        "jobs.ig-keyword-search",
+        "jobs.ig-mentions-fetcher",
+        "jobs.tt-keyword-search",
+        "jobs.tt-hashtag-feed-poller",
+        "jobs.tt-profile-videos-poller",
+        "jobs.tt-client-videos-fetcher",
+        "jobs.x-recent-search",
+        "jobs.x-user-timeline-poller",
+        "jobs.li-post-search",
+        "jobs.li-client-posts-poller",
+        "jobs.li-company-posts-poller",
+        "jobs.tg-message-search",
+        "jobs.tg-channel-posts-poller",
+        "jobs.yt-keyword-search",
+        "jobs.yt-web-search-bridge",
+        "jobs.news-feed-poller",
+        "jobs.news-sitemap-poller",
+        "jobs.news-homepage-differ",
+        "jobs.web-search-perplexity",
+        "jobs.web-search-mojeek",
+        "jobs.web-gdelt-poller",
+        "jobs.web-commoncrawl-scanner"
+      ],
+      "kinds": ["rotation"],
+      "producers": ["@queue"],
+      "from": "ADR-0012, ADR-0044, ADR-0015 (fb-page-search makes a keyword-rule row due at once on added or updated, the old seed)"
+    },
+    {
+      "queues": [
+        "jobs.fb-page-feed-poller",
+        "jobs.fb-group-posts-poller",
+        "jobs.fb-keyword-search",
+        "jobs.fb-page-search",
+        "jobs.ig-account-media-poller",
+        "jobs.ig-hashtag-search",
+        "jobs.ig-keyword-search",
+        "jobs.ig-mentions-fetcher",
+        "jobs.tt-keyword-search",
+        "jobs.tt-hashtag-feed-poller",
+        "jobs.tt-profile-videos-poller",
+        "jobs.tt-client-videos-fetcher",
+        "jobs.x-recent-search",
+        "jobs.x-user-timeline-poller",
+        "jobs.li-post-search",
+        "jobs.li-client-posts-poller",
+        "jobs.li-company-posts-poller",
+        "jobs.tg-message-search",
+        "jobs.tg-channel-posts-poller",
+        "jobs.yt-keyword-search",
+        "jobs.yt-web-search-bridge",
+        "jobs.news-feed-poller",
+        "jobs.news-sitemap-poller",
+        "jobs.news-homepage-differ",
+        "jobs.web-search-perplexity",
+        "jobs.web-search-mojeek",
+        "jobs.web-gdelt-poller",
+        "jobs.web-commoncrawl-scanner",
+        "jobs.tg-bot-channel-receiver",
+        "jobs.tg-discussion-receiver",
+        "jobs.yt-uploads-reconciler"
+      ],
+      "kinds": ["reconciliation", "refresh"],
+      "producers": ["@queue"],
+      "from": "ADR-0012 L32, ADR-0049, ADR-0062; F-32 (fields declared as none where no PRD defines them)"
+    },
+    {
+      "queues": ["jobs.x-recent-search"],
+      "kinds": ["reconciliation"],
+      "producers": ["x-filtered-stream"],
+      "from": "ADR-0064, ADR-0012 (the X gap)"
+    },
+    {
+      "queues": ["jobs.ig-own-comments-fetcher", "jobs.ig-mentions-fetcher"],
+      "kinds": ["reconciliation", "ops_force"],
+      "producers": ["ig-webhook-receiver"],
+      "from": "ADR-0012 (targeted reads; ops_force also the admin API, below)"
+    },
+    {
+      "queues": ["jobs.li-own-comments-fetcher"],
+      "kinds": ["reconciliation"],
+      "producers": ["comment-decay-scheduler"],
+      "from": "ADR-0012 (whole-thread, under 7 days)"
+    },
+    {
+      "queues": [
+        "jobs.fb-page-resolver",
+        "jobs.ig-account-resolver",
+        "jobs.tt-user-resolver",
+        "jobs.x-user-resolver",
+        "jobs.li-org-resolver",
+        "jobs.tg-channel-resolver",
+        "jobs.yt-channel-resolver",
+        "jobs.news-site-resolver"
+      ],
+      "kinds": ["resolve"],
+      "producers": ["poster-resolver"],
+      "from": "ADR-0032"
+    },
+    {
+      "queues": [
+        "jobs.fb-page-resolver",
+        "jobs.ig-account-resolver",
+        "jobs.tt-user-resolver",
+        "jobs.x-user-resolver",
+        "jobs.li-org-resolver",
+        "jobs.tg-channel-resolver",
+        "jobs.yt-channel-resolver",
+        "jobs.news-site-resolver"
+      ],
+      "kinds": ["refresh"],
+      "producers": ["@queue"],
+      "from": "ADR-0032 (each resolver's 30-day loop over its registered sources)"
+    },
+    {
+      "queues": ["jobs.news-site-resolver"],
+      "kinds": ["refresh"],
+      "producers": [
+        "news-feed-poller",
+        "news-sitemap-poller",
+        "news-homepage-differ",
+        "news-comments-fetcher"
+      ],
+      "from": "ADR-0032, ADR-0012, ADR-0040 (event-triggered)"
+    },
+    {
+      "queues": ["jobs.news-robots-checker"],
+      "kinds": ["refresh"],
+      "producers": ["news-robots-checker"],
+      "from": "ADR-0011"
+    },
+    {
+      "queues": ["jobs.news-robots-checker"],
+      "kinds": ["first_check"],
+      "producers": ["news-site-resolver"],
+      "from": "ADR-0022, ADR-0012"
+    },
+    {
+      "queues": ["jobs.news-robots-checker"],
+      "kinds": ["recheck"],
+      "producers": [
+        "news-site-resolver",
+        "news-feed-poller",
+        "news-sitemap-poller",
+        "news-homepage-differ",
+        "news-article-extractor"
+      ],
+      "from": "ADR-0022, ADR-0012 (the SDK host gate)"
+    },
+    {
+      "queues": ["jobs.poster-resolver"],
+      "kinds": ["manual_candidate"],
+      "producers": ["registry-writer"],
+      "from": "ADR-0012, ADR-0032, ADR-0066"
+    },
+    {
+      "queues": [
+        "jobs.fb-post-comments-fetcher",
+        "jobs.fb-group-comments-fetcher",
+        "jobs.ig-own-comments-fetcher",
+        "jobs.ig-comments-fetcher",
+        "jobs.tt-video-comments-fetcher",
+        "jobs.x-replies-fetcher",
+        "jobs.yt-comments-fetcher",
+        "jobs.li-own-comments-fetcher",
+        "jobs.li-post-comments-fetcher",
+        "jobs.news-comments-fetcher"
+      ],
+      "kinds": ["comments"],
+      "producers": ["comment-decay-scheduler"],
+      "from": "ADR-0012"
+    },
+    {
+      "queues": [
+        "jobs.fb-group-comments-fetcher",
+        "jobs.tt-video-comments-fetcher",
+        "jobs.yt-replies-fetcher",
+        "jobs.x-full-archive-search"
+      ],
+      "kinds": ["replies"],
+      "producers": ["comment-decay-scheduler"],
+      "from": "ADR-0060, ADR-0059"
+    },
+    {
+      "queues": [
+        "jobs.fb-reactions-fetcher",
+        "jobs.ig-account-media-poller",
+        "jobs.tt-video-stats-refresher",
+        "jobs.yt-video-details-fetcher"
+      ],
+      "kinds": ["metrics"],
+      "producers": ["comment-decay-scheduler"],
+      "from": "ADR-0012, ADR-0034, ADR-0024 (none for green TikTok videos)"
+    },
+    {
+      "queues": [
+        "jobs.fb-backfill",
+        "jobs.fb-group-posts-poller",
+        "jobs.fb-keyword-search",
+        "jobs.ig-account-media-poller",
+        "jobs.ig-mentions-fetcher",
+        "jobs.ig-hashtag-search",
+        "jobs.ig-keyword-search",
+        "jobs.tt-profile-videos-poller",
+        "jobs.tt-client-videos-fetcher",
+        "jobs.tt-keyword-search",
+        "jobs.tt-hashtag-feed-poller",
+        "jobs.x-full-archive-search",
+        "jobs.li-client-posts-poller",
+        "jobs.li-company-posts-poller",
+        "jobs.li-post-search",
+        "jobs.tg-channel-posts-poller",
+        "jobs.tg-message-search",
+        "jobs.yt-uploads-reconciler",
+        "jobs.yt-keyword-search",
+        "jobs.news-sitemap-poller",
+        "jobs.web-commoncrawl-scanner"
+      ],
+      "kinds": ["backfill"],
+      "producers": ["backfill-orchestrator"],
+      "from": "ADR-0020, ADR-0059"
+    },
+    {
+      "queues": ["jobs.x-full-archive-search"],
+      "kinds": ["keyword_history"],
+      "producers": ["backfill-orchestrator"],
+      "from": "ADR-0064, ADR-0059"
+    },
+    {
+      "queues": ["jobs.yt-video-details-fetcher"],
+      "kinds": ["first_sight"],
+      "producers": [
+        "yt-pubsub-receiver",
+        "yt-uploads-reconciler",
+        "yt-keyword-search",
+        "search-hit-router"
+      ],
+      "from": "ADR-0012, ADR-0037, ADR-0065"
+    },
+    {
+      "queues": [
+        "jobs.yt-comments-fetcher",
+        "jobs.yt-replies-fetcher",
+        "jobs.yt-video-details-fetcher"
+      ],
+      "kinds": ["refresh"],
+      "producers": ["yt-text-purger"],
+      "from": "ADR-0065, ADR-0012"
+    },
+    {
+      "queues": ["jobs.yt-text-purger"],
+      "kinds": ["retention_sweep"],
+      "producers": ["retention-purger"],
+      "from": "ADR-0012"
+    },
+    {
+      "queues": ["jobs.aggregator"],
+      "kinds": ["recompute"],
+      "producers": ["deletion-propagator", "admin-api"],
+      "from": "ADR-0035, ADR-0012"
+    },
+    {
+      "queues": [
+        "jobs.analysis-sentiment",
+        "jobs.analysis-topics",
+        "jobs.analysis-entities",
+        "jobs.analysis-media",
+        "jobs.analysis-sentiment.priority",
+        "jobs.analysis-topics.priority",
+        "jobs.analysis-entities.priority",
+        "jobs.analysis-media.priority"
+      ],
+      "kinds": ["analyze"],
+      "producers": ["@queue"],
+      "from": "ADR-0023, ADR-0012"
+    },
+    {
+      "queues": [
+        "jobs.analysis-sentiment",
+        "jobs.analysis-topics",
+        "jobs.analysis-entities",
+        "jobs.analysis-media"
+      ],
+      "kinds": ["rerun"],
+      "producers": ["admin-api"],
+      "from": "ADR-0012; analysis-sentiment §5.1 L51"
+    },
+    {
+      "queues": ["jobs.keyword-matcher"],
+      "kinds": ["candidate_retry"],
+      "producers": ["keyword-matcher"],
+      "from": "ADR-0012"
+    },
+    {
+      "queues": ["jobs.keyword-matcher"],
+      "kinds": ["rematch"],
+      "producers": ["admin-api"],
+      "from": "ADR-0012"
+    },
+    {
+      "queues": ["jobs.normalize-item"],
+      "kinds": ["replay"],
+      "producers": ["admin-api"],
+      "from": "ADR-0039, ADR-0012"
+    },
+    {
+      "queues": ["jobs.qualifier"],
+      "kinds": ["review_answer"],
+      "producers": ["admin-api"],
+      "from": "ADR-0067 L26, L33; Q13"
+    },
+    {
+      "queues": ["jobs.x-compliance-sync"],
+      "kinds": ["export"],
+      "producers": ["admin-api"],
+      "from": "ADR-0067 L26; Q13"
+    },
+    {
+      "queues": [
+        "jobs.fb-client-webhook-receiver",
+        "jobs.ig-webhook-receiver",
+        "jobs.yt-pubsub-receiver"
+      ],
+      "kinds": ["push"],
+      "producers": ["@queue"],
+      "from": "ADR-0011"
+    },
+    {
+      "queues": [
+        "jobs.fb-page-feed-poller",
+        "jobs.fb-group-posts-poller",
+        "jobs.fb-keyword-search",
+        "jobs.fb-page-resolver",
+        "jobs.fb-post-comments-fetcher",
+        "jobs.fb-group-comments-fetcher",
+        "jobs.ig-account-media-poller",
+        "jobs.ig-account-resolver",
+        "jobs.ig-comments-fetcher",
+        "jobs.ig-keyword-search",
+        "jobs.ig-mentions-fetcher",
+        "jobs.ig-own-comments-fetcher",
+        "jobs.tt-user-resolver",
+        "jobs.tt-client-videos-fetcher",
+        "jobs.tt-profile-videos-poller",
+        "jobs.tt-video-stats-refresher",
+        "jobs.x-recent-search",
+        "jobs.x-user-resolver",
+        "jobs.x-user-timeline-poller",
+        "jobs.x-compliance-sync",
+        "jobs.li-client-posts-poller",
+        "jobs.li-company-posts-poller",
+        "jobs.li-org-resolver",
+        "jobs.tg-bot-channel-receiver",
+        "jobs.tg-discussion-receiver",
+        "jobs.tg-channel-posts-poller",
+        "jobs.tg-channel-resolver",
+        "jobs.yt-channel-resolver",
+        "jobs.yt-uploads-reconciler",
+        "jobs.yt-video-details-fetcher",
+        "jobs.yt-text-purger",
+        "jobs.news-site-resolver",
+        "jobs.news-robots-checker",
+        "jobs.news-feed-poller",
+        "jobs.news-sitemap-poller",
+        "jobs.news-homepage-differ",
+        "jobs.news-comments-fetcher",
+        "jobs.web-commoncrawl-scanner"
+      ],
+      "kinds": ["ops_force"],
+      "producers": ["admin-api"],
+      "from": "ADR-0012, ADR-0032 (INVENTORY section 3.1, background; a queue not listed gains the kind through /contract-change)"
+    }
+  ],
+  "required_fields": [
+    {
+      "queues": ["jobs.ig-hashtag-search"],
+      "kinds": ["rotation", "backfill", "ops_force"],
+      "fields": ["edge"],
+      "from": "F-27; ig-hashtag-search.md L45 (ops_force has no row on this queue yet; the requirement applies once a contract change adds one)"
+    },
+    {
+      "queues": ["jobs.x-recent-search"],
+      "kinds": ["reconciliation"],
+      "producers": ["x-filtered-stream"],
+      "fields": ["query", "window_start", "window_end", "source_ids", "client_ids"],
+      "from": "ADR-0064 (the X gap)"
+    },
+    {
+      "queues": ["jobs.li-own-comments-fetcher"],
+      "kinds": ["reconciliation"],
+      "producers": ["comment-decay-scheduler"],
+      "fields": ["post_ref"],
+      "from": "ADR-0011, ADR-0012 (a whole-thread read)"
+    },
+    {
+      "queues": [
+        "jobs.fb-page-resolver",
+        "jobs.ig-account-resolver",
+        "jobs.tt-user-resolver",
+        "jobs.x-user-resolver",
+        "jobs.li-org-resolver",
+        "jobs.tg-channel-resolver",
+        "jobs.yt-channel-resolver",
+        "jobs.news-site-resolver"
+      ],
+      "kinds": ["refresh"],
+      "producers": ["@queue"],
+      "fields": ["candidate_key", "source_id"],
+      "from": "ADR-0032, ADR-0004 (a registered source's key `<platform>:<platform_id>`)"
+    },
+    {
+      "queues": ["jobs.news-site-resolver"],
+      "kinds": ["refresh"],
+      "producers": [
+        "news-feed-poller",
+        "news-sitemap-poller",
+        "news-homepage-differ",
+        "news-comments-fetcher"
+      ],
+      "fields": ["candidate_key", "source_id", "reason"],
+      "from": "ADR-0032, ADR-0040"
+    },
+    {
+      "queues": ["jobs.news-robots-checker"],
+      "kinds": ["refresh"],
+      "producers": ["news-robots-checker"],
+      "fields": ["host"],
+      "from": "ADR-0040, ADR-0004"
+    },
+    {
+      "queues": [
+        "jobs.yt-comments-fetcher",
+        "jobs.yt-replies-fetcher",
+        "jobs.yt-video-details-fetcher"
+      ],
+      "kinds": ["refresh"],
+      "producers": ["yt-text-purger"],
+      "fields": ["post_ref", "run_id", "must_finish_by", "refresh_for_client_ids"],
+      "from": "ADR-0065 e)"
+    },
+    {
+      "queues": [
+        "jobs.fb-group-comments-fetcher",
+        "jobs.tt-video-comments-fetcher",
+        "jobs.yt-replies-fetcher"
+      ],
+      "kinds": ["replies"],
+      "fields": ["post_ref.thread_ids"],
+      "from": "ADR-0011, ADR-0060"
+    },
+    {
+      "queues": ["jobs.x-full-archive-search"],
+      "kinds": ["replies"],
+      "fields": ["window_start"],
+      "from": "ADR-0011, ADR-0059, ADR-0064"
+    },
+    {
+      "queues": ["jobs.web-commoncrawl-scanner"],
+      "kinds": ["rotation", "ops_force"],
+      "fields": ["crawl_id"],
+      "from": "F-31; ADR-0004 L27, L39"
+    },
+    {
+      "queues": [
+        "jobs.fb-page-feed-poller",
+        "jobs.fb-group-posts-poller",
+        "jobs.fb-keyword-search",
+        "jobs.fb-page-resolver",
+        "jobs.fb-post-comments-fetcher",
+        "jobs.fb-group-comments-fetcher",
+        "jobs.ig-account-media-poller",
+        "jobs.ig-account-resolver",
+        "jobs.ig-comments-fetcher",
+        "jobs.ig-keyword-search",
+        "jobs.ig-mentions-fetcher",
+        "jobs.ig-own-comments-fetcher",
+        "jobs.tt-user-resolver",
+        "jobs.tt-client-videos-fetcher",
+        "jobs.tt-profile-videos-poller",
+        "jobs.tt-video-stats-refresher",
+        "jobs.x-recent-search",
+        "jobs.x-user-resolver",
+        "jobs.x-user-timeline-poller",
+        "jobs.x-compliance-sync",
+        "jobs.li-client-posts-poller",
+        "jobs.li-company-posts-poller",
+        "jobs.li-org-resolver",
+        "jobs.tg-bot-channel-receiver",
+        "jobs.tg-discussion-receiver",
+        "jobs.tg-channel-posts-poller",
+        "jobs.tg-channel-resolver",
+        "jobs.yt-channel-resolver",
+        "jobs.yt-uploads-reconciler",
+        "jobs.yt-video-details-fetcher",
+        "jobs.yt-text-purger",
+        "jobs.news-site-resolver",
+        "jobs.news-robots-checker",
+        "jobs.news-feed-poller",
+        "jobs.news-sitemap-poller",
+        "jobs.news-homepage-differ",
+        "jobs.news-comments-fetcher",
+        "jobs.web-commoncrawl-scanner"
+      ],
+      "kinds": ["ops_force"],
+      "producers": ["admin-api"],
+      "fields": ["request_id", "requested_by"],
+      "from": "ADR-0012 L34 (ops and client requests carry request_id and requested_by)"
+    },
+    {
+      "queues": ["jobs.aggregator"],
+      "kinds": ["recompute"],
+      "producers": ["deletion-propagator"],
+      "fields": ["run_id", "deletion_id", "buckets", "keyword_ids"],
+      "from": "ADR-0035"
+    },
+    {
+      "queues": ["jobs.aggregator"],
+      "kinds": ["recompute"],
+      "producers": ["admin-api"],
+      "fields": ["from", "to", "request_id", "requested_by"],
+      "from": "ADR-0012 L34"
+    }
+  ]
+}

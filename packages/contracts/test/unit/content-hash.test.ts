@@ -9,9 +9,12 @@ interface ContentHashGolden {
 const g = golden<ContentHashGolden>("content-hash.json");
 
 describe("content_hash (ADR-0009)", () => {
-  it.each(g.hashes.map((c) => [c.name, c] as const))("derives the golden content hashes: %s", (_n, c) => {
-    expect(contentHash(c.title, c.text)).toBe(c.content_hash);
-  });
+  it.each(g.hashes.map((c) => [c.name, c] as const))(
+    "derives the golden content hashes: %s",
+    (_n, c) => {
+      expect(contentHash(c.title, c.text)).toBe(c.content_hash);
+    },
+  );
 
   it("a decomposed text hashes as its composed form", () => {
     const nfd = g.hashes.find((c) => c.name === "decomposed text hashes as composed");

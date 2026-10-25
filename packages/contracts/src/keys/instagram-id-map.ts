@@ -22,17 +22,27 @@ export function instagramPostKey(
   lookup: (shortcode: string) => InstagramMapRow | null,
 ): { key: string; map_row: InstagramMapRow | null } {
   const { shortcode } = read;
-  if (shortcode !== null && !SHORTCODE.test(shortcode)) throw new ContractError("bad_shortcode", shortcode);
-  if (read.media_id !== null && !MEDIA_ID.test(read.media_id)) throw new ContractError("bad_media_id", read.media_id);
+  if (shortcode !== null && !SHORTCODE.test(shortcode))
+    throw new ContractError("bad_shortcode", shortcode);
+  if (read.media_id !== null && !MEDIA_ID.test(read.media_id))
+    throw new ContractError("bad_media_id", read.media_id);
   if (read.route === "graph") {
-    if (read.media_id === null) throw new ContractError("bad_media_id", "a Graph read carries its media id");
+    if (read.media_id === null)
+      throw new ContractError("bad_media_id", "a Graph read carries its media id");
     const known = shortcode === null ? null : lookup(shortcode);
     const key = known ? known.key : `instagram:post:${read.media_id}`;
-    return { key, map_row: shortcode === null ? null : { shortcode, graph_media_id: read.media_id, key } };
+    return {
+      key,
+      map_row: shortcode === null ? null : { shortcode, graph_media_id: read.media_id, key },
+    };
   }
   if (read.route !== "vendor") throw new ContractError("bad_route", String(read.route));
-  if (shortcode === null) throw new ContractError("bad_shortcode", "a vendor read keys on its shortcode");
+  if (shortcode === null)
+    throw new ContractError("bad_shortcode", "a vendor read keys on its shortcode");
   const known = lookup(shortcode);
   const key = known ? known.key : `instagram:post:sc:${shortcode}`;
-  return { key, map_row: { shortcode, graph_media_id: known?.graph_media_id ?? read.media_id, key } };
+  return {
+    key,
+    map_row: { shortcode, graph_media_id: known?.graph_media_id ?? read.media_id, key },
+  };
 }

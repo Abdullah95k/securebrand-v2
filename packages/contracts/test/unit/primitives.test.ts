@@ -48,15 +48,43 @@ describe("candidate keys (ADR-0032)", () => {
   it("builds the four forms", () => {
     expect(candidateKeyFromId("x", "1234567890")).toBe("x:1234567890");
     expect(candidateKeyFromId("youtube", "UCabcDEF123")).toBe("youtube:UCabcDEF123");
-    expect(candidateKeyFromHandle("instagram", "@Example_Store_IQ")).toBe("instagram:example_store_iq");
+    expect(candidateKeyFromHandle("instagram", "@Example_Store_IQ")).toBe(
+      "instagram:example_store_iq",
+    );
     expect(facebookGroupCandidateKey("123456789012345")).toBe("facebook:group:123456789012345");
     expect(newsSiteCandidateKey("Example-Daily.IQ")).toBe("news:site:example-daily.iq");
   });
 
   it("parses each form", () => {
-    expect(parseCandidateKey("facebook:group:123")).toEqual({ platform: "facebook", form: "group", value: "123" });
-    expect(parseCandidateKey("news:site:example.iq")).toEqual({ platform: "news", form: "site", value: "example.iq" });
-    expect(parseCandidateKey("x:1234567890")).toEqual({ platform: "x", form: "account", value: "1234567890" });
+    expect(parseCandidateKey("facebook:group:123")).toEqual({
+      platform: "facebook",
+      form: "group",
+      value: "123",
+    });
+    expect(parseCandidateKey("news:site:example.iq")).toEqual({
+      platform: "news",
+      form: "site",
+      value: "example.iq",
+    });
+    expect(parseCandidateKey("x:1234567890")).toEqual({
+      platform: "x",
+      form: "account",
+      value: "1234567890",
+    });
+  });
+
+  it("keeps a LinkedIn organisation URN, colons included, as the id form", () => {
+    expect(candidateKeyFromId("linkedin", "urn:li:organization:1234567")).toBe(
+      "linkedin:urn:li:organization:1234567",
+    );
+    expect(parseCandidateKey("linkedin:urn:li:organization:1234567")).toEqual({
+      platform: "linkedin",
+      form: "account",
+      value: "urn:li:organization:1234567",
+    });
+    expect(PATTERNS.candidateKey.test("linkedin:urn:li:organization:1234567")).toBe(true);
+    expect(PATTERNS.candidateKey.test("x:12:34")).toBe(false);
+    expect(() => candidateKeyFromId("x", "12:34")).toThrow();
   });
 
   it("refuses keys outside the four forms", () => {
@@ -69,13 +97,38 @@ describe("candidate keys (ADR-0032)", () => {
 
 describe("raw_ref (ADR-0005, ADR-0039)", () => {
   it("builds and parses an archive reference with a six-digit batch", () => {
-    const ref = rawRef({ route: "green", platform: "facebook", date: "2026-10-06", service: "fb-page-feed-poller", batch: 123, line: 42 });
+    const ref = rawRef({
+      route: "green",
+      platform: "facebook",
+      date: "2026-10-06",
+      service: "fb-page-feed-poller",
+      batch: 123,
+      line: 42,
+    });
     expect(ref).toBe("raw/green/facebook/2026/10/06/fb-page-feed-poller/000123.jsonl.zst#42");
-    expect(parseRawRef(ref)).toEqual({ route: "green", platform: "facebook", date: "2026-10-06", service: "fb-page-feed-poller", batch: 123, line: 42 });
+    expect(parseRawRef(ref)).toEqual({
+      route: "green",
+      platform: "facebook",
+      date: "2026-10-06",
+      service: "fb-page-feed-poller",
+      batch: 123,
+      line: 42,
+    });
   });
 
   it("refuses a batch beyond six digits and a malformed reference", () => {
-    expect(() => rawRef({ route: "green", platform: "x", date: "2026-10-06", service: "x-recent-search", batch: 1_000_000, line: 1 })).toThrow();
-    expect(() => parseRawRef("raw/green/x/2026/10/06/x-recent-search/0042.jsonl.zst#310")).toThrow();
+    expect(() =>
+      rawRef({
+        route: "green",
+        platform: "x",
+        date: "2026-10-06",
+        service: "x-recent-search",
+        batch: 1_000_000,
+        line: 1,
+      }),
+    ).toThrow();
+    expect(() =>
+      parseRawRef("raw/green/x/2026/10/06/x-recent-search/0042.jsonl.zst#310"),
+    ).toThrow();
   });
 });

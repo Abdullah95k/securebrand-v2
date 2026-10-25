@@ -6,7 +6,8 @@ import { ContractError } from "./errors.ts";
 function check(value: unknown, path: string): void {
   if (value === null || typeof value === "string" || typeof value === "boolean") return;
   if (typeof value === "number") {
-    if (!Number.isFinite(value)) throw new ContractError("not_json", `${path} is not a finite number`);
+    if (!Number.isFinite(value))
+      throw new ContractError("not_json", `${path} is not a finite number`);
     return;
   }
   if (Array.isArray(value)) {

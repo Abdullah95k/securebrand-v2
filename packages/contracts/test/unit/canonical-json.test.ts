@@ -18,7 +18,8 @@ describe("canonical JSON (RFC 8785)", () => {
   );
 
   it("key order by UTF-16 code units, escapes, integers and floats as RFC 8785 renders them", () => {
-    for (const c of g.numbers) expect(canonicalJson(JSON.parse(c.json) as unknown)).toBe(c.canonical);
+    for (const c of g.numbers)
+      expect(canonicalJson(JSON.parse(c.json) as unknown)).toBe(c.canonical);
   });
 
   it("refuses values JSON cannot carry", () => {

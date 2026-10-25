@@ -8,7 +8,9 @@ import { compareCodePoints, nfc, requireString, sha256Hex } from "./text.ts";
 
 export type FoldingProfile = "exact" | "folded";
 
-const profiles = (loadRegistry("query-folding.json") as { profiles: Record<string, FoldingProfile> }).profiles;
+const profiles = (
+  loadRegistry("query-folding.json") as { profiles: Record<string, FoldingProfile> }
+).profiles;
 
 const TATWEEL = 0x0640;
 const isTashkeel = (cp: number): boolean => (cp >= 0x064b && cp <= 0x065f) || cp === 0x0670;
@@ -23,9 +25,11 @@ const FOLD: ReadonlyMap<number, number> = new Map([
 ]);
 
 export function foldingProfile(platform: Platform): FoldingProfile {
-  if (!(PLATFORMS as readonly string[]).includes(platform)) throw new ContractError("bad_platform", platform);
+  if (!(PLATFORMS as readonly string[]).includes(platform))
+    throw new ContractError("bad_platform", platform);
   const profile = profiles[platform];
-  if (profile !== "exact" && profile !== "folded") throw new ContractError("bad_registry", `no profile for ${platform}`);
+  if (profile !== "exact" && profile !== "folded")
+    throw new ContractError("bad_registry", `no profile for ${platform}`);
   return profile;
 }
 
@@ -56,8 +60,10 @@ export function queryKeyWithProfile(
   forms: readonly string[],
   contextTerms: readonly string[],
 ): string {
-  if (profile !== "exact" && profile !== "folded") throw new ContractError("bad_profile", String(profile));
-  if (forms.length === 0) throw new ContractError("bad_keyword", "a keyword needs at least one form");
+  if (profile !== "exact" && profile !== "folded")
+    throw new ContractError("bad_profile", String(profile));
+  if (forms.length === 0)
+    throw new ContractError("bad_keyword", "a keyword needs at least one form");
   const value = {
     context_terms: normaliseList(profile, contextTerms, "context term"),
     forms: normaliseList(profile, forms, "form"),
@@ -65,6 +71,10 @@ export function queryKeyWithProfile(
   return sha256Hex(canonicalJson(value));
 }
 
-export function queryKey(platform: Platform, forms: readonly string[], contextTerms: readonly string[]): string {
+export function queryKey(
+  platform: Platform,
+  forms: readonly string[],
+  contextTerms: readonly string[],
+): string {
   return queryKeyWithProfile(foldingProfile(platform), forms, contextTerms);
 }

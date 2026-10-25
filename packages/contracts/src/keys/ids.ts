@@ -12,7 +12,8 @@ export const NS_HITS = "889d9f7d-7cd6-4556-8f5e-3cebf0938434";
 export const NS_CARDS = "68861d52-0265-403a-a35d-493238d31f4b";
 
 function requireUuid(value: string, what: string): string {
-  if (!PATTERNS.uuid.test(requireString(value, what))) throw new ContractError("bad_uuid", `${what} ${value}`);
+  if (!PATTERNS.uuid.test(requireString(value, what)))
+    throw new ContractError("bad_uuid", `${what} ${value}`);
   return value;
 }
 
@@ -33,16 +34,20 @@ export function hitId(itemIdValue: string, clientId: string, keywordId: string):
 
 /** card_id = uuid_v5(ns_cards, "<card_type>:<subject key>:<decision_id or request_id>") (Q11, F-47). */
 export function cardId(cardType: string, subjectKey: string, ref: string): string {
-  if (!(CARD_TYPES as readonly string[]).includes(cardType)) throw new ContractError("bad_card_type", cardType);
-  if (!PATTERNS.token.test(requireString(subjectKey, "subject key"))) throw new ContractError("bad_subject", subjectKey);
-  if (!PATTERNS.ulid.test(requireString(ref, "ref"))) throw new ContractError("bad_ulid", `ref ${ref}`);
+  if (!(CARD_TYPES as readonly string[]).includes(cardType))
+    throw new ContractError("bad_card_type", cardType);
+  if (!PATTERNS.token.test(requireString(subjectKey, "subject key")))
+    throw new ContractError("bad_subject", subjectKey);
+  if (!PATTERNS.ulid.test(requireString(ref, "ref")))
+    throw new ContractError("bad_ulid", `ref ${ref}`);
   return uuidV5(NS_CARDS, `${cardType}:${subjectKey}:${ref}`);
 }
 
 /** `<item_id>:<task>:<model_version>`; task and model version hold no colon (ADR-0023). */
 export function analysisKey(itemIdValue: string, task: string, modelVersion: string): string {
   requireUuid(itemIdValue, "item_id");
-  if (!PATTERNS.analysisTask.test(requireString(task, "task"))) throw new ContractError("bad_task", task);
+  if (!PATTERNS.analysisTask.test(requireString(task, "task")))
+    throw new ContractError("bad_task", task);
   if (!PATTERNS.modelVersion.test(requireString(modelVersion, "model_version"))) {
     throw new ContractError("bad_model_version", modelVersion);
   }

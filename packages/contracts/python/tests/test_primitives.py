@@ -81,6 +81,22 @@ def test_parses_each_form() -> None:
     }
 
 
+def test_keeps_a_linkedin_organisation_urn_colons_included_as_the_id_form() -> None:
+    assert (
+        candidate_key_from_id("linkedin", "urn:li:organization:1234567")
+        == "linkedin:urn:li:organization:1234567"
+    )
+    assert parse_candidate_key("linkedin:urn:li:organization:1234567") == {
+        "platform": "linkedin",
+        "form": "account",
+        "value": "urn:li:organization:1234567",
+    }
+    assert _matches("candidateKey", "linkedin:urn:li:organization:1234567")
+    assert not _matches("candidateKey", "x:12:34")
+    with pytest.raises(ValueError):  # noqa: PT011 - every refusal is a ContractError, a ValueError
+        candidate_key_from_id("x", "12:34")
+
+
 def test_refuses_keys_outside_the_four_forms() -> None:
     for bad in ("news:example.iq", "instagram:post:Cx4kQ2LsT9m"):
         with pytest.raises(ValueError):  # noqa: PT011 - every refusal is a ContractError, a ValueError

@@ -21,9 +21,9 @@ export const PATTERNS = {
   // Service names and vendors are registry data, typed as patterned strings (Q1, F-09).
   service: /^[a-z0-9]+(-[a-z0-9]+)*$/,
   snakeName: /^[a-z][a-z0-9_]*$/,
-  // The four candidate key forms (ADR-0032).
+  // The four candidate key forms (ADR-0032); a LinkedIn id is an organisation URN, colons included.
   candidateKey:
-    /^(facebook:group:[0-9]+|news:site:[a-z0-9-]+(\.[a-z0-9-]+)+|(facebook|instagram|tiktok|x|linkedin|telegram|youtube):[^\x00-\x20:]+)$/,
+    /^(facebook:group:[0-9]+|news:site:[a-z0-9-]+(\.[a-z0-9-]+)+|(facebook|instagram|tiktok|x|telegram|youtube):[^\x00-\x20:]+|linkedin:[^\x00-\x20]+)$/,
   // Item keys per platform (ADR-0007, ADR-0036, ADR-0038); the kind segment of an X reply is post.
   idempotencyKey:
     /^(((facebook|instagram|linkedin|telegram):(post|comment)|(tiktok|youtube):(video|comment)|x:post|news:comment):[^\x00-\x20]+|(news:article|web:result):[0-9a-f]{64})$/,

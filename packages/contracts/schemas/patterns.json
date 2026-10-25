@@ -8,7 +8,7 @@
   "keywordSetVersion": "^cs:[0-9a-f]{64}$",
   "service": "^[a-z0-9]+(-[a-z0-9]+)*$",
   "snakeName": "^[a-z][a-z0-9_]*$",
-  "candidateKey": "^(facebook:group:[0-9]+|news:site:[a-z0-9-]+(\\.[a-z0-9-]+)+|(facebook|instagram|tiktok|x|linkedin|telegram|youtube):[^\\x00-\\x20:]+)$",
+  "candidateKey": "^(facebook:group:[0-9]+|news:site:[a-z0-9-]+(\\.[a-z0-9-]+)+|(facebook|instagram|tiktok|x|telegram|youtube):[^\\x00-\\x20:]+|linkedin:[^\\x00-\\x20]+)$",
   "idempotencyKey": "^(((facebook|instagram|linkedin|telegram):(post|comment)|(tiktok|youtube):(video|comment)|x:post|news:comment):[^\\x00-\\x20]+|(news:article|web:result):[0-9a-f]{64})$",
   "rawRef": "^raw\\/(green|amber)\\/(facebook|instagram|tiktok|x|linkedin|telegram|youtube|news|web)\\/[0-9]{4}\\/(0[1-9]|1[0-2])\\/(0[1-9]|[12][0-9]|3[01])\\/[a-z0-9]+(-[a-z0-9]+)*\\/[0-9]{6}\\.jsonl\\.zst#[0-9]+$",
   "httpUrl": "^https?:\\/\\/[^\\x00-\\x20]+$",

@@ -24,7 +24,8 @@ interface UrlsGolden {
 }
 
 const g = golden<UrlsGolden>("urls.json");
-const byName = (name: string): UrlsGolden["urls"][number] | undefined => g.urls.find((c) => c.name === name);
+const byName = (name: string): UrlsGolden["urls"][number] | undefined =>
+  g.urls.find((c) => c.name === name);
 
 describe("the URL normaliser (ADR-0036; Q9)", () => {
   it.each(g.urls.map((c) => [c.name, c] as const))("normalises every golden URL: %s", (_n, c) => {
@@ -47,7 +48,9 @@ describe("the URL normaliser (ADR-0036; Q9)", () => {
   });
 
   it("http and https forms of one page hash differently", () => {
-    expect(byName("http, the known limit")?.url_hash).not.toBe(byName("https, the known limit")?.url_hash);
+    expect(byName("http, the known limit")?.url_hash).not.toBe(
+      byName("https, the known limit")?.url_hash,
+    );
     expect(byName("www kept")?.url_hash).not.toBe(byName("bare host")?.url_hash);
   });
 

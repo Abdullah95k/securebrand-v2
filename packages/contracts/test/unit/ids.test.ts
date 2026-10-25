@@ -25,8 +25,14 @@ interface IdsGolden {
     input: { due_at: string; item_id: string; lane: string; series_step: string };
     job_id: string;
   }[];
-  analysis_keys: { input: { item_id: string; task: string; model_version: string }; analysis_key: string }[];
-  analysis_rejects: { name: string; input: { item_id: string; task: string; model_version: string } }[];
+  analysis_keys: {
+    input: { item_id: string; task: string; model_version: string };
+    analysis_key: string;
+  }[];
+  analysis_rejects: {
+    name: string;
+    input: { item_id: string; task: string; model_version: string };
+  }[];
 }
 
 const g = golden<IdsGolden>("ids.json");
@@ -38,8 +44,10 @@ describe("deterministic ids (ADR-0006)", () => {
   });
 
   it("derives the golden uuid v5 ids and deterministic ULIDs", () => {
-    for (const c of g.hit_ids) expect(hitId(c.input.item_id, c.input.client_id, c.input.keyword_id)).toBe(c.hit_id);
-    for (const c of g.card_ids) expect(cardId(c.input.card_type, c.input.subject_key, c.input.ref)).toBe(c.card_id);
+    for (const c of g.hit_ids)
+      expect(hitId(c.input.item_id, c.input.client_id, c.input.keyword_id)).toBe(c.hit_id);
+    for (const c of g.card_ids)
+      expect(cardId(c.input.card_type, c.input.subject_key, c.input.ref)).toBe(c.card_id);
     for (const c of g.ulids) expect(deterministicUlid(c.input.time, c.input.fields)).toBe(c.ulid);
     for (const c of g.hit_message_ids) expect(hitMessageId(c.input)).toBe(c.message_id);
     for (const c of g.comment_decay_job_ids) expect(commentDecayJobId(c.input)).toBe(c.job_id);
@@ -50,7 +58,9 @@ describe("deterministic ids (ADR-0006)", () => {
     expect(c).toBeDefined();
     if (!c) return;
     expect(hitMessageId({ ...c.input })).toBe(hitMessageId({ ...c.input }));
-    expect(deterministicUlid("2026-10-06T08:51:40Z", ["a"])).toBe(deterministicUlid("2026-10-06T08:51:40Z", ["a"]));
+    expect(deterministicUlid("2026-10-06T08:51:40Z", ["a"])).toBe(
+      deterministicUlid("2026-10-06T08:51:40Z", ["a"]),
+    );
   });
 
   it("a new item version gives a new hit message id", () => {
@@ -74,11 +84,16 @@ describe("deterministic ids (ADR-0006)", () => {
 describe("analysis keys (ADR-0023)", () => {
   it("builds the analysis key", () => {
     for (const c of g.analysis_keys) {
-      expect(analysisKey(c.input.item_id, c.input.task, c.input.model_version)).toBe(c.analysis_key);
+      expect(analysisKey(c.input.item_id, c.input.task, c.input.model_version)).toBe(
+        c.analysis_key,
+      );
     }
   });
 
-  it.each(g.analysis_rejects.map((c) => [c.name, c] as const))("refuses a task holding a colon: %s", (_n, c) => {
-    expect(() => analysisKey(c.input.item_id, c.input.task, c.input.model_version)).toThrow();
-  });
+  it.each(g.analysis_rejects.map((c) => [c.name, c] as const))(
+    "refuses a task holding a colon: %s",
+    (_n, c) => {
+      expect(() => analysisKey(c.input.item_id, c.input.task, c.input.model_version)).toThrow();
+    },
+  );
 });

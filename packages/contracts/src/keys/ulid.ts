@@ -8,7 +8,8 @@ const CROCKFORD = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
 
 /** Encodes a 48-bit time and 10 bytes of randomness as a ULID's 26 Crockford base32 characters. */
 export function encodeUlid(timeMs: number, random: Uint8Array): string {
-  if (!Number.isInteger(timeMs) || timeMs < 0 || timeMs >= 2 ** 48) throw new ContractError("bad_time", String(timeMs));
+  if (!Number.isInteger(timeMs) || timeMs < 0 || timeMs >= 2 ** 48)
+    throw new ContractError("bad_time", String(timeMs));
   if (random.length !== 10) throw new ContractError("bad_random", "ULID randomness is 10 bytes");
   let value = BigInt(timeMs);
   for (const byte of random) value = (value << 8n) | BigInt(byte);
@@ -35,7 +36,11 @@ export function hitMessageId(input: HitMessageIdInput): string {
   if (!Number.isInteger(input.item_version) || input.item_version < 0) {
     throw new ContractError("bad_version", "item_version must be a non-negative integer");
   }
-  return deterministicUlid(input.hit_at, [input.hit_id, String(input.item_version), input.keyword_set_version]);
+  return deterministicUlid(input.hit_at, [
+    input.hit_id,
+    String(input.item_version),
+    input.keyword_set_version,
+  ]);
 }
 
 export interface CommentDecayJobIdInput {

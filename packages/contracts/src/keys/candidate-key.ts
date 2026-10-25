@@ -1,12 +1,28 @@
 // The four candidate key forms (ADR-0032): `<platform>:<platform_id>`, `<platform>:<handle>`,
 // `facebook:group:<id>` and `news:site:<registrable domain>`. Routers map every other form first.
+// A LinkedIn organisation's id is its URN (`urn:li:organization:<n>`), so a LinkedIn value may hold
+// colons; on the other platforms a colon would make the form ambiguous.
 import { ContractError } from "../errors.ts";
 import { nfc, requireString } from "./text.ts";
 
-const ACCOUNT_PLATFORMS = ["facebook", "instagram", "tiktok", "x", "linkedin", "telegram", "youtube"] as const;
+const ACCOUNT_PLATFORMS = [
+  "facebook",
+  "instagram",
+  "tiktok",
+  "x",
+  "linkedin",
+  "telegram",
+  "youtube",
+] as const;
 type AccountPlatform = (typeof ACCOUNT_PLATFORMS)[number];
 // eslint-disable-next-line no-control-regex -- control characters are what the pattern refuses
 const VALUE = /^[^\x00-\x20:]+$/;
+// eslint-disable-next-line no-control-regex -- control characters are what the pattern refuses
+const URN_VALUE = /^[^\x00-\x20]+$/;
+
+function validValue(platform: AccountPlatform, value: string): boolean {
+  return (platform === "linkedin" ? URN_VALUE : VALUE).test(value);
+}
 const DOMAIN = /^[a-z0-9-]+(\.[a-z0-9-]+)+$/;
 
 function accountPlatform(platform: string): AccountPlatform {
@@ -19,7 +35,7 @@ function accountPlatform(platform: string): AccountPlatform {
 /** An id keeps its case. */
 export function candidateKeyFromId(platform: string, id: string): string {
   const p = accountPlatform(platform);
-  if (!VALUE.test(requireString(id, "id"))) throw new ContractError("bad_candidate", id);
+  if (!validValue(p, requireString(id, "id"))) throw new ContractError("bad_candidate", id);
   return `${p}:${id}`;
 }
 
@@ -27,12 +43,13 @@ export function candidateKeyFromId(platform: string, id: string): string {
 export function candidateKeyFromHandle(platform: string, handle: string): string {
   const p = accountPlatform(platform);
   const h = nfc(requireString(handle, "handle").replace(/^@/, "")).toLowerCase();
-  if (!VALUE.test(h)) throw new ContractError("bad_candidate", handle);
+  if (!validValue(p, h)) throw new ContractError("bad_candidate", handle);
   return `${p}:${h}`;
 }
 
 export function facebookGroupCandidateKey(groupId: string): string {
-  if (!/^[0-9]+$/.test(requireString(groupId, "group id"))) throw new ContractError("bad_candidate", groupId);
+  if (!/^[0-9]+$/.test(requireString(groupId, "group id")))
+    throw new ContractError("bad_candidate", groupId);
   return `facebook:group:${groupId}`;
 }
 
@@ -58,7 +75,6 @@ export function parseCandidateKey(key: string): ParsedCandidateKey {
   const colon = key.indexOf(":");
   const platform = colon < 0 ? "" : key.slice(0, colon);
   const value = colon < 0 ? "" : key.slice(colon + 1);
-  accountPlatform(platform);
-  if (!VALUE.test(value)) throw new ContractError("bad_candidate", key);
+  if (!validValue(accountPlatform(platform), value)) throw new ContractError("bad_candidate", key);
   return { platform, form: "account", value };
 }

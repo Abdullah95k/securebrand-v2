@@ -127,9 +127,7 @@ describe("idempotency keys (ADR-0006, ADR-0007)", () => {
     const big = "7429384756102938475";
     expect(Number(big).toString()).not.toBe(big);
     expect(idempotencyKey("tiktok", "video", big)).toBe(`tiktok:video:${big}`);
-    expect(() =>
-      idempotencyKey("tiktok", "video", Number(big) as unknown as string),
-    ).toThrow();
+    expect(() => idempotencyKey("tiktok", "video", Number(big) as unknown as string)).toThrow();
   });
 });
 

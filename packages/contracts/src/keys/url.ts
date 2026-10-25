@@ -344,4 +344,3 @@ export function articleKey(canonicalUrl: string): string {
 export function webResultKey(canonicalUrl: string): string {
   return `web:result:${canonicalUrlHash(canonicalUrl)}`;
 }
-

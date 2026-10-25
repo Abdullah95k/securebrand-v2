@@ -3,5 +3,7 @@
 import { readFileSync } from "node:fs";
 
 export function loadRegistry(name: string): unknown {
-  return JSON.parse(readFileSync(new URL(`../../registries/${name}`, import.meta.url), "utf8")) as unknown;
+  return JSON.parse(
+    readFileSync(new URL(`../../registries/${name}`, import.meta.url), "utf8"),
+  ) as unknown;
 }
