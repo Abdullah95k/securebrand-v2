@@ -41,6 +41,17 @@ describe("scripts/policy/check-handoff-review.sh", () => {
     expect(result.output).toContain("docs/reviews/C11.md");
   });
 
+  it("a follow-up lane is judged by its own review, not its parent's", () => {
+    // sb/F1b is lane F1b: F1's handoff and its "ready to merge" review do not cover it.
+    repo.write("docs/handoffs/F1.md", "# Handoff\n");
+    repo.write("docs/reviews/F1.md", review("ready.md"));
+    repo.write("tools/repo-checks/test/unit/x.test.ts", "export {};\n").commit();
+    const result = check("sb/F1b");
+    expect(result.code).not.toBe(0);
+    expect(result.output).toContain("docs/handoffs/F1b.md");
+    expect(result.output).toContain("docs/reviews/F1b.md");
+  });
+
   it("fails when the review verdict is needs fixes", () => {
     repo.write("docs/handoffs/C11.md", "# Handoff\n");
     repo.write("docs/reviews/C11.md", review("needs-fixes.md")).commit();
