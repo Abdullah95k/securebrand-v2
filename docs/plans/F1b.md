@@ -1,6 +1,6 @@
 # Plan · F1b Kit follow-ups after D1 and D2
 
-Brief: build-plan/sessions/F1b-kit-follow-ups-after-d1-and-d2.md · PRD: none (toolkit lane; the requirements are the orchestrator's brief for F1b, W1 to W13 with its decisions table, read from `docs/orchestration/briefs/F1b.md` at commit 8f70987 and given to the build session in its system prompt) · Approved by: pending (orchestrator)
+Brief: build-plan/sessions/F1b-kit-follow-ups-after-d1-and-d2.md · PRD: none (toolkit lane; the requirements are the orchestrator's brief for F1b, W1 to W13 with its decisions table, read from `docs/orchestration/briefs/F1b.md` at commit 8f70987 and given to the build session in its system prompt) · Approved by: the orchestrator, under the user's delegation (docs/orchestration/README.md), 25 Oct 2026
 
 ## Context the plan rests on
 
@@ -219,7 +219,7 @@ The orchestrator's decisions table, copied exactly (columns as in the brief), th
 | Q13 | W13 | `docs/plans/F1.md`: the approval date for L3, and for each of the 12 rows at L194-205 who decided and when (the repository does not record it; L190 says questions 1 to 5, 8 and 9 needed an answer) | the orchestrator supplies them from its records, and "not recorded in the repository" where it has none | the orchestrator | see "Q13: the F1 plan's approval record" below; decided by the orchestrator on 24 Oct 2026 |
 | Q14 | W13 | Who creates the `contract-change` label before F2 opens its pull request: (a) the user (repository Settings, Labels); (b) the orchestrator, with a token that can write labels; (c) rely on adding the label to F2's pull request to create it (not verified) | (a) | the orchestrator | done: the orchestrator created the label `contract-change` on 24 Oct 2026, since `docs/orchestration/README.md:43` makes the orchestrator apply it; decided by the orchestrator on 24 Oct 2026. W13 only verifies it exists (`gh api repos/Abdullah95k/securebrand-v2/labels/contract-change`) |
 | Q15 | W13 | F1's records: (a) correct `docs/handoffs/F1.md` and `docs/plans/F1.md` in place, with a dated correction line; (b) leave them as merged and record the corrections only in `docs/handoffs/F1b.md` (the verifiers disagreed; `.prettierignore:11` says plans are "kept exactly as approved") | (a) | the orchestrator | (a) for both files, each with one dated correction line. The plan's body and its questions' wording stay unchanged; only its approval header and its "Answer" and "Decided by" cells are filled in, from the record the orchestrator kept; decided by the orchestrator on 24 Oct 2026 |
-| Q16 | W13 | `docs/plans/F1.md` ADR cells: Q13 fills each row's ADR cell with "none"; Q15 says only the approval header and the "Answer" and "Decided by" cells are filled in. (a) write "none" in the 12 ADR cells, as Q13 says; (b) leave them empty, as Q15 says | (a) | the orchestrator | pending |
+| Q16 | W13 | `docs/plans/F1.md` ADR cells: Q13 fills each row's ADR cell with "none"; Q15 says only the approval header and the "Answer" and "Decided by" cells are filled in. (a) write "none" in the 12 ADR cells, as Q13 says; (b) leave them empty, as Q15 says | (a) | the orchestrator | (a) write "none" in all 12 ADR cells of `docs/plans/F1.md`; decided by the orchestrator on 25 Oct 2026 |
 
 ### Q13: the F1 plan's approval record
 
