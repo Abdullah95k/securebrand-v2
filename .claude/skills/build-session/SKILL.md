@@ -30,7 +30,7 @@ Implement until the acceptance tests pass, then write the tests for the plan's u
 
 - Use `listening-sdk` (or `py/listening_sdk`) for jobs, retries, DLQ, cursors, quota, canary, logs and metrics.
 - No network in tests: fixtures and the fake-platform harness only.
-- Never edit `packages/contracts` or the migrations. If you need a change, write `docs/proposals/$0-<topic>.md` from the template and stop.
+- `packages/contracts`, `supabase/migrations` and `clickhouse/migrations`: F2, F3 and F8 write what their plan names there, on their lane branch `sb/$0` or with `ALLOW_CONTRACT_EDITS=1`, following `.claude/rules/contracts.md`. Every other session never edits them: if you need a change, write `docs/proposals/$0-<topic>.md` from the template and stop.
 - If a dependency does not behave as its handoff says: a failing test, `docs/issues/$0-<n>.md` from the template, then stop.
 - A new runtime dependency gets its line in `docs/dependencies.md` (licence, owner, country), checked against the vendor screen in CONVENTIONS.
 - If this service emits a `raw.items` record shape that normalize-item does not map yet, add the mapper under `services/normalize-item/src/mappers/<platform>/` with fixture tests, as `docs/patterns/MAPPERS.md` describes, and list it in the handoff.

@@ -15,7 +15,7 @@ CWD="$(printf '%s' "$INPUT" | jq -r '.cwd // empty')"
 # sessions allowed to write contracts (F2, F3, F8 and contract changes) carry the same permission.
 BRANCH="$(git -C "${CWD:-.}" rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
 case "$BRANCH" in
-  sb/F2|sb/F3|sb/F8|sb/CC-*) exit 0 ;;
+  sb/F2|sb/F3|sb/F8|sb/CC-?*) exit 0 ;;
 esac
 
 PROTECTED='(packages/contracts|supabase/migrations|clickhouse/migrations)'

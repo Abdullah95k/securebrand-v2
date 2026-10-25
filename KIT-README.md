@@ -8,7 +8,7 @@ This kit turns the build plan into files Claude Code loads by itself. Install it
 |---|---|
 | `CLAUDE.md` | Instructions Claude reads in every session: non-negotiables, commands, layout, session rules |
 | `.claude/settings.json` | Permissions and four hooks |
-| `.claude/hooks/guard-contracts.sh` | Blocks edits to `packages/contracts`, `supabase/migrations`, `clickhouse/migrations` unless the session started with `ALLOW_CONTRACT_EDITS=1` |
+| `.claude/hooks/guard-contracts.sh` | Blocks edits to `packages/contracts`, `supabase/migrations`, `clickhouse/migrations` unless the session (F2, F3, F8 or a contract change) started with `ALLOW_CONTRACT_EDITS=1` or runs on its lane branch sb/<ID> (cloud) |
 | `.claude/hooks/format-file.sh` | Formats each edited file (Prettier; `ruff format` from the nearest pyproject) |
 | `.claude/hooks/arm-stop-gate.sh` | Arms the stop gate when you type `/build-session` or `/fix-session`, for that session only |
 | `.claude/hooks/stop-gate.sh` | In armed sessions, keeps Claude working while the checks for changed packages fail (three rounds at most); lets it stop once a proposal or issue is filed |
