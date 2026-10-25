@@ -44,6 +44,13 @@
     ],
     "rule": "facts are strings (Q11)"
   },
+  "fallback-to-client.json": {
+    "path": [
+      "audience"
+    ],
+    "rule": "an automatic-fallback notice goes to ops (ADR-0021 L58; note 12)",
+    "client_type": "commercial"
+  },
   "fallback-unknown-reason.json": {
     "path": [
       "details",
@@ -65,6 +72,15 @@
     "rule": "a government client receives the keyword-level rule types only (alert-evaluator §5.3 C L65; ADR-0048)",
     "client_type": "government"
   },
+  "government-scope-level.json": {
+    "path": [
+      "details",
+      "scope",
+      "level"
+    ],
+    "rule": "a government client's alert names its keyword at the keyword level only (alert-evaluator §6.2 L102; F-50; note 12)",
+    "client_type": "government"
+  },
   "government-scope-platform.json": {
     "path": [
       "details",
@@ -83,12 +99,28 @@
     "rule": "a government client's alert names no source (alert-evaluator §6.2 L102)",
     "client_type": "government"
   },
+  "government-subject-candidate-key.json": {
+    "path": [
+      "subject",
+      "candidate_key"
+    ],
+    "rule": "a government client's alert names its keyword at the keyword level only (alert-evaluator §6.2 L102; F-50; note 12)",
+    "client_type": "government"
+  },
   "government-subject-platform.json": {
     "path": [
       "subject",
       "platform"
     ],
     "rule": "a government client's alert names no platform (F-50)",
+    "client_type": "government"
+  },
+  "government-subject-route.json": {
+    "path": [
+      "subject",
+      "route"
+    ],
+    "rule": "a government client's alert names its keyword at the keyword level only (alert-evaluator §6.2 L102; F-50; note 12)",
     "client_type": "government"
   },
   "government-subject-source.json": {

@@ -40,7 +40,7 @@
       "elapsed_fraction": 0.62,
       "evaluated_at": "2026-10-06T08:37:12Z"
     },
-    "fingerprint": "volume_spike:5d0c2b7e:a3c0f1e2",
+    "fingerprint": "volume_spike:5d0c2b7e:9a8b7c6d",
     "cooldown_until": "2026-10-06T10:37:12Z",
     "metrics": {
       "mentions_so_far": 120,

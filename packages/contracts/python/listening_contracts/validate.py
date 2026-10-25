@@ -1151,6 +1151,12 @@ def _n8n_alert(m: Json, out: _Issues, ctx: _Context) -> None:
                     "fallback_subject",
                     "a route's fallback notice names the platform and route (ADR-0021)",
                 )
+    if "subject_kind" in details and m.get("audience") != "ops":
+        out.add(
+            ["audience"],
+            "fallback_audience",
+            "an automatic-fallback notice goes to ops (ADR-0021 L58)",
+        )
     if m.get("audience") not in ("client", "account_manager"):
         return
     # The government rule (alert-evaluator §6.2 L102; F-50) needs the client's type, which the
@@ -1161,15 +1167,22 @@ def _n8n_alert(m: Json, out: _Issues, ctx: _Context) -> None:
         return
     if ctx.client_type != "government":
         return
-    subject = _rec(m.get("subject"))
-    for name in ("source_id", "platform"):
-        if name in subject:
+    # A government client's alert names its keyword or request only, so a subject field added
+    # inside the version is refused too (F-50; note 12).
+    for name in _rec(m.get("subject")):
+        if name not in ("keyword_id", "request_id"):
             out.add(
                 ["subject", name],
                 "government_subject",
                 f"a government client's alert names no {name} (F-50)",
             )
     scope = _rec(details.get("scope"))
+    if "level" in scope and scope["level"] != "keyword":
+        out.add(
+            ["details", "scope", "level"],
+            "government_scope",
+            "a government client's alert is at the keyword level (alert-evaluator §6.2 L102)",
+        )
     for name in ("source", "platform"):
         if name in scope:
             out.add(

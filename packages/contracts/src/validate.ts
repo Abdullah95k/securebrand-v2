@@ -936,6 +936,12 @@ const n8nAlert: Rule = (m, out, ctx) => {
         );
     }
   }
+  if (details.subject_kind !== undefined && m.audience !== "ops")
+    out.add(
+      ["audience"],
+      "fallback_audience",
+      "an automatic-fallback notice goes to ops (ADR-0021 L58)",
+    );
   if (m.audience !== "client" && m.audience !== "account_manager") return;
   // The government rule (alert-evaluator §6.2 L102; F-50) needs the client's type, which the
   // producer passes; a producer that does not fails closed (CONVENTIONS v1.1 L84).
@@ -946,9 +952,10 @@ const n8nAlert: Rule = (m, out, ctx) => {
     return;
   }
   if (clientType !== "government") return;
-  const subject = rec(m.subject);
-  for (const name of ["source_id", "platform"]) {
-    if (subject[name] !== undefined)
+  // A government client's alert names its keyword or request only, so a subject field added inside
+  // the version is refused too (F-50; note 12).
+  for (const name of Object.keys(rec(m.subject))) {
+    if (name !== "keyword_id" && name !== "request_id")
       out.add(
         ["subject", name],
         "government_subject",
@@ -956,6 +963,12 @@ const n8nAlert: Rule = (m, out, ctx) => {
       );
   }
   const scope = rec(details.scope);
+  if (scope.level !== undefined && scope.level !== "keyword")
+    out.add(
+      ["details", "scope", "level"],
+      "government_scope",
+      "a government client's alert is at the keyword level (alert-evaluator §6.2 L102)",
+    );
   for (const name of ["source", "platform"]) {
     if (scope[name] !== undefined)
       out.add(

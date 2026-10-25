@@ -54,6 +54,46 @@ def test_rejects_a_government_clients_alert_with_subject_source_id_or_subject_pl
     assert validate(ALERT, f.value, "consumer").ok
 
 
+def test_names_a_government_alert_by_keyword_or_request_only_at_the_keyword_level() -> None:
+    """Note 12."""
+    f = fixture(ALERT, "valid", "government-keyword-level.json")
+    cases: list[tuple[list[str], object, str]] = [
+        (["subject", "candidate_key"], "x:example_poster_x", "government_subject"),
+        (["subject", "route"], "green", "government_subject"),
+        (["subject", "vendor"], None, "government_subject"),
+        (["details", "scope", "level"], "keyword_source", "government_scope"),
+    ]
+    for path, v, code in cases:
+        value = f.copy()
+        node: Any = value
+        for step in path[:-1]:
+            node = node[step]
+        node[path[-1]] = v
+        result = validate(ALERT, value, "producer", client_type="government")
+        assert [path, code] in [[i["path"], i["code"]] for i in result.issues], path
+        assert validate(ALERT, value, "producer", client_type="commercial").ok, path
+
+
+def test_sends_an_automatic_fallback_notice_to_ops_only() -> None:
+    """ADR-0021 L58; note 12."""
+    f = fixture(ALERT, "valid", "source-fallback-notice.json")
+    for audience in ("client", "account_manager"):
+        value = {
+            **f.copy(),
+            "audience": audience,
+            "client_id": "c7f12d45-b7c5-467d-aa82-e7826ed8abf2",
+        }
+        result = validate(ALERT, value, "producer", client_type="commercial")
+        assert fails_at(result, ["audience"]), audience
+
+
+def test_keys_the_government_fixtures_fingerprint_on_its_keyword() -> None:
+    """alert-evaluator L63; D-11."""
+    details = fixture(ALERT, "valid", "government-keyword-level.json").value["details"]
+    keyword_id: str = details["keyword"]["keyword_id"]
+    assert details["fingerprint"].split(":")[2] == keyword_id[:8]
+
+
 def test_requires_each_card_types_fields() -> None:
     required = {
         "qualifier_review": "buttons",

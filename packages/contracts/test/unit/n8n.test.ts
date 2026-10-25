@@ -56,6 +56,45 @@ describe("n8n.alert/v1 and n8n.card/v1 (ADR-0067, A30)", () => {
     expect(validate(ALERT, f.value, "consumer").ok).toBe(true);
   });
 
+  it("names a government client's alert by keyword or request only, at the keyword level (note 12)", () => {
+    const f = fixture(ALERT, "valid", "government-keyword-level.json");
+    const cases: [string[], unknown, string][] = [
+      [["subject", "candidate_key"], "x:example_poster_x", "government_subject"],
+      [["subject", "route"], "green", "government_subject"],
+      [["subject", "vendor"], null, "government_subject"],
+      [["details", "scope", "level"], "keyword_source", "government_scope"],
+    ];
+    for (const [path, v, code] of cases) {
+      const value = copyOf(f);
+      const [head, ...rest] = path;
+      let node = value[head as string] as Json;
+      for (const step of rest.slice(0, -1)) node = node[step] as Json;
+      node[rest.at(-1) as string] = v;
+      const r = validate(ALERT, value, "producer", { clientType: "government" });
+      expect(r.ok ? [] : r.issues.map((i) => [i.path, i.code]), path.join(".")).toContainEqual([
+        path,
+        code,
+      ]);
+      expect(validate(ALERT, value, "producer", { clientType: "commercial" }).ok).toBe(true);
+    }
+  });
+
+  it("sends an automatic-fallback notice to ops only (ADR-0021 L58; note 12)", () => {
+    const f = fixture(ALERT, "valid", "source-fallback-notice.json");
+    for (const audience of ["client", "account_manager"]) {
+      const value = { ...copyOf(f), audience, client_id: "c7f12d45-b7c5-467d-aa82-e7826ed8abf2" };
+      const r = validate(ALERT, value, "producer", { clientType: "commercial" });
+      expect(failsAt(r, ["audience"]), audience).toBe(true);
+    }
+  });
+
+  it("keys the government fixture's fingerprint on its keyword (alert-evaluator L63; D-11)", () => {
+    const details = (fixture(ALERT, "valid", "government-keyword-level.json").value as Json)
+      .details as Json;
+    const keyword = (details.keyword as Json).keyword_id as string;
+    expect((details.fingerprint as string).split(":")[2]).toBe(keyword.slice(0, 8));
+  });
+
   it("requires each card_type's fields", () => {
     const required: Record<string, string> = {
       qualifier_review: "buttons",

@@ -205,9 +205,25 @@ def alerts() -> None:
                 "baseline_days": 7,
             },
             {"level": "keyword"},
+            # The scope key of a keyword-level alert is its keyword (alert-evaluator L63; D-11).
+            fingerprint="volume_spike:5d0c2b7e:9a8b7c6d",
         ),
     )
     valid(s, "government-keyword-level", gov, client_type="government")
+    for name, path, v in (
+        ("government-scope-level", ("details", "scope", "level"), "keyword_source"),
+        ("government-subject-candidate-key", ("subject", "candidate_key"), "x:example_poster_x"),
+        ("government-subject-route", ("subject", "route"), "green"),
+    ):
+        invalid(
+            s,
+            name,
+            with_(gov, path, v),
+            list(path),
+            "a government client's alert names its keyword at the keyword level only"
+            " (alert-evaluator §6.2 L102; F-50; note 12)",
+            client_type="government",
+        )
     route_fallback = alert(
         "route-fallback",
         "2026-10-06T11:30:05Z",
@@ -249,6 +265,14 @@ def alerts() -> None:
         service="registry-writer",
     )
     valid(s, "source-fallback-notice", source_fallback)
+    invalid(
+        s,
+        "fallback-to-client",
+        {**source_fallback, "audience": "client", "client_id": CLIENT},
+        ["audience"],
+        "an automatic-fallback notice goes to ops (ADR-0021 L58; note 12)",
+        client_type="commercial",
+    )
     invalid(
         s,
         "subject-vendor-unlisted",
