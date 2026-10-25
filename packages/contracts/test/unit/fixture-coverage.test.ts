@@ -133,6 +133,43 @@ describe("fixture consistency with the decisions", () => {
     }
   });
 
+  // The vendors each platform's amber flag takes (CONVENTIONS v1.1 L430; ADR-0051).
+  const AMBER_VENDORS: Record<string, readonly string[]> = {
+    facebook: ["scrapecreators", "sociavault"],
+    instagram: ["sociavault"],
+    tiktok: ["ensembledata", "tikhub"],
+    linkedin: ["harvestapi"],
+    telegram: ["telemetrio", "tugelbay", "sovereigntaylor"],
+  };
+
+  it("every amber vendor in a valid fixture is one its platform's flag allows (CONVENTIONS L430)", () => {
+    const valids = CATALOGUE.flatMap((e) => fixtures(dirOf.get(e.id) ?? "", "valid"));
+    // A decision about a source names no platform: its source's events do.
+    const platformOf = new Map<unknown, string>();
+    for (const f of valids) {
+      const [source, platform] = [field(f.value, "source_id"), field(f.value, "platform")];
+      if (typeof source === "string" && typeof platform === "string")
+        platformOf.set(source, platform);
+    }
+    const wrong: string[] = [];
+    const checked = new Set<string>();
+    const walk = (v: unknown, platform: string | undefined, name: string): void => {
+      if (Array.isArray(v)) for (const x of v) walk(x, platform, name);
+      if (typeof v !== "object" || v === null || Array.isArray(v)) return;
+      const own = field(v, "platform") ?? field(v, "target", "platform");
+      const here = typeof own === "string" ? own : platform;
+      const vendor = field(v, "vendor");
+      if (field(v, "route") === "amber" && typeof vendor === "string" && here !== undefined) {
+        checked.add(name);
+        if (!(AMBER_VENDORS[here] ?? []).includes(vendor)) wrong.push(`${name}: ${here} ${vendor}`);
+      }
+      for (const x of Object.values(v)) walk(x, here, name);
+    };
+    for (const f of valids) walk(f.value, platformOf.get(field(f.value, "source_id")), f.name);
+    expect(wrong).toEqual([]);
+    expect(checked).toContain("registry.decisions/v1/valid/update-budget-wait-amber.json");
+  });
+
   it("a search result for a client names its language and keywords, GDELT's language aside (ADR-0037 L24, ADR-0044 L30)", () => {
     for (const f of fixtures("search.results/v1", "valid")) {
       const clients = field(f.value, "client_ids") as unknown[];

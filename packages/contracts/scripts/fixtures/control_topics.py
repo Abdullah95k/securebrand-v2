@@ -461,7 +461,7 @@ def decisions() -> None:
             "update",
             "budget_wait",
             {"source_id": hashtag},
-            {"source": {"route": "amber", "vendor": "ensembledata"}},
+            {"source": {"route": "amber", "vendor": "sociavault"}},
             "budget-amber",
         ),
     )
@@ -1543,7 +1543,7 @@ def events() -> None:
                 "url": None,
                 "display_name": None,
                 "route": "amber",
-                "vendor": "ensembledata",
+                "vendor": "sociavault",
                 "added_by": "client",
                 "followers": None,
                 "country_signals": None,
