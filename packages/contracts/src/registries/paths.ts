@@ -4,6 +4,13 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+/**
+ * A registry entry by name, own properties only: `toString` or `constructor` names no entry (D-5).
+ */
+export function own<T>(record: Readonly<Record<string, T>>, name: string): T | undefined {
+  return Object.hasOwn(record, name) ? record[name] : undefined;
+}
+
 /** The value at `path`, or undefined when a step is missing or not an object. */
 export function getPath(value: unknown, path: string): unknown {
   let current: unknown = value;

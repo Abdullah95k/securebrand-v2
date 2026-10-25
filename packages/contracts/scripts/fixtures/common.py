@@ -87,8 +87,8 @@ def json_text(obj: Any) -> str:
     return _LONE_SURROGATE.sub(lambda m: f"\\u{ord(m.group()):04x}", text)
 
 
-def _dump(path: Path, obj: Any) -> None:
-    text = json_text(obj)
+def _dump(path: Path, obj: Any, text: str | None = None) -> None:
+    text = json_text(obj) if text is None else text
     rel = str(path.relative_to(ROOT))
     if rel in WRITTEN:
         raise SystemExit(f"written twice: {rel}")
@@ -133,6 +133,26 @@ def invalid(
     if client_type:
         entry["client_type"] = client_type
     EXPECTED.setdefault(schema, {})[f"{name}.json"] = entry
+
+
+def invalid_text(
+    schema: str,
+    name: str,
+    obj: Any,
+    literals: dict[str, str],
+    path: list[str | int],
+    rule: str,
+) -> None:
+    """An invalid fixture whose text holds what no Python value writes: each placeholder string
+    of `literals` is written as the raw JSON text it maps to, such as the number 1e400, which
+    json.dumps would write as Infinity."""
+    text = json_text(obj)
+    for placeholder, literal in literals.items():
+        quoted = json.dumps(placeholder)
+        assert text.count(quoted) == 1, placeholder
+        text = text.replace(quoted, literal)
+    _dump(_dir(schema, "invalid") / f"{name}.json", obj, text)
+    EXPECTED.setdefault(schema, {})[f"{name}.json"] = {"path": path, "rule": rule}
 
 
 def prd(

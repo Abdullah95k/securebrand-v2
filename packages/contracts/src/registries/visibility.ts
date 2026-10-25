@@ -4,6 +4,7 @@
 import { z } from "zod";
 import type { Visibility } from "../vocabulary.ts";
 import { loadRegistry } from "./load.ts";
+import { own } from "./paths.ts";
 
 const Rule = z.object({
   rule: z.enum(["owner", "watchers", "pool", "owner_or_watchers", "owner_or_pool"]),
@@ -16,13 +17,13 @@ const file = VisibilityFile.parse(loadRegistry("visibility.json"));
 
 /** The service's declared rule and client filter, or null for a service that declares none. */
 export function visibilityRule(service: string): VisibilityRule | null {
-  const rule = file.services[service];
+  const rule = own(file.services, service);
   return rule ? { ...rule } : null;
 }
 
 /** The visibility of a record `service` fetched from a source that is, or is not, client-owned. */
 export function visibilityOf(service: string, ownedByClient: boolean): Visibility | null {
-  const rule = file.services[service]?.rule;
+  const rule = own(file.services, service)?.rule;
   switch (rule) {
     case undefined:
       return null;

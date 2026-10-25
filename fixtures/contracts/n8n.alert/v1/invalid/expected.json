@@ -147,6 +147,15 @@
     "rule": "metrics are numbers (Q11)",
     "client_type": "commercial"
   },
+  "metrics-proto-key.json": {
+    "path": [
+      "details",
+      "metrics",
+      "__proto__"
+    ],
+    "rule": "a message holds no __proto__ key (D-5)",
+    "client_type": "commercial"
+  },
   "negative-share-text-metric.json": {
     "path": [
       "details",

@@ -5,6 +5,7 @@ import { z } from "zod";
 import { ContractError } from "../errors.ts";
 import { PATTERNS } from "../primitives.ts";
 import { loadRegistry } from "./load.ts";
+import { own } from "./paths.ts";
 import { isKnownService, namesService } from "./services.ts";
 
 const fieldRow = z.object({
@@ -160,7 +161,7 @@ export function topicWriters(): Record<string, string[]> {
 
 /** The record kinds a raw.items writer may write, or null for a service that writes none. */
 export function rawItemsKinds(service: string): string[] | null {
-  const kinds = writersFile.raw_items_kinds[service];
+  const kinds = own(writersFile.raw_items_kinds, service);
   return kinds ? [...kinds] : null;
 }
 
@@ -211,10 +212,10 @@ export function isAllowedTopicWriter(
     return decisionFile.rows.some((r) => namesService(r.producers, service));
   if (schemaId === "jobs.completed/v1")
     return detail.queue !== undefined && queueService(detail.queue) === service;
-  const writers = writersFile.topics[schemaId];
+  const writers = own(writersFile.topics, schemaId);
   if (!writers?.includes(service)) return false;
   if (schemaId === "raw.items/v1" && detail.kind !== undefined) {
-    return (writersFile.raw_items_kinds[service] ?? []).includes(detail.kind);
+    return (own(writersFile.raw_items_kinds, service) ?? []).includes(detail.kind);
   }
   return true;
 }

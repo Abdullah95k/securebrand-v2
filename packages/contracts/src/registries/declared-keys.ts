@@ -2,6 +2,7 @@
 // poster.profiles `extras` (ADR-0033). The types are the schemas'; these lists say who may use which.
 import { z } from "zod";
 import { loadRegistry } from "./load.ts";
+import { own } from "./paths.ts";
 
 const Declared = z.object({ keys: z.array(z.string()), required: z.array(z.string()) });
 const ContextFile = z.object({
@@ -23,16 +24,16 @@ export function extrasKeyRegistry(): z.infer<typeof ExtrasFile> {
 
 /** The `context` keys a raw.items record of `kind` from `service` may carry, and those it must. */
 export function declaredContextKeys(service: string, kind: string): z.infer<typeof Declared> {
-  const own = context.producers[service] ?? { keys: [], required: [] };
-  const byKind = context.by_kind[kind] ?? { keys: [], required: [] };
+  const byService = own(context.producers, service) ?? { keys: [], required: [] };
+  const byKind = own(context.by_kind, kind) ?? { keys: [], required: [] };
   return {
-    keys: [...new Set([...own.keys, ...byKind.keys])],
-    required: [...new Set([...own.required, ...byKind.required])],
+    keys: [...new Set([...byService.keys, ...byKind.keys])],
+    required: [...new Set([...byService.required, ...byKind.required])],
   };
 }
 
 /** The `extras` keys a resolver declares, or null for a service that declares none. */
 export function declaredExtrasKeys(service: string): string[] | null {
-  const keys = extras.resolvers[service];
+  const keys = own(extras.resolvers, service);
   return keys ? [...keys] : null;
 }

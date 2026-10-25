@@ -4,7 +4,7 @@
 import { z } from "zod";
 import { ContractError } from "../errors.ts";
 import { loadRegistry } from "./load.ts";
-import { getPath } from "./paths.ts";
+import { getPath, own } from "./paths.ts";
 import { registrySchemaId } from "./producers.ts";
 
 const Fields = z.object({ fields: z.array(z.string()).min(1), from: z.string() });
@@ -25,7 +25,7 @@ const file = PartitionKeysFile.parse(loadRegistry("partition-keys.json"));
 
 /** The key fields of a topic, tried in order; null for a schema id the record does not know. */
 export function topicKeyFields(schemaId: string): string[] | null {
-  const entry = file.topics[registrySchemaId(schemaId)];
+  const entry = own(file.topics, registrySchemaId(schemaId));
   return entry ? [...entry.fields] : null;
 }
 

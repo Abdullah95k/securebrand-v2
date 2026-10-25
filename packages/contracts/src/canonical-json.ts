@@ -1,5 +1,7 @@
 // RFC 8785 canonical JSON, through the `canonicalize` library; values JSON cannot carry, and strings
-// holding a lone surrogate, are refused first with the package's own errors, as in Python.
+// holding a lone surrogate, are refused first with the package's own errors, as in Python. Callers
+// pass no numbers: integers beyond ±(2^53 - 1) are refused in Python and already rounded by
+// JSON.parse here (review note 17).
 import canonicalize from "canonicalize";
 import { ContractError } from "./errors.ts";
 import { assertWellFormed } from "./keys/text.ts";

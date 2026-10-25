@@ -1,6 +1,8 @@
 // validate(): the contract check every producer and consumer runs (ADR-0002, ADR-0012). Three layers,
 // each reported as issues with the path of the field at fault:
-// 1. the Zod schema of the mode (producer strict, consumer tolerant of unknown fields);
+// 1. the message as JSON (well-formed Unicode, finite numbers, at most 64 levels below a top-level
+//    field, no `__proto__` key; D-5), then the Zod schema of the mode (producer strict, consumer
+//    tolerant of unknown fields);
 // 2. the rules a schema cannot state, in both modes: keys equal to the key helpers' output, fields that
 //    go together, a control message refusing provenance (ADR-0003, ADR-0006);
 // 3. the registry data, in producer mode only, because it grows inside the version (Q1, F-09): known
@@ -144,11 +146,16 @@ const isPlainObject = (v: unknown): v is Json =>
 const NOT_UNICODE =
   "a string or key is well-formed Unicode, UTF-8 encodable (ADR-0006); this one holds a lone surrogate";
 
+// A container nested deeper below a message's top-level field, a free-form payload, body or dead
+// letter's message counted from that value, is refused (D-5).
+const MAX_DEPTH = 64;
+
 /**
  * What a message must be as JSON before its schema runs, as Python checks it on reading: every string
  * and key is well-formed Unicode, so a lone surrogate (what a UTF-16 slice through an emoji leaves) is
- * refused alike in both languages (review finding 5). Depth first, an object's keys before its
- * values, without recursion; it never throws.
+ * refused alike in both languages (review finding 5); a number is finite; no container is nested
+ * more than MAX_DEPTH levels below a top-level field; and no key is `__proto__` (D-5). Depth first,
+ * an object's keys before its values, without recursion; it never throws.
  */
 function jsonIssues(value: unknown): ValidationIssue[] {
   const out: ValidationIssue[] = [];
@@ -157,16 +164,23 @@ function jsonIssues(value: unknown): ValidationIssue[] {
     const [v, path] = next;
     if (typeof v === "string") {
       if (!v.isWellFormed()) out.push({ path, code: "not_unicode", message: NOT_UNICODE });
+    } else if (typeof v === "number") {
+      if (!Number.isFinite(v)) out.push({ path, code: "not_json", message: "a number is finite" });
+    } else if ((Array.isArray(v) || isPlainObject(v)) && path.length > MAX_DEPTH) {
+      out.push({ path, code: "not_json", message: `nested deeper than ${MAX_DEPTH} levels` });
     } else if (Array.isArray(v)) {
       for (let i = v.length - 1; i >= 0; i--) pending.push([v[i], [...path, i]]);
     } else if (isPlainObject(v)) {
       const entries = Object.entries(v);
-      for (const [key] of entries)
+      for (const [key] of entries) {
         if (!key.isWellFormed())
           out.push({ path: [...path, key], code: "not_unicode", message: NOT_UNICODE });
+        else if (key === "__proto__")
+          out.push({ path: [...path, key], code: "not_json", message: "no key is __proto__" });
+      }
       // undefined is no JSON value: JSON.stringify drops it, and the schema judges a missing field.
       for (const [key, x] of entries.reverse())
-        if (x !== undefined) pending.push([x, [...path, key]]);
+        if (x !== undefined && key !== "__proto__") pending.push([x, [...path, key]]);
     }
   }
   return out;

@@ -267,6 +267,14 @@ def alerts() -> None:
     valid(s, "source-fallback-notice", source_fallback)
     invalid(
         s,
+        "metrics-proto-key",
+        with_(spike, ("details", "metrics", "__proto__"), 1),
+        ["details", "metrics", "__proto__"],
+        "a message holds no __proto__ key (D-5)",
+        client_type="commercial",
+    )
+    invalid(
+        s,
         "fallback-to-client",
         {**source_fallback, "audience": "client", "client_id": CLIENT},
         ["audience"],

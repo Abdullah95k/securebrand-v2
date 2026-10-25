@@ -1,9 +1,10 @@
 """validate(): the contract check every producer and consumer runs (ADR-0002, ADR-0012), the twin
 of src/validate.ts. Three layers, each reported as issues with the path of the field at fault:
 
-1. the generated Pydantic model of the mode (models/strict refuses unknown fields, models/consumer
-   drops them), validated strictly, as JSON values (an integral float counts as an integer, as in
-   JavaScript, and a non-finite number is refused);
+1. the message as JSON (well-formed Unicode, finite numbers, at most 64 levels below a top-level
+   field, no `__proto__` key; D-5), then the generated Pydantic model of the mode (models/strict
+   refuses unknown fields, models/consumer drops them), validated strictly, as JSON values (an
+   integral float counts as an integer, as in JavaScript);
 2. the rules a schema cannot state, in both modes: keys equal to the key helpers' output, fields
    that go together, a control message refusing provenance (ADR-0003, ADR-0006);
 3. the registry data, in producer mode only, because it grows inside the version (Q1, F-09): known
@@ -174,10 +175,17 @@ def _well_formed(s: str) -> bool:
     return True
 
 
+# A container nested deeper below a message's top-level field, a free-form payload, body or dead
+# letter's message counted from that value, is refused (D-5).
+_MAX_DEPTH = 64
+
+
 def _as_json(value: object, path: IssuePath, out: _Issues) -> object:
     """The value as JavaScript reads JSON: an integral float is an integer; NaN and the infinities
     are not JSON; every string and key is well-formed Unicode, so a lone surrogate is refused alike
-    in both languages (review finding 5). Depth first, an object's keys before its values."""
+    in both languages (review finding 5); no container is nested more than _MAX_DEPTH levels below
+    a top-level field, and no key is `__proto__` (D-5). Depth first, an object's keys before its
+    values; the depth bound keeps the recursion short, so it never raises."""
     if isinstance(value, str):
         if not _well_formed(value):
             out.add(path, "not_unicode", NOT_UNICODE)
@@ -189,6 +197,9 @@ def _as_json(value: object, path: IssuePath, out: _Issues) -> object:
             out.add(path, "not_json", "a number is finite")
             return value
         return int(value) if value.is_integer() else value
+    if isinstance(value, (list, dict)) and len(path) > _MAX_DEPTH:
+        out.add(path, "not_json", f"nested deeper than {_MAX_DEPTH} levels")
+        return cast(object, value)
     if isinstance(value, list):
         return [_as_json(v, [*path, i], out) for i, v in enumerate(cast(list[object], value))]
     if isinstance(value, dict):
@@ -196,7 +207,11 @@ def _as_json(value: object, path: IssuePath, out: _Issues) -> object:
         for k in items:
             if not _well_formed(k):
                 out.add([*path, k], "not_unicode", NOT_UNICODE)
-        return {k: _as_json(v, [*path, k], out) for k, v in items.items()}
+            elif k == "__proto__":
+                out.add([*path, k], "not_json", "no key is __proto__")
+        return {
+            k: v if k == "__proto__" else _as_json(v, [*path, k], out) for k, v in items.items()
+        }
     out.add(path, "not_json", f"{type(value).__name__} is not a JSON value")
     return value
 

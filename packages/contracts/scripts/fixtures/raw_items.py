@@ -8,6 +8,7 @@ from common import (
     CLIENT,
     iid,
     invalid,
+    invalid_text,
     key,
     meta,
     prd,
@@ -2607,6 +2608,33 @@ def invalids() -> None:
         without(profile, "envelope", "candidate_key"),
         ["envelope", "source_id"],
         "a record carries source_id or candidate_key (ADR-0005)",
+    )
+    # Edge inputs (D-5; review note 17): a number no value holds, and a free-form value nested
+    # deeper than 64 levels, counted from the payload; a payload exactly 64 deep is valid.
+    fb_comment = json.loads((ROOT / S / "valid" / "prd-fb-post-comments-fetcher.json").read_text())
+    invalid_text(
+        S,
+        "payload-number-1e400",
+        with_(fb_comment, ("payload", "like_count"), "@1e400@"),
+        {"@1e400@": "1e400"},
+        ["payload", "like_count"],
+        "a number is finite: 1e400 is no number either language holds (D-5)",
+    )
+
+    def nested(levels: int) -> list[Any]:
+        """`levels` arrays, one inside the other."""
+        value: list[Any] = []
+        for _ in range(levels - 1):
+            value = [value]
+        return value
+
+    valid(S, "payload-nested-64", with_(base, ("payload", "attachments"), nested(63)))
+    invalid(
+        S,
+        "payload-nested-too-deep",
+        with_(base, ("payload", "attachments"), nested(64)),
+        ["payload", "attachments", *([0] * 63)],
+        "a free-form value nests 64 levels at most, counted from that value (D-5)",
     )
     invalid(
         S,
