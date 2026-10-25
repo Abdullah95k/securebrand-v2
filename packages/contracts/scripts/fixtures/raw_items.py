@@ -2615,6 +2615,42 @@ def invalids() -> None:
         ["envelope", "source_id"],
         "a search response is keyed by the rule's source_id (ADR-0005)",
     )
+    # Plan L165 (D-10): only web-commoncrawl-scanner's aggregate is keyed by a candidate, and an
+    # article by its canonical URL (note 15).
+    crawl = json.loads((ROOT / S / "valid" / "search-response-commoncrawl.json").read_text())
+    invalid(
+        S,
+        "search-response-candidate-key",
+        with_(
+            without(resp, "envelope", "source_id"),
+            ("envelope", "candidate_key"),
+            "news:site:example-daily.iq",
+        ),
+        ["envelope", "source_id"],
+        "a search response is keyed by its rule's source_id (plan L165; D-10)",
+    )
+    invalid(
+        S,
+        "search-response-commoncrawl-source-id",
+        with_(
+            without(crawl, "envelope", "candidate_key"),
+            ("envelope", "source_id"),
+            "7d2b0c4e-1f3a-4b5c-8d6e-9f0a1b2c3d4e",
+        ),
+        ["envelope", "candidate_key"],
+        "web-commoncrawl-scanner's aggregate is keyed by its candidate (plan L165; D-10)",
+    )
+    invalid(
+        S,
+        "article-key-not-the-canonical-urls",
+        with_(
+            article,
+            ("payload", "canonical_url"),
+            "https://www.example-daily.iq/politics/2026/10/07/another-page",
+        ),
+        ["envelope", "idempotency_key"],
+        "an article is keyed by its canonical URL (plan L165; ADR-0036)",
+    )
     invalid(
         S,
         "undeclared-context-key",

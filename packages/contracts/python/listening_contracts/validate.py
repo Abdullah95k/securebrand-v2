@@ -65,7 +65,7 @@ from listening_contracts.registries import (
     writer_conditions,
 )
 from listening_contracts.ulid import hit_message_id
-from listening_contracts.url import canonical_url_hash, url_hash, url_key
+from listening_contracts.url import article_key, canonical_url_hash, url_hash, url_key
 from listening_contracts.versions import REPORT_KIND_FIELDS, catalogue_entry, catalogue_id
 from listening_contracts.vocabulary import VOCABULARY
 
@@ -483,6 +483,32 @@ def _raw_items(m: Json, out: _Issues, ctx: _Context) -> None:
             env.get("platform_id"),
             env.get("idempotency_key"),
         )
+    # Plan L165 (D-10): only web-commoncrawl-scanner's aggregate is keyed by a candidate; every
+    # other search response by its rule's source_id.
+    if env.get("kind") == "search_response":
+        aggregate = _rec(env.get("provenance")).get("service") == "web-commoncrawl-scanner"
+        if aggregate and not has_candidate:
+            out.add(
+                ["envelope", "candidate_key"],
+                "missing_subject",
+                "web-commoncrawl-scanner's aggregate is keyed by its candidate (plan L165)",
+            )
+        if not aggregate and has_candidate:
+            out.add(
+                ["envelope", "source_id"],
+                "missing_subject",
+                "a search response is keyed by its rule's source_id (plan L165)",
+            )
+    # An article is keyed by its canonical URL (plan L165; ADR-0036); a null one is not checked.
+    canonical = _rec(m.get("payload")).get("canonical_url")
+    if env.get("kind") == "article" and isinstance(canonical, str):
+        want = _derive(lambda: article_key(canonical))
+        if want != env.get("idempotency_key"):
+            out.add(
+                ["envelope", "idempotency_key"],
+                "key_mismatch",
+                f"an article is keyed by its canonical URL, {want or 'none'}",
+            )
     try:
         ref = parse_raw_ref(cast(str, env.get("raw_ref")))
     except (ContractError, TypeError):

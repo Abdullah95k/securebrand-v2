@@ -19,6 +19,7 @@ import { provenance, signalProvenance } from "./metadata.ts";
 import { PATTERNS } from "./primitives.ts";
 import {
   analysisKey,
+  articleKey,
   cardId,
   canonicalUrlHash,
   deletionId,
@@ -299,6 +300,34 @@ const rawItems: Rule = (m, out) => {
       env.platform_id,
       env.idempotency_key,
     );
+  // Plan L165 (D-10): only web-commoncrawl-scanner's aggregate is keyed by a candidate; every other
+  // search response by its rule's source_id.
+  if (env.kind === "search_response") {
+    const aggregate = rec(env.provenance).service === "web-commoncrawl-scanner";
+    if (aggregate && !hasCandidate)
+      out.add(
+        ["envelope", "candidate_key"],
+        "missing_subject",
+        "web-commoncrawl-scanner's aggregate is keyed by its candidate (plan L165)",
+      );
+    if (!aggregate && hasCandidate)
+      out.add(
+        ["envelope", "source_id"],
+        "missing_subject",
+        "a search response is keyed by its rule's source_id (plan L165)",
+      );
+  }
+  // An article is keyed by its canonical URL (plan L165; ADR-0036); a null one is not checked.
+  const canonical = rec(m.payload).canonical_url;
+  if (env.kind === "article" && typeof canonical === "string") {
+    const want = derive(() => articleKey(canonical));
+    if (want !== env.idempotency_key)
+      out.add(
+        ["envelope", "idempotency_key"],
+        "key_mismatch",
+        `an article is keyed by its canonical URL, ${want ?? "none"}`,
+      );
+  }
   const ref = derive(() => parseRawRef(str(env.raw_ref) ?? ""));
   if (ref !== undefined) {
     if (ref.route !== rec(env.provenance).route || ref.platform !== env.platform)

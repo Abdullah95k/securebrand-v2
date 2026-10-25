@@ -7,6 +7,13 @@
     ],
     "rule": "an amber record names its vendor (ADR-0051 (c))"
   },
+  "article-key-not-the-canonical-urls.json": {
+    "path": [
+      "envelope",
+      "idempotency_key"
+    ],
+    "rule": "an article is keyed by its canonical URL (plan L165; ADR-0036)"
+  },
   "article-unknown-field.json": {
     "path": [
       "payload",
@@ -236,6 +243,20 @@
       "idempotency_key"
     ],
     "rule": "a web result's key is web:result:<canonical_url_hash> (ADR-0038)"
+  },
+  "search-response-candidate-key.json": {
+    "path": [
+      "envelope",
+      "source_id"
+    ],
+    "rule": "a search response is keyed by its rule's source_id (plan L165; D-10)"
+  },
+  "search-response-commoncrawl-source-id.json": {
+    "path": [
+      "envelope",
+      "candidate_key"
+    ],
+    "rule": "web-commoncrawl-scanner's aggregate is keyed by its candidate (plan L165; D-10)"
   },
   "search-response-neither.json": {
     "path": [
