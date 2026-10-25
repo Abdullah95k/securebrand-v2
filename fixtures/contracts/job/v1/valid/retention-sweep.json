@@ -1,0 +1,17 @@
+{
+  "schema": "job/v1",
+  "message_id": "01M47F0V80NSSG201PWNCCDF4X",
+  "produced_at": "2026-10-06T02:00:00Z",
+  "producer": {
+    "service": "retention-purger",
+    "version": "1.0.0",
+    "job_id": "01M47F0V80VY639JG2M08G6947"
+  },
+  "job_id": "01M47F0V80FZGG928KMD5XX36K",
+  "kind": "retention_sweep",
+  "due_at": "2026-10-06T02:00:00Z",
+  "attempt": 1,
+  "run_id": "01M47F0V80FZGG928KMD5XX36J",
+  "cutoff": "2026-09-06T02:00:00Z",
+  "next_sweep_at": "2026-10-07T02:00:00Z"
+}

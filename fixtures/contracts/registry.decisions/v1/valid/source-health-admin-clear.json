@@ -1,0 +1,18 @@
+{
+  "schema": "registry.decisions/v1",
+  "message_id": "01M4BE1SC0SV9AR22AFGFAZS1A",
+  "produced_at": "2026-10-07T15:00:00Z",
+  "producer": {
+    "service": "admin-api",
+    "version": "1.0.0",
+    "job_id": "01M4BE1SC0HJTVJ2NKBMQFB942"
+  },
+  "decision_id": "01M4BE1SC0WVQTAFMJX6JE3PDB",
+  "decision": "health_change",
+  "requested_by": "person:01J9P2R4T6V8X0Z2B4D6F8H0KM",
+  "reason": "privacy_mode",
+  "source_id": "8a3f1c6e-2b9d-4e70-b5a4-f0c9d2e1b7a8",
+  "health_change": {
+    "health": "ok"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "schema": "article.urls/v1",
+  "message_id": "01M47XAQK0FS9FH5CTQRTF6K1E",
+  "produced_at": "2026-10-06T06:10:04Z",
+  "producer": {
+    "service": "news-sitemap-poller",
+    "version": "1.0.0",
+    "job_id": "01J9N3C7P2M5Q8W1Z4T0B6F3JD"
+  },
+  "source_id": "3c7f9d52-1e4a-4b86-a0d3-7b2e5c8f1a90",
+  "url": "https://www.example-daily.iq/economy/2026/07/14/oil-deal",
+  "url_key": "news:url:8d12947d7f11b729aa0cd9932ec5384d03612d0666f53b0b41187e921bb8c893",
+  "found_via": "sitemap_backfill",
+  "found_at": "2026-10-06T06:10:03Z",
+  "title": "ارتفاع صادرات النفط في أيلول",
+  "published_at": "2026-10-06T06:05:00Z",
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "news-sitemap-poller",
+    "fetched_at": "2026-10-06T06:10:03Z"
+  },
+  "retention_class": "news_excerpt"
+}

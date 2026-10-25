@@ -1,0 +1,27 @@
+{
+  "schema": "deletions/v1",
+  "message_id": "01M478QDY09TG3295B6A65EKZ9",
+  "produced_at": "2026-10-06T00:10:00Z",
+  "producer": {
+    "service": "retention-purger",
+    "version": "1.0.0",
+    "job_id": "01J9Q8A3V5N7B2D4F6H0K1M9QB"
+  },
+  "deletion_id": "del:client_offboarding:client:26c1fc6cc276d5ba4107c987df9c04ca52222ae92caafc14f790c3c6bff053cd",
+  "reason": "client_offboarding",
+  "scope": "client",
+  "mode": "delete",
+  "client_id": "e2a9d0b1-6c7f-4a38-9d5e-0f1a2b3c4d5e",
+  "target": {},
+  "signal_at": "2026-10-06T00:00:00Z",
+  "due_at": "2026-10-13T00:00:00Z",
+  "provenance": {
+    "route": null,
+    "vendor": null,
+    "service": "retention-purger",
+    "fetched_at": "2026-10-06T00:00:00Z"
+  },
+  "requested_by": "retention-purger",
+  "run_id": "01J9Q8A3V5N7B2D4F6H0K1M9QB",
+  "source_id": "6f1c2e3a-8b4d-4c7e-9a21-0d5e7f3b9c11"
+}

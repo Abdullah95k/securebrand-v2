@@ -1,0 +1,100 @@
+{
+  "candidate-on-hit.json": {
+    "path": [
+      "candidate"
+    ],
+    "rule": "item.hits carries poster, never candidate (ADR-0031)"
+  },
+  "hit-id-not-the-helpers.json": {
+    "path": [
+      "hit_id"
+    ],
+    "rule": "hit_id = uuid_v5(ns_hits, item:client:keyword) (ADR-0006)"
+  },
+  "matched-term-lone-surrogate.json": {
+    "path": [
+      "matched_term"
+    ],
+    "rule": "every string and key is well-formed Unicode (UTF-8 encodable, ADR-0006)"
+  },
+  "message-id-not-replay-stable.json": {
+    "path": [
+      "message_id"
+    ],
+    "rule": "a hit's message_id is the deterministic ULID (ADR-0006)"
+  },
+  "no-metadata-message-id.json": {
+    "path": [
+      "message_id"
+    ],
+    "rule": "every message carries message_id (ADR-0002)"
+  },
+  "no-metadata-produced-at.json": {
+    "path": [
+      "produced_at"
+    ],
+    "rule": "every message carries produced_at (ADR-0002)"
+  },
+  "no-metadata-producer.json": {
+    "path": [
+      "producer"
+    ],
+    "rule": "every message carries producer (ADR-0002)"
+  },
+  "no-metadata-schema.json": {
+    "path": [
+      "schema"
+    ],
+    "rule": "every message carries schema (ADR-0002)"
+  },
+  "not-keyword-matcher.json": {
+    "path": [
+      "producer",
+      "service"
+    ],
+    "rule": "keyword-matcher alone writes item.hits (ADR-0031)"
+  },
+  "occurrences-false.json": {
+    "path": [
+      "occurrences"
+    ],
+    "rule": "a constant keeps its JSON type: 0 is not false and true is not 1 (finding 6)"
+  },
+  "poster-handle.json": {
+    "path": [
+      "poster",
+      "handle"
+    ],
+    "rule": "no person's handle on a hit (ADR-0010)"
+  },
+  "retracted-unknown-status.json": {
+    "path": [
+      "status"
+    ],
+    "rule": "status active or retracted"
+  },
+  "short-keyword-set-version.json": {
+    "path": [
+      "keyword_set_version"
+    ],
+    "rule": "cs:<64 hex> (ADR-0070 a))"
+  },
+  "source-with-occurrences.json": {
+    "path": [
+      "occurrences"
+    ],
+    "rule": "a source match has zero occurrences (F-20)"
+  },
+  "source-with-offsets.json": {
+    "path": [
+      "offsets"
+    ],
+    "rule": "a source match carries no offsets (F-20)"
+  },
+  "text-without-term.json": {
+    "path": [
+      "matched_term"
+    ],
+    "rule": "a text match carries its term (F-20)"
+  }
+}

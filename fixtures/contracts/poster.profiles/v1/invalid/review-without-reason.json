@@ -1,0 +1,80 @@
+{
+  "schema": "poster.profiles/v1",
+  "message_id": "01M48KN1ZRXA2NB5S4PV1XE58H",
+  "produced_at": "2026-10-06T12:40:11Z",
+  "producer": {
+    "service": "ig-account-resolver",
+    "version": "1.0.0",
+    "job_id": "01J9N8H3S5J7B9D2Z4W6Y8NPXK"
+  },
+  "platform": "instagram",
+  "status": "review",
+  "reason": null,
+  "followers": 48200,
+  "verified": null,
+  "client_ids": [
+    "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+  ],
+  "resolved_at": "2026-10-06T12:40:11Z",
+  "cached": false,
+  "cached_until": "2026-11-05T12:40:11Z",
+  "candidate_key": "instagram:furat_restaurant",
+  "source_id": null,
+  "source_type": "account",
+  "account_type": "business_or_creator",
+  "individual": false,
+  "public_account": false,
+  "platform_id": "17841400112233445",
+  "handle": "furat_restaurant",
+  "url": "https://www.instagram.com/furat_restaurant/",
+  "display_name": "مطعم الفرات",
+  "posts_30d": null,
+  "last_post_at": null,
+  "posts_per_day": null,
+  "duplicate_text_share": null,
+  "default_avatar": null,
+  "account_created_at": null,
+  "owned_by_client": false,
+  "country_signals": {
+    "iraqi_place": true,
+    "platform_country_iq": false,
+    "phone_964": true,
+    "iq_domain": true,
+    "outlet_link": false,
+    "seed_list": false,
+    "signal_evidence": [
+      {
+        "signal": "iraqi_place",
+        "matched": "البصرة",
+        "where": "biography"
+      },
+      {
+        "signal": "phone_964",
+        "matched": "+964 770",
+        "where": "biography"
+      },
+      {
+        "signal": "iq_domain",
+        "matched": "example.iq",
+        "where": "website"
+      }
+    ]
+  },
+  "lang_share": null,
+  "keyword_ids": [],
+  "route": "green",
+  "vendor": null,
+  "review_flags": [],
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "ig-account-resolver",
+    "fetched_at": "2026-10-06T12:40:11Z"
+  },
+  "retention_class": "meta_on_request",
+  "extras": {
+    "media_count": 913,
+    "biography": "مطعم عراقي في البصرة. للحجز: +964 770 000 0000",
+    "website": "https://example.iq"
+  }
+}

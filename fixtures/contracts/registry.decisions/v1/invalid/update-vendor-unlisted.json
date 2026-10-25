@@ -1,0 +1,20 @@
+{
+  "schema": "registry.decisions/v1",
+  "message_id": "01M5H9ZH008W2JCDDE4PQDFB6F",
+  "produced_at": "2026-10-22T08:00:00Z",
+  "producer": {
+    "service": "admin-console",
+    "version": "1.0.0",
+    "job_id": "01M5H9ZH00Q69SQ4T4N5YJXP2R"
+  },
+  "decision_id": "01M5H9ZH00VMJ3FN996Y9EHSCF",
+  "decision": "update",
+  "requested_by": "person:01J9P2R4T6V8X0Z2B4D6F8H0KM",
+  "reason": null,
+  "source_id": "3d8a51c2-7e04-4b9f-8c16-2a9e5d70f4b8",
+  "update": {
+    "source": {
+      "vendor": "acme"
+    }
+  }
+}

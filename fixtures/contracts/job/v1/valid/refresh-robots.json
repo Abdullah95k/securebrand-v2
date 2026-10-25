@@ -1,0 +1,15 @@
+{
+  "schema": "job/v1",
+  "message_id": "01M4AGWC7GVV8YP5Q6A93A8BHY",
+  "produced_at": "2026-10-07T06:30:14Z",
+  "producer": {
+    "service": "news-robots-checker",
+    "version": "1.0.0",
+    "job_id": "01M4AGWC7G69KGJHX7JXYHHNG4"
+  },
+  "job_id": "01J9N3Q8D5W2K7X1R4T9V0MZBD",
+  "kind": "refresh",
+  "due_at": "2026-10-07T06:30:14Z",
+  "attempt": 1,
+  "host": "www.example-daily.iq"
+}

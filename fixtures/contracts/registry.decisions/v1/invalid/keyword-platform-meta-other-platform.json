@@ -1,0 +1,22 @@
+{
+  "schema": "registry.decisions/v1",
+  "message_id": "01M482FD40N3M16SH1PF3VC4EX",
+  "produced_at": "2026-10-06T07:40:00Z",
+  "producer": {
+    "service": "client-portal",
+    "version": "1.0.0",
+    "job_id": "01M482FD40AG2TGDSGGAD64WSK"
+  },
+  "decision_id": "01M482FD40CKYMMBEBWWSGH9DP",
+  "decision": "add",
+  "requested_by": "person:01J9P2R4T6V8X0Z2B4D6F8H0KM",
+  "reason": null,
+  "keyword_id": "0cd402b6-9015-45f8-86b4-d90cc086d320",
+  "add": {
+    "platform_meta": {
+      "youtube": {
+        "uploads_playlist_id": "UUx3"
+      }
+    }
+  }
+}

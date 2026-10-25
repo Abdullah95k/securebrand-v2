@@ -1,0 +1,120 @@
+{
+  "card-id-not-the-subjects.json": {
+    "path": [
+      "card_id"
+    ],
+    "rule": "card_id = uuid_v5(ns_cards, <card_type>:<subject key>:<decision_id or request_id>) (F-47)"
+  },
+  "client-without-client-id.json": {
+    "path": [
+      "client_id"
+    ],
+    "rule": "a client or account-manager card names its client (F-46)"
+  },
+  "grant-missing-with-buttons.json": {
+    "path": [
+      "buttons"
+    ],
+    "rule": "a missing-grant card has no buttons (F-47)"
+  },
+  "grant-missing-without-link.json": {
+    "path": [
+      "regrant_url"
+    ],
+    "rule": "a missing-grant card carries its re-grant link (F-47)"
+  },
+  "idempotency-key-not-the-channels.json": {
+    "path": [
+      "idempotency_key"
+    ],
+    "rule": "idempotency_key = <card_id>:<channel> (F-23)"
+  },
+  "manual-url-file-input.json": {
+    "path": [
+      "inputs",
+      0,
+      "kind"
+    ],
+    "rule": "an input is a url or a text (F-47)"
+  },
+  "manual-url-without-inputs.json": {
+    "path": [
+      "inputs"
+    ],
+    "rule": "a manual-URL card asks for its input (F-47)"
+  },
+  "no-metadata-message-id.json": {
+    "path": [
+      "message_id"
+    ],
+    "rule": "every message carries message_id (ADR-0002)"
+  },
+  "no-metadata-produced-at.json": {
+    "path": [
+      "produced_at"
+    ],
+    "rule": "every message carries produced_at (ADR-0002)"
+  },
+  "no-metadata-producer.json": {
+    "path": [
+      "producer"
+    ],
+    "rule": "every message carries producer (ADR-0002)"
+  },
+  "no-metadata-schema.json": {
+    "path": [
+      "schema"
+    ],
+    "rule": "every message carries schema (ADR-0002)"
+  },
+  "review-default-approve.json": {
+    "path": [
+      "default_action"
+    ],
+    "rule": "a review card defaults to reject (qualifier §5.2 L61)"
+  },
+  "review-unknown-action.json": {
+    "path": [
+      "buttons",
+      0,
+      "action"
+    ],
+    "rule": "a button is one of the review actions (qualifier §5.3 L67)"
+  },
+  "review-without-buttons.json": {
+    "path": [
+      "buttons"
+    ],
+    "rule": "a review card carries its buttons (qualifier §5.3 L67)"
+  },
+  "review-without-timeout.json": {
+    "path": [
+      "timeout_at"
+    ],
+    "rule": "a review card times out after 24 hours (qualifier §5.2 L61)"
+  },
+  "subject-without-ref.json": {
+    "path": [
+      "subject"
+    ],
+    "rule": "a card's subject names its decision or request (F-47)"
+  },
+  "unknown-card-type.json": {
+    "path": [
+      "card_type"
+    ],
+    "rule": "card_type is closed (Q11)"
+  },
+  "webhook-channel.json": {
+    "path": [
+      "channel"
+    ],
+    "rule": "a card goes through n8n's channels only (ADR-0067)"
+  },
+  "with-provenance.json": {
+    "path": [
+      "provenance"
+    ],
+    "rule": "an n8n notice carries producer only (F-51)"
+  }
+}

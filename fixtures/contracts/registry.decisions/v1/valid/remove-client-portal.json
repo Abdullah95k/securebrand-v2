@@ -1,0 +1,18 @@
+{
+  "schema": "registry.decisions/v1",
+  "message_id": "01M4JGMRM02E4RRQMNA0Y4WG8C",
+  "produced_at": "2026-10-10T09:00:00Z",
+  "producer": {
+    "service": "client-portal",
+    "version": "1.0.0",
+    "job_id": "01M4JGMRM0B6ZQH7PPRM7HR3FP"
+  },
+  "decision_id": "01M4JGMRM0FVR8WQGQC1KYCQQR",
+  "decision": "remove_client",
+  "requested_by": "person:01J9P2R4T6V8X0Z2B4D6F8H0KM",
+  "reason": "client_removed",
+  "source_id": "7f1c2a9e-5d1b-4c7e-9a3f-2b8e6d4c1a00",
+  "remove_client": {
+    "client_id": "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+  }
+}

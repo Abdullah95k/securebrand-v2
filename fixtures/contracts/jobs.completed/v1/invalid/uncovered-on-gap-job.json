@@ -1,0 +1,32 @@
+{
+  "schema": "jobs.completed/v1",
+  "message_id": "01M489B4C0EYVNEMRR1PHRN0B4",
+  "produced_at": "2026-10-06T09:40:00Z",
+  "producer": {
+    "service": "x-recent-search",
+    "version": "1.0.0",
+    "job_id": "01M487XBH0B2C4D6E8F0G2H4J6"
+  },
+  "job_id": "01M487XBH0B2C4D6E8F0G2H4J6",
+  "queue": "jobs.x-recent-search",
+  "kind": "reconciliation",
+  "source_id": "7c1d9a2e-55b4-4f1e-8a0c-3e9f6b2d4a71",
+  "paid_user_reads": 12,
+  "free_rereads": 0,
+  "gap_unfilled": null,
+  "attempt": 1,
+  "status": "done",
+  "reason": null,
+  "finished_at": "2026-10-06T09:40:00Z",
+  "report": {
+    "new_count": 12,
+    "seen_count": 0,
+    "pages": 1,
+    "cost_units": 12,
+    "reply_candidates": []
+  },
+  "uncovered": {
+    "window_start": "2026-10-06T08:00:00Z",
+    "window_end": "2026-10-06T08:20:00Z"
+  }
+}

@@ -1,0 +1,362 @@
+{
+  "analyze-with-item.json": {
+    "path": [
+      "item"
+    ],
+    "rule": "a job carries no platform data (ADR-0003; Q6)",
+    "queue": "jobs.analysis-sentiment.priority"
+  },
+  "analyze-with-provenance.json": {
+    "path": [
+      "provenance"
+    ],
+    "rule": "a job carries no provenance (ADR-0003; Q6)",
+    "queue": "jobs.analysis-sentiment.priority"
+  },
+  "candidate-retry-with-text.json": {
+    "path": [
+      "text"
+    ],
+    "rule": "a job carries ids and the client's terms, no platform text (ADR-0003)",
+    "queue": "jobs.keyword-matcher"
+  },
+  "carries-priority.json": {
+    "path": [
+      "priority"
+    ],
+    "rule": "priority, route and vendor never travel in a job (ADR-0011, ADR-0018)",
+    "queue": "jobs.fb-page-feed-poller"
+  },
+  "carries-route.json": {
+    "path": [
+      "route"
+    ],
+    "rule": "priority, route and vendor never travel in a job (ADR-0011, ADR-0018)",
+    "queue": "jobs.fb-page-feed-poller"
+  },
+  "carries-vendor.json": {
+    "path": [
+      "vendor"
+    ],
+    "rule": "priority, route and vendor never travel in a job (ADR-0011, ADR-0018)",
+    "queue": "jobs.fb-page-feed-poller"
+  },
+  "comments-backfill-step.json": {
+    "path": [
+      "series_step"
+    ],
+    "rule": "series_step = backfill goes (ADR-0065)",
+    "queue": "jobs.fb-post-comments-fetcher"
+  },
+  "comments-thread-ids.json": {
+    "path": [
+      "post_ref",
+      "thread_ids"
+    ],
+    "rule": "a comments, metrics or first_sight job reads the whole item, never thread_ids (plan L415; ADR-0011)",
+    "queue": "jobs.fb-post-comments-fetcher"
+  },
+  "export-not-admin.json": {
+    "path": [
+      "producer",
+      "service"
+    ],
+    "rule": "the admin API sends export jobs (ADR-0067 L26; Q13)",
+    "queue": "jobs.x-compliance-sync"
+  },
+  "first-check-without-host.json": {
+    "path": [
+      "host"
+    ],
+    "rule": "a first check names its host (ADR-0022)",
+    "queue": "jobs.news-robots-checker"
+  },
+  "first-sight-id-list.json": {
+    "path": [
+      "post_ref"
+    ],
+    "rule": "one video per first_sight job (ADR-0065 a))",
+    "queue": "jobs.yt-video-details-fetcher"
+  },
+  "first-sight-series-step.json": {
+    "path": [
+      "series_step"
+    ],
+    "rule": "series_step goes from first_sight (ADR-0065)",
+    "queue": "jobs.yt-video-details-fetcher"
+  },
+  "first-sight-thread-ids.json": {
+    "path": [
+      "post_ref",
+      "thread_ids"
+    ],
+    "rule": "a comments, metrics or first_sight job reads the whole item, never thread_ids (plan L415; ADR-0011)",
+    "queue": "jobs.yt-video-details-fetcher"
+  },
+  "hashtag-without-edge.json": {
+    "path": [
+      "edge"
+    ],
+    "rule": "an ig-hashtag-search job names its edge (F-27)",
+    "queue": "jobs.ig-hashtag-search"
+  },
+  "keyword-history-ops-reason.json": {
+    "path": [
+      "reason"
+    ],
+    "rule": "a keyword history runs on add or client (ADR-0064, ADR-0059)",
+    "queue": "jobs.x-full-archive-search"
+  },
+  "kind-not-on-queue.json": {
+    "path": [
+      "kind"
+    ],
+    "rule": "a kind with no row on a queue leaves it (ADR-0012)",
+    "queue": "jobs.fb-page-feed-poller"
+  },
+  "manual-without-request.json": {
+    "path": [
+      "request_id"
+    ],
+    "rule": "a manual candidate names its request (ADR-0066)",
+    "queue": "jobs.poster-resolver"
+  },
+  "metrics-comment-step.json": {
+    "path": [
+      "series_step"
+    ],
+    "rule": "a metrics step is +24h, +7d or refresh:<request_id> (ADR-0034)",
+    "queue": "jobs.fb-reactions-fetcher"
+  },
+  "metrics-thread-ids.json": {
+    "path": [
+      "post_ref",
+      "thread_ids"
+    ],
+    "rule": "a comments, metrics or first_sight job reads the whole item, never thread_ids (plan L415; ADR-0011)",
+    "queue": "jobs.fb-reactions-fetcher"
+  },
+  "missing-partition-key.json": {
+    "path": [
+      "source_id"
+    ],
+    "rule": "a job carries its queue's key (ADR-0004)",
+    "queue": "jobs.fb-page-feed-poller"
+  },
+  "no-metadata-message-id.json": {
+    "path": [
+      "message_id"
+    ],
+    "rule": "every message carries message_id (ADR-0002)"
+  },
+  "no-metadata-produced-at.json": {
+    "path": [
+      "produced_at"
+    ],
+    "rule": "every message carries produced_at (ADR-0002)"
+  },
+  "no-metadata-producer.json": {
+    "path": [
+      "producer"
+    ],
+    "rule": "every message carries producer (ADR-0002)"
+  },
+  "no-metadata-schema.json": {
+    "path": [
+      "schema"
+    ],
+    "rule": "every message carries schema (ADR-0002)"
+  },
+  "ops-force-unknown-requester.json": {
+    "path": [
+      "requested_by"
+    ],
+    "rule": "a requester that names a service is one the registry lists (Q18; F-09)",
+    "queue": "jobs.fb-page-feed-poller"
+  },
+  "ops-force-without-request.json": {
+    "path": [
+      "request_id"
+    ],
+    "rule": "the admin API's ops_force names its request (ADR-0012 L34)",
+    "queue": "jobs.fb-page-feed-poller"
+  },
+  "produced-at-february-30.json": {
+    "path": [
+      "produced_at"
+    ],
+    "rule": "message times are calendar times from 0001 to 9999 (note 18)",
+    "queue": "jobs.fb-page-feed-poller"
+  },
+  "producer-not-allowed.json": {
+    "path": [
+      "producer",
+      "service"
+    ],
+    "rule": "the producer table has no row for this queue, kind and service (ADR-0012)",
+    "queue": "jobs.fb-page-feed-poller"
+  },
+  "purge-refresh-without-deadline.json": {
+    "path": [
+      "must_finish_by"
+    ],
+    "rule": "a refresh before a purge carries its deadline (ADR-0065 e))",
+    "queue": "jobs.yt-comments-fetcher"
+  },
+  "push-due-at-not-received.json": {
+    "path": [
+      "due_at"
+    ],
+    "rule": "a push job is due when received (ADR-0011)",
+    "queue": "jobs.yt-pubsub-receiver"
+  },
+  "reason-as-kind.json": {
+    "path": [
+      "kind"
+    ],
+    "rule": "reason is never the type (ADR-0011)",
+    "queue": "jobs.fb-backfill"
+  },
+  "recheck-person-requester.json": {
+    "path": [
+      "requested_by"
+    ],
+    "rule": "a recheck names the service whose host gate asked, never a person (ADR-0040)",
+    "queue": "jobs.news-robots-checker"
+  },
+  "recheck-unknown-requester.json": {
+    "path": [
+      "requested_by"
+    ],
+    "rule": "a recheck's requester is a service the registry lists (F-09)",
+    "queue": "jobs.news-robots-checker"
+  },
+  "recheck-without-requester.json": {
+    "path": [
+      "requested_by"
+    ],
+    "rule": "a recheck names the service that asked (ADR-0022)",
+    "queue": "jobs.news-robots-checker"
+  },
+  "recompute-range-without-from.json": {
+    "path": [
+      "from"
+    ],
+    "rule": "the admin API's recompute names its range (ADR-0012 L34)",
+    "queue": "jobs.aggregator"
+  },
+  "rematch-without-window.json": {
+    "path": [
+      "window_days"
+    ],
+    "rule": "a rematch names its window (keyword-matcher §5.3 H)",
+    "queue": "jobs.keyword-matcher"
+  },
+  "replay-unknown-requester.json": {
+    "path": [
+      "requested_by"
+    ],
+    "rule": "a requester that names a service is one the registry lists (Q18; F-09)",
+    "queue": "jobs.normalize-item"
+  },
+  "replay-without-requester.json": {
+    "path": [
+      "requested_by"
+    ],
+    "rule": "a replay names who asked (ADR-0012 L34)",
+    "queue": "jobs.normalize-item"
+  },
+  "replies-window-start.json": {
+    "path": [
+      "window_start"
+    ],
+    "rule": "a replies job off jobs.x-full-archive-search names its threads, not a window (plan L425)",
+    "queue": "jobs.yt-replies-fetcher"
+  },
+  "replies-without-thread-ids.json": {
+    "path": [
+      "post_ref",
+      "thread_ids"
+    ],
+    "rule": "a replies job lists its threads (ADR-0060)",
+    "queue": "jobs.yt-replies-fetcher"
+  },
+  "rerun-colon-task.json": {
+    "path": [
+      "task"
+    ],
+    "rule": "task names hold no colon (ADR-0023)",
+    "queue": "jobs.analysis-topics"
+  },
+  "resolve-without-identity.json": {
+    "path": [
+      "platform_id"
+    ],
+    "rule": "a resolve job names the account by id, handle or url (ADR-0032)",
+    "queue": "jobs.ig-account-resolver"
+  },
+  "resolver-without-candidate-key.json": {
+    "path": [
+      "candidate_key"
+    ],
+    "rule": "a resolve job carries its candidate key (ADR-0032)",
+    "queue": "jobs.ig-account-resolver"
+  },
+  "retention-sweep-without-cutoff.json": {
+    "path": [
+      "cutoff"
+    ],
+    "rule": "a sweep names its cutoff (yt-text-purger §5.1 L44)",
+    "queue": "jobs.yt-text-purger"
+  },
+  "review-answer-unknown-action.json": {
+    "path": [
+      "action"
+    ],
+    "rule": "the action is one of the card's buttons (qualifier §5.3 L67)",
+    "queue": "jobs.qualifier"
+  },
+  "run-id-initial.json": {
+    "path": [
+      "run_id"
+    ],
+    "rule": "run_id is a ULID (ADR-0020)",
+    "queue": "jobs.fb-backfill"
+  },
+  "tier-true.json": {
+    "path": [
+      "tier"
+    ],
+    "rule": "a constant keeps its JSON type: 0 is not false and true is not 1 (finding 6)",
+    "queue": "jobs.fb-page-feed-poller"
+  },
+  "x-gap-with-reason.json": {
+    "path": [
+      "reason"
+    ],
+    "rule": "a reconciliation names a reason on yt-uploads-reconciler's queue only; the X gap job none (plan L421; ADR-0064 L25)",
+    "queue": "jobs.x-recent-search"
+  },
+  "x-gap-without-window.json": {
+    "path": [
+      "window_start"
+    ],
+    "rule": "the X gap job names its window (ADR-0064)",
+    "queue": "jobs.x-recent-search"
+  },
+  "x-replies-thread-ids.json": {
+    "path": [
+      "post_ref",
+      "thread_ids"
+    ],
+    "rule": "an X replies job reads a window rather than thread_ids (plan L425; ADR-0060 L32)",
+    "queue": "jobs.x-full-archive-search"
+  },
+  "x-replies-without-window.json": {
+    "path": [
+      "window_start"
+    ],
+    "rule": "an X replies job names its window (ADR-0064)",
+    "queue": "jobs.x-full-archive-search"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M497QPE8P3EM16H4EXE9J118",
+    "produced_at": "2026-10-06T18:31:09Z",
+    "producer": {
+      "service": "x-replies-fetcher",
+      "version": "1.0.0",
+      "job_id": "01J9Q2M7T4X8B1R6V0Z3N5K9WD"
+    },
+    "platform": "x",
+    "kind": "comment",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "x-replies-fetcher",
+      "fetched_at": "2026-10-06T18:31:07Z"
+    },
+    "retention_class": "x_24h_sync",
+    "client_ids": [
+      "5e1a7c3d-9b2f-4d6e-8a0c-3f7b1e9d2a64"
+    ],
+    "job_id": "01J9Q2M7T4X8B1R6V0Z3N5K9WD",
+    "attempt": 1,
+    "job_kind": "comments",
+    "api_version": "2",
+    "raw_ref": "raw/green/x/2026/10/06/x-replies-fetcher/000112.jsonl.zst#18",
+    "source_id": "7c2e9a41-3b6d-4f8e-a1c5-0d9b2e6f4a73",
+    "platform_id": "1975210483926617088",
+    "idempotency_key": "x:post:1975210483926617088",
+    "parent_id": "9b55018e-84d7-5c7d-8077-64bd7922b781",
+    "root_id": "9b55018e-84d7-5c7d-8077-64bd7922b781",
+    "author_ref": "f33d7e3cb996d6fc821f1beb9e7067b2fba767a27b3224628d28932a590437b5",
+    "redacted_fields": [
+      "author_id",
+      "in_reply_to_user_id",
+      "entities.mentions.id",
+      "entities.mentions.username",
+      "includes.users"
+    ],
+    "context": {
+      "series_step": "+6h",
+      "paid": true
+    }
+  },
+  "payload": {
+    "id": "1975210483926617088",
+    "text": "نفس المشكلة عندي",
+    "conversation_id": "1975163027415552001",
+    "created_at": "2026-10-06T18:10:00.000Z"
+  }
+}

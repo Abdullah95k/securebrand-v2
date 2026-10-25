@@ -1,0 +1,47 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M48C8QFRWW2YT08HRF1PS0EV",
+    "produced_at": "2026-10-06T10:31:07Z",
+    "producer": {
+      "service": "ig-own-comments-fetcher",
+      "version": "1.0.0",
+      "job_id": "01J9N4C6M3E8X2Z5V7R1T9HQAD"
+    },
+    "platform": "instagram",
+    "kind": "comment",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "ig-own-comments-fetcher",
+      "fetched_at": "2026-10-06T10:31:05Z"
+    },
+    "retention_class": "meta_on_request",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01J9N4C6M3E8X2Z5V7R1T9HQAD",
+    "attempt": 1,
+    "job_kind": "comments",
+    "api_version": "v21.0",
+    "raw_ref": "raw/green/instagram/2026/10/06/ig-own-comments-fetcher/000214.jsonl.zst#6",
+    "source_id": "a3d94c10-5e7b-4f28-b6c1-92e0d4a7f835",
+    "platform_id": "17858893269123456",
+    "idempotency_key": "instagram:comment:17858893269123456",
+    "parent_id": "958519fe-8de3-53a3-96cc-4b661c4c3e9d",
+    "root_id": "958519fe-8de3-53a3-96cc-4b661c4c3e9d",
+    "author_ref": "dae652f487183e5bbca169912fc81316110672e9099645c2045febf0997c8054",
+    "redacted_fields": [
+      "from",
+      "username"
+    ],
+    "context": {
+      "series_step": "+1h"
+    }
+  },
+  "payload": {
+    "id": "17858893269123456",
+    "text": "متى يفتح الفرع؟",
+    "timestamp": "2026-10-06T10:20:44+0000"
+  }
+}

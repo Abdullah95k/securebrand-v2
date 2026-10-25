@@ -1,0 +1,38 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M4888XMR7KK60M4GE86MDTFC",
+    "produced_at": "2026-10-06T09:21:19Z",
+    "producer": {
+      "service": "tg-channel-posts-poller",
+      "version": "1.0.0",
+      "job_id": "01J9N5C3R8V2K7T4X0M6Q1HZDE"
+    },
+    "platform": "telegram",
+    "kind": "post",
+    "provenance": {
+      "route": "amber",
+      "vendor": "apify_tugelbay",
+      "service": "tg-channel-posts-poller",
+      "fetched_at": "2026-10-06T09:21:17Z"
+    },
+    "retention_class": "vendor_agreed",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01J9N5C3R8V2K7T4X0M6Q1HZDE",
+    "attempt": 1,
+    "job_kind": "rotation",
+    "api_version": "tugelbay-actor-2",
+    "raw_ref": "raw/amber/telegram/2026/10/06/tg-channel-posts-poller/000045.jsonl.zst#13",
+    "source_id": "3a7d9e54-6c0b-4f12-8e37-b1c24d90f6a8",
+    "platform_id": "iq_example_news/48213",
+    "idempotency_key": "telegram:post:iq_example_news/48213"
+  },
+  "payload": {
+    "id": 48213,
+    "channel": "iq_example_news",
+    "text": "انقطاع الكهرباء في البصرة",
+    "views": 8410
+  }
+}

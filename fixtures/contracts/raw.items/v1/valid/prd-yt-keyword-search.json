@@ -1,0 +1,47 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M47JPDY85GFZTP0YYKXQFXSK",
+    "produced_at": "2026-10-06T03:04:13Z",
+    "producer": {
+      "service": "yt-keyword-search",
+      "version": "1.0.0",
+      "job_id": "01M47JP18081JQQZ19WYHA1ZH3"
+    },
+    "platform": "youtube",
+    "kind": "video",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "yt-keyword-search",
+      "fetched_at": "2026-10-06T03:04:11Z"
+    },
+    "retention_class": "youtube_30d_text",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01M47JP18081JQQZ19WYHA1ZH3",
+    "attempt": 1,
+    "job_kind": "rotation",
+    "api_version": "v3",
+    "raw_ref": "raw/green/youtube/2026/10/06/yt-keyword-search/000003.jsonl.zst#12",
+    "source_id": "3f1c2a6e-9d2b-4c1e-9a6f-2b7d8e5f4a10",
+    "platform_id": "dQw4w9WgXcQ",
+    "idempotency_key": "youtube:video:dQw4w9WgXcQ",
+    "context": {
+      "partial": true
+    }
+  },
+  "payload": {
+    "kind": "youtube#searchResult",
+    "id": {
+      "videoId": "dQw4w9WgXcQ"
+    },
+    "snippet": {
+      "publishedAt": "2026-10-06T01:12:00Z",
+      "channelId": "UCuAXFkgsw1L7xaCfnd5JJOw",
+      "title": "...",
+      "description": "..."
+    }
+  }
+}

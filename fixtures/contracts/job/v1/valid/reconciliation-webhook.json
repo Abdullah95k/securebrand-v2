@@ -1,0 +1,20 @@
+{
+  "schema": "job/v1",
+  "message_id": "01M48HMMF04D2B1E8NSAAQWSS8",
+  "produced_at": "2026-10-06T12:05:00Z",
+  "producer": {
+    "service": "ig-webhook-receiver",
+    "version": "1.0.0",
+    "job_id": "01M48HMMF0BMRH8AR2GGN8JAXZ"
+  },
+  "job_id": "01M48S0V80ZZGG928KMD5XX36J",
+  "kind": "reconciliation",
+  "due_at": "2026-10-06T12:05:00Z",
+  "attempt": 1,
+  "source_id": "d4c3b2a1-9f8e-4d7c-8b6a-5f4e3d2c1b0a",
+  "post_ref": {
+    "item_id": "4156787d-3bbe-589b-8b21-eb2c70e2ea68",
+    "platform": "instagram",
+    "platform_id": "17990012345678901"
+  }
+}

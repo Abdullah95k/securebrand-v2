@@ -1,0 +1,59 @@
+{
+  "schema": "crawl.policies/v1",
+  "produced_at": "2026-10-06T06:30:15Z",
+  "producer": {
+    "service": "news-robots-checker",
+    "version": "1.0.0",
+    "job_id": "01J9N3Q8D5W2K7X1R4T9V0MZBC"
+  },
+  "host": "www.example-daily.iq",
+  "status": "allowed",
+  "crawl_allowed": true,
+  "reason": null,
+  "access_mode": "proxy",
+  "crawl_delay_seconds": 5,
+  "robots_status": "ok",
+  "robots_rules": {
+    "group": "ListeningBot",
+    "rules": {
+      "allow": [
+        "/wp-admin/admin-ajax.php"
+      ],
+      "disallow": [
+        "/wp-admin/",
+        "/search"
+      ]
+    },
+    "sitemaps": [
+      "https://www.example-daily.iq/sitemap_index.xml"
+    ],
+    "hash": "7f3a1c9e5b2d48a6f0c1e9d7b3a5f482c6d0e1a9b7f3c5d2e8a4b6c0f1d9e373"
+  },
+  "usage_signals": {
+    "search": "yes",
+    "ai_input": "unset",
+    "ai_train": "no"
+  },
+  "rsl": {
+    "found": false
+  },
+  "payment": {
+    "http_402": false,
+    "price": null
+  },
+  "checked_at": "2026-10-06T06:30:14Z",
+  "expires_at": "2026-10-07T06:30:14Z",
+  "policy_version": 3,
+  "changed_fields": [
+    "access_mode"
+  ],
+  "requested_by": "news-article-extractor",
+  "kind": "recheck",
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "news-robots-checker",
+    "fetched_at": "2026-10-06T06:30:11Z"
+  },
+  "retention_class": "news_excerpt"
+}

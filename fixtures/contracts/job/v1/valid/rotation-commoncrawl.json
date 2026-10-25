@@ -1,0 +1,15 @@
+{
+  "schema": "job/v1",
+  "message_id": "01M4F67080T089H7TBWN7S87GQ",
+  "produced_at": "2026-10-09T02:00:00Z",
+  "producer": {
+    "service": "web-commoncrawl-scanner",
+    "version": "1.0.0",
+    "job_id": "01M4F67080RJQ2JJ41RNM05DM1"
+  },
+  "job_id": "01M4F71ZR0A8N3K5D2B7T4W9XC",
+  "kind": "rotation",
+  "due_at": "2026-10-09T02:00:00Z",
+  "attempt": 1,
+  "crawl_id": "CC-MAIN-2026-38"
+}

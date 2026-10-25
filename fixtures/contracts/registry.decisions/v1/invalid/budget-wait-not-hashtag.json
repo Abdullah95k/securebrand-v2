@@ -1,0 +1,21 @@
+{
+  "schema": "registry.decisions/v1",
+  "message_id": "01M47WREM84FM8JTJF4BQCZZRX",
+  "produced_at": "2026-10-06T06:00:05Z",
+  "producer": {
+    "service": "fb-page-feed-poller",
+    "version": "1.0.0",
+    "job_id": "01M47WREM8D7JPMPVY9G1PF2EB"
+  },
+  "decision_id": "01M47WREM8YM5H7B6PHXEQSN2Q",
+  "decision": "update",
+  "requested_by": "fb-page-feed-poller",
+  "reason": "budget_wait",
+  "source_id": "a3c0f1e2-5b6d-4c7e-9f80-112233445566",
+  "update": {
+    "source": {
+      "route": "amber",
+      "vendor": "sociavault"
+    }
+  }
+}

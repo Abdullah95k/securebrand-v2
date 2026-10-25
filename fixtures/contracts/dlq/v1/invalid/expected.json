@@ -1,0 +1,148 @@
+{
+  "bad-base64.json": {
+    "path": [
+      "raw"
+    ],
+    "rule": "raw is base64"
+  },
+  "class-without-provenance.json": {
+    "path": [
+      "provenance"
+    ],
+    "rule": "provenance and retention_class travel together (ADR-0003)"
+  },
+  "consume-without-group.json": {
+    "path": [
+      "consumer",
+      "group"
+    ],
+    "rule": "a consumed entry names its consumer group (Q5)"
+  },
+  "consumer-mismatch.json": {
+    "path": [
+      "consumer",
+      "service"
+    ],
+    "rule": "a dead letter is in its own service's dlq.<service> (CONVENTIONS L41; note 11)"
+  },
+  "consumer-service-unknown.json": {
+    "path": [
+      "consumer",
+      "service"
+    ],
+    "rule": "the consumer is a service of the index (Q1; note 11)"
+  },
+  "error-message-lone-surrogate.json": {
+    "path": [
+      "error",
+      "message"
+    ],
+    "rule": "every string and key is well-formed Unicode (UTF-8 encodable, ADR-0006)"
+  },
+  "invented-class.json": {
+    "path": [
+      "retention_class"
+    ],
+    "rule": "an author-, source- or client-scope deletion has no class to copy (F-42, D-1)"
+  },
+  "message-and-raw.json": {
+    "path": [
+      "raw"
+    ],
+    "rule": "message or raw, exactly one (Q5)"
+  },
+  "neither-message-nor-raw.json": {
+    "path": [
+      "message"
+    ],
+    "rule": "message or raw, exactly one (Q5)"
+  },
+  "no-metadata-message-id.json": {
+    "path": [
+      "message_id"
+    ],
+    "rule": "every message carries message_id (ADR-0002)"
+  },
+  "no-metadata-produced-at.json": {
+    "path": [
+      "produced_at"
+    ],
+    "rule": "every message carries produced_at (ADR-0002)"
+  },
+  "no-metadata-producer.json": {
+    "path": [
+      "producer"
+    ],
+    "rule": "every message carries producer (ADR-0002)"
+  },
+  "no-metadata-schema.json": {
+    "path": [
+      "schema"
+    ],
+    "rule": "every message carries schema (ADR-0002)"
+  },
+  "not-own-dlq.json": {
+    "path": [
+      "producer",
+      "service"
+    ],
+    "rule": "each service writes its own dlq.<service> (CONVENTIONS v1.1 L41)"
+  },
+  "null-class-copied.json": {
+    "path": [
+      "retention_class"
+    ],
+    "rule": "a class is copied only from an original that has a valid one (F-42, D-1)"
+  },
+  "null-route-not-a-deletion.json": {
+    "path": [
+      "provenance"
+    ],
+    "rule": "a null route is copied only from an author-, source- or client-scope deletion (F-42, D-1)"
+  },
+  "produce-with-offset.json": {
+    "path": [
+      "original",
+      "partition"
+    ],
+    "rule": "a produce-side entry has no consumed offset (F-21)"
+  },
+  "provenance-not-copied.json": {
+    "path": [
+      "provenance"
+    ],
+    "rule": "a data message's provenance is copied to the top (F-42)"
+  },
+  "provenance-not-the-messages.json": {
+    "path": [
+      "provenance"
+    ],
+    "rule": "the copied provenance equals the message's (F-42)"
+  },
+  "raw-with-provenance.json": {
+    "path": [
+      "provenance"
+    ],
+    "rule": "provenance is copied only from a parsed data message (F-42)"
+  },
+  "schema-not-a-dlq.json": {
+    "path": [
+      "schema"
+    ],
+    "rule": "the schema is dlq.<service>/v1 (Q5, F-52)"
+  },
+  "unknown-error-class.json": {
+    "path": [
+      "error",
+      "class"
+    ],
+    "rule": "error.class is closed (Q5)"
+  },
+  "zero-attempts.json": {
+    "path": [
+      "error",
+      "attempts"
+    ],
+    "rule": "a dead letter failed at least once"
+  }
+}

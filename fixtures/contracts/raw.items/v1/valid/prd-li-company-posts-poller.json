@@ -1,0 +1,37 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M485ZC48SG4TBAJT8K7C9TZB",
+    "produced_at": "2026-10-06T08:41:09Z",
+    "producer": {
+      "service": "li-company-posts-poller",
+      "version": "1.0.0",
+      "job_id": "01J9N3D2M6V4Q8S1X7C5E0A3RJ"
+    },
+    "platform": "linkedin",
+    "kind": "post",
+    "provenance": {
+      "route": "amber",
+      "vendor": "harvestapi",
+      "service": "li-company-posts-poller",
+      "fetched_at": "2026-10-06T08:41:07Z"
+    },
+    "retention_class": "linkedin_org",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01J9N3D2M6V4Q8S1X7C5E0A3RJ",
+    "attempt": 1,
+    "job_kind": "rotation",
+    "api_version": "harvestapi-v1",
+    "raw_ref": "raw/amber/linkedin/2026/10/06/li-company-posts-poller/000007.jsonl.zst#11",
+    "source_id": "8a4e1c27-5d3b-4f60-b9a2-7e0c6d1f3a58",
+    "platform_id": "urn:li:activity:7246999999999999999",
+    "idempotency_key": "linkedin:post:urn:li:activity:7246999999999999999"
+  },
+  "payload": {
+    "id": "7246999999999999999",
+    "text": "Example Bank opens a new branch in Basra",
+    "postUrl": "https://www.linkedin.com/posts/example-bank_activity-7246999999999999999-ab12"
+  }
+}

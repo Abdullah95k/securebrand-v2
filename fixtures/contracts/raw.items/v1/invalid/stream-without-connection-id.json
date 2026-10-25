@@ -1,0 +1,46 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M48B5X7GBYQRF0SK5762YM61",
+    "produced_at": "2026-10-06T10:12:06Z",
+    "producer": {
+      "service": "x-filtered-stream",
+      "version": "1.0.0",
+      "job_id": "01M48B5V90W8B91YHW3K3BNVR2"
+    },
+    "platform": "x",
+    "kind": "post",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "x-filtered-stream",
+      "fetched_at": "2026-10-06T10:12:04Z"
+    },
+    "retention_class": "x_24h_sync",
+    "client_ids": [
+      "3e8f1a2b-7c4d-4b9e-a1f0-6d2c5e8b7a14"
+    ],
+    "job_id": "01M48B5V90W8B91YHW3K3BNVR2",
+    "attempt": 1,
+    "job_kind": "stream",
+    "api_version": "2",
+    "raw_ref": "raw/green/x/2026/10/06/x-filtered-stream/000412.jsonl.zst#7",
+    "source_id": "a4d2c9e1-5b7f-4e3a-8c60-2f1b9d7e4a35",
+    "platform_id": "2107413571090333696",
+    "idempotency_key": "x:post:2107413571090333696",
+    "context": {
+      "paid": true
+    }
+  },
+  "payload": {
+    "data": {
+      "id": "2107413571090333696",
+      "text": "وصل العرض الجديد لفرع البصرة"
+    },
+    "matching_rules": [
+      {
+        "id": "1843102937465028608"
+      }
+    ]
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "schema": "poster.profiles/v1",
+  "message_id": "01M48AMZ7RZ0HPFDNSC7V8DNCG",
+  "produced_at": "2026-10-06T10:02:51Z",
+  "producer": {
+    "service": "li-org-resolver",
+    "version": "1.0.0",
+    "job_id": "01M48AMMG0BSDJZYJZ2V3SKTWF"
+  },
+  "platform": "linkedin",
+  "status": "resolved",
+  "reason": null,
+  "followers": 12400,
+  "verified": null,
+  "client_ids": [
+    "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+  ],
+  "resolved_at": "2026-10-06T10:02:51Z",
+  "cached": false,
+  "cached_until": null,
+  "candidate_key": "linkedin:example-bank",
+  "source_id": null,
+  "source_type": "company_page",
+  "account_type": "company_page",
+  "individual": false,
+  "public_account": true,
+  "platform_id": "urn:li:organization:1234567",
+  "handle": "example-bank",
+  "url": "https://www.linkedin.com/company/example-bank/",
+  "display_name": "Example Bank",
+  "posts_30d": null,
+  "last_post_at": "2026-10-04T08:15:00Z",
+  "posts_per_day": 0.4,
+  "duplicate_text_share": 0.05,
+  "default_avatar": null,
+  "account_created_at": null,
+  "owned_by_client": false,
+  "country_signals": {
+    "iraqi_place": true,
+    "platform_country_iq": false,
+    "phone_964": true,
+    "iq_domain": true,
+    "outlet_link": false,
+    "seed_list": false,
+    "signal_evidence": [
+      {
+        "signal": "iraqi_place",
+        "matched": "Baghdad",
+        "where": "location"
+      }
+    ]
+  },
+  "lang_share": {
+    "ar": 0.65,
+    "ckb": 0,
+    "en": 0.35,
+    "mixed": 0,
+    "other": 0,
+    "und": 0,
+    "ar_iraqi": 0.65,
+    "sample": 20
+  },
+  "keyword_ids": [],
+  "route": "amber",
+  "vendor": "harvestapi",
+  "review_flags": [],
+  "provenance": {
+    "route": "amber",
+    "vendor": "harvestapi",
+    "service": "li-org-resolver",
+    "fetched_at": "2026-10-06T10:02:51Z"
+  },
+  "retention_class": "linkedin_org",
+  "extras": {
+    "posts_sampled": 20
+  }
+}

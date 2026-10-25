@@ -1,0 +1,22 @@
+{
+  "schema": "article.urls/v1",
+  "message_id": "01M4F7BM40ATK4TCBNAJ74Z0FX",
+  "produced_at": "2026-10-09T02:20:00Z",
+  "producer": {
+    "service": "web-commoncrawl-scanner",
+    "version": "1.0.0",
+    "job_id": "01M4F72A8RQ0N3K5D2B7T4W9XB"
+  },
+  "source_id": "3c7f9d52-1e4a-4b86-a0d3-7b2e5c8f1a90",
+  "url": "https://www.example-daily.iq/economy/2026/09/26/fiberx-wasit",
+  "url_key": "news:url:e9c744aa0a4d69c97253bbb9df26cc15d70a813c0eff4eec8c121588380dd588",
+  "found_via": "commoncrawl",
+  "found_at": "2026-10-09T02:19:58Z",
+  "provenance": {
+    "route": "green",
+    "vendor": null,
+    "service": "web-commoncrawl-scanner",
+    "fetched_at": "2026-10-09T02:19:58Z"
+  },
+  "retention_class": "news_excerpt"
+}

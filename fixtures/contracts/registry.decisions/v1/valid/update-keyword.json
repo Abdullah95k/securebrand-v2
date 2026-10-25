@@ -1,0 +1,16 @@
+{
+  "schema": "registry.decisions/v1",
+  "message_id": "01M482RJ30KDE4PVBH8VMSWG4J",
+  "produced_at": "2026-10-06T07:45:00Z",
+  "producer": {
+    "service": "admin-console",
+    "version": "1.0.0",
+    "job_id": "01M482RJ301H078NDQQ30VVRV3"
+  },
+  "decision_id": "01M482RJ30RSAZNECSZYSS9P1T",
+  "decision": "update",
+  "requested_by": "person:01J9P2R4T6V8X0Z2B4D6F8H0KM",
+  "reason": null,
+  "keyword_id": "0cd402b6-9015-45f8-86b4-d90cc086d320",
+  "update": {}
+}

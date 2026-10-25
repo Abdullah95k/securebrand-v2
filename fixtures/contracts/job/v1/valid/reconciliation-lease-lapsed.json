@@ -1,0 +1,16 @@
+{
+  "schema": "job/v1",
+  "message_id": "01M4N3AMK05XY1HZ1KRCQ9GZ19",
+  "produced_at": "2026-10-11T09:05:00Z",
+  "producer": {
+    "service": "yt-uploads-reconciler",
+    "version": "1.0.0",
+    "job_id": "01M4N3AMK06RZQYDXC6SGRKE08"
+  },
+  "job_id": "01M48R0V80ZZGG928KMD5XX36J",
+  "kind": "reconciliation",
+  "due_at": "2026-10-11T09:05:00Z",
+  "attempt": 1,
+  "source_id": "3c9a7e52-1f4b-4d8e-b6a0-8e2f5c1d7a94",
+  "reason": "lease_lapsed"
+}

@@ -1,0 +1,26 @@
+{
+  "schema": "jobs.completed/v1",
+  "message_id": "01M4AWWF80TV869QASGKDGT69B",
+  "produced_at": "2026-10-07T10:00:00Z",
+  "producer": {
+    "service": "x-compliance-sync",
+    "version": "1.0.0",
+    "job_id": "01M4H00000A8N3K5D2B7T4W9XC"
+  },
+  "job_id": "01M4H00000A8N3K5D2B7T4W9XC",
+  "queue": "jobs.x-compliance-sync",
+  "kind": "export",
+  "client_id": null,
+  "request_id": "01J9R5S3V7W1X4Y8Z0A2B6C9DH",
+  "attempt": 1,
+  "status": "done",
+  "reason": null,
+  "finished_at": "2026-10-07T10:00:00Z",
+  "report": {
+    "new_count": 0,
+    "seen_count": 0,
+    "pages": 0,
+    "cost_units": 0,
+    "reply_candidates": []
+  }
+}

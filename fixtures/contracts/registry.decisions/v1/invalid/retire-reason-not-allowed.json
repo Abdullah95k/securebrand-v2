@@ -1,0 +1,18 @@
+{
+  "schema": "registry.decisions/v1",
+  "message_id": "01MA8JTR8073AZ1ARBCESJ41R6",
+  "produced_at": "2026-12-20T02:00:00Z",
+  "producer": {
+    "service": "qualifier",
+    "version": "1.0.0",
+    "job_id": "01MA8JTR80B507KREVJPQ4D3JK"
+  },
+  "decision_id": "01MA8JTR80BPWTXJ3N3T2H2XXK",
+  "decision": "retire",
+  "requested_by": "qualifier",
+  "reason": "owner_request",
+  "source_id": "3d8a51c2-7e04-4b9f-8c16-2a9e5d70f4b8",
+  "retire": {
+    "rule_hit": 9
+  }
+}

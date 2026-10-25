@@ -1,0 +1,126 @@
+{
+  "description": "One declared partition key per topic and per queue, per scope or kind where one carries several subjects (ADR-0004, ADR-0031, ADR-0033). `fields` are dotted paths tried in order; the key is the first one present and not null. The SDK producer sets the Kafka key from this record, never the caller. A job's key depends on its queue and kind: the first rule matching both applies, else `default`. jobs.completed takes the key of the job it reports, found by its `queue` and `kind`.",
+  "topics": {
+    "raw.items/v1": {
+      "fields": ["envelope.source_id", "envelope.candidate_key"],
+      "from": "ADR-0004, ADR-0005"
+    },
+    "items.normalized/v1": {
+      "fields": ["source_id"],
+      "from": "ADR-0004"
+    },
+    "item.hits/v1": {
+      "fields": ["source_id"],
+      "from": "ADR-0004, ADR-0031"
+    },
+    "discovery.hits/v1": {
+      "fields": ["candidate.candidate_key"],
+      "from": "ADR-0004, ADR-0031"
+    },
+    "poster.profiles/v1": {
+      "fields": ["candidate_key", "author_ref"],
+      "from": "ADR-0004, ADR-0033 (a registered source's refresh carries its <platform>:<platform_id> key; an ordinary individual's answer is keyed by author_ref)"
+    },
+    "registry.decisions/v1": {
+      "fields": ["candidate_key", "author_ref", "source_id", "platform", "keyword_id"],
+      "from": "ADR-0004, ADR-0013, ADR-0044 (exactly one subject)"
+    },
+    "source.events/v1": {
+      "fields": ["source_id"],
+      "from": "ADR-0004"
+    },
+    "items.analysis/v1": {
+      "fields": ["source_id"],
+      "from": "ADR-0004, ADR-0023"
+    },
+    "item.metrics/v1": {
+      "fields": ["source_id"],
+      "from": "ADR-0004, ADR-0034"
+    },
+    "deletions/v1": {
+      "fields": ["source_id", "author_ref", "client_id"],
+      "from": "ADR-0004, ADR-0035 (item and source scope source_id, author scope author_ref, client scope client_id)"
+    },
+    "article.urls/v1": {
+      "fields": ["source_id"],
+      "from": "ADR-0004, ADR-0036 (the site)"
+    },
+    "search.results/v1": {
+      "fields": ["canonical_url_hash"],
+      "from": "ADR-0004"
+    },
+    "crawl.policies/v1": {
+      "fields": ["host"],
+      "from": "ADR-0004"
+    },
+    "news.dedup/v1": {
+      "fields": ["story_id"],
+      "from": "ADR-0004, ADR-0022"
+    },
+    "dlq.<service>/v1": {
+      "fields": ["original.key"],
+      "from": "Q5, F-21 (the original message's key; a produce-side entry, the key the SDK would have set)"
+    }
+  },
+  "jobs": {
+    "default": {
+      "fields": ["source_id"],
+      "from": "ADR-0004 (analyze, push, first_sight, comment, replies and metrics jobs included; a search find's comment jobs carry the post's source_id; an X gap job its rule's first source)"
+    },
+    "rules": [
+      {
+        "queues": [
+          "jobs.fb-page-resolver",
+          "jobs.ig-account-resolver",
+          "jobs.tt-user-resolver",
+          "jobs.x-user-resolver",
+          "jobs.li-org-resolver",
+          "jobs.tg-channel-resolver",
+          "jobs.yt-channel-resolver",
+          "jobs.news-site-resolver",
+          "jobs.poster-resolver",
+          "jobs.qualifier"
+        ],
+        "kinds": "*",
+        "fields": ["candidate_key"],
+        "from": "ADR-0004; Q13"
+      },
+      {
+        "queues": ["jobs.news-robots-checker"],
+        "kinds": "*",
+        "fields": ["host"],
+        "from": "ADR-0004"
+      },
+      {
+        "queues": ["jobs.web-commoncrawl-scanner"],
+        "kinds": ["rotation", "ops_force"],
+        "fields": ["crawl_id"],
+        "from": "ADR-0004 L27, L39; F-31 (a scan is about no source)"
+      },
+      {
+        "queues": ["jobs.x-compliance-sync", "jobs.yt-text-purger"],
+        "kinds": ["ops_force"],
+        "fields": ["request_id"],
+        "from": "ADR-0004; F-31 (an ops_force about no source)"
+      },
+      {
+        "queues": ["jobs.keyword-matcher"],
+        "kinds": ["rematch"],
+        "fields": ["client_id"],
+        "from": "ADR-0004"
+      },
+      {
+        "queues": ["jobs.x-compliance-sync"],
+        "kinds": ["export"],
+        "fields": ["request_id"],
+        "from": "ADR-0004; Q13"
+      },
+      {
+        "queues": "*",
+        "kinds": ["replay", "rerun", "recompute", "retention_sweep"],
+        "fields": ["run_id", "request_id"],
+        "from": "ADR-0004 (order does not matter there)"
+      }
+    ]
+  }
+}

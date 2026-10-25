@@ -1,0 +1,44 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M48VS858HSTHZQ7CEBJANJS5",
+    "produced_at": "2026-10-06T15:02:17Z",
+    "producer": {
+      "service": "li-notification-receiver",
+      "version": "1.0.0",
+      "job_id": "01J9N5K2W8T4R6Y1B3D7F0GHMQ"
+    },
+    "platform": "linkedin",
+    "kind": "comment",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "li-notification-receiver",
+      "fetched_at": "2026-10-06T15:02:15Z"
+    },
+    "retention_class": "linkedin_48h",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01J9N5K2W8T4R6Y1B3D7F0GHMQ",
+    "attempt": 1,
+    "job_kind": "push",
+    "api_version": "202610",
+    "raw_ref": "raw/green/linkedin/2026/10/06/li-notification-receiver/000003.jsonl.zst#2",
+    "source_id": "3d2f8a14-6b7c-4e19-8a05-c1f7e2b94d36",
+    "platform_id": "urn:li:comment:(urn:li:share:7247000000000000001,7247000000000000100)",
+    "idempotency_key": "linkedin:comment:urn:li:comment:(urn:li:share:7247000000000000001,7247000000000000100)",
+    "parent_id": "d889901d-a86a-5d59-93d7-dff472b77b58",
+    "root_id": "d889901d-a86a-5d59-93d7-dff472b77b58",
+    "author_ref": "a9080ed1a38030f00cacc60421a58198192dd2a7106af2016879c8fd0d7b0fb5",
+    "redacted_fields": [
+      "actor"
+    ]
+  },
+  "payload": {
+    "action": "COMMENT",
+    "organizationalEntity": "urn:li:organization:1234567",
+    "object": "urn:li:share:7247000000000000001",
+    "comment": "متى تفتحون؟"
+  }
+}

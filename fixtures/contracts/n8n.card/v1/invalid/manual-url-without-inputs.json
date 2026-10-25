@@ -1,0 +1,29 @@
+{
+  "schema": "n8n.card/v1",
+  "message_id": "01M48ARX70750D2VGH3FZP5ZDC",
+  "produced_at": "2026-10-06T10:05:00Z",
+  "producer": {
+    "service": "li-org-resolver",
+    "version": "1.0.0",
+    "job_id": "01M48ARX70PJ20CDV0MKSGGN27"
+  },
+  "card_id": "ae29bce5-482f-5d1d-96fc-2f5861003cae",
+  "idempotency_key": "ae29bce5-482f-5d1d-96fc-2f5861003cae:slack",
+  "channel": "slack",
+  "card_type": "manual_url",
+  "audience": "ops",
+  "client_id": null,
+  "subject": {
+    "candidate_key": "linkedin:example-company-iq",
+    "request_id": "01J9N3B5C7D9E1F3G5H7J9K1M3"
+  },
+  "title": "LinkedIn page URL needed",
+  "summary": "the company page did not resolve by name",
+  "facts": [
+    {
+      "label": "name",
+      "value": "Example Company Iraq"
+    }
+  ],
+  "opened_at": "2026-10-06T10:05:00Z"
+}

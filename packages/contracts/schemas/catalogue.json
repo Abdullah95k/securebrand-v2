@@ -1,0 +1,143 @@
+{
+  "schemas": [
+    {
+      "id": "raw.items/v1",
+      "class": "data",
+      "file": "raw.items/v1.json",
+      "module": "raw_items_v1",
+      "title": "RawItemsV1"
+    },
+    {
+      "id": "items.normalized/v1",
+      "class": "data",
+      "file": "items.normalized/v1.json",
+      "module": "items_normalized_v1",
+      "title": "ItemsNormalizedV1"
+    },
+    {
+      "id": "item.hits/v1",
+      "class": "data",
+      "file": "item.hits/v1.json",
+      "module": "item_hits_v1",
+      "title": "ItemHitsV1"
+    },
+    {
+      "id": "discovery.hits/v1",
+      "class": "data",
+      "file": "discovery.hits/v1.json",
+      "module": "discovery_hits_v1",
+      "title": "DiscoveryHitsV1"
+    },
+    {
+      "id": "poster.profiles/v1",
+      "class": "data",
+      "file": "poster.profiles/v1.json",
+      "module": "poster_profiles_v1",
+      "title": "PosterProfilesV1"
+    },
+    {
+      "id": "registry.decisions/v1",
+      "class": "data",
+      "file": "registry.decisions/v1.json",
+      "module": "registry_decisions_v1",
+      "title": "RegistryDecisionsV1"
+    },
+    {
+      "id": "source.events/v1",
+      "class": "control",
+      "file": "source.events/v1.json",
+      "module": "source_events_v1",
+      "title": "SourceEventsV1"
+    },
+    {
+      "id": "items.analysis/v1",
+      "class": "data",
+      "file": "items.analysis/v1.json",
+      "module": "items_analysis_v1",
+      "title": "ItemsAnalysisV1"
+    },
+    {
+      "id": "item.metrics/v1",
+      "class": "data",
+      "file": "item.metrics/v1.json",
+      "module": "item_metrics_v1",
+      "title": "ItemMetricsV1"
+    },
+    {
+      "id": "deletions/v1",
+      "class": "data",
+      "file": "deletions/v1.json",
+      "module": "deletions_v1",
+      "title": "DeletionsV1"
+    },
+    {
+      "id": "article.urls/v1",
+      "class": "data",
+      "file": "article.urls/v1.json",
+      "module": "article_urls_v1",
+      "title": "ArticleUrlsV1"
+    },
+    {
+      "id": "search.results/v1",
+      "class": "data",
+      "file": "search.results/v1.json",
+      "module": "search_results_v1",
+      "title": "SearchResultsV1"
+    },
+    {
+      "id": "crawl.policies/v1",
+      "class": "data",
+      "file": "crawl.policies/v1.json",
+      "module": "crawl_policies_v1",
+      "title": "CrawlPoliciesV1"
+    },
+    {
+      "id": "news.dedup/v1",
+      "class": "data",
+      "file": "news.dedup/v1.json",
+      "module": "news_dedup_v1",
+      "title": "NewsDedupV1"
+    },
+    {
+      "id": "jobs.completed/v1",
+      "class": "control",
+      "file": "jobs.completed/v1.json",
+      "module": "jobs_completed_v1",
+      "title": "JobsCompletedV1"
+    },
+    {
+      "id": "job/v1",
+      "class": "control",
+      "file": "job/v1.json",
+      "module": "job_v1",
+      "title": "JobV1"
+    },
+    {
+      "id": "dlq.<service>/v1",
+      "class": "control",
+      "file": "dlq/v1.json",
+      "module": "dlq_v1",
+      "title": "DlqV1"
+    },
+    {
+      "id": "n8n.alert/v1",
+      "class": "control",
+      "file": "n8n.alert/v1.json",
+      "module": "n8n_alert_v1",
+      "title": "N8nAlertV1"
+    },
+    {
+      "id": "n8n.card/v1",
+      "class": "control",
+      "file": "n8n.card/v1.json",
+      "module": "n8n_card_v1",
+      "title": "N8nCardV1"
+    }
+  ],
+  "report_kind_fields": {
+    "oldest_item_at": ["backfill", "keyword_history"],
+    "complete": ["comments", "replies"],
+    "stored_before": ["comments", "replies"],
+    "comments_total": ["comments", "replies"]
+  }
+}

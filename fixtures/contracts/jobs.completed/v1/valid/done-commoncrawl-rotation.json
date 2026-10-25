@@ -1,0 +1,25 @@
+{
+  "schema": "jobs.completed/v1",
+  "message_id": "01M4F9MVW01EQ9R84EF38NJ38H",
+  "produced_at": "2026-10-09T03:00:00Z",
+  "producer": {
+    "service": "web-commoncrawl-scanner",
+    "version": "1.0.0",
+    "job_id": "01M4F71ZR0A8N3K5D2B7T4W9XC"
+  },
+  "job_id": "01M4F71ZR0A8N3K5D2B7T4W9XC",
+  "queue": "jobs.web-commoncrawl-scanner",
+  "kind": "rotation",
+  "crawl_id": "CC-MAIN-2026-38",
+  "attempt": 1,
+  "status": "done",
+  "reason": null,
+  "finished_at": "2026-10-09T03:00:00Z",
+  "report": {
+    "new_count": 14,
+    "seen_count": 220,
+    "pages": 40,
+    "cost_units": 0,
+    "reply_candidates": []
+  }
+}

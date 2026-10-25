@@ -1,0 +1,41 @@
+{
+  "envelope": {
+    "schema": "raw.items/v1",
+    "message_id": "01M48HCSFRHG3X9TW1XNVRS69W",
+    "produced_at": "2026-10-06T12:00:43Z",
+    "producer": {
+      "service": "ig-mentions-fetcher",
+      "version": "1.0.0",
+      "job_id": "01J9N6E4Q7G9Z1B3X5T8W2MHVF"
+    },
+    "platform": "instagram",
+    "kind": "post",
+    "provenance": {
+      "route": "green",
+      "vendor": null,
+      "service": "ig-mentions-fetcher",
+      "fetched_at": "2026-10-06T12:00:41Z"
+    },
+    "retention_class": "meta_on_request",
+    "client_ids": [
+      "0b6b8c7e-2d1a-4e0f-9c3a-5f2d1e8a7b60"
+    ],
+    "job_id": "01J9N6E4Q7G9Z1B3X5T8W2MHVF",
+    "attempt": 1,
+    "job_kind": "rotation",
+    "api_version": "v21.0",
+    "raw_ref": "raw/green/instagram/2026/10/06/ig-mentions-fetcher/000058.jsonl.zst#2",
+    "source_id": "e52b7a90-1c36-4d8f-a7e4-3b9c0d1f6a28",
+    "platform_id": "17895432167098765",
+    "idempotency_key": "instagram:post:17895432167098765",
+    "context": {
+      "mention_type": "mentioned_media",
+      "mention_of": "17841405822304914"
+    }
+  },
+  "payload": {
+    "id": "17895432167098765",
+    "caption": "شكرا @example_store على الخدمة",
+    "timestamp": "2026-10-06T11:40:00+0000"
+  }
+}
