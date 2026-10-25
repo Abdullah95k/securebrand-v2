@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from "node:fs";
+import { chmodSync, existsSync, readFileSync } from "node:fs";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { runHook } from "../helpers/hooks.js";
 import { TempRepo, type RunResult } from "../helpers/repo.js";
@@ -49,6 +49,15 @@ describe(".claude/hooks/stop-gate.sh and arm-stop-gate.sh", () => {
 
   function changeCode(): void {
     repo.write("services/a/index.ts", `export const changed = ${Date.now()};\n`);
+  }
+
+  /** The code a session leaves when it stops: an edit of a tracked file, or a new file. */
+  function writeCode(shape: string): void {
+    if (shape === "a new file") {
+      repo.write("services/a/added.ts", "export const added = 1;\n");
+    } else {
+      changeCode();
+    }
   }
 
   function expectBlocked(result: RunResult): void {
@@ -129,6 +138,29 @@ describe(".claude/hooks/stop-gate.sh and arm-stop-gate.sh", () => {
     expect(stubRuns()).toBe(2);
   });
 
+  it.each(["an edited file", "a new file"])(
+    "does not rerun green checks when the code they passed on is committed unchanged (%s)",
+    (shape) => {
+      arm();
+      writeCode(shape);
+      expect(stop("s1", 0).code).toBe(0);
+      repo.git("add", "-A");
+      expect(stop("s1", 0).code).toBe(0);
+      repo.git("commit", "-q", "-m", "X: work");
+      expect(stop("s1", 0).code).toBe(0);
+      expect(stubRuns()).toBe(1);
+    },
+  );
+
+  it("reruns the checks when only a file's executable bit changes", () => {
+    arm();
+    changeCode();
+    expect(stop("s1", 0).code).toBe(0);
+    chmodSync(repo.path("services/a/index.ts"), 0o755);
+    expect(stop("s1", 0).code).toBe(0);
+    expect(stubRuns()).toBe(2);
+  });
+
   it("lets Claude stop after three failed rounds, naming the log", () => {
     arm();
     changeCode();
@@ -197,6 +229,37 @@ describe(".claude/hooks/stop-gate.sh and arm-stop-gate.sh", () => {
     const result = stop();
     expect(result.code, result.output).toBe(0);
     expect(systemMessage(result)).toContain("docs/issues/X-q2.md");
+  });
+
+  it.each(["an edited file", "a new file"])(
+    "keeps the exemption when the code it covered is committed unchanged (%s)",
+    (shape) => {
+      arm();
+      writeCode(shape);
+      repo.write("docs/issues/X-1.md", "# Issue · X-1\n");
+      let result = stop();
+      expect(result.code, result.output).toBe(0);
+      repo.git("add", "-A");
+      result = stop();
+      expect(result.code, result.output).toBe(0);
+      repo.git("commit", "-q", "-m", "X: the failing test and its issue");
+      result = stop();
+      expect(result.code, result.output).toBe(0);
+      expect(systemMessage(result)).toContain("docs/issues/X-1.md");
+      expect(stubRuns()).toBe(0);
+    },
+  );
+
+  it("does not exempt changed code again when one of two filed questions is deleted", () => {
+    arm();
+    changeCode();
+    repo.write("docs/issues/X-q1.md", "# Question for the user: x\n");
+    repo.write("docs/issues/X-q2.md", "# Question for the user: y\n");
+    expect(stop().code).toBe(0);
+    repo.write("services/a/other.ts", "export const next = 1;\n");
+    expectBlocked(stop());
+    repo.remove("docs/issues/X-q2.md");
+    expectBlocked(stop());
   });
 
   it("runs the checks when only a docs lane's README changed, as make check does", () => {

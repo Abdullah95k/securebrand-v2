@@ -45,7 +45,9 @@ LOG="$STATE/last-check.log"
 # fast-forward), never count. An arm file in the old, empty format gives no exemption.
 ARM_FILE="$STATE/stop-gate-$SESSION"
 ARM="$(head -n1 "$ARM_FILE" 2>/dev/null)"
+SEEN_FILE="$STATE/stop-gate-$SESSION.seen" # the filed files an exemption has covered, one per line
 FILED=""
+NEW=""
 if [ -n "$ARM" ] && [ "$ARM" != none ] && git rev-parse --verify -q "$ARM^{commit}" >/dev/null &&
   [ -f "$ARM_FILE.filed-before" ]; then
   OWN="$(git rev-list --first-parent --no-merges "$ARM..HEAD")"
@@ -62,34 +64,34 @@ if [ -n "$ARM" ] && [ "$ARM" != none ] && git rev-parse --verify -q "$ARM^{commi
       [ "$from_main" = 0 ] || continue
     fi
     FILED="$FILED$f "
+    grep -qxF -- "$f" "$SEEN_FILE" 2>/dev/null || NEW="$NEW$f"$'\n'
   done < <({
     git -c core.quotePath=false diff --no-renames --name-only --diff-filter=A "$ARM" -- docs/proposals docs/issues
     git -c core.quotePath=false ls-files --others --exclude-standard -- docs/proposals docs/issues
   } | grep -E '^docs/(proposals|issues)/[^/]+\.md$' | grep -vE '/README\.md$' | sort -u)
 fi
 
-# The code by content, with or without a merge base: every tracked and untracked file outside docs/
-# and build-plan/, and the docs lanes' READMEs, which repo-checks reads (check-changed.sh's
-# ROOT_TOOLING).
+# The code by content alone, with or without a merge base, so that staging or committing it
+# unchanged changes nothing: every tracked and untracked file outside docs/ and build-plan/, and the
+# docs lanes' READMEs, which repo-checks reads (check-changed.sh's ROOT_TOOLING), each with its
+# executable bit. Neither the index nor HEAD goes in; a deleted file drops out.
 FP="$( {
-  git ls-files -s -- . ':(exclude)docs' ':(exclude)build-plan'
-  git ls-files -s -- 'docs/*/README.md'
-  git diff -- . ':(exclude)docs' ':(exclude)build-plan'
-  git diff -- 'docs/*/README.md'
-  {
-    git ls-files -z --others --exclude-standard -- . ':(exclude)docs' ':(exclude)build-plan'
-    git ls-files -z --others --exclude-standard -- 'docs/*/README.md'
-  } | sort -z | xargs -0 -r sha256sum
-} 2>/dev/null | sha256sum | cut -d' ' -f1)"
+  git ls-files -z --cached --others --exclude-standard -- . ':(exclude)docs' ':(exclude)build-plan'
+  git ls-files -z --cached --others --exclude-standard -- 'docs/*/README.md'
+} 2>/dev/null | LC_ALL=C sort -zu |
+  xargs -0 -r sh -c 'sha256sum -- "$@"; for f; do [ -x "$f" ] && printf "x %s\n" "$f"; done' sh 2>/dev/null |
+  sha256sum | cut -d' ' -f1)"
 
-# The exemption covers the code as it was at the first stop that saw these files: work that goes on
-# afterwards in this session (an answer came in) is checked again, until another file is filed.
+# The exemption covers the code as it was at the first stop that saw a newly filed file: work that
+# goes on afterwards in this session (an answer came in) is checked again, until a file it has not
+# seen is filed. Deleting one of the filed files files nothing new.
 EXEMPT_FILE="$STATE/stop-gate-$SESSION.exempt"
 if [ -n "$FILED" ]; then
-  if [ "$(head -n1 "$EXEMPT_FILE" 2>/dev/null)" != "${FILED% }" ]; then
-    printf '%s\n%s\n' "${FILED% }" "$FP" >"$EXEMPT_FILE"
+  if [ -n "$NEW" ]; then
+    printf '%s' "$NEW" >>"$SEEN_FILE"
+    echo "$FP" >"$EXEMPT_FILE"
   fi
-  if [ "$(sed -n 2p "$EXEMPT_FILE" 2>/dev/null)" = "$FP" ]; then
+  if [ "$(cat "$EXEMPT_FILE" 2>/dev/null)" = "$FP" ]; then
     rm -f "$COUNT_FILE"
     printf '{"systemMessage":"Stopped with a proposal or issue filed in this session: %s. Checks were not enforced."}\n' "${FILED% }"
     exit 0
