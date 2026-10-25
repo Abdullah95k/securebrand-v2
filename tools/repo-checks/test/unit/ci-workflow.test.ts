@@ -216,17 +216,26 @@ describe("GitHub workflows", () => {
     expect(copy?.env?.MIRROR_REPLACE).toBe("${{ github.ref == 'refs/heads/main' && '1' || '' }}");
   });
 
-  it("dependabot covers npm, uv, docker and github-actions weekly and grouped with a low limit", () => {
+  it("dependabot covers npm, uv and github-actions weekly and grouped with a low limit", () => {
     const config = parse(readFileSync(join(ROOT, ".github", "dependabot.yml"), "utf8")) as {
       updates: {
         "package-ecosystem": string;
         schedule: { interval: string };
         "open-pull-requests-limit": number;
         groups?: Record<string, unknown>;
+        ignore?: { "dependency-name": string; "update-types"?: string[] }[];
       }[];
     };
     const ecosystems = config.updates.map((u) => u["package-ecosystem"]).sort();
-    expect(ecosystems).toEqual(["docker", "github-actions", "npm", "uv"]);
+    // The service templates' base images follow .node-version, .python-version and uv.toml, so
+    // they are bumped by hand with the toolchain (pins.test.ts), not by Dependabot's docker updates.
+    expect(ecosystems).toEqual(["github-actions", "npm", "uv"]);
+    // uv-build follows uv.toml's required-version range, so a minor bump of the 0.x tool is planned.
+    const uv = config.updates.find((u) => u["package-ecosystem"] === "uv");
+    expect(uv?.ignore).toContainEqual({
+      "dependency-name": "uv-build",
+      "update-types": ["version-update:semver-minor"],
+    });
     for (const update of config.updates) {
       expect(update.schedule.interval).toBe("weekly");
       expect(update["open-pull-requests-limit"]).toBeLessThanOrEqual(3);
