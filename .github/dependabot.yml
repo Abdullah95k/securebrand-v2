@@ -1,10 +1,11 @@
-# Weekly, grouped, few open pull requests at a time. Major versions are planned upgrades (Node 26,
-# pnpm 11, TypeScript 7, Python 3.14 and the rest are follow-ups in docs/handoffs/F1.md), and so is
-# a minor bump of a 0.x tool or of Python, which can break like a major one: Dependabot proposes
-# minor and patch updates, and ignores uv-build's minors, which follow uv.toml's required-version.
-# The stack's image tags in stack/versions.env and the service templates' base images (which follow
-# .node-version, .python-version and uv.toml) are bumped by hand. Renovate is not used: Mend.io
-# fails the vendor screen.
+# Weekly, grouped, few open pull requests at a time. Dependabot proposes minor and patch updates and
+# ignores majors, which are planned upgrades (Node 26, pnpm 11, TypeScript 7, Python 3.14 and the
+# rest are follow-ups in docs/handoffs/F1.md). A minor update of a 0.x tool (ruff 0.16 to 0.17) can
+# break like a major one: review such a pull request as a planned upgrade. uv-build's minors are
+# ignored, since they must follow uv.toml's required-version. The stack's image tags in
+# stack/versions.env and the service templates' base images (which follow .node-version,
+# .python-version and uv.toml) are bumped by hand. Renovate is not used: Mend.io fails the vendor
+# screen.
 version: 2
 updates:
   - package-ecosystem: npm

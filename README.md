@@ -87,6 +87,6 @@ scripts, so a pull request cannot loosen its own checks. `mirror-images.yml` cop
 stack image whose `_REPO` in `stack/versions.env` points to this repository's GHCR (Redpanda, which
 has no anonymous upstream, and ClickHouse, whose ECR copy refuses CI's pulls). Every action is
 pinned to a commit. Dependabot proposes minor and patch updates of the npm and uv dependencies and
-the actions weekly; a major version, and a minor one of a 0.x tool or of Python, is a planned
-upgrade (uv-build's minors are ignored: they follow `uv.toml`). The stack's image tags and the
-service templates' base images are bumped by hand.
+the actions weekly; majors are planned upgrades, and a minor update of a 0.x tool is reviewed as one
+(uv-build's minors are ignored: they follow `uv.toml`). The stack's image tags and the service
+templates' base images, Python's included, are bumped by hand.
